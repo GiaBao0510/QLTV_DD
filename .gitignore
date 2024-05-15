@@ -1,4 +1,5 @@
 #bỏ qua thư mục module
+app_qltv/lib/BackEnd/node_modules
 
 #bỏ qua thụ mục ghi chí
 ghiChu/
