@@ -13,10 +13,16 @@ con.connect(function(err){
     if(err) throw err;
     console.log('ket noi duoc');
 
+    const PhanQuyenUser = "pq_user";
     //Truy xuất
-    var sql ="SELECT * FROM pq_user";
-    con.query("SELECT * FROM pq_user", function(err, result, fields){
+    var sql =`SELECT * FROM ${PhanQuyenUser}`;
+    con.query(sql, function(err, result, fields){
         if(err) throw err;
         console.log(result);
     });
 })
+
+// --------
+const ktraham = require('./app/services/pt_user_services');
+const ktraham1 = new ktraham();
+ktraham1.DanhSachPhanQuyenNguoiDung();
