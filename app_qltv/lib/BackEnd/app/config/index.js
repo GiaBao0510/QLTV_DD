@@ -1,10 +1,11 @@
-const config = {
-    app:{
-        port: 3306|| process.env.PORT,
-    },
-    db:{
-        uri: process.env.MYSQL_URI || 'mysql://localhost:3306/quanlytiemvang'
-    }
-};
+var mysql = require('mysql');
+
+var config = mysql.createConnection({
+    host: 'localhost',
+    database: 'quanlytiemvang',
+    port: '3306',
+    user:"userB",
+    password:'12345'
+});
 
 module.exports = config;
