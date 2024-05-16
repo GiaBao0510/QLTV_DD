@@ -5,7 +5,7 @@ const pt_user = require('../controllers/pt_user_controller');
 const router = express.Router();
 
 //1. Lấy danh sách phân quyền user
-router.route('/DanhSachPhanQuyenNguoiDung').get(pt_user.DSphanQuyen_user);
+router.route('/userhierarchylist').get(pt_user.DSphanQuyen_user);
 
 
 // ------------------------------

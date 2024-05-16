@@ -23,6 +23,5 @@ con.connect(function(err){
 })
 
 // --------
-const ktraham = require('./app/services/pt_user_services');
-const ktraham1 = new ktraham();
-ktraham1.DanhSachPhanQuyenNguoiDung();
+const ktraham = require('./app/controllers/pt_user_controller');
+const ktraham1 = ktraham.DSphanQuyen_user();

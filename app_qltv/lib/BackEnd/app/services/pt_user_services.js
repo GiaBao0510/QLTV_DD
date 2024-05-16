@@ -14,11 +14,13 @@ class pt_user_services{
     //Lấy danh sách phân quyền người dùng
     async DanhSachPhanQuyenNguoiDung(){
         try{
-            const [rows] = await connection.query(`SELECT * FROM ${this.PhanQuyenUser}`);
-            console.log(rows); 
-            return [rows];
+            const rows = await connection.query(`SELECT * FROM ${this.PhanQuyenUser}`);
+            const data = rows.map(row => ({ ...row }));
+            const jsondata = JSON.stringify(data, null,2)
+            console.log(jsondata);
+            return jsondata;
         }catch(err){
-            return 0;
+            return [];
         }
     }
 }
