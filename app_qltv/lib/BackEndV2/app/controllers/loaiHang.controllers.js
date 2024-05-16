@@ -102,8 +102,14 @@ exports.lay_LoaiHang = async (req, res, next) =>{
                 console.log(`Lỗi khi lấy thông tin loại hàng - ${err}`);
                 return res.status(404).json({message: `Loi khi lấy thong tin loai hang - ${LOAIID}`});
             }else{
-
-                return res.status(200).json(result);
+                let KetQua = result.map(i =>({
+                    "LOAIID": Number(i.LOAIID),
+                    "LOAIMA": i.LOAIMA,
+                    "LOAI_TEN": i.LOAI_TEN,
+                    "GHI_CHU": i.GHI_CHU,
+                    "SU_DUNG": i.SU_DUNG,
+                }));
+                return res.status(200).json(KetQua);
             }
         })
     }catch(err){
