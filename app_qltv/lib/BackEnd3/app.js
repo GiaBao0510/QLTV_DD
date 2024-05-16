@@ -6,7 +6,8 @@ const os = require('os');
 const db = require('./app/config/index_2');
 const admin = require('./app/routers/admin.router');
 const userRoutes = require('./app/routers/userRoutes');
-const groupRoutes = require ('./app/routers/groupRoutes')
+const groupRoutes = require ('./app/routers/groupRoutes');
+const productype = require('./app/routers/productTypeRoute');
 const app = express();
 app.use(express.json());
 
@@ -15,6 +16,7 @@ app.use(express.urlencoded({extended: true}));
 app.use('/api/admin',admin);
 app.use('/api/users', userRoutes);
 app.use('/api/groups', groupRoutes);
+app.use('/api/productype', productype);
 
 //Áp dụng cấu hình phiên
 app.use(
