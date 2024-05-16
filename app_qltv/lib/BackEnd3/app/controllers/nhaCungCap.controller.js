@@ -1,7 +1,7 @@
 var mysql = require('mysql');
 var express = require('express');
-var db = require('../config/index');
-var ApiError = require('../../api-error');
+var db = require('../config/index_2');
+var ApiError = require('../api-error');
 
 //1.xóa danh sách thông tin nhà cung cấp 
 exports.list_NhaCungCap = async (req, res, next) =>{
