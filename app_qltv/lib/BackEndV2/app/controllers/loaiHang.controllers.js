@@ -60,7 +60,6 @@ exports.update_LoaiHang = async (req, res, next) =>{
                 console.log(`Lỗi khi cập nhật thông tin loại hàng - ${err}`);
                 return res.status(404).json({message: `Loi khi cập nhật thong tin loai hang`});
             }else{
-
                 return res.status(200).json({message: `cập nhật thong tin loai hang thanh cong ,ID: ${LOAIID} `});
             }
         })
@@ -72,15 +71,20 @@ exports.update_LoaiHang = async (req, res, next) =>{
 //4.Lấy danh sách thông tin loại hàng 
 exports.list_LoaiHang = async (req, res, next) =>{
     try{
-
     
-        db.query(`SELECT * FROM loai_hang`,(err, result)=>{
+        db.query(`SELECT * FROM loai_hang`,(err, results)=>{
             if(err){
                 console.log(`Lỗi khi lấy danh sách thông tin loại hàng - ${err}`);
                 return res.status(404).json({message: `Loi khi cập nhật thong tin loai hang`});
             }else{
-
-                return res.status(200).json(result);
+                let KetQua = results.map(result =>({
+                    "LOAIID": Number(result.LOAIID),
+                    "LOAIMA": result.LOAIMA,
+                    "LOAI_TEN": result.LOAI_TEN,
+                    "GHI_CHU": result.GHI_CHU,
+                    "SU_DUNG": result.SU_DUNG,
+                }));
+                return res.status(200).json(KetQua);
             }
         })
     }catch(err){
