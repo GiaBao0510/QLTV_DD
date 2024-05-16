@@ -12,9 +12,9 @@ app.use(express.json());
 
 app.use(cors());
 app.use(express.urlencoded({extended: true}));
-app.use('/api',admin);
-app.use('/api', userRoutes);
-app.use('/api', groupRoutes);
+app.use('/api/admin',admin);
+app.use('/api/users', userRoutes);
+app.use('/api/groups', groupRoutes);
 
 //Áp dụng cấu hình phiên
 app.use(
