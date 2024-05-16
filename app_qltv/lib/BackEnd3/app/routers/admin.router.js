@@ -2,6 +2,7 @@ const express = require('express');
 const loaihang = require('../controllers/loaiHang.controllers');
 const khachhang = require('../controllers/khachHang.controller');
 const nhacungcap = require('../controllers/nhaCungCap.controller');
+const kho = require('../controllers/warehouseController');
 
 //0. Tạo 1 router để quản lý tuyến đường
 const router = express.Router();
@@ -37,11 +38,25 @@ router.route('/danhsachkhachhang').get(khachhang.list_KhachHang);
 router.route('/nhacungcap/:NCCMA')
         .put(nhacungcap.Update_NhaCungCap)
         .delete(nhacungcap.delete_NhaCungCap)
-        .get(nhacungcap.lay_NhaCungCap)
+        .get(nhacungcap.lay_NhaCungCap);
    
 //Lấy danh sách thông tin Nhà cung cấp
 router.route('/danhsachnhacungcap').get(nhacungcap.list_NhaCungCap);
 
 //Thêm nhà cung cấp
 router.route('/themnhacungcap').post(nhacungcap.Add_NhaCungCap);
+
+    // >>>>>>>>    Kho
+//Liệt kê kho
+router.route('/danhsachkho').get(kho.list_wareHouse);
+
+//Thêm 
+router.route('/themkho').post(kho.Add_wareHouse);
+
+//Tìm, sửa ,xóa kho
+router.route('/kho/:KHOMA')
+        .put(kho.Update_wareHouse)
+        .delete(kho.delete_wareHouse)
+        .get(kho.lay_wareHouse);
+
 module.exports = router;
