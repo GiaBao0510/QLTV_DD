@@ -6,10 +6,10 @@ app.use(express.json());
 
 var connect = mysql.createConnection({
     host: 'localhost',
-    database: 'quanlytiemvang',
+    database: 'tiemvang',
     port: '3306',
-    user:"userB",
-    password:'12345'
+    user:"root",
+    password:''
 });
 
 //Kiểm tra kết nối
