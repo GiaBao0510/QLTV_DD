@@ -1,29 +1,8 @@
-const mysql = require('mysql');
-const config = require('../config/index');
-//const { use } = require('../routers/userRoutes');
-
-// Kết nối với MySQL
-const connection = mysql.createConnection({
-  host: config.development.host,
-  user: config.development.user,
-  password: config.development.password,
-  database: config.development.database
-});
-// NHOMHANGID           int zerofill not null auto_increment,
-// NHOMHANGMA           varchar(3),
-// NHOMCHAID            int,
-// NHOM_TEN             national varchar(50),
-// DON_GIA_BAN          numeric(18,5),
-// DON_GIA_MUA          numeric(18,5),
-// MUA_BAN              bool,
-// DON_GIA_VON          numeric(18,5),
-// DON_GIA_CAM          numeric(18,5),
-// SU_DUNG              bool,
-// GHI_CHU              varchar(50),
+const db = require('../config/index_2');
 
 const createProductType = async (userData) => {
   return new Promise((resolve, reject) => {
-    connection.query('INSERT INTO nhom_hang SET ?', userData, (error, results, fields) => {
+    db.query('INSERT INTO nhom_hang SET ?', userData, (error, results, fields) => {
       if (error) {
         reject(error);
       } else {
@@ -31,10 +10,11 @@ const createProductType = async (userData) => {
       }
     });
   });
-}
+};
+
 const updateProductType = async (id, userData) => {
   return new Promise((resolve, reject) => {
-    connection.query('UPDATE nhom_hang SET ? WHERE NHOMHANGID = ?', [userData, id], (error, results) => {
+    db.query('UPDATE nhom_hang SET ? WHERE NHOMHANGID = ?', [userData, id], (error, results) => {
       if (error) {
         reject(error);
       } else {
@@ -42,11 +22,11 @@ const updateProductType = async (id, userData) => {
       }
     });
   });
+};
 
-}
 const deleteProductType = async (id) => {
   return new Promise((resolve, reject) => {
-    connection.query('UPDATE nhom_hang SET SU_DUNG = 0 WHERE NHOMHANGID = ?', id, (error, results) => {
+    db.query('UPDATE nhom_hang SET SU_DUNG = 0 WHERE NHOMHANGID = ?', id, (error, results) => {
       if (error) {
         reject(error);
       } else {
@@ -54,10 +34,11 @@ const deleteProductType = async (id) => {
       }
     });
   });
-}
-const getProductTypeById = (id) => {
+};
+
+const getProductTypeById = async (id) => {
   return new Promise((resolve, reject) => {
-    connection.query('SELECT * FROM nhom_hang WHERE NHOMHANGID = ?', [id], (error, results, fields) => {
+    db.query('SELECT * FROM nhom_hang WHERE NHOMHANGID = ?', [id], (error, results) => {
       if (error) {
         reject(error);
       } else {
@@ -67,9 +48,9 @@ const getProductTypeById = (id) => {
   });
 };
 
-const getAllProductType = () => {
+const getAllProductType = async () => {
   return new Promise((resolve, reject) => {
-    connection.query('SELECT * FROM nhom_hang WHERE SU_DUNG = 1', (error, results, fields) => {
+    db.query('SELECT * FROM nhom_hang WHERE SU_DUNG = 1', (error, results) => {
       if (error) {
         reject(error);
       } else {

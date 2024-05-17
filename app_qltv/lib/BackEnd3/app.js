@@ -16,7 +16,7 @@ app.use(express.urlencoded({extended: true}));
 app.use('/api/admin',admin);
 app.use('/api/users', userRoutes);
 app.use('/api/groups', groupRoutes);
-app.use('/api/productype', productype);
+app.use('/api/productType', productype);
 
 //Áp dụng cấu hình phiên
 app.use(

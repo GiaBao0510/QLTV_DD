@@ -1,36 +1,17 @@
-const mysql = require('mysql');
-const config = require('../config/index');
-const { use } = require('../routers/userRoutes');
+const db = require('../config/index_2');
 const bcrypt = require('bcrypt');
 
-// Kết nối với MySQL
-const connection = mysql.createConnection({
-  host: config.development.host,
-  user: config.development.user,
-  password: config.development.password,
-  database: config.development.database
-});
-
 const createUser = async (userData) => {
-  let USER_TEN = userData.USER_TEN,
-    MAT_KHAU = userData.MAT_KHAU,
-    USER_MA = userData.USER_MA,
-    BIKHOA = userData.BIKHOA,
-    NGAY_TAO = userData.NGAY_TAO,
-    SU_DUNG = userData.SU_DUNG,
-    REALM = userData.REALM,
-    EMAIL = userData.EMAIL,
-    EMAILVERIFIED = userData.EMAILVERIFIED,
-    VERIFICATIONTOKEN = userData.VERIFICATIONTOKEN,
-    MAC = userData.MAC,
-    LY_DO_KHOA = userData.LY_DO_KHOA;
+  let { USER_TEN, MAT_KHAU, USER_MA, BIKHOA, NGAY_TAO, SU_DUNG, REALM, EMAIL, EMAILVERIFIED, VERIFICATIONTOKEN, MAC, LY_DO_KHOA } = userData;
 
   let saltRounds = 10;
   let salt = await bcrypt.genSalt(saltRounds);
   MAT_KHAU = await bcrypt.hash(MAT_KHAU, salt);
 
   return new Promise((resolve, reject) => {
-    connection.query('INSERT INTO pq_user(USER_MA,USER_TEN, MAT_KHAU, BIKHOA, LY_DO_KHOA, NGAY_TAO, SU_DUNG, REALM, EMAIL, EMAILVERIFIED, VERIFICATIONTOKEN, MAC) VALUES(?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ', [USER_MA, USER_TEN, MAT_KHAU, BIKHOA, LY_DO_KHOA, NGAY_TAO, SU_DUNG, REALM, EMAIL, EMAILVERIFIED, VERIFICATIONTOKEN, MAC], (error, results, fields) => {
+    db.query('INSERT INTO pq_user(USER_MA,USER_TEN, MAT_KHAU, BIKHOA, LY_DO_KHOA, NGAY_TAO, SU_DUNG, REALM, EMAIL, EMAILVERIFIED, VERIFICATIONTOKEN, MAC) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)', 
+    [USER_MA, USER_TEN, MAT_KHAU, BIKHOA, LY_DO_KHOA, NGAY_TAO, SU_DUNG, REALM, EMAIL, EMAILVERIFIED, VERIFICATIONTOKEN, MAC], 
+    (error, results) => {
       if (error) {
         reject(error);
       } else {
@@ -38,7 +19,8 @@ const createUser = async (userData) => {
       }
     });
   });
-}
+};
+
 const updateUser = async (id, userData) => {
   try {
     if (userData.MAT_KHAU) {
@@ -47,7 +29,7 @@ const updateUser = async (id, userData) => {
       userData.MAT_KHAU = hashP;
     }
     return new Promise((resolve, reject) => {
-      connection.query('UPDATE pq_user SET ? WHERE USER_ID = ?', [userData, id], (error, results) => {
+      db.query('UPDATE pq_user SET ? WHERE USER_ID = ?', [userData, id], (error, results) => {
         if (error) {
           reject(error);
         } else {
@@ -56,25 +38,13 @@ const updateUser = async (id, userData) => {
       });
     });
   } catch (error) {
-    next(error);
+    throw error;
   }
+};
 
-}
-// create table ns_nhan_vien
-// (
-//    NV_ID                int not null auto_increment,
-//    DON_VI_ID            int,
-//    NV_MA                varchar(50),
-//    NV_TEN               national varchar(50),
-//    NGAY_VAO_LAM         datetime,
-//    TINH_TRANG           bool,
-//    SU_DUNG              bool,
-//    GHI_CHU              national varchar(50),
-//    primary key (NV_ID)
-// );
 const deleteUser = async (id) => {
   return new Promise((resolve, reject) => {
-    connection.query('UPDATE pq_user SET SU_DUNG = 0 WHERE USER_ID = ?', id, (error, results) => {
+    db.query('UPDATE pq_user SET SU_DUNG = 0 WHERE USER_ID = ?', [id], (error, results) => {
       if (error) {
         reject(error);
       } else {
@@ -82,10 +52,11 @@ const deleteUser = async (id) => {
       }
     });
   });
-}
-const getUserById = (id) => {
+};
+
+const getUserById = async (id) => {
   return new Promise((resolve, reject) => {
-    connection.query('SELECT * FROM pq_user WHERE USER_ID = ?', [id], (error, results, fields) => {
+    db.query('SELECT * FROM pq_user WHERE USER_ID = ?', [id], (error, results) => {
       if (error) {
         reject(error);
       } else {
@@ -95,9 +66,9 @@ const getUserById = (id) => {
   });
 };
 
-const getAllUsers = () => {
+const getAllUsers = async () => {
   return new Promise((resolve, reject) => {
-    connection.query('SELECT * FROM pq_user WHERE SU_DUNG = 1', (error, results, fields) => {
+    db.query('SELECT * FROM pq_user WHERE SU_DUNG = 1', (error, results) => {
       if (error) {
         reject(error);
       } else {
