@@ -8,6 +8,8 @@ const admin = require('./app/routers/admin.router');
 const userRoutes = require('./app/routers/userRoutes');
 const groupRoutes = require ('./app/routers/groupRoutes');
 const productype = require('./app/routers/productTypeRoute');
+const cam = require ('./app/routers/camvangRoute');
+const phieu = require ('./app/routers/phieuRoute')
 const app = express();
 app.use(express.json());
 
@@ -17,7 +19,8 @@ app.use('/api/admin',admin);
 app.use('/api/users', userRoutes);
 app.use('/api/groups', groupRoutes);
 app.use('/api/productType', productype);
-
+app.use('/api/cam', cam);
+app.use('/api/phieu',phieu);
 //Áp dụng cấu hình phiên
 app.use(
     session({
