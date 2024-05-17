@@ -119,7 +119,7 @@ exports.Update_wareHouse= async (req, res, next) =>{
 
         //Thông tin sửa
         const KHO_TEN = req.body.KHO_TEN,
-            SU_DUNG = req.body.SU_DUNG;
+            SU_DUNG = 1;
     
         db.query(`update gd_kho
                 set KHO_TEN="${KHO_TEN}", SU_DUNG="${SU_DUNG}"

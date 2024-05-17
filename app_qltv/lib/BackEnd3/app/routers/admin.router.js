@@ -3,6 +3,7 @@ const loaihang = require('../controllers/loaiHang.controllers');
 const khachhang = require('../controllers/khachHang.controller');
 const nhacungcap = require('../controllers/nhaCungCap.controller');
 const kho = require('../controllers/warehouseController');
+const ns_don_vi = require('../controllers/ns_donVi.controller');
 
 //0. Tạo 1 router để quản lý tuyến đường
 const router = express.Router();
@@ -58,5 +59,18 @@ router.route('/kho/:KHOMA')
         .put(kho.Update_wareHouse)
         .delete(kho.delete_wareHouse)
         .get(kho.lay_wareHouse);
+
+    // >>>>>>>>    ns_don_vi
+//Lấy ds đơn vị
+router.route('/danhsachNSdonvi').get(ns_don_vi.list_nsDonVi);
+
+//Lấy, xóa, sửa
+router.route('/nsDonVi/:DON_VI_MA')
+            .get(ns_don_vi.lay_nsDonVi)
+            .put(ns_don_vi.Update_nsDonVi)
+            .delete(ns_don_vi.delete_nsDonVi);
+
+//Thêm
+router.route('/themNSdonvi').post(ns_don_vi.Add_nsDonVi);
 
 module.exports = router;

@@ -59,7 +59,7 @@ exports.Add_NhaCungCap = async (req, res, next) =>{
     try{
         const NCC_TEN = req.body.NCC_TEN,
         GHI_CHU = req.body.GHI_CHU,
-        SU_DUNG = req.body.SU_DUNG,
+        SU_DUNG = 1,
         NGAYBD = req.body.NGAYBD;
     
         //Thêm trước mớ thông tin ngoại trừ ID và mã NCC
