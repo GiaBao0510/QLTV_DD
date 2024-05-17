@@ -6,7 +6,7 @@ var ApiError = require('../api-error');
 //1. danh sách thông tin kho
 exports.list_wareHouse = async (req, res, next) =>{
     try{
-        db.query(`SELECT * FROM gd_kho`,(err, results)=>{
+        db.query(`SELECT * FROM gd_kho where SU_DUNG="1"`,(err, results)=>{
             if(err){
                 console.log(`Lỗi khi lấy danh sách thông tin kho - ${err}`);
                 return res.status(404).json({message: `Loi khi lấy danh sách thong tin kho`});
@@ -30,7 +30,7 @@ exports.lay_wareHouse= async (req, res, next) =>{
     try{
         const KHOMA = req.params.KHOMA;
     
-        db.query(`select * from gd_kho where KHOMA = "${KHOMA}"`,(err, results)=>{
+        db.query(`select * from gd_kho where KHOMA = "${KHOMA}" AND  SU_DUNG="1"`,(err, results)=>{
             if(err){
                 console.log(`Lỗi khi tìm thông tin kho - ${err}`);
                 return res.status(404).json({message: `Loi khi tìm thong tin kho - ${KHOMA}`});
@@ -53,7 +53,7 @@ exports.lay_wareHouse= async (req, res, next) =>{
 exports.Add_wareHouse= async (req, res, next) =>{
     try{
         const KHO_TEN = req.body.KHO_TEN,
-        SU_DUNG = req.body.SU_DUNG;
+        SU_DUNG = 1;
     
         //Thêm trước mớ thông tin ngoại trừ ID và mã NCC
         db.query('insert into gd_kho(KHO_TEN,SU_DUNG) values(?,?)',[KHO_TEN,SU_DUNG],(err, result)=>{
@@ -95,7 +95,7 @@ exports.delete_wareHouse= async (req, res, next) =>{
     try{
         const KHOMA = req.params.KHOMA;
     
-        db.query(`delete from gd_kho where KHOMA = "${KHOMA}"`,(err, results)=>{
+        db.query(`update gd_kho set SU_DUNG="0" where KHOMA = "${KHOMA}"`,(err, results)=>{
             if(err){
                 console.log(`Lỗi khi xóa thông tin kho - ${err}`);
                 return res.status(404).json({message: `Loi khi xóa thong tin kho - ${KHOMA}`});
