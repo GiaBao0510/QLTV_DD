@@ -6,7 +6,6 @@ var ApiError = require('../api-error');
 //1. danh sách thông tin kho
 exports.list_wareHouse = async (req, res, next) =>{
     try{
-
         db.query(`SELECT * FROM gd_kho`,(err, results)=>{
             if(err){
                 console.log(`Lỗi khi lấy danh sách thông tin kho - ${err}`);

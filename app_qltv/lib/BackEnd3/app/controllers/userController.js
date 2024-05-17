@@ -19,6 +19,7 @@ exports.updateUser = async (req, res, next)=>{
     next(error);
   }
 }
+
 exports.deleteUser = async (req, res, next)=>{
   try{
     const deleted = await userService.deleteUser(req.params.id);

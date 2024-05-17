@@ -2,8 +2,8 @@ const config = {
     development: {
       host: 'localhost',
       database: 'quanlytiemvang',
-      user: 'userB', 
-      password: '12345',
+      user: 'test', 
+      password: '123123',
       dialect: 'mysql',
     },
     production: {
