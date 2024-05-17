@@ -23,10 +23,8 @@ exports.Add_LoaiHang = async (req, res, next) =>{
                         return res.status(404).json({message: `Loi khi lấy ID cuối thong tin loai hang`});
                     }else{
                         let IDcuoi = Number(result[0].LOAIID);
-
                         //Chuyển ID cuối về chuỗi
                         const IDchuoi = String(IDcuoi);
-                        
                         db.query(`update loai_hang set LOAIMA="${IDchuoi}" where LOAIID = "${IDcuoi}"`, (err, results)=>{
                             if (err) {
                                 console.log(`Lỗi khi cập nhật LOAIMA của loai hang - ${err}`);
