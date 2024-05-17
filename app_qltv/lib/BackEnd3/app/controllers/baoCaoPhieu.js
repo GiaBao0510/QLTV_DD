@@ -39,3 +39,20 @@ exports.getTonKhoById = async (req, res, next) => {
     next(error);
   }
 };
+
+exports.getTonKhoGroupProduct = async (req, res, next) => {
+  try {
+    const phieuList = await bao_caoPhieuServices.getTonKhoGroupProduct();
+    res.status(200).json(phieuList);
+  } catch (error) {
+    next(error);
+  }
+};
+exports.getTonKhoGroupProductById = async (req, res, next) => {
+  try {
+    const phieuList = await bao_caoPhieuServices.getTonKhoGPById();
+    res.status(200).json(phieuList);
+  } catch (error) {
+    next(error);
+  }
+};
