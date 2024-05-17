@@ -13,7 +13,7 @@ class NhomVangManager with ChangeNotifier {
   int get nhomVangsLength => _nhomVangs.length;
 
   Future<List<NhomVang>> fetchLoaiHang() async {
-    final response = await http.get(Uri.parse('http://localhost:3000/admin/danhsachloaihang'));
+    final response = await http.get(Uri.parse('http://localhost:3000/api/admin/danhsachloaihang'));
 
     if (response.statusCode == 200) {
       // Parse JSON array and convert to list of NhomVang objects
@@ -32,7 +32,7 @@ class NhomVangManager with ChangeNotifier {
   Future<void> addNhomVang(NhomVang nhomVang) async {
     // Thêm nhomVang vào backend
     final response = await http.post(
-      Uri.parse('http://localhost:3000/admin/themloaihang'),
+      Uri.parse('http://localhost:3000/api/admin/themloaihang'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -54,7 +54,7 @@ class NhomVangManager with ChangeNotifier {
   Future<NhomVang> updateLoaiHang(int loaiId, String loaiMa, String loaiTen, String ghiChu, int suDung) async {
     try {
       final response = await http.put(
-        Uri.parse('http://localhost:3000/admin/loaihang/$loaiId'),
+        Uri.parse('http://localhost:3000/api/admin/loaihang/$loaiId'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -83,7 +83,7 @@ class NhomVangManager with ChangeNotifier {
   Future<NhomVang> deleteNhomVang(int loaiId) async {
     try {
       final response = await http.delete(
-        Uri.parse('http://localhost:3000/admin/loaihang/$loaiId'),
+        Uri.parse('http://localhost:3000/api/admin/loaihang/$loaiId'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },

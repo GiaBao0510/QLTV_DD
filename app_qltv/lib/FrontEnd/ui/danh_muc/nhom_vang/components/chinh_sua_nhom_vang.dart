@@ -41,11 +41,11 @@ class _ChinhSuaNhomVangScreenState extends State<ChinhSuaNhomVangScreen> {
             Navigator.of(context).pop();
           },
         ),
-        title: Row(
-          children: [
-            const Text("Chỉnh Sửa Nhóm Vàng", style: TextStyle(color: Colors.black ,fontWeight: FontWeight.w900 )),
-            Expanded(child: Container()), // Spacer
-          ],
+        title: const Center(
+            child: Padding(
+              padding: EdgeInsets.only(right: 50.0),
+              child: Text("Chỉnh Sửa Nhóm Vàng", style: TextStyle(color: Colors.black ,fontWeight: FontWeight.w900), textAlign: TextAlign.center,),
+            ),
         ),
       ),
       body: Container(
@@ -75,8 +75,11 @@ class _ChinhSuaNhomVangScreenState extends State<ChinhSuaNhomVangScreen> {
               ),
               const SizedBox(height: 10,),
               ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.grey[50]
+                ),
                 onPressed: () => _saveForm(context),
-                child: const Text('Update Data'),
+                child: const Text('Cập Nhật', style: TextStyle(fontWeight: FontWeight.w900, color: Colors.green),),
               ),
             ],
           ),
@@ -154,7 +157,7 @@ class _ChinhSuaNhomVangScreenState extends State<ChinhSuaNhomVangScreen> {
       await nhomVangManager.updateLoaiHang(_editedNhomVang.loaiId as int, _editedNhomVang.loaiMa as String, _editedNhomVang.loaiTen as String, _editedNhomVang.ghiChu as String, _editedNhomVang.suDung as int); // Call updateLoaiHang method
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('Data updated successfully', style: TextStyle(fontWeight: FontWeight.w900), textAlign: TextAlign.center,),
+          content: const Text('Cập nhật thành công!', style: TextStyle(fontWeight: FontWeight.w900), textAlign: TextAlign.center,),
           backgroundColor: Colors.grey,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15.0),
@@ -168,7 +171,7 @@ class _ChinhSuaNhomVangScreenState extends State<ChinhSuaNhomVangScreen> {
     } catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('DFailed to update data', style: TextStyle(fontWeight: FontWeight.w900, color: Colors.red), textAlign: TextAlign.center,),
+          content: const Text('Failed to update data', style: TextStyle(fontWeight: FontWeight.w900, color: Colors.red), textAlign: TextAlign.center,),
           backgroundColor: Colors.grey,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15.0),
