@@ -2,63 +2,98 @@ var mysql = require('mysql');
 var express = require('express');
 var db = require('../config/index_2');
 var ApiError = require('../api-error');
+const e = require('express');
 
 //1. danh sách thông tin kho
-exports.list_nsDonVi = async (req, res, next) =>{
+exports.list_hangHoa = async (req, res, next) =>{
     try{
 
-        db.query(`SELECT * FROM ns_don_vi`,(err, results)=>{
+        db.query(`SELECT * FROM danh_muc_hang_hoa`,(err, results)=>{
             if(err){
-                console.log(`Lỗi khi lấy danh sách thông tin Đơn vị - ${err}`);
-                return res.status(404).json({message: `Loi khi lấy danh sách thong tin  Đơn vị`});
+                console.log(`Lỗi khi lấy danh sách thông tin hàng hóa - ${err}`);
+                return res.status(404).json({message: `Loi khi lấy danh sách thong tin  hàng hóa`});
             }else{
                 let KetQua = results.map(result =>({
-                    "DON_VI_ID": Number(result.DON_VI_ID),
-                    "DON_VI_MA": result.DON_VI_MA,
-                    "DON_VI_TEN": result.DON_VI_TEN,
+                    "HANGHOAID": Number(result.HANGHOAID),
+                    "HANGHOAMA": result.HANGHOAMA,
+                    "LOAIID": result.LOAIID,
+                    "DVTID" : result.DVTID,
+                    "NHOMHANGID": result.NHOMHANGID,
+                    "NCCID": result.NCCID,
+                    "GIAM_GIA_ID": result.GIAM_GIA_ID,
+                    "HANG_HOA_TEN": result.HANG_HOA_TEN,
+                    "GIA_BAN": result.GIA_BAN,
+                    "VAT": result.VAT,
+                    "THUE": result.THUE,
                     "SU_DUNG": result.SU_DUNG,
+                    "DANH_DAU": result.DANH_DAU,
+                    "SL_IN": result.SL_IN,
                     "GHI_CHU": result.GHI_CHU,
-                    "DON_VI_TEN_HD": result.DON_VI_TEN_HD,
-                    "DIA_CHI_HD": result.DIA_CHI_HD,
-                    "DIEN_THOAI": result.DIEN_THOAI,
-                    "TEN_GIAO_DICH": result.TEN_GIAO_DICH,
-                    "TAO_LUU_Y": result.TAO_LUU_Y,
-                    "TIEU_DE_PHIEU_CAM": result.TIEU_DE_PHIEU_CAM,
-                    "TIEU_DE_PHIEU_BAN": result.TIEU_DE_PHIEU_BAN,
-                    "GIOI_THIEU": result.GIOI_THIEU,
+                    "TAO_MA": result.TAO_MA,
+                    "GIA_BAN_SI": result.GIA_BAN_SI,
+                    "CAN_TONG": result.CAN_TONG,
+                    "TL_HOT": result.TL_HOT,
+                    "GIA_CONG": result.GIA_CONG,
+                    "DON_GIA_GOC": result.DON_GIA_GOC,
+                    "CONG_GOC": result.CONG_GOC,
+                    "TUOI_BAN": result.TUOI_BAN,
+                    "TUOI_MUA": result.TUOI_MUA,
+                    "XUAT_XU": result.XUAT_XU,
+                    "KY_HIEU": result.KY_HIEU,
+                    "NGAY": new Date(result.NGAY),
+                    "SO_LUONG": Number(result.SO_LUONG)
                 }));
                 return res.status(200).json(KetQua);
             }
         })
     }catch(err){
-        return next(new ApiError(500, `Loi xuat hien khi lấy danh sách  Đơn vị: ${err.message}`));
+        return next(new ApiError(500, `Loi xuat hien khi lấy danh sách  hàng hóa: ${err.message}`));
     }
 }
 
 //2. lấy thông tin kho theo ID
-exports.lay_nsDonVi= async (req, res, next) =>{
+exports.lay_hangHoa= async (req, res, next) =>{
     try{
-        const DON_VI_MA = req.params.DON_VI_MA;
+        const HANGHOAMA = req.params.HANGHOAMA;
     
-        db.query(`select * from ns_don_vi where DON_VI_MA = "${DON_VI_MA}"`,(err, results)=>{
-            if(err){
-                console.log(`Không tìm thấy thông tin đơn vị - ${err}`);
-                return res.status(404).json({message: `Loi khong tin thay thong tin don vi - ${DON_VI_MA}`});
+        db.query(`select * from danh_muc_hang_hoa where HANGHOAMA = "${HANGHOAMA}"`,(err, results)=>{
+            if (err) {
+                console.log(`Lỗi khi truy vấn thông tin hàng hóa - ${err}`);
+                return res.status(500).json({ message: `Lỗi khi truy vấn thông tin hàng hóa` });
+            }
+            else if(!results || results.length === 0) {
+                console.log(`Không tìm thấy thông tin hàng hóa - ${HANGHOAMA}`);
+                return res.status(404).json({ message: `Lỗi không tìm thấy thông tin hàng hóa - ${HANGHOAMA}` });
             }else{
                 let KetQua = results.map(result =>({
-                    "DON_VI_ID": Number(result.DON_VI_ID),
-                    "DON_VI_MA": result.DON_VI_MA,
-                    "DON_VI_TEN": result.DON_VI_TEN,
+                    "HANGHOAID": Number(result.HANGHOAID),
+                    "HANGHOAMA": result.HANGHOAMA,
+                    "LOAIID": result.LOAIID,
+                    "DVTID" : result.DVTID,
+                    "NHOMHANGID": result.NHOMHANGID,
+                    "NCCID": result.NCCID,
+                    "GIAM_GIA_ID": result.GIAM_GIA_ID,
+                    "HANG_HOA_TEN": result.HANG_HOA_TEN,
+                    "GIA_BAN": result.GIA_BAN,
+                    "VAT": result.VAT,
+                    "THUE": result.THUE,
                     "SU_DUNG": result.SU_DUNG,
+                    "DANH_DAU": result.DANH_DAU,
+                    "SL_IN": result.SL_IN,
                     "GHI_CHU": result.GHI_CHU,
-                    "DON_VI_TEN_HD": result.DON_VI_TEN_HD,
-                    "DIA_CHI_HD": result.DIA_CHI_HD,
-                    "DIEN_THOAI": result.DIEN_THOAI,
-                    "TEN_GIAO_DICH": result.TEN_GIAO_DICH,
-                    "TAO_LUU_Y": result.TAO_LUU_Y,
-                    "TIEU_DE_PHIEU_CAM": result.TIEU_DE_PHIEU_CAM,
-                    "TIEU_DE_PHIEU_BAN": result.TIEU_DE_PHIEU_BAN,
-                    "GIOI_THIEU": result.GIOI_THIEU,
+                    "TAO_MA": result.TAO_MA,
+                    "GIA_BAN_SI": result.GIA_BAN_SI,
+                    "CAN_TONG": result.CAN_TONG,
+                    "TL_HOT": result.TL_HOT,
+                    "GIA_CONG": result.GIA_CONG,
+                    "DON_GIA_GOC": result.DON_GIA_GOC,
+                    "CONG_GOC": result.CONG_GOC,
+                    "TUOI_BAN": result.TUOI_BAN,
+                    "TUOI_MUA": result.TUOI_MUA,
+                    "XUAT_XU": result.XUAT_XU,
+                    "KY_HIEU": result.KY_HIEU,
+                    "NGAY": new Date(result.NGAY),
+                    "SO_LUONG": Number(result.SO_LUONG)
                 }));
                 return res.status(200).json(KetQua);
             }
@@ -68,110 +103,164 @@ exports.lay_nsDonVi= async (req, res, next) =>{
     }
 }
 
-//3.Thêm thông tin ns_don_vi
-exports.Add_nsDonVi= async (req, res, next) =>{
-    try{
-        let DON_VI_TEN= req.body.DON_VI_TEN,
-            SU_DUNG= 1,
-            GHI_CHU= req.body.GHI_CHU,
-            DON_VI_TEN_HD= req.body.DON_VI_TEN_HD,
-            DIA_CHI_HD= req.body.DIA_CHI_HD,
-            DIEN_THOAI= req.body.DIEN_THOAI,
-            TEN_GIAO_DICH= req.body.TEN_GIAO_DICH,
-            TAO_LUU_Y= req.body.TAO_LUU_Y,
-            TIEU_DE_PHIEU_CAM= req.body.TIEU_DE_PHIEU_CAM,
-            TIEU_DE_PHIEU_BAN= req.body.TIEU_DE_PHIEU_BAN,
-            GIOI_THIEU= req.body.GIOI_THIEU;
-    
-        //Thêm trước mớ thông tin ngoại trừ ID và mã NCC
-        db.query(` insert into ns_don_vi(DON_VI_TEN,SU_DUNG,GHI_CHU,DON_VI_TEN_HD,DIA_CHI_HD,DIEN_THOAI,TEN_GIAO_DICH,TAO_LUU_Y,TIEU_DE_PHIEU_CAM,TIEU_DE_PHIEU_BAN,GIOI_THIEU) 
-                values(?,?,?,?,?,?,?,?,?,?,?)`
-                ,[DON_VI_TEN,SU_DUNG,GHI_CHU,DON_VI_TEN_HD,DIA_CHI_HD,DIEN_THOAI,TEN_GIAO_DICH,TAO_LUU_Y,TIEU_DE_PHIEU_CAM,TIEU_DE_PHIEU_BAN,GIOI_THIEU],(err, result)=>{
-            if(err){
-                console.log(`Lỗi khi gửi thông tin đơn vị - ${err}`);
-                return res.status(404).json({message: `Loi khi gui thong tin đơn vị`});
-            }else{
+//3.Thêm thông tin danh_muc_hang_hoa
+exports.Add_hangHoa = async (req, res, next) => {
+    try {
+        const {
+            LOAIID, DVTID, NHOMHANGID, NCCID, GIAM_GIA_ID, HANG_HOA_TEN, GIA_BAN, VAT, THUE,
+            SU_DUNG, DANH_DAU, SL_IN, GHI_CHU, TAO_MA, GIA_BAN_SI, CAN_TONG, TL_HOT, GIA_CONG,
+            DON_GIA_GOC, CONG_GOC, TUOI_BAN, TUOI_MUA, XUAT_XU, KY_HIEU, NGAY, SO_LUONG
+        } = req.body;
 
-                //lấy ID cuối
-                db.query("SELECT DON_VI_ID FROM ns_don_vi ORDER BY DON_VI_ID DESC LIMIT 1",(err, result)=> {
-                    if(err){
-                        console.log(`Lỗi khi lấy ID cuối thông tin đơn vị - ${err}`);
-                        return res.status(404).json({message: `Loi khi lấy ID cuối thong tin đơn vị`});
-                    }else{
-                        let IDcuoi = Number(result[0].DON_VI_ID);
-
-                        //Chuyển ID cuối về chuỗi
-                        const IDchuoi = String(IDcuoi);
-                        
-                        db.query(`update ns_don_vi set DON_VI_MA="${IDchuoi}" where DON_VI_ID = "${IDcuoi}"`, (err, results)=>{
-                            if (err) {
-                                console.log(`Lỗi khi cập nhật DON_VI_MA của kho - ${err}`);
-                                return res.status(404).json({message: `Loi khi cập nhật DON_VI_MA của đơn vị`});
-                            } else {
-                                return res.status(200).json({message: `Thêm thong tin đơn vị thanh cong, ID: ${IDcuoi}`});
-                            }
-                        })
+        // Tìm kiếm các ID để đảm bảo tồn tại
+        const checkExistence = (query, id, table) => {
+            return new Promise((resolve, reject) => {
+                db.query(query, [id], (err, result) => {
+                    if (err) {
+                        return reject(`Lỗi khi truy vấn thông tin: ${err}`);
                     }
-                })
-            }
-        });
-    }catch(err){
-        return next(new ApiError(500, `Loi xuat hien khi them kho: ${err.message}`));
-    }
-}
+                    if (!result || result.length == 0) {
+                        return reject(`Không tìm thấy thông tin - ${id} - ${table}`);
+                    }
+                    resolve(true);
+                });
+            });
+        };
 
-//4. xóa thông tin đơn vị
-exports.delete_nsDonVi= async (req, res, next) =>{
-    try{
-        const DON_VI_MA = req.params.DON_VI_MA;
-    
-        db.query(`delete from ns_don_vi where DON_VI_MA = "${DON_VI_MA}"`,(err, results)=>{
-            if(err){
-                console.log(`Lỗi khi xóa thông tin kho - ${err}`);
-                return res.status(404).json({message: `Loi Không tìm thấy thông tin đơn vị để xóa - ${DON_VI_MA}`});
-            }else{
-                return res.status(200).json({message: `xóa thong tin đơn vị thanh cong- ${DON_VI_MA}`});
+        try {
+            await checkExistence(`SELECT * FROM loai_hang WHERE LOAIID = ?`, LOAIID, "loai_hang");
+            //await checkExistence(`SELECT * FROM ns_don_vi WHERE DON_VI_ID = ?`, DVTID, "ns_don_vi");
+            await checkExistence(`SELECT * FROM nhom_hang WHERE NHOMHANGID = ?`, NHOMHANGID, "nhom_hang");
+            await checkExistence(`SELECT * FROM phn_nha_cung_cap WHERE NCCID = ?`, NCCID, "phn_nha_cung_cap");
+        } catch (error) {
+            console.log(error);
+            return res.status(404).json({ message: error });
+        }
+
+        // Thêm hàng hóa
+        db.query(
+            `INSERT INTO danh_muc_hang_hoa (LOAIID, DVTID, NHOMHANGID, NCCID, GIAM_GIA_ID, HANG_HOA_TEN, GIA_BAN, VAT, THUE, SU_DUNG, DANH_DAU, SL_IN, GHI_CHU, TAO_MA, GIA_BAN_SI, CAN_TONG, TL_HOT, GIA_CONG, DON_GIA_GOC, CONG_GOC, TUOI_BAN, TUOI_MUA, XUAT_XU, KY_HIEU, NGAY, SO_LUONG) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            [LOAIID, DVTID, NHOMHANGID, NCCID, GIAM_GIA_ID, HANG_HOA_TEN, GIA_BAN, VAT, THUE, SU_DUNG, DANH_DAU, SL_IN, GHI_CHU, TAO_MA, GIA_BAN_SI, CAN_TONG, TL_HOT, GIA_CONG, DON_GIA_GOC, CONG_GOC, TUOI_BAN, TUOI_MUA, XUAT_XU, KY_HIEU, NGAY, SO_LUONG],
+            (err, result) => {
+                if (err) {
+                    console.log(`Lỗi khi gửi thông tin hàng hóa - ${err}`);
+                    return res.status(500).json({ message: `Lỗi khi gửi thông tin hàng hóa` });
+                }
+
+                // Lấy ID cuối cùng
+                db.query("SELECT HANGHOAID FROM danh_muc_hang_hoa ORDER BY HANGHOAID DESC LIMIT 1", (err, result) => {
+                    if (err) {
+                        console.log(`Lỗi khi lấy ID cuối thông tin hàng hóa - ${err}`);
+                        return res.status(500).json({ message: `Lỗi khi lấy ID cuối thông tin hàng hóa` });
+                    }
+                    const IDcuoi = result[0].HANGHOAID;
+                    const IDchuoi = String(IDcuoi);
+
+                    db.query(`UPDATE danh_muc_hang_hoa SET HANGHOAMA = ? WHERE HANGHOAID = ?`, [IDchuoi, IDcuoi], (err, results) => {
+                        if (err) {
+                            console.log(`Lỗi khi cập nhật HANGHOAMA của hàng hóa - ${err}`);
+                            return res.status(500).json({ message: `Lỗi khi cập nhật HANGHOAMA của hàng hóa` });
+                        }
+
+                        return res.status(200).json({ message: `Thêm thông tin hàng hóa thành công, ID: ${IDcuoi}` });
+                    });
+                });
             }
-        })
+        );
+    } catch (err) {
+        return next(new ApiError(500, `Lỗi xuất hiện khi thêm hàng hóa: ${err.message}`));
+    }
+};
+
+//4. xóa thông tin hàng hóa
+exports.delete_hangHoa= async (req, res, next) =>{
+    try{
+        const HANGHOAMA = req.params.HANGHOAMA;
+
+        //Đầu tiên tìm mã hàng hóa có tồn tại không
+        db.query(`select * from danh_muc_hang_hoa where HANGHOAMA = "${HANGHOAMA}"`,(err, results)=>{
+            if (err) {
+                console.log(`Lỗi khi truy vấn thông tin hàng hóa - ${err}`);
+                return res.status(500).json({ message: `Lỗi khi truy vấn thông tin hàng hóa` });
+            }
+            else if(!results || results.length === 0) {
+                console.log(`Không tìm thấy thông tin hàng hóa - ${HANGHOAMA}`);
+                return res.status(404).json({ message: `Lỗi không tìm thấy thông tin hàng hóa - ${HANGHOAMA}` });
+            }else{
+                db.query(`update danh_muc_hang_hoa set SU_DUNG="0" where HANGHOAMA = "${HANGHOAMA}"`,(err, results)=>{
+                    if (err) {
+                        console.log(`Lỗi khi xóa thông tin hàng hóa - ${err}`);
+                        return res.status(500).json({ message: `Lỗi khi xóa thông tin hàng hóa` });
+                    }
+                    else{
+                        return res.status(202).json({ message: `Xóa thông tin hàng hóa thành công - ${HANGHOAMA}` });
+                    }
+                });
+            }
+        });    
+
     }catch(err){
-        return next(new ApiError(500, `Loi xuat hien khi xóa đơn vị: ${err.message}`));
+        return next(new ApiError(500, `Loi xuat hien khi xóa hàng hóa: ${err.message}`));
     }
 }
 
 //5. sửa thông tin kho
-exports.Update_nsDonVi= async (req, res, next) =>{
+exports.Update_hangHoa= async (req, res, next) =>{
     try{
         //Thông tin truy vẫn
-        let DON_VI_MA = req.params.DON_VI_MA;
-        DON_VI_MA = String(DON_VI_MA);
+        let HANGHOAMA = req.params.HANGHOAMA;
+        HANGHOAMA = String(HANGHOAMA);
 
-        //Thông tin sửa
-        let DON_VI_TEN= req.body.DON_VI_TEN,
-            SU_DUNG= req.body.SU_DUNG,
-            GHI_CHU= req.body.GHI_CHU,
-            DON_VI_TEN_HD= req.body.DON_VI_TEN_HD,
-            DIA_CHI_HD= req.body.DIA_CHI_HD,
-            DIEN_THOAI= req.body.DIEN_THOAI,
-            TEN_GIAO_DICH= req.body.TEN_GIAO_DICH,
-            TAO_LUU_Y= req.body.TAO_LUU_Y,
-            TIEU_DE_PHIEU_CAM= req.body.TIEU_DE_PHIEU_CAM,
-            TIEU_DE_PHIEU_BAN= req.body.TIEU_DE_PHIEU_BAN,
-            GIOI_THIEU= req.body.GIOI_THIEU;
+        //Phần thông tin từ body
+        const {
+            LOAIID, DVTID, NHOMHANGID, NCCID, GIAM_GIA_ID, HANG_HOA_TEN, GIA_BAN, VAT, THUE,
+            SU_DUNG, DANH_DAU, SL_IN, GHI_CHU, TAO_MA, GIA_BAN_SI, CAN_TONG, TL_HOT, GIA_CONG,
+            DON_GIA_GOC, CONG_GOC, TUOI_BAN, TUOI_MUA, XUAT_XU, KY_HIEU, NGAY, SO_LUONG
+        } = req.body;
+
+        // Tìm kiếm các ID để đảm bảo tồn tại
+        const checkExistence = (query, id, table) => {
+            return new Promise((resolve, reject) => {
+                db.query(query, [id], (err, result) => {
+                    if (err) {
+                        return reject(`Lỗi khi truy vấn thông tin: ${err}`);
+                    }
+                    if (!result || result.length == 0) {
+                        return reject(`Không tìm thấy thông tin - ${id} - ${table}`);
+                    }
+                    resolve(true);
+                });
+            });
+        };
+
+        try {
+            await checkExistence(`SELECT * FROM loai_hang WHERE LOAIID = ?`, LOAIID, "loai_hang");
+            await checkExistence(`SELECT * FROM nhom_hang WHERE NHOMHANGID = ?`, NHOMHANGID, "nhom_hang");
+            await checkExistence(`SELECT * FROM phn_nha_cung_cap WHERE NCCID = ?`, NCCID, "phn_nha_cung_cap");
+        } catch (error) {
+            console.log(error);
+            return res.status(404).json({ message: error });
+        }
     
-        db.query(`update ns_don_vi
-                set DON_VI_TEN="${DON_VI_TEN}", SU_DUNG="${SU_DUNG}" , GHI_CHU="${GHI_CHU}" , DON_VI_TEN_HD="${DON_VI_TEN_HD}" 
-                , DIA_CHI_HD="${DIA_CHI_HD}" , DIEN_THOAI="${DIEN_THOAI}" , TEN_GIAO_DICH="${TEN_GIAO_DICH}" , TAO_LUU_Y="${TAO_LUU_Y}" 
-                , TIEU_DE_PHIEU_CAM="${TIEU_DE_PHIEU_CAM}" , TIEU_DE_PHIEU_BAN="${TIEU_DE_PHIEU_BAN}", GIOI_THIEU="${GIOI_THIEU}"
-                where DON_VI_MA="${DON_VI_MA}"`,(err, result)=>{
+        //Thực hiện cập nhật
+        db.query(`update danh_muc_hang_hoa
+                set LOAIID="${LOAIID}", DVTID="${DVTID}", NHOMHANGID="${NHOMHANGID}", NCCID="${NCCID}",
+                    GIAM_GIA_ID="${GIAM_GIA_ID}", HANG_HOA_TEN="${HANG_HOA_TEN}", GIA_BAN="${GIA_BAN}", VAT="${VAT}",
+                    THUE="${THUE}", SU_DUNG="${SU_DUNG}", DANH_DAU="${DANH_DAU}", SL_IN="${SL_IN}",
+                    GHI_CHU="${GHI_CHU}", TAO_MA="${TAO_MA}", GIA_BAN_SI="${GIA_BAN_SI}", CAN_TONG="${CAN_TONG}",
+                    TL_HOT="${TL_HOT}", GIA_CONG="${GIA_CONG}", DON_GIA_GOC="${DON_GIA_GOC}", CONG_GOC="${CONG_GOC}",
+                    TUOI_BAN="${TUOI_BAN}", TUOI_MUA="${TUOI_MUA}", XUAT_XU="${XUAT_XU}", KY_HIEU="${KY_HIEU}",
+                    NGAY="${NGAY}", SO_LUONG="${SO_LUONG}"
+                where HANGHOAMA="${HANGHOAMA}"`,(err, result)=>{
             if(err){
-                console.log(`Lỗi không tìm thất mã đơn vị để cập nhật - ${err}`);
-                return res.status(404).json({message: `Không tìm thấy ID đơn vị`});
+                console.log(`Lỗi không tìm thất mã hàng hóa để cập nhật - ${err}`);
+                return res.status(404).json({message: `Không tìm thấy ID hàng hóa`});
             }else{
-
-                return res.status(200).json({message: `cập nhật thong tin đơn vị thanh cong ,ID: ${DON_VI_MA} `});
+                return res.status(200).json({message: `cập nhật thong tin hàng hóa thanh cong ,ID: ${HANGHOAMA} `});
             }
         })
     }catch(err){
-        return next(new ApiError(500, `Loi xuat hien khi cap nhat thong tin đơn vị: ${err.message}`));
+        return next(new ApiError(500, `Loi xuat hien khi cap nhat thong tin hàng hóa: ${err.message}`));
     }
 }
