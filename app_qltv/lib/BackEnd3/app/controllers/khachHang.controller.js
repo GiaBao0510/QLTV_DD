@@ -1,6 +1,6 @@
 var mysql = require('mysql');
 var express = require('express');
-var db = require('../config/index');
+var db = require('../config/index_2');
 
 //Thêm khách hàng
 exports.Add_khachHang = async(req, res, next) =>{
@@ -9,7 +9,7 @@ exports.Add_khachHang = async(req, res, next) =>{
             CMND = req.body.CMND,
             DIEN_THOAI = req.body.DIEN_THOAI,
             DIA_CHI = req.body.DIA_CHI,
-            SU_DUNG = req.body.SU_DUNG,
+            SU_DUNG = 1,
             GHI_CHU = req.body.GHI_CHU;
 
         // Thêm thông tin người dùng trước
@@ -53,7 +53,7 @@ exports.Delete_KhachHang = async (req, res, next) =>{
         let KH_MA = req.params.KH_MA;
         KH_MA = String(KH_MA);
     
-        db.query(`delete from phx_khach_hang where KH_MA = "${KH_MA}"`,(err, result)=>{
+        db.query(`update phx_khach_hang set SU_DUNG="0" where KH_MA = "${KH_MA}"`,(err, result)=>{
             if(err){
                 console.log(`Lỗi khi xóa thông tin khách hàng - ${err}`);
                 return res.status(404).json({message: `Loi khi xóa thong tin khách hang`});
@@ -101,7 +101,7 @@ exports.Update_KhachHang = async (req, res, next) =>{
 //4.Lấy danh sách thông tin khách hàng 
 exports.list_KhachHang = async (req, res, next) =>{
     try{
-        db.query(`SELECT * FROM phx_khach_hang`,(err, result)=>{
+        db.query(`SELECT * FROM phx_khach_hang where SU_DUNG="1"`,(err, result)=>{
             if(err){
                 console.log(`Lỗi khi lấy danh sách thông tin khách hàng - ${err}`);
                 return res.status(404).json({message: `Loi khi cập nhật thong tin khách hang`});
@@ -122,7 +122,7 @@ exports.lay_KhachHang = async (req, res, next) =>{
         let KH_MA = req.params.KH_MA;
         KH_MA = String(KH_MA);
     
-        db.query(`select * from phx_khach_hang  where KH_MA="${KH_MA}"`,(err, result)=>{
+        db.query(`select * from phx_khach_hang  where KH_MA="${KH_MA}" AND SU_DUNG="1"`,(err, result)=>{
             if(err){
                 console.log(`Lỗi khi lấy thông tin khách hàng - ${err}`);
                 return res.status(404).json({message: `Loi khi lấy thong tin khách hang - ${KH_MA}`});

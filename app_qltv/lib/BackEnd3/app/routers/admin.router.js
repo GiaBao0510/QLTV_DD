@@ -2,6 +2,8 @@ const express = require('express');
 const loaihang = require('../controllers/loaiHang.controllers');
 const khachhang = require('../controllers/khachHang.controller');
 const nhacungcap = require('../controllers/nhaCungCap.controller');
+const kho = require('../controllers/warehouseController');
+const ns_don_vi = require('../controllers/ns_donVi.controller');
 
 //0. Tạo 1 router để quản lý tuyến đường
 const router = express.Router();
@@ -34,10 +36,41 @@ router.route('/danhsachkhachhang').get(khachhang.list_KhachHang);
 
     // >>>>>>>>     Nhà cung cấp
 //Lấy thông tin, xóa sửa
-router.route('/nhacungcap/:KH_MA')
-        .get(nhacungcap.lay_NhaCungCap)
+router.route('/nhacungcap/:NCCMA')
+        .put(nhacungcap.Update_NhaCungCap)
+        .delete(nhacungcap.delete_NhaCungCap)
+        .get(nhacungcap.lay_NhaCungCap);
    
 //Lấy danh sách thông tin Nhà cung cấp
 router.route('/danhsachnhacungcap').get(nhacungcap.list_NhaCungCap);
+
+//Thêm nhà cung cấp
+router.route('/themnhacungcap').post(nhacungcap.Add_NhaCungCap);
+
+    // >>>>>>>>    Kho
+//Liệt kê kho
+router.route('/danhsachkho').get(kho.list_wareHouse);
+
+//Thêm 
+router.route('/themkho').post(kho.Add_wareHouse);
+
+//Tìm, sửa ,xóa kho
+router.route('/kho/:KHOMA')
+        .put(kho.Update_wareHouse)
+        .delete(kho.delete_wareHouse)
+        .get(kho.lay_wareHouse);
+
+    // >>>>>>>>    ns_don_vi
+//Lấy ds đơn vị
+router.route('/danhsachNSdonvi').get(ns_don_vi.list_nsDonVi);
+
+//Lấy, xóa, sửa
+router.route('/nsDonVi/:DON_VI_MA')
+            .get(ns_don_vi.lay_nsDonVi)
+            .put(ns_don_vi.Update_nsDonVi)
+            .delete(ns_don_vi.delete_nsDonVi);
+
+//Thêm
+router.route('/themNSdonvi').post(ns_don_vi.Add_nsDonVi);
 
 module.exports = router;

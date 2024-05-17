@@ -1,21 +1,26 @@
-//Thêm module
 const express = require('express');
 const session = require('express-session');
 const cors = require('cors');
 const os = require('os');
 
-const db = require('./app/config/index');
+const db = require('./app/config/index_2');
 const admin = require('./app/routers/admin.router');
-const apiError = require('./api-error');
-var bodyParser = require('body-parser');
-
+const userRoutes = require('./app/routers/userRoutes');
+const groupRoutes = require ('./app/routers/groupRoutes');
+const productype = require('./app/routers/productTypeRoute');
+const cam = require ('./app/routers/camvangRoute');
+const phieu = require ('./app/routers/phieuRoute')
 const app = express();
+app.use(express.json());
 
 app.use(cors());
-app.use(express.json());
 app.use(express.urlencoded({extended: true}));
-app.use('/admin',admin);
-
+app.use('/api/admin',admin);
+app.use('/api/users', userRoutes);
+app.use('/api/groups', groupRoutes);
+app.use('/api/productType', productype);
+app.use('/api/cam', cam);
+app.use('/api/phieu',phieu);
 //Áp dụng cấu hình phiên
 app.use(
     session({
@@ -47,6 +52,5 @@ app.use((err, req, res, next)=>{
         message: err.message || 'Internal server error!',
     });
 });
-
 
 module.exports = app;
