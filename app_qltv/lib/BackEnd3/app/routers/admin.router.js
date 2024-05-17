@@ -4,7 +4,7 @@ const khachhang = require('../controllers/khachHang.controller');
 const nhacungcap = require('../controllers/nhaCungCap.controller');
 const kho = require('../controllers/warehouseController');
 const ns_don_vi = require('../controllers/ns_donVi.controller');
-const danh_muc_hang_hoa = require('../controllers/hangHoa.controller_TEMP');
+const danh_muc_hang_hoa = require('../controllers/hangHoa.controller');
 
 //0. Tạo 1 router để quản lý tuyến đường
 const router = express.Router();
@@ -82,5 +82,7 @@ router.route('/themhanghoa').post(danh_muc_hang_hoa.Add_hangHoa);
 //Lấy ,Sửa ,xóa
 router.route('/hanghoa/:HANGHOAMA')
         .get(danh_muc_hang_hoa.lay_hangHoa)
+        .put(danh_muc_hang_hoa.Update_hangHoa)
+        .delete(danh_muc_hang_hoa.delete_hangHoa);
 
 module.exports = router;

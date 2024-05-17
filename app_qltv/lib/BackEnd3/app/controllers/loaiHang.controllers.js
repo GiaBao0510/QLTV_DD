@@ -92,11 +92,7 @@ exports.update_LoaiHang = async (req, res, next) =>{
 exports.list_LoaiHang = async (req, res, next) =>{
     try{
     
-<<<<<<< HEAD:app_qltv/lib/BackEndV2/app/controllers/loaiHang.controllers.js
-        db.query(`SELECT * FROM loai_hang where SU_DUNG`,(err, results)=>{
-=======
         db.query(`SELECT * FROM loai_hang where SU_DUNG="1"`,(err, results)=>{
->>>>>>> 5a882bfeafd538d51e13b11670677c27c0c34ef5:app_qltv/lib/BackEnd3/app/controllers/loaiHang.controllers.js
             if(err){
                 console.log(`Lỗi khi lấy danh sách thông tin loại hàng - ${err}`);
                 return res.status(404).json({message: `Loi khi cập nhật thong tin loai hang`});

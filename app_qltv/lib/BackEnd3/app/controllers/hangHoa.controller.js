@@ -2,6 +2,7 @@ var mysql = require('mysql');
 var express = require('express');
 var db = require('../config/index_2');
 var ApiError = require('../api-error');
+const e = require('express');
 
 //1. danh sách thông tin kho
 exports.list_hangHoa = async (req, res, next) =>{
@@ -127,10 +128,10 @@ exports.Add_hangHoa = async (req, res, next) => {
         };
 
         try {
-            await checkExistence(`SELECT * FROM loai_hang WHERE LOAIID = "?" `, LOAIID, "loai_hang");
-            await checkExistence(`SELECT * FROM ns_don_vi WHERE DON_VI_ID = "?" `, DVTID, "ns_don_vi");
-            await checkExistence(`SELECT * FROM nhom_hang WHERE NHOMHANGID = "?" `, NHOMHANGID, "nhom_hang");
-            await checkExistence(`SELECT * FROM phn_nha_cung_cap WHERE NCCID = "?" `, NCCID, "phn_nha_cung_cap");
+            await checkExistence(`SELECT * FROM loai_hang WHERE LOAIID = ?`, LOAIID, "loai_hang");
+            //await checkExistence(`SELECT * FROM ns_don_vi WHERE DON_VI_ID = ?`, DVTID, "ns_don_vi");
+            await checkExistence(`SELECT * FROM nhom_hang WHERE NHOMHANGID = ?`, NHOMHANGID, "nhom_hang");
+            await checkExistence(`SELECT * FROM phn_nha_cung_cap WHERE NCCID = ?`, NCCID, "phn_nha_cung_cap");
         } catch (error) {
             console.log(error);
             return res.status(404).json({ message: error });
@@ -153,7 +154,6 @@ exports.Add_hangHoa = async (req, res, next) => {
                         console.log(`Lỗi khi lấy ID cuối thông tin hàng hóa - ${err}`);
                         return res.status(500).json({ message: `Lỗi khi lấy ID cuối thông tin hàng hóa` });
                     }
-
                     const IDcuoi = result[0].HANGHOAID;
                     const IDchuoi = String(IDcuoi);
 
@@ -177,15 +177,29 @@ exports.Add_hangHoa = async (req, res, next) => {
 exports.delete_hangHoa= async (req, res, next) =>{
     try{
         const HANGHOAMA = req.params.HANGHOAMA;
-    
-        db.query(`delete from danh_muc_hang_hoa where HANGHOAMA = "${HANGHOAMA}"`,(err, results)=>{
-            if(err){
-                console.log(`Lỗi khi xóa thông tin kho - ${err}`);
-                return res.status(404).json({message: `Loi Không tìm thấy thông tin hàng hóa để xóa - ${HANGHOAMA}`});
-            }else{
-                return res.status(200).json({message: `xóa thong tin hàng hóa thanh cong- ${HANGHOAMA}`});
+
+        //Đầu tiên tìm mã hàng hóa có tồn tại không
+        db.query(`select * from danh_muc_hang_hoa where HANGHOAMA = "${HANGHOAMA}"`,(err, results)=>{
+            if (err) {
+                console.log(`Lỗi khi truy vấn thông tin hàng hóa - ${err}`);
+                return res.status(500).json({ message: `Lỗi khi truy vấn thông tin hàng hóa` });
             }
-        })
+            else if(!results || results.length === 0) {
+                console.log(`Không tìm thấy thông tin hàng hóa - ${HANGHOAMA}`);
+                return res.status(404).json({ message: `Lỗi không tìm thấy thông tin hàng hóa - ${HANGHOAMA}` });
+            }else{
+                db.query(`update danh_muc_hang_hoa set SU_DUNG="0" where HANGHOAMA = "${HANGHOAMA}"`,(err, results)=>{
+                    if (err) {
+                        console.log(`Lỗi khi xóa thông tin hàng hóa - ${err}`);
+                        return res.status(500).json({ message: `Lỗi khi xóa thông tin hàng hóa` });
+                    }
+                    else{
+                        return res.status(202).json({ message: `Xóa thông tin hàng hóa thành công - ${HANGHOAMA}` });
+                    }
+                });
+            }
+        });    
+
     }catch(err){
         return next(new ApiError(500, `Loi xuat hien khi xóa hàng hóa: ${err.message}`));
     }
@@ -198,29 +212,51 @@ exports.Update_hangHoa= async (req, res, next) =>{
         let HANGHOAMA = req.params.HANGHOAMA;
         HANGHOAMA = String(HANGHOAMA);
 
-        //Thông tin sửa
-        let DON_VI_TEN= req.body.DON_VI_TEN,
-            SU_DUNG= req.body.SU_DUNG,
-            GHI_CHU= req.body.GHI_CHU,
-            DON_VI_TEN_HD= req.body.DON_VI_TEN_HD,
-            DIA_CHI_HD= req.body.DIA_CHI_HD,
-            DIEN_THOAI= req.body.DIEN_THOAI,
-            TEN_GIAO_DICH= req.body.TEN_GIAO_DICH,
-            TAO_LUU_Y= req.body.TAO_LUU_Y,
-            TIEU_DE_PHIEU_CAM= req.body.TIEU_DE_PHIEU_CAM,
-            TIEU_DE_PHIEU_BAN= req.body.TIEU_DE_PHIEU_BAN,
-            GIOI_THIEU= req.body.GIOI_THIEU;
+        //Phần thông tin từ body
+        const {
+            LOAIID, DVTID, NHOMHANGID, NCCID, GIAM_GIA_ID, HANG_HOA_TEN, GIA_BAN, VAT, THUE,
+            SU_DUNG, DANH_DAU, SL_IN, GHI_CHU, TAO_MA, GIA_BAN_SI, CAN_TONG, TL_HOT, GIA_CONG,
+            DON_GIA_GOC, CONG_GOC, TUOI_BAN, TUOI_MUA, XUAT_XU, KY_HIEU, NGAY, SO_LUONG
+        } = req.body;
+
+        // Tìm kiếm các ID để đảm bảo tồn tại
+        const checkExistence = (query, id, table) => {
+            return new Promise((resolve, reject) => {
+                db.query(query, [id], (err, result) => {
+                    if (err) {
+                        return reject(`Lỗi khi truy vấn thông tin: ${err}`);
+                    }
+                    if (!result || result.length == 0) {
+                        return reject(`Không tìm thấy thông tin - ${id} - ${table}`);
+                    }
+                    resolve(true);
+                });
+            });
+        };
+
+        try {
+            await checkExistence(`SELECT * FROM loai_hang WHERE LOAIID = ?`, LOAIID, "loai_hang");
+            await checkExistence(`SELECT * FROM nhom_hang WHERE NHOMHANGID = ?`, NHOMHANGID, "nhom_hang");
+            await checkExistence(`SELECT * FROM phn_nha_cung_cap WHERE NCCID = ?`, NCCID, "phn_nha_cung_cap");
+        } catch (error) {
+            console.log(error);
+            return res.status(404).json({ message: error });
+        }
     
+        //Thực hiện cập nhật
         db.query(`update danh_muc_hang_hoa
-                set DON_VI_TEN="${DON_VI_TEN}", SU_DUNG="${SU_DUNG}" , GHI_CHU="${GHI_CHU}" , DON_VI_TEN_HD="${DON_VI_TEN_HD}" 
-                , DIA_CHI_HD="${DIA_CHI_HD}" , DIEN_THOAI="${DIEN_THOAI}" , TEN_GIAO_DICH="${TEN_GIAO_DICH}" , TAO_LUU_Y="${TAO_LUU_Y}" 
-                , TIEU_DE_PHIEU_CAM="${TIEU_DE_PHIEU_CAM}" , TIEU_DE_PHIEU_BAN="${TIEU_DE_PHIEU_BAN}", GIOI_THIEU="${GIOI_THIEU}"
+                set LOAIID="${LOAIID}", DVTID="${DVTID}", NHOMHANGID="${NHOMHANGID}", NCCID="${NCCID}",
+                    GIAM_GIA_ID="${GIAM_GIA_ID}", HANG_HOA_TEN="${HANG_HOA_TEN}", GIA_BAN="${GIA_BAN}", VAT="${VAT}",
+                    THUE="${THUE}", SU_DUNG="${SU_DUNG}", DANH_DAU="${DANH_DAU}", SL_IN="${SL_IN}",
+                    GHI_CHU="${GHI_CHU}", TAO_MA="${TAO_MA}", GIA_BAN_SI="${GIA_BAN_SI}", CAN_TONG="${CAN_TONG}",
+                    TL_HOT="${TL_HOT}", GIA_CONG="${GIA_CONG}", DON_GIA_GOC="${DON_GIA_GOC}", CONG_GOC="${CONG_GOC}",
+                    TUOI_BAN="${TUOI_BAN}", TUOI_MUA="${TUOI_MUA}", XUAT_XU="${XUAT_XU}", KY_HIEU="${KY_HIEU}",
+                    NGAY="${NGAY}", SO_LUONG="${SO_LUONG}"
                 where HANGHOAMA="${HANGHOAMA}"`,(err, result)=>{
             if(err){
                 console.log(`Lỗi không tìm thất mã hàng hóa để cập nhật - ${err}`);
                 return res.status(404).json({message: `Không tìm thấy ID hàng hóa`});
             }else{
-
                 return res.status(200).json({message: `cập nhật thong tin hàng hóa thanh cong ,ID: ${HANGHOAMA} `});
             }
         })
