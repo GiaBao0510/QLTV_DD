@@ -46,7 +46,7 @@ const updateProductType = async (id, userData) => {
 }
 const deleteProductType = async (id) => {
   return new Promise((resolve, reject) => {
-    connection.query('DELETE FROM nhom_hang WHERE NHOMHANGID = ?', id, (error, results) => {
+    connection.query('UPDATE nhom_hang SET SU_DUNG = 0 WHERE NHOMHANGID = ?', id, (error, results) => {
       if (error) {
         reject(error);
       } else {
@@ -69,7 +69,7 @@ const getProductTypeById = (id) => {
 
 const getAllProductType = () => {
   return new Promise((resolve, reject) => {
-    connection.query('SELECT * FROM nhom_hang', (error, results, fields) => {
+    connection.query('SELECT * FROM nhom_hang WHERE SU_DUNG = 1', (error, results, fields) => {
       if (error) {
         reject(error);
       } else {

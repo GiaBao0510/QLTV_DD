@@ -60,9 +60,21 @@ const updateUser = async (id, userData) => {
   }
 
 }
+// create table ns_nhan_vien
+// (
+//    NV_ID                int not null auto_increment,
+//    DON_VI_ID            int,
+//    NV_MA                varchar(50),
+//    NV_TEN               national varchar(50),
+//    NGAY_VAO_LAM         datetime,
+//    TINH_TRANG           bool,
+//    SU_DUNG              bool,
+//    GHI_CHU              national varchar(50),
+//    primary key (NV_ID)
+// );
 const deleteUser = async (id) => {
   return new Promise((resolve, reject) => {
-    connection.query('DELETE FROM pq_user WHERE USER_ID = ?', id, (error, results) => {
+    connection.query('UPDATE pq_user SET SU_DUNG = 0 WHERE USER_ID = ?', id, (error, results) => {
       if (error) {
         reject(error);
       } else {
@@ -85,7 +97,7 @@ const getUserById = (id) => {
 
 const getAllUsers = () => {
   return new Promise((resolve, reject) => {
-    connection.query('SELECT * FROM pq_user', (error, results, fields) => {
+    connection.query('SELECT * FROM pq_user WHERE SU_DUNG = 1', (error, results, fields) => {
       if (error) {
         reject(error);
       } else {
