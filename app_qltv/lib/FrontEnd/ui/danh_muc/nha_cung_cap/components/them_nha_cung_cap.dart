@@ -1,33 +1,52 @@
+import 'dart:convert';
+import 'package:app_qltv/FrontEnd/controller/danhmuc/nhacungcap_manager.dart';
+import 'package:app_qltv/FrontEnd/model/danhmuc/nhacungcap.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart'; // Import Provider package
+import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 
-import 'package:app_qltv/FrontEnd/model/danhmuc/nhomvang.dart';
-import 'package:app_qltv/FrontEnd/controller/danhmuc/nhomvang_manager.dart';
-
-class ThemNhomVangScreen extends StatefulWidget {
-  static const routeName = "/themnvhomvang";
-
-  const ThemNhomVangScreen({Key? key}) : super(key: key);
+class ThemNhaCungCapScreen extends StatefulWidget {
+  static const routeName = "/themNhaCungCap";
 
   @override
-  State<ThemNhomVangScreen> createState() => _ThemNhomVangScreenState();
+  State<ThemNhaCungCapScreen> createState() => _ThemNhaCungCapScreenState();
 }
 
-class _ThemNhomVangScreenState extends State<ThemNhomVangScreen> {
+class _ThemNhaCungCapScreenState extends State<ThemNhaCungCapScreen> {
   final _addForm = GlobalKey<FormState>();
-  var _newNhomVang = NhomVang(
-    loaiId: null,
-    loaiMa: '',
-    loaiTen: '',
-    ghiChu: '',
-    suDung: null,
-  );
+  NhaCungCap _newNhaCungCap = NhaCungCap();
+  TextEditingController _dateController = TextEditingController();
+  late DateTime _selectedDate;
 
   @override
   void initState() {
     super.initState();
-    Provider.of<NhomVangManager>(context, listen: false).fetchLoaiHang();
+    _selectedDate = DateTime.now();
+    _dateController.text = DateFormat('dd/MM/yyyy').format(_selectedDate);
+  }
+
+  @override
+  void dispose() {
+    _dateController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: _selectedDate,
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
+    );
+    if (picked != null && picked != _selectedDate) {
+      setState(() {
+        _selectedDate = picked;
+        _dateController.text = DateFormat('dd/MM/yyyy').format(_selectedDate);
+        _newNhaCungCap = _newNhaCungCap.copyWith(ngay_bd: _selectedDate.toIso8601String());
+      });
+    }
   }
 
   @override
@@ -46,12 +65,12 @@ class _ThemNhomVangScreenState extends State<ThemNhomVangScreen> {
         title: const Center(
             child: Padding(
               padding: EdgeInsets.only(right: 50.0),
-              child: Text("Thêm Nhóm Vàng", style: TextStyle(color: Colors.black ,fontWeight: FontWeight.w900), textAlign: TextAlign.center,),
+              child: Text("Thêm Nhà Cung Cấp", style: TextStyle(color: Colors.black ,fontWeight: FontWeight.w900), textAlign: TextAlign.center,),
             ),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
+      body: Container(
+        padding: const EdgeInsets.all(16.0), 
         child: Form(
           key: _addForm,
           child: ListView(
@@ -69,8 +88,12 @@ class _ThemNhomVangScreenState extends State<ThemNhomVangScreen> {
                       child: buildLoaiTenField(),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(bottom: 0.0),
+                      padding: const EdgeInsets.only(bottom: 14.0),
                       child: buildKyHieuField(),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 0.0),
+                      child: buildNgayBdField(context),
                     ),
                   ],
                 ),
@@ -93,7 +116,7 @@ class _ThemNhomVangScreenState extends State<ThemNhomVangScreen> {
   TextFormField buildLoaiTenField() {
     return TextFormField(
       decoration: const InputDecoration(
-        labelText: 'Tên Nhóm',
+        labelText: 'Tên Nhà Cung Cấp',
         labelStyle: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
         filled: true,
         fillColor: Colors.white,
@@ -112,7 +135,7 @@ class _ThemNhomVangScreenState extends State<ThemNhomVangScreen> {
         return null;
       },
       onSaved: (value) {
-        _newNhomVang = _newNhomVang.copyWith(loaiTen: value);
+        _newNhaCungCap = _newNhaCungCap.copyWith(ncc_ten: value);
       },
     );
   }
@@ -120,7 +143,7 @@ class _ThemNhomVangScreenState extends State<ThemNhomVangScreen> {
   TextFormField buildKyHieuField() {
     return TextFormField(
       decoration: const InputDecoration(
-        labelText: 'Ký Hiệu',
+        labelText: 'Địa Chỉ',
         labelStyle: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
         filled: true,
         fillColor: Colors.white,
@@ -129,7 +152,6 @@ class _ThemNhomVangScreenState extends State<ThemNhomVangScreen> {
           borderRadius: BorderRadius.all(Radius.circular(15.0)),
         ),
       ),
-
       textInputAction: TextInputAction.next,
       keyboardType: TextInputType.text,
       autofocus: true,
@@ -140,7 +162,34 @@ class _ThemNhomVangScreenState extends State<ThemNhomVangScreen> {
         return null;
       },
       onSaved: (value) {
-        _newNhomVang = _newNhomVang.copyWith(ghiChu: value);
+        _newNhaCungCap = _newNhaCungCap.copyWith(ghi_chu: value);
+      },
+    );
+  }
+
+  TextFormField buildNgayBdField(BuildContext context) {
+    return TextFormField(
+      controller: _dateController,
+      decoration: const InputDecoration(
+        labelText: 'Ngày Bắt Đầu',
+        labelStyle: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+        filled: true,
+        fillColor: Colors.white,
+        border: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.white, width: 15.0),
+          borderRadius: BorderRadius.all(Radius.circular(15.0)),
+        ),
+      ),
+      readOnly: true,
+      onTap: () => _selectDate(context),
+      validator: (value) {
+        if (value!.isEmpty) {
+          return 'Please provide a value';
+        }
+        return null;
+      },
+      onSaved: (value) {
+        // No need to save the value here, it's already saved in _selectDate method
       },
     );
   }
@@ -153,8 +202,8 @@ class _ThemNhomVangScreenState extends State<ThemNhomVangScreen> {
     _addForm.currentState!.save();
 
     try {
-      final nhomVangManager = Provider.of<NhomVangManager>(context, listen: false);
-      await nhomVangManager.addNhomVang(_newNhomVang);
+      final nhaCungCapManager = Provider.of<NhaCungCapManager>(context, listen: false); 
+      await nhaCungCapManager.addNhaCungCap(_newNhaCungCap); // Call addNhaCungCap method
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: const Text('Thêm thành công!', style: TextStyle(fontWeight: FontWeight.w900), textAlign: TextAlign.center,),
@@ -171,7 +220,7 @@ class _ThemNhomVangScreenState extends State<ThemNhomVangScreen> {
     } catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('Failed to update data', style: TextStyle(fontWeight: FontWeight.w900, color: Colors.red), textAlign: TextAlign.center,),
+          content: const Text('Failed to add data', style: TextStyle(fontWeight: FontWeight.w900, color: Colors.red), textAlign: TextAlign.center,),
           backgroundColor: Colors.grey,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15.0),

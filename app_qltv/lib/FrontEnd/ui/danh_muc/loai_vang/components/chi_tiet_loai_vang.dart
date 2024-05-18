@@ -1,5 +1,5 @@
 
-import 'package:app_qltv/FrontEnd/model/danhmuc/loaivang/loaivang.dart';
+import 'package:app_qltv/FrontEnd/model/danhmuc/loaivang.dart';
 
 import 'package:flutter/material.dart';
 

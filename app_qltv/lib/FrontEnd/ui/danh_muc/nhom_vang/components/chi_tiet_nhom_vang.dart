@@ -1,5 +1,5 @@
 
-import 'package:app_qltv/FrontEnd/model/danhmuc/nhom_vang/nhomvang.dart';
+import 'package:app_qltv/FrontEnd/model/danhmuc/nhomvang.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 

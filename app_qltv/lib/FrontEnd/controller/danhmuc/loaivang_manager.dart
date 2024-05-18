@@ -1,4 +1,4 @@
-import './loaivang.dart';
+import '../../model/danhmuc/loaivang.dart';
 import 'package:http/http.dart' as http;
 
 class LoaiVangManager {

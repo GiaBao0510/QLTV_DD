@@ -7,7 +7,7 @@ var ApiError = require('../api-error');
 exports.list_NhaCungCap = async (req, res, next) =>{
     try{
 
-        db.query(`SELECT * FROM phn_nha_cung_cap`,(err, results)=>{
+        db.query(`SELECT * FROM phn_nha_cung_cap WHERE SU_DUNG = 1`,(err, results)=>{
             if(err){
                 console.log(`Lỗi khi xóa danh sách thông tin nhà cung cấp - ${err}`);
                 return res.status(404).json({message: `Loi khi cập nhật thong tin nhà cung cấp`});
@@ -28,7 +28,7 @@ exports.list_NhaCungCap = async (req, res, next) =>{
     }
 }
 
-//2. xóa thông tin nhà cung cấp theo ID
+//2. lấy thông tin nhà cung cấp theo ID
 exports.lay_NhaCungCap = async (req, res, next) =>{
     try{
         const NCCMA = req.params.NCCMA;
@@ -102,7 +102,7 @@ exports.delete_NhaCungCap = async (req, res, next) =>{
     try{
         const NCCMA = req.params.NCCMA;
     
-        db.query(`delete from phn_nha_cung_cap where NCCMA = "${NCCMA}"`,(err, results)=>{
+        db.query(`UPDATE phn_nha_cung_cap SET SU_DUNG=0 WHERE NCCMA = "${NCCMA}"`,(err, results)=>{
             if(err){
                 console.log(`Lỗi khi xóa thông tin nhà cung cấp - ${err}`);
                 return res.status(404).json({message: `Loi khi xóa thong tin nhà cung cấp - ${NCCMA}`});
@@ -126,7 +126,7 @@ exports.Update_NhaCungCap = async (req, res, next) =>{
         //Thông tin sửa
         const NCC_TEN = req.body.NCC_TEN,
             GHI_CHU = req.body.GHI_CHU,
-            SU_DUNG = req.body.SU_DUNG,
+            SU_DUNG = 1,
             NGAYBD = req.body.NGAYBD;
     
         db.query(`update phn_nha_cung_cap

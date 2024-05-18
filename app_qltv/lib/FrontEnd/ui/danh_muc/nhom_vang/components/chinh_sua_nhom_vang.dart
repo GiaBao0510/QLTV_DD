@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart'; // Import Provider package
 
-import 'package:app_qltv/FrontEnd/model/danhmuc/nhom_vang/nhomvang.dart';
-import 'package:app_qltv/FrontEnd/model/danhmuc/nhom_vang/nhomvang_manager.dart';
+import 'package:app_qltv/FrontEnd/model/danhmuc/nhomvang.dart';
+import 'package:app_qltv/FrontEnd/controller/danhmuc/nhomvang_manager.dart';
 
 class ChinhSuaNhomVangScreen extends StatefulWidget {
   static const routeName = "/chinhsuanhomvang";
@@ -17,7 +17,6 @@ class ChinhSuaNhomVangScreen extends StatefulWidget {
 }
 
 class _ChinhSuaNhomVangScreenState extends State<ChinhSuaNhomVangScreen> {
-  // final TextEditingController _controller = TextEditingController();
   final _editForm = GlobalKey<FormState>();
   late NhomVang _editedNhomVang;
 
@@ -25,7 +24,6 @@ class _ChinhSuaNhomVangScreenState extends State<ChinhSuaNhomVangScreen> {
   void initState() {
     super.initState();
     _editedNhomVang = widget.nhomVang; // Initialize _editedNhomVang with widget's nhomVang
-    // _controller.text = _editedNhomVang.loaiTen ?? ''; // Set initial value for TextField
   }
 
   @override

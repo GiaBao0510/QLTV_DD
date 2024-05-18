@@ -1,5 +1,6 @@
 
-import 'package:app_qltv/FrontEnd/ui/danh_muc/loai_vang/loai_vang.dart';
+// import 'package:app_qltv/FrontEnd/ui/danh_muc/loai_vang/loai_vang.dart';
+import 'package:app_qltv/FrontEnd/ui/danh_muc/nha_cung_cap/nha_cung_cap_green.dart';
 import 'package:app_qltv/FrontEnd/ui/danh_muc/nhom_vang/nhom_vang.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -38,10 +39,10 @@ class drawer extends StatelessWidget {
                   //   Navigator.of(context).pushNamed(loaiVang.routeName);
                   // },
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const loaiVang()),
-                    );
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(builder: (context) => const loaiVang()),
+                    // );
                   },
                 ),
               ),
@@ -84,7 +85,10 @@ class drawer extends StatelessWidget {
                   leading: const Icon(CupertinoIcons.settings),
                   title: const Text('NCC'),
                   onTap: () {
-                    // Handle NCC tap
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const NhaCungCapScreen()),
+                    );
                   },
                 ),
               ),
