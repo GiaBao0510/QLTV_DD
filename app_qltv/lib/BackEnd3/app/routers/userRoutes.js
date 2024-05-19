@@ -10,4 +10,4 @@ router.get('/', userController.getUsers);
 router.get('/:id', userController.getUserById);
 
 
-module.exports = router;
+module.exports = router; 
