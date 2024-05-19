@@ -2,7 +2,6 @@ var mysql = require('mysql');
 var express = require('express');
 var db = require('../config/index_2');
 var ApiError = require('../api-error');
-const e = require('express');
 
 //1. danh sách thông tin kho
 exports.list_hangHoa = async (req, res, next) =>{

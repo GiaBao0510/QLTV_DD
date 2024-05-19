@@ -5,6 +5,9 @@ const nhacungcap = require('../controllers/nhaCungCap.controller');
 const kho = require('../controllers/warehouseController');
 const ns_don_vi = require('../controllers/ns_donVi.controller');
 const danh_muc_hang_hoa = require('../controllers/hangHoa.controller');
+const BC_TonKhoTheoNhomVang = require('../controllers/baoCaoTonKhoTheoNhom');
+const BC_TonKhoLoaiVang = require('../controllers/baoCaoTonKhoLoaiVang');
+const BC_TonKho = require('../controllers/BaoCaoTonKho');
 
 //0. Tạo 1 router để quản lý tuyến đường
 const router = express.Router();
@@ -84,5 +87,24 @@ router.route('/hanghoa/:HANGHOAMA')
         .get(danh_muc_hang_hoa.lay_hangHoa)
         .put(danh_muc_hang_hoa.Update_hangHoa)
         .delete(danh_muc_hang_hoa.delete_hangHoa);
+
+
+    //  >>>>>> Báo cáo tồn kho theo từng nhóm
+
+//Lấy danh sách báo cáo tồn kho theo nhóm vàng được sắp xếp theo tên loại
+router.route('/baocaotonkhotheonhomvang').get(BC_TonKhoTheoNhomVang.baoCaoTonKhoTheoNhom)
+
+//Lấy danh sách báo cáo tồn kho theo nhóm vàng được lấy theo tên loại cụ thể
+router.route('/baocaotonkhotheonhomvang/:LOAI_TEN').get(BC_TonKhoTheoNhomVang.baoCaoTonKhoTheoNhom_TenNhom);
+
+    //  >>>>>> Báo cáo tồn kho loại vàng
+//Lấy danh sách báo cáo tồn kho loại vàng được sắp xếp theo tên nhóm vàng
+router.route('/baocaotonkholoaivang').get(BC_TonKhoLoaiVang.baoCaoTonKhoLoaiVang);
+
+//Lấy danh sách báo cáo tồn kho loại vàng được lấy theo tên nhóm cụ thể
+router.route('/baocaotonkholoaivang/:NHOM_TEN').get(BC_TonKhoLoaiVang.baoCaoTonKhoLoaiVang_TenLoaiVang);
+
+    //  >>>>>> Báo cáo tồn kho
+router.route('/baocaotonkho').get(BC_TonKho.baoCaoTonKho);
 
 module.exports = router;
