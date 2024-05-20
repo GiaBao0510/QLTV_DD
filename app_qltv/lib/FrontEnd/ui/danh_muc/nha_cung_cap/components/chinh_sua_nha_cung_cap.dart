@@ -3,6 +3,7 @@ import 'package:app_qltv/FrontEnd/model/danhmuc/nhacungcap.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+// ignore: depend_on_referenced_packages
 import 'package:intl/intl.dart';
 
 class ChinhSuaNhaCungCapScreen extends StatefulWidget {
