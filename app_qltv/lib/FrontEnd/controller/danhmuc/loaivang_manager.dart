@@ -1,45 +1,86 @@
+import 'dart:convert';
+import 'package:flutter/cupertino.dart';
 import '../../model/danhmuc/loaivang.dart';
 import 'package:http/http.dart' as http;
 
-class LoaiVangManager {
-  final List<LoaiVang> _items = [
-    LoaiVang(
-      nhomHangId: 0000000001,
-      nhomHangMa: "1",
-      nhomChaId: 0,
-      nhomTen: "9999",
-      donGiaBan: 5500000.00000,
-      donGiaMua: 5000000.00000,
-      muaBan: false,
-      donGiaVon: 6000000.00000,
-      donGiaCam: 5000000.00000,
-      suDung: false,
-      ghiChu: "",
-    ),
-    LoaiVang(
-      nhomHangId: 0000000002,
-      nhomHangMa: "2",
-      nhomChaId: 1,
-      nhomTen: "24",
-      donGiaBan: 5500000.00000,
-      donGiaMua: 5000000.00000,
-      muaBan: false,
-      donGiaVon: 6000000.00000,
-      donGiaCam: 5000000.00000,
-      suDung: false,
-      ghiChu: "",
-    ),
-  ];
+class LoaiVangManager with ChangeNotifier {
 
-  Future<http.Response> fetchLoaiVang() {
-    return http.get(Uri.parse('http://localhost:3000/admin/danhsachloaihang'));
+  List<LoaiVang> _loaiVangs= [];
+
+  List<LoaiVang> get loaiVangs => _loaiVangs;
+
+  int get loaiVangsLength => _loaiVangs.length;
+
+  Future<List<LoaiVang>> fetchLoaiHang() async {
+    final response = await http.get(Uri.parse('http://localhost:3000/api/productType/'));
+    if (response.statusCode == 200) {
+      // Parse JSON array and convert to list of NhomVang objects
+      List<dynamic> jsonList = jsonDecode(response.body);
+      List<LoaiVang> loaiVangList = jsonList.map((e) => LoaiVang.fromMap(e)).toList(); 
+      _loaiVangs = jsonList.map((e) => LoaiVang.fromMap(e)).toList();
+      notifyListeners();
+      return loaiVangList;
+    } else {
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      throw Exception('Failed to load data');
+    }
   }
 
-  int get itemCount {
-    return _items.length;
+   Future<LoaiVang> updateLoaiVang(String loaiId, LoaiVang loaiVang) async {
+    try {
+      final response = await http.put(
+        Uri.parse('http://localhost:3000/api/productType/$loaiId'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, dynamic>{
+          'NHOM_TEN': loaiVang.nhomTen,
+          'DON_GIA_VON': loaiVang.donGiaVon,
+          'DON_GIA_MUA': loaiVang.donGiaMua,
+          'DON_GIA_BAN': loaiVang.donGiaBan, 
+          'DON_GIA_CAM': loaiVang.donGiaCam,
+          'GHI_CHU': loaiVang.ghiChu 
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        // Nếu server trả về mã status 200 OK, tiến hành parse JSON để tạo ra một đối tượng NhomVang từ dữ liệu nhận được
+        notifyListeners();
+        return LoaiVang.fromMap(jsonDecode(response.body) as Map<String, dynamic>);
+      } else {
+        // Nếu server không trả về mã status 200 OK, ném một Exception để thông báo rằng việc cập nhật thất bại
+        throw Exception('Failed to update LoaiHang: ${response.statusCode}');
+      }
+    } catch (error) {
+      // Nếu có bất kỳ lỗi nào xảy ra trong quá trình gửi request hoặc xử lý response, ném một Exception để thông báo rằng việc cập nhật thất bại
+      throw Exception('Failed to update LoaiHang: $error');
+    }
   }
 
-  List<LoaiVang> get items{
-    return [..._items];
+  Future<LoaiVang> deleteLoaiVang(String loaiId) async {
+    try {
+      final response = await http.delete(
+        Uri.parse('http://localhost:3000/api/productType/$loaiId'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, dynamic>{
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        // Nếu server trả về mã status 200 OK, tiến hành parse JSON để tạo ra một đối tượng LoaiVang từ dữ liệu nhận được
+        notifyListeners();
+        return LoaiVang.fromMap(jsonDecode(response.body) as Map<String, dynamic>);
+      } else {
+        // Nếu server không trả về mã status 200 OK, ném một Exception để thông báo rằng việc cập nhật thất bại
+        throw Exception('Failed to update LoaiHang: ${response.statusCode}');
+      }
+    } catch (error) {
+      // Nếu có bất kỳ lỗi nào xảy ra trong quá trình gửi request hoặc xử lý response, ném một Exception để thông báo rằng việc cập nhật thất bại
+      throw Exception('Failed to update LoaiHang: $error');
+    }
   }
+
 }

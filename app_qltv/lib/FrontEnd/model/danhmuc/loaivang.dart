@@ -1,7 +1,7 @@
 // database : nhom_hang
 
 class LoaiVang {
-  final int? nhomHangId;
+  final String? nhomHangId;
   final String? nhomHangMa;
   final int? nhomChaId;
   final String? nhomTen;
@@ -27,8 +27,10 @@ class LoaiVang {
     this.ghiChu,
   });
 
+  get loaiTen => null;
+
   LoaiVang copyWith({
-    int? nhomHangId,
+    String? nhomHangId,
     String? nhomHangMa,
     int? nhomChaId,
     String? nhomTen,

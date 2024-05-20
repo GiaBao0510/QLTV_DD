@@ -1,33 +1,28 @@
+import 'package:app_qltv/FrontEnd/controller/danhmuc/loaivang_manager.dart';
+import 'package:app_qltv/FrontEnd/model/danhmuc/loaivang.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart'; // Import Provider package
 
-import 'package:app_qltv/FrontEnd/model/danhmuc/nhomvang.dart';
-import 'package:app_qltv/FrontEnd/controller/danhmuc/nhomvang_manager.dart';
+class ChinhSuaLoaiVangScreen extends StatefulWidget {
+  static const routeName = "/chinhsualoaivang";
 
-class ThemLoaiVangScreen extends StatefulWidget {
-  static const routeName = "/themloaivang";
+  final LoaiVang loaiVang;
 
-  const ThemLoaiVangScreen({Key? key}) : super(key: key);
+  const ChinhSuaLoaiVangScreen({Key? key, required this.loaiVang}) : super(key: key);
 
   @override
-  State<ThemLoaiVangScreen> createState() => _ThemLoaiVangScreenState();
+  State<ChinhSuaLoaiVangScreen> createState() => _ChinhSuaLoaiVangScreenState();
 }
 
-class _ThemLoaiVangScreenState extends State<ThemLoaiVangScreen> {
-  final _addForm = GlobalKey<FormState>();
-  var _newNhomVang = NhomVang(
-    loaiId: null,
-    loaiMa: '',
-    loaiTen: '',
-    ghiChu: '',
-    suDung: null,
-  );
+class _ChinhSuaLoaiVangScreenState extends State<ChinhSuaLoaiVangScreen> {
+  final _editForm = GlobalKey<FormState>();
+  late LoaiVang _editedLoaiVang;
 
   @override
   void initState() {
     super.initState();
-    Provider.of<NhomVangManager>(context, listen: false).fetchLoaiHang();
+    _editedLoaiVang = widget.loaiVang; // Initialize _editedLoaiVang with widget's nhomVang
   }
 
   @override
@@ -46,14 +41,14 @@ class _ThemLoaiVangScreenState extends State<ThemLoaiVangScreen> {
         title: const Center(
             child: Padding(
               padding: EdgeInsets.only(right: 50.0),
-              child: Text("Thêm Loại Vàng", style: TextStyle(color: Colors.black ,fontWeight: FontWeight.w900), textAlign: TextAlign.center,),
+              child: Text("Chỉnh Sửa Loại Vàng", style: TextStyle(color: Colors.black ,fontWeight: FontWeight.w900), textAlign: TextAlign.center,),
             ),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
+      body: Container(
+        padding: const EdgeInsets.all(16.0), 
         child: Form(
-          key: _addForm,
+          key: _editForm,
           child: ListView(
             children: <Widget>[
               Container(
@@ -84,10 +79,6 @@ class _ThemLoaiVangScreenState extends State<ThemLoaiVangScreen> {
                       padding: const EdgeInsets.only(bottom: 14.0),
                       child: buildDonGiaCamField(),
                     ),
-                    // Padding(
-                    //   padding: const EdgeInsets.only(bottom: 14.0),
-                    //   child: buildLoaiChaField(),
-                    // ),
                     Padding(
                       padding: const EdgeInsets.only(bottom: 0.0),
                       child: buildGhiChuField(),
@@ -101,7 +92,7 @@ class _ThemLoaiVangScreenState extends State<ThemLoaiVangScreen> {
                   backgroundColor: Colors.grey[50]
                 ),
                 onPressed: () => _saveForm(context),
-                child: const Text('Thêm', style: TextStyle(fontWeight: FontWeight.w900, color: Colors.green),),
+                child: const Text('Cập Nhật', style: TextStyle(fontWeight: FontWeight.w900, color: Colors.green),),
               ),
             ],
           ),
@@ -110,8 +101,9 @@ class _ThemLoaiVangScreenState extends State<ThemLoaiVangScreen> {
     );
   }
 
-  TextFormField buildLoaiVangField() {
+ TextFormField buildLoaiVangField() {
     return TextFormField(
+      initialValue: _editedLoaiVang.nhomTen.toString(),
       decoration: const InputDecoration(
         labelText: 'Loại Vàng',
         labelStyle: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
@@ -132,13 +124,14 @@ class _ThemLoaiVangScreenState extends State<ThemLoaiVangScreen> {
         return null;
       },
       onSaved: (value) {
-        _newNhomVang = _newNhomVang.copyWith(loaiTen: value);
+        _editedLoaiVang = _editedLoaiVang.copyWith(nhomTen: value);
       },
     );
   }
 
   TextFormField buildDonGiaVonField() {
     return TextFormField(
+      initialValue: _editedLoaiVang.donGiaVon.toString(),
       decoration: const InputDecoration(
         labelText: 'Đơn Giá Vốn',
         labelStyle: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
@@ -149,9 +142,8 @@ class _ThemLoaiVangScreenState extends State<ThemLoaiVangScreen> {
           borderRadius: BorderRadius.all(Radius.circular(15.0)),
         ),
       ),
-
       textInputAction: TextInputAction.next,
-      keyboardType: TextInputType.text,
+      keyboardType: TextInputType.number,
       autofocus: true,
       validator: (value) {
         if (value!.isEmpty) {
@@ -160,15 +152,17 @@ class _ThemLoaiVangScreenState extends State<ThemLoaiVangScreen> {
         return null;
       },
       onSaved: (value) {
-        _newNhomVang = _newNhomVang.copyWith(ghiChu: value);
+        _editedLoaiVang = _editedLoaiVang.copyWith(donGiaVon: double.parse(value!));
       },
     );
   }
 
-  TextFormField buildDonGiaMuaField() {
+
+    TextFormField buildDonGiaMuaField() {
     return TextFormField(
+      initialValue: _editedLoaiVang.donGiaMua.toString(),
       decoration: const InputDecoration(
-        labelText: 'Đơn Giá Mua',
+        labelText: 'Đơn Giá Vốn',
         labelStyle: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
         filled: true,
         fillColor: Colors.white,
@@ -177,9 +171,8 @@ class _ThemLoaiVangScreenState extends State<ThemLoaiVangScreen> {
           borderRadius: BorderRadius.all(Radius.circular(15.0)),
         ),
       ),
-
       textInputAction: TextInputAction.next,
-      keyboardType: TextInputType.text,
+      keyboardType: TextInputType.number,
       autofocus: true,
       validator: (value) {
         if (value!.isEmpty) {
@@ -188,13 +181,14 @@ class _ThemLoaiVangScreenState extends State<ThemLoaiVangScreen> {
         return null;
       },
       onSaved: (value) {
-        _newNhomVang = _newNhomVang.copyWith(ghiChu: value);
+        _editedLoaiVang = _editedLoaiVang.copyWith(donGiaMua: double.parse(value!));
       },
     );
   }
 
   TextFormField buildDonGiaBanField() {
     return TextFormField(
+      initialValue: _editedLoaiVang.donGiaBan.toString(),
       decoration: const InputDecoration(
         labelText: 'Đơn Giá Bán',
         labelStyle: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
@@ -207,7 +201,7 @@ class _ThemLoaiVangScreenState extends State<ThemLoaiVangScreen> {
       ),
 
       textInputAction: TextInputAction.next,
-      keyboardType: TextInputType.text,
+      keyboardType: TextInputType.number,
       autofocus: true,
       validator: (value) {
         if (value!.isEmpty) {
@@ -216,15 +210,44 @@ class _ThemLoaiVangScreenState extends State<ThemLoaiVangScreen> {
         return null;
       },
       onSaved: (value) {
-        _newNhomVang = _newNhomVang.copyWith(ghiChu: value);
+        _editedLoaiVang = _editedLoaiVang.copyWith(donGiaBan: double.parse(value!));
       },
     );
   }
 
   TextFormField buildDonGiaCamField() {
     return TextFormField(
+      initialValue: _editedLoaiVang.donGiaCam.toString(),
       decoration: const InputDecoration(
         labelText: 'Đơn Giá Cầm',
+        labelStyle: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+        filled: true,
+        fillColor: Colors.white,
+        border: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.white, width: 15.0),
+          borderRadius: BorderRadius.all(Radius.circular(15.0)),
+        ),
+      ),
+
+      textInputAction: TextInputAction.next,
+      keyboardType: TextInputType.number,
+      autofocus: true,
+      validator: (value) {
+        if (value!.isEmpty) {
+          return 'Please provide a value';
+        }
+        return null;
+      },
+      onSaved: (value) {
+       _editedLoaiVang = _editedLoaiVang.copyWith(donGiaCam: double.parse(value!));
+      },
+    );
+  }
+
+  TextFormField buildGhiChuField() {
+    return TextFormField(
+      decoration: const InputDecoration(
+        labelText: 'Ghi Chú',
         labelStyle: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
         filled: true,
         fillColor: Colors.white,
@@ -244,7 +267,7 @@ class _ThemLoaiVangScreenState extends State<ThemLoaiVangScreen> {
         return null;
       },
       onSaved: (value) {
-        _newNhomVang = _newNhomVang.copyWith(ghiChu: value);
+        _editedLoaiVang = _editedLoaiVang.copyWith(ghiChu: value);
       },
     );
   }
@@ -272,53 +295,26 @@ class _ThemLoaiVangScreenState extends State<ThemLoaiVangScreen> {
   //       return null;
   //     },
   //     onSaved: (value) {
-  //       _newNhomVang = _newNhomVang.copyWith(nhomChaId: value);
+  //       _editedLoaiVang = _editedLoaiVang.copyWith(nhomChaId: value);
   //     },
   //   );
   // }
 
-  TextFormField buildGhiChuField() {
-    return TextFormField(
-      decoration: const InputDecoration(
-        labelText: 'Ghi Chú',
-        labelStyle: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-        filled: true,
-        fillColor: Colors.white,
-        border: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.white, width: 15.0),
-          borderRadius: BorderRadius.all(Radius.circular(15.0)),
-        ),
-      ),
-
-      textInputAction: TextInputAction.next,
-      keyboardType: TextInputType.text,
-      autofocus: true,
-      validator: (value) {
-        if (value!.isEmpty) {
-          return 'Please provide a value';
-        }
-        return null;
-      },
-      onSaved: (value) {
-        _newNhomVang = _newNhomVang.copyWith(ghiChu: value);
-      },
-    );
-  }
 
 
   Future<void> _saveForm(BuildContext context) async {
-    final isValid = _addForm.currentState!.validate();
+    final isValid = _editForm.currentState!.validate();
     if (!isValid) {
       return;
     }
-    _addForm.currentState!.save();
+    _editForm.currentState!.save();
 
     try {
-      final nhomVangManager = Provider.of<NhomVangManager>(context, listen: false);
-      await nhomVangManager.addNhomVang(_newNhomVang);
+      final nhomVangManager = Provider.of<LoaiVangManager>(context, listen: false); 
+      await nhomVangManager.updateLoaiVang(_editedLoaiVang.nhomHangId as String, _editedLoaiVang); 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('Thêm thành công!', style: TextStyle(fontWeight: FontWeight.w900), textAlign: TextAlign.center,),
+          content: const Text('Cập nhật thành công!', style: TextStyle(fontWeight: FontWeight.w900), textAlign: TextAlign.center,),
           backgroundColor: Colors.grey,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15.0),

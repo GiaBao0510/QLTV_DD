@@ -1,3 +1,4 @@
+import 'package:app_qltv/FrontEnd/controller/danhmuc/loaivang_manager.dart';
 import 'package:app_qltv/FrontEnd/controller/danhmuc/nhacungcap_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -17,6 +18,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => NhomVangManager()),
+        ChangeNotifierProvider(create: (context) => LoaiVangManager()),
         ChangeNotifierProvider(create: (context) => NhaCungCapManager()),
         
       ],
