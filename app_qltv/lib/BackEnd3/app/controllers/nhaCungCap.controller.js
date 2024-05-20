@@ -13,13 +13,15 @@ exports.list_NhaCungCap = async (req, res, next) =>{
                 return res.status(404).json({message: `Loi khi cập nhật thong tin nhà cung cấp`});
             }else{
                 let KetQua = results.map(result =>({
-                    "NCCID": Number(result.NCCID),
-                    "NCCMA": result.NCCMA,
-                    "NCC_TEN": result.NCC_TEN,
-                    "NGAYBD": new Date(result.NGAYBD),
-                    "GHI_CHU": result.GHI_CHU,
-                    "SU_DUNG": result.SU_DUNG
-                }));
+                        "NCCID": Number(result.NCCID),
+                        "NCCMA": result.NCCMA,
+                        "NCC_TEN": result.NCC_TEN,
+                        "NGAYBD": new Date(result.NGAYBD).toLocaleDateString('vi-VN'),//.getDate() + "/"+ Number(new Date(result.NGAYBD).getMonth() + 1) +'/'+ new Date(result.NGAYBD).getFullYear() ),
+                        "GIO_BD": new Date(result.NGAYBD).toLocaleTimeString('vi-VN'),
+                        "GHI_CHU": result.GHI_CHU,
+                        "SU_DUNG": result.SU_DUNG
+                    })
+                );
                 return res.status(200).json(KetQua);
             }
         })
@@ -42,10 +44,12 @@ exports.lay_NhaCungCap = async (req, res, next) =>{
                     "NCCID": Number(result.NCCID),
                     "NCCMA": result.NCCMA,
                     "NCC_TEN": result.NCC_TEN,
-                    "NGAYBD": new Date(result.NGAYBD),
+                    "NGAYBD": new Date(result.NGAYBD).toLocaleDateString('vi-VN'),//.getDate() + "/"+ Number(new Date(result.NGAYBD).getMonth() + 1) +'/'+ new Date(result.NGAYBD).getFullYear() ),
+                    "GIO_BD": new Date(result.NGAYBD).toLocaleTimeString('vi-VN'),
                     "GHI_CHU": result.GHI_CHU,
                     "SU_DUNG": result.SU_DUNG
-                }));
+                })
+            );
                 return res.status(200).json(KetQua);
             }
         })
