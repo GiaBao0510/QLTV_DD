@@ -3,6 +3,7 @@ import 'package:app_qltv/FrontEnd/model/danhmuc/nhacungcap.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
+import 'package:app_qltv/FrontEnd/constants/config.dart';
 
 class NhaCungCapManager with ChangeNotifier {
   List<NhaCungCap> _nhaCungCaps = [];
@@ -12,7 +13,7 @@ class NhaCungCapManager with ChangeNotifier {
   int get nhaCungCapsLength => _nhaCungCaps.length;
 
   Future<List<NhaCungCap>> fetchNhaCungCap() async {
-  final response = await http.get(Uri.parse('http://localhost:3000/api/admin/danhsachnhacungcap'));
+  final response = await http.get(Uri.parse('$url/api/admin/danhsachnhacungcap'));
 
   if (response.statusCode == 200) {
     try {
@@ -33,7 +34,7 @@ class NhaCungCapManager with ChangeNotifier {
 
   Future<void> addNhaCungCap(NhaCungCap nhaCungCap) async {
     final response = await http.post(
-      Uri.parse('http://localhost:3000/api/admin/themnhacungcap'),
+      Uri.parse('$url/api/admin/themnhacungcap'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -55,7 +56,7 @@ class NhaCungCapManager with ChangeNotifier {
   Future<NhaCungCap> updateNhaCungCap(String nccMa, String ncc_ten, String ghiChu, String ngayBd) async {
     try {
       final response = await http.put(
-        Uri.parse('http://localhost:3000/api/admin/nhacungcap/$nccMa'),
+        Uri.parse('$url/api/admin/nhacungcap/$nccMa'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -80,7 +81,7 @@ class NhaCungCapManager with ChangeNotifier {
   Future<void> deleteNhaCungCap(int nccMa) async {
     try {
       final response = await http.delete(
-        Uri.parse('http://localhost:3000/api/admin/nhacungcap/$nccMa'),
+        Uri.parse('$url/api/admin/nhacungcap/$nccMa'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },

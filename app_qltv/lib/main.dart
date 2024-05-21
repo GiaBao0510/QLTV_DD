@@ -5,6 +5,8 @@ import 'package:provider/provider.dart';
 import 'package:app_qltv/FrontEnd/ui/home/home.dart';
 import 'package:app_qltv/FrontEnd/ui/routes.dart';
 import 'package:app_qltv/FrontEnd/controller/danhmuc/nhomvang_manager.dart'; // Import NhomVangManager của bạn
+import 'package:session_manager/session_manager.dart';
+import 'package:app_qltv/FrontEnd/ui/home/component/login.dart';
 
 void main() {
   runApp(MyApp());
@@ -12,6 +14,20 @@ void main() {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
+
+  //Kiểm tra xem đang nhap hay chua
+  Future<Widget> KiemTraDangNhap(BuildContext context) async{
+    //Lấy thông tin
+    String taiKhoan = await SessionManager().getString('username');
+    String matkhau = await SessionManager().getString('password');
+
+    //Nếu chưa có tìa khoản thì chuyển sang trang đăng nhập
+    if(taiKhoan.isEmpty || matkhau.isEmpty){
+      return LoginPage();
+    }
+
+    return HomeScreen();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +51,18 @@ class MyApp extends StatelessWidget {
             elevation: 0, // Xóa bỏ hiệu ứng đổ bóng của AppBar
           ),
         ),
-        home: const HomeScreen(),
+        home: FutureBuilder<Widget>(
+          future: KiemTraDangNhap(context),
+          builder: (context, snapshot){
+            if(snapshot.hasData){
+              return snapshot.data!;
+            }else if( snapshot.hasError){
+              return Text("Error: ${snapshot.error}");
+            }else{
+              return CircularProgressIndicator();
+            }
+          },
+        ),
         routes: routes,
       ),
     );

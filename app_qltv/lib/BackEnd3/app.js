@@ -43,21 +43,22 @@ app.post('/login', async (req, res, next) => {
             if(err){
                 return res.status(400).json({message: `Lỗi khi tìm USER_TEN: ${USER_TEN} `});
             }else if(!result || result.length == 0){
-                return res.status(400).json({message: `Tài khoản không tồn tại ${USER_TEN}`});
+                return res.status(400).json({message: `Tài khoản không tồn tại ${USER_TEN}`,value:-1});
             }else{
                 const MatKhauDaBam = result[0].MAT_KHAU;
                 
                 //So sánh mật khẩu
                 const kqSoSanh = await bcrypt.compare(MAT_KHAU, MatKhauDaBam);
                 if(!kqSoSanh){
-                    return res.status(400).json({message: `Mật khẩu không hợp lệ`});
+                    return res.status(400).json({message: `Mật khẩu không hợp lệ`, value:0});
                 }
                 
                 //Nếu đăng nhập thành công thì lưu thông tin
                 req.session.authenticated = true;
                 req.session.user = USER_TEN;
+                req.session.password = MatKhauDaBam;
                 req.secure.code = 'GOOD_REQUEST';
-                return res.status(200).json({message: `Đăng nhập thành công!`, USER: USER_TEN});
+                return res.status(200).json({message: `Đăng nhập thành công!` ,USER: USER_TEN ,PASS_WORD: MatKhauDaBam ,value:1});
             }
         });
         

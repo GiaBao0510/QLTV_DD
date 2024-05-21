@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import '../../model/danhmuc/loaivang.dart';
+import 'package:app_qltv/FrontEnd/constants/config.dart';
 import 'package:http/http.dart' as http;
 
 class LoaiVangManager with ChangeNotifier {
@@ -12,7 +13,7 @@ class LoaiVangManager with ChangeNotifier {
   int get loaiVangsLength => _loaiVangs.length;
 
   Future<List<LoaiVang>> fetchLoaiHang() async {
-    final response = await http.get(Uri.parse('http://localhost:3000/api/productType/'));
+    final response = await http.get(Uri.parse('$url/api/productType/'));
     if (response.statusCode == 200) {
       // Parse JSON array and convert to list of NhomVang objects
       List<dynamic> jsonList = jsonDecode(response.body);
@@ -30,7 +31,7 @@ class LoaiVangManager with ChangeNotifier {
    Future<LoaiVang> updateLoaiVang(String loaiId, LoaiVang loaiVang) async {
     try {
       final response = await http.put(
-        Uri.parse('http://localhost:3000/api/productType/$loaiId'),
+        Uri.parse('$url/api/productType/$loaiId'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -61,7 +62,7 @@ class LoaiVangManager with ChangeNotifier {
   Future<LoaiVang> deleteLoaiVang(String loaiId) async {
     try {
       final response = await http.delete(
-        Uri.parse('http://localhost:3000/api/productType/$loaiId'),
+        Uri.parse('$url/api/productType/$loaiId'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
