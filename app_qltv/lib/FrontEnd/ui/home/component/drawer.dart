@@ -37,7 +37,6 @@ class drawer extends StatelessWidget {
       print(res.body);
 
       SessionManager().setString('username','');
-      SessionManager().setString('password','');
 
       QuickAlert.show(
         context: context,

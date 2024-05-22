@@ -72,7 +72,6 @@ class _LoginPage extends State<LoginPage>{
     if(value == 1){
       print('Đăng nhập thành công');
       SessionManager().setString('username', user.username);
-      SessionManager().setString('password',user.password);
 
       QuickAlert.show(
         context: context,
