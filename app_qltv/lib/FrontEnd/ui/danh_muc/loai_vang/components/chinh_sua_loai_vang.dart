@@ -18,11 +18,23 @@ class ChinhSuaLoaiVangScreen extends StatefulWidget {
 class _ChinhSuaLoaiVangScreenState extends State<ChinhSuaLoaiVangScreen> {
   final _editForm = GlobalKey<FormState>();
   late LoaiVang _editedLoaiVang;
+  late Future<List<LoaiVang>> _loaiVangFuture;
+  List<LoaiVang> _loaiVangList = [];
 
   @override
   void initState() {
     super.initState();
+    _loadLoaiVanngs();
     _editedLoaiVang = widget.loaiVang; // Initialize _editedLoaiVang with widget's nhomVang
+  }
+
+  Future<void> _loadLoaiVanngs() async {
+    _loaiVangFuture = Provider.of<LoaiVangManager>(context, listen: false).fetchLoaiHang();
+    _loaiVangFuture.then((loaiVangs) {
+      setState(() {
+        _loaiVangList = loaiVangs;
+      });
+    });
   }
 
   @override
@@ -80,9 +92,10 @@ class _ChinhSuaLoaiVangScreenState extends State<ChinhSuaLoaiVangScreen> {
                       child: buildDonGiaCamField(),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(bottom: 0.0),
+                      padding: const EdgeInsets.only(bottom: 14.0),
                       child: buildGhiChuField(),
                     ),
+                    buildLoaiChaDropdown(),
                   ],
                 ),
               ),
@@ -100,6 +113,7 @@ class _ChinhSuaLoaiVangScreenState extends State<ChinhSuaLoaiVangScreen> {
       ),
     );
   }
+
 
  TextFormField buildLoaiVangField() {
     return TextFormField(
@@ -260,47 +274,44 @@ class _ChinhSuaLoaiVangScreenState extends State<ChinhSuaLoaiVangScreen> {
       textInputAction: TextInputAction.next,
       keyboardType: TextInputType.text,
       autofocus: true,
-      validator: (value) {
-        if (value!.isEmpty) {
-          return 'Please provide a value';
-        }
-        return null;
-      },
       onSaved: (value) {
         _editedLoaiVang = _editedLoaiVang.copyWith(ghiChu: value);
       },
     );
   }
 
-  // TextFormField buildLoaiChaField() {
-  //   return TextFormField(
-  //     decoration: const InputDecoration(
-  //       labelText: 'Loại Cha',
-  //       labelStyle: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-  //       filled: true,
-  //       fillColor: Colors.white,
-  //       border: OutlineInputBorder(
-  //         borderSide: BorderSide(color: Colors.white, width: 15.0),
-  //         borderRadius: BorderRadius.all(Radius.circular(15.0)),
-  //       ),
-  //     ),
-
-  //     textInputAction: TextInputAction.next,
-  //     keyboardType: TextInputType.text,
-  //     autofocus: true,
-  //     validator: (value) {
-  //       if (value!.isEmpty) {
-  //         return 'Please provide a value';
-  //       }
-  //       return null;
-  //     },
-  //     onSaved: (value) {
-  //       _editedLoaiVang = _editedLoaiVang.copyWith(nhomChaId: value);
-  //     },
-  //   );
-  // }
-
-
+  DropdownButtonFormField<int> buildLoaiChaDropdown() {
+    return DropdownButtonFormField<int>(
+      decoration: const InputDecoration(
+        labelText: 'Loại Cha',
+        labelStyle: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+        filled: true,
+        fillColor: Colors.white,
+        border: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.white, width: 15.0),
+          borderRadius: BorderRadius.all(Radius.circular(15.0)),
+        ),
+      ),
+      value: _editedLoaiVang.nhomChaId,
+      items: _loaiVangList.map((LoaiVang loaiHang) {
+        return DropdownMenuItem<int>(
+          value: int.parse(loaiHang.nhomHangMa!),
+          child: Text(loaiHang.nhomTen!),
+        );
+      }).toList(),
+      onChanged: (newValue) {
+        setState(() {
+          _editedLoaiVang = _editedLoaiVang.copyWith(nhomChaId: newValue);
+        });
+      },
+      validator: (value) {
+        if (value == null || value == 0) {
+          return 'Please select a value';
+        }
+        return null;
+      },
+    );
+  }
 
   Future<void> _saveForm(BuildContext context) async {
     final isValid = _editForm.currentState!.validate();
@@ -311,7 +322,7 @@ class _ChinhSuaLoaiVangScreenState extends State<ChinhSuaLoaiVangScreen> {
 
     try {
       final nhomVangManager = Provider.of<LoaiVangManager>(context, listen: false); 
-      await nhomVangManager.updateLoaiVang(_editedLoaiVang.nhomHangId as String, _editedLoaiVang); 
+      await nhomVangManager.updateLoaiVang(int.parse(_editedLoaiVang.nhomHangId!), _editedLoaiVang); 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: const Text('Cập nhật thành công!', style: TextStyle(fontWeight: FontWeight.w900), textAlign: TextAlign.center,),

@@ -1,10 +1,8 @@
-import 'dart:convert';
 import 'package:app_qltv/FrontEnd/controller/danhmuc/nhacungcap_manager.dart';
 import 'package:app_qltv/FrontEnd/model/danhmuc/nhacungcap.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:http/http.dart' as http;
 // ignore: depend_on_referenced_packages
 import 'package:intl/intl.dart';
 
@@ -18,14 +16,15 @@ class ThemNhaCungCapScreen extends StatefulWidget {
 class _ThemNhaCungCapScreenState extends State<ThemNhaCungCapScreen> {
   final _addForm = GlobalKey<FormState>();
   NhaCungCap _newNhaCungCap = NhaCungCap();
-  TextEditingController _dateController = TextEditingController();
+  final TextEditingController _dateController = TextEditingController();
   late DateTime _selectedDate;
+  final DateFormat _dateFormat = DateFormat('dd/MM/yyyy');
 
   @override
   void initState() {
     super.initState();
     _selectedDate = DateTime.now();
-    _dateController.text = DateFormat('dd/MM/yyyy').format(_selectedDate);
+    _dateController.text = _dateFormat.format(_selectedDate);
   }
 
   @override
@@ -44,9 +43,11 @@ class _ThemNhaCungCapScreenState extends State<ThemNhaCungCapScreen> {
     if (picked != null && picked != _selectedDate) {
       setState(() {
         _selectedDate = picked;
-        _dateController.text = DateFormat('dd/MM/yyyy').format(_selectedDate);
+        _dateController.text = _dateFormat.format(_selectedDate);
         _newNhaCungCap = _newNhaCungCap.copyWith(ngay_bd: _selectedDate.toIso8601String());
       });
+    } else {
+      _newNhaCungCap = _newNhaCungCap.copyWith(ngay_bd: _selectedDate.toIso8601String());
     }
   }
 
@@ -64,24 +65,28 @@ class _ThemNhaCungCapScreenState extends State<ThemNhaCungCapScreen> {
           },
         ),
         title: const Center(
-            child: Padding(
-              padding: EdgeInsets.only(right: 50.0),
-              child: Text("Thêm Nhà Cung Cấp", style: TextStyle(color: Colors.black ,fontWeight: FontWeight.w900), textAlign: TextAlign.center,),
+          child: Padding(
+            padding: EdgeInsets.only(right: 50.0),
+            child: Text(
+              "Thêm Nhà Cung Cấp",
+              style: TextStyle(color: Colors.black, fontWeight: FontWeight.w900),
+              textAlign: TextAlign.center,
             ),
+          ),
         ),
       ),
       body: Container(
-        padding: const EdgeInsets.all(16.0), 
+        padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _addForm,
           child: ListView(
             children: <Widget>[
               Container(
                 decoration: BoxDecoration(
-                  color: const Color.fromARGB(50, 169, 169, 169), 
-                  borderRadius: BorderRadius.circular(15.0), 
+                  color: const Color.fromARGB(50, 169, 169, 169),
+                  borderRadius: BorderRadius.circular(15.0),
                 ),
-                padding: const EdgeInsets.all(16.0), 
+                padding: const EdgeInsets.all(16.0),
                 child: Column(
                   children: [
                     Padding(
@@ -189,9 +194,6 @@ class _ThemNhaCungCapScreenState extends State<ThemNhaCungCapScreen> {
         }
         return null;
       },
-      onSaved: (value) {
-        // No need to save the value here, it's already saved in _selectDate method
-      },
     );
   }
 
@@ -201,7 +203,9 @@ class _ThemNhaCungCapScreenState extends State<ThemNhaCungCapScreen> {
       return;
     }
     _addForm.currentState!.save();
-
+     if (_newNhaCungCap.ngay_bd == null) {
+      _newNhaCungCap = _newNhaCungCap.copyWith(ngay_bd: _selectedDate.toIso8601String());
+    }
     try {
       final nhaCungCapManager = Provider.of<NhaCungCapManager>(context, listen: false); 
       await nhaCungCapManager.addNhaCungCap(_newNhaCungCap); // Call addNhaCungCap method
@@ -221,7 +225,11 @@ class _ThemNhaCungCapScreenState extends State<ThemNhaCungCapScreen> {
     } catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('Failed to add data', style: TextStyle(fontWeight: FontWeight.w900, color: Colors.red), textAlign: TextAlign.center,),
+          content: Text(
+            'Failed to add data: $error',
+            style: const TextStyle(fontWeight: FontWeight.w900, color: Colors.red),
+            textAlign: TextAlign.center,
+          ),
           backgroundColor: Colors.grey,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15.0),
