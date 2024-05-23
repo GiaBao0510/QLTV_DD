@@ -13,10 +13,15 @@ var db = mysql.createConnection({
     // user:"test131",
     // password:'123123'
 
-    port: '3306',
-    database: 'quanlytiemvang',
-    user:"userB",
-    password:'12345'
+    database: 'tiemvang',
+    port: '3307',
+    user:"root",
+    password:''
+
+    // port: '3306',
+    // database: 'quanlytiemvang',
+    // user:"userB",
+    // password:'12345'
 
 });
 
