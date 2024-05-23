@@ -1,4 +1,3 @@
-//database phn_nha_cung_cap
 
 
 class NhaCungCap {
@@ -19,7 +18,6 @@ class NhaCungCap {
   });
 
   NhaCungCap copyWith({
-    //int(10) for ncc_id
     int? ncc_id,
     String? ncc_ma,
     String? ncc_ten,
@@ -48,7 +46,6 @@ class NhaCungCap {
       su_dung: map['SU_DUNG'],
     );
   }
-  
 
   // Phương thức để chuyển đổi đối tượng NhaCungCap sang Map
   Map<String, dynamic> toMap() {

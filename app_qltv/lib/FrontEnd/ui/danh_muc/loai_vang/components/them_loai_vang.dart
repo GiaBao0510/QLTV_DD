@@ -1,9 +1,8 @@
+import 'package:app_qltv/FrontEnd/controller/danhmuc/loaivang_manager.dart';
+import 'package:app_qltv/FrontEnd/model/danhmuc/loaivang.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart'; // Import Provider package
-
-import 'package:app_qltv/FrontEnd/model/danhmuc/nhomvang.dart';
-import 'package:app_qltv/FrontEnd/controller/danhmuc/nhomvang_manager.dart';
 
 class ThemLoaiVangScreen extends StatefulWidget {
   static const routeName = "/themloaivang";
@@ -15,19 +14,34 @@ class ThemLoaiVangScreen extends StatefulWidget {
 }
 
 class _ThemLoaiVangScreenState extends State<ThemLoaiVangScreen> {
-  final _addForm = GlobalKey<FormState>();
-  var _newNhomVang = NhomVang(
-    loaiId: null,
-    loaiMa: '',
-    loaiTen: '',
-    ghiChu: '',
-    suDung: null,
-  );
+  final _formKey = GlobalKey<FormState>();
+  late LoaiVang _newLoaiVang;
+  late Future<List<LoaiVang>> _loaiVangFuture;
+  List<LoaiVang> _loaiVangList = [];
 
   @override
   void initState() {
     super.initState();
-    Provider.of<NhomVangManager>(context, listen: false).fetchLoaiHang();
+    _newLoaiVang = LoaiVang(
+      nhomHangId: '',
+      nhomTen: '',
+      donGiaVon: 0,
+      donGiaMua: 0,
+      donGiaBan: 0,
+      donGiaCam: 0,
+      nhomChaId: 1,
+      ghiChu: ''
+    );
+    _loadLoaiVangs();
+  }
+
+  Future<void> _loadLoaiVangs() async {
+    _loaiVangFuture = Provider.of<LoaiVangManager>(context, listen: false).fetchLoaiHang();
+    _loaiVangFuture.then((loaiVangs) {
+      setState(() {
+        _loaiVangList = loaiVangs;
+      });
+    });
   }
 
   @override
@@ -44,24 +58,28 @@ class _ThemLoaiVangScreenState extends State<ThemLoaiVangScreen> {
           },
         ),
         title: const Center(
-            child: Padding(
-              padding: EdgeInsets.only(right: 50.0),
-              child: Text("Thêm Loại Vàng", style: TextStyle(color: Colors.black ,fontWeight: FontWeight.w900), textAlign: TextAlign.center,),
+          child: Padding(
+            padding: EdgeInsets.only(right: 50.0),
+            child: Text(
+              "Thêm Loại Vàng",
+              style: TextStyle(color: Colors.black, fontWeight: FontWeight.w900),
+              textAlign: TextAlign.center,
             ),
+          ),
         ),
       ),
-      body: Padding(
+      body: Container(
         padding: const EdgeInsets.all(16.0),
         child: Form(
-          key: _addForm,
+          key: _formKey,
           child: ListView(
             children: <Widget>[
               Container(
                 decoration: BoxDecoration(
-                  color: const Color.fromARGB(50, 169, 169, 169), 
-                  borderRadius: BorderRadius.circular(15.0), 
+                  color: const Color.fromARGB(50, 169, 169, 169),
+                  borderRadius: BorderRadius.circular(15.0),
                 ),
-                padding: const EdgeInsets.all(16.0), 
+                padding: const EdgeInsets.all(16.0),
                 child: Column(
                   children: [
                     Padding(
@@ -84,14 +102,11 @@ class _ThemLoaiVangScreenState extends State<ThemLoaiVangScreen> {
                       padding: const EdgeInsets.only(bottom: 14.0),
                       child: buildDonGiaCamField(),
                     ),
-                    // Padding(
-                    //   padding: const EdgeInsets.only(bottom: 14.0),
-                    //   child: buildLoaiChaField(),
-                    // ),
                     Padding(
-                      padding: const EdgeInsets.only(bottom: 0.0),
+                      padding: const EdgeInsets.only(bottom: 14.0),
                       child: buildGhiChuField(),
                     ),
+                    buildLoaiChaDropdown(),
                   ],
                 ),
               ),
@@ -101,7 +116,7 @@ class _ThemLoaiVangScreenState extends State<ThemLoaiVangScreen> {
                   backgroundColor: Colors.grey[50]
                 ),
                 onPressed: () => _saveForm(context),
-                child: const Text('Thêm', style: TextStyle(fontWeight: FontWeight.w900, color: Colors.green),),
+                child: const Text('Thêm Mới', style: TextStyle(fontWeight: FontWeight.w900, color: Colors.green),),
               ),
             ],
           ),
@@ -110,8 +125,10 @@ class _ThemLoaiVangScreenState extends State<ThemLoaiVangScreen> {
     );
   }
 
+
   TextFormField buildLoaiVangField() {
     return TextFormField(
+      initialValue: _newLoaiVang.nhomTen.toString(),
       decoration: const InputDecoration(
         labelText: 'Loại Vàng',
         labelStyle: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
@@ -132,13 +149,14 @@ class _ThemLoaiVangScreenState extends State<ThemLoaiVangScreen> {
         return null;
       },
       onSaved: (value) {
-        _newNhomVang = _newNhomVang.copyWith(loaiTen: value);
+        _newLoaiVang = _newLoaiVang.copyWith(nhomTen: value);
       },
     );
   }
 
   TextFormField buildDonGiaVonField() {
     return TextFormField(
+      initialValue: _newLoaiVang.donGiaVon.toString(),
       decoration: const InputDecoration(
         labelText: 'Đơn Giá Vốn',
         labelStyle: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
@@ -149,9 +167,8 @@ class _ThemLoaiVangScreenState extends State<ThemLoaiVangScreen> {
           borderRadius: BorderRadius.all(Radius.circular(15.0)),
         ),
       ),
-
       textInputAction: TextInputAction.next,
-      keyboardType: TextInputType.text,
+      keyboardType: TextInputType.number,
       autofocus: true,
       validator: (value) {
         if (value!.isEmpty) {
@@ -160,13 +177,14 @@ class _ThemLoaiVangScreenState extends State<ThemLoaiVangScreen> {
         return null;
       },
       onSaved: (value) {
-        _newNhomVang = _newNhomVang.copyWith(ghiChu: value);
+        _newLoaiVang = _newLoaiVang.copyWith(donGiaVon: double.parse(value!));
       },
     );
   }
 
   TextFormField buildDonGiaMuaField() {
     return TextFormField(
+      initialValue: _newLoaiVang.donGiaMua.toString(),
       decoration: const InputDecoration(
         labelText: 'Đơn Giá Mua',
         labelStyle: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
@@ -177,9 +195,8 @@ class _ThemLoaiVangScreenState extends State<ThemLoaiVangScreen> {
           borderRadius: BorderRadius.all(Radius.circular(15.0)),
         ),
       ),
-
       textInputAction: TextInputAction.next,
-      keyboardType: TextInputType.text,
+      keyboardType: TextInputType.number,
       autofocus: true,
       validator: (value) {
         if (value!.isEmpty) {
@@ -188,13 +205,14 @@ class _ThemLoaiVangScreenState extends State<ThemLoaiVangScreen> {
         return null;
       },
       onSaved: (value) {
-        _newNhomVang = _newNhomVang.copyWith(ghiChu: value);
+        _newLoaiVang = _newLoaiVang.copyWith(donGiaMua: double.parse(value!));
       },
     );
   }
 
   TextFormField buildDonGiaBanField() {
     return TextFormField(
+      initialValue: _newLoaiVang.donGiaBan.toString(),
       decoration: const InputDecoration(
         labelText: 'Đơn Giá Bán',
         labelStyle: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
@@ -205,9 +223,8 @@ class _ThemLoaiVangScreenState extends State<ThemLoaiVangScreen> {
           borderRadius: BorderRadius.all(Radius.circular(15.0)),
         ),
       ),
-
       textInputAction: TextInputAction.next,
-      keyboardType: TextInputType.text,
+      keyboardType: TextInputType.number,
       autofocus: true,
       validator: (value) {
         if (value!.isEmpty) {
@@ -216,13 +233,14 @@ class _ThemLoaiVangScreenState extends State<ThemLoaiVangScreen> {
         return null;
       },
       onSaved: (value) {
-        _newNhomVang = _newNhomVang.copyWith(ghiChu: value);
+        _newLoaiVang = _newLoaiVang.copyWith(donGiaBan: double.parse(value!));
       },
     );
   }
 
   TextFormField buildDonGiaCamField() {
     return TextFormField(
+      initialValue: _newLoaiVang.donGiaCam.toString(),
       decoration: const InputDecoration(
         labelText: 'Đơn Giá Cầm',
         labelStyle: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
@@ -233,9 +251,8 @@ class _ThemLoaiVangScreenState extends State<ThemLoaiVangScreen> {
           borderRadius: BorderRadius.all(Radius.circular(15.0)),
         ),
       ),
-
       textInputAction: TextInputAction.next,
-      keyboardType: TextInputType.text,
+      keyboardType: TextInputType.number,
       autofocus: true,
       validator: (value) {
         if (value!.isEmpty) {
@@ -244,38 +261,10 @@ class _ThemLoaiVangScreenState extends State<ThemLoaiVangScreen> {
         return null;
       },
       onSaved: (value) {
-        _newNhomVang = _newNhomVang.copyWith(ghiChu: value);
+        _newLoaiVang = _newLoaiVang.copyWith(donGiaCam: double.parse(value!));
       },
     );
   }
-
-  // TextFormField buildLoaiChaField() {
-  //   return TextFormField(
-  //     decoration: const InputDecoration(
-  //       labelText: 'Loại Cha',
-  //       labelStyle: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-  //       filled: true,
-  //       fillColor: Colors.white,
-  //       border: OutlineInputBorder(
-  //         borderSide: BorderSide(color: Colors.white, width: 15.0),
-  //         borderRadius: BorderRadius.all(Radius.circular(15.0)),
-  //       ),
-  //     ),
-
-  //     textInputAction: TextInputAction.next,
-  //     keyboardType: TextInputType.text,
-  //     autofocus: true,
-  //     validator: (value) {
-  //       if (value!.isEmpty) {
-  //         return 'Please provide a value';
-  //       }
-  //       return null;
-  //     },
-  //     onSaved: (value) {
-  //       _newNhomVang = _newNhomVang.copyWith(nhomChaId: value);
-  //     },
-  //   );
-  // }
 
   TextFormField buildGhiChuField() {
     return TextFormField(
@@ -289,36 +278,61 @@ class _ThemLoaiVangScreenState extends State<ThemLoaiVangScreen> {
           borderRadius: BorderRadius.all(Radius.circular(15.0)),
         ),
       ),
-
       textInputAction: TextInputAction.next,
       keyboardType: TextInputType.text,
       autofocus: true,
-      validator: (value) {
-        if (value!.isEmpty) {
-          return 'Please provide a value';
-        }
-        return null;
-      },
       onSaved: (value) {
-        _newNhomVang = _newNhomVang.copyWith(ghiChu: value);
+        _newLoaiVang = _newLoaiVang.copyWith(ghiChu: value);
       },
     );
   }
 
+  DropdownButtonFormField<int> buildLoaiChaDropdown() {
+    return DropdownButtonFormField<int>(
+      decoration: const InputDecoration(
+        labelText: 'Loại Cha',
+        labelStyle: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+        filled: true,
+        fillColor: Colors.white,
+        border: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.white, width: 15.0),
+          borderRadius: BorderRadius.all(Radius.circular(15.0)),
+        ),
+      ),
+      value: _newLoaiVang.nhomChaId,
+      items: _loaiVangList.map((LoaiVang loaiHang) {
+        return DropdownMenuItem<int>(
+          value: int.parse(loaiHang.nhomHangMa!),
+          child: Text(loaiHang.nhomTen!),
+        );
+      }).toList(),
+      onChanged: (newValue) {
+        setState(() {
+          _newLoaiVang = _newLoaiVang.copyWith(nhomChaId: newValue);
+        });
+      },
+      validator: (value) {
+        if (value == null || value == 0) {
+          return 'Please select a value';
+        }
+        return null;
+      },
+    );
+  }
 
   Future<void> _saveForm(BuildContext context) async {
-    final isValid = _addForm.currentState!.validate();
+    final isValid = _formKey.currentState!.validate();
     if (!isValid) {
       return;
     }
-    _addForm.currentState!.save();
+    _formKey.currentState!.save();
 
     try {
-      final nhomVangManager = Provider.of<NhomVangManager>(context, listen: false);
-      await nhomVangManager.addNhomVang(_newNhomVang);
+      final nhomVangManager = Provider.of<LoaiVangManager>(context, listen: false);
+      await nhomVangManager.addLoaiVang(_newLoaiVang);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('Thêm thành công!', style: TextStyle(fontWeight: FontWeight.w900), textAlign: TextAlign.center,),
+          content: const Text('Thêm mới thành công!', style: TextStyle(fontWeight: FontWeight.w900), textAlign: TextAlign.center,),
           backgroundColor: Colors.grey,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15.0),
@@ -332,7 +346,7 @@ class _ThemLoaiVangScreenState extends State<ThemLoaiVangScreen> {
     } catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('Failed to update data', style: TextStyle(fontWeight: FontWeight.w900, color: Colors.red), textAlign: TextAlign.center,),
+          content: const Text('Failed to add data', style: TextStyle(fontWeight: FontWeight.w900, color: Colors.red), textAlign: TextAlign.center,),
           backgroundColor: Colors.grey,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15.0),
