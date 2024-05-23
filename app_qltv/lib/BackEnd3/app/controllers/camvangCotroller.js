@@ -1,11 +1,11 @@
 
 // //  table cam_phieu_cam_vang
 
-const bao_caoPhieuServices = require('../services/baoCaoPhieuServices');
+const camvangServices = require('../services/camvangServices');
 
 exports.getPhieuDangCam = async (req, res, next) => {
   try {
-    const phieuList = await bao_caoPhieuServices.getPhieuDangCam();
+    const phieuList = await camvangServices.getPhieuDangCam();
     res.status(200).json(phieuList);
   } catch (error) {
     next(error);
@@ -13,7 +13,7 @@ exports.getPhieuDangCam = async (req, res, next) => {
 };
 exports.getPhieuDangCamById = async (req, res, next) => {
   try {
-    const phieu = await bao_caoPhieuServices.getPhieuDangCamById(req.params.id);
+    const phieu = await camvangServices.getPhieuDangCamById(req.params.id);
     res.status(200).json(phieu);
   } catch (error) {
     next(error);
@@ -22,7 +22,7 @@ exports.getPhieuDangCamById = async (req, res, next) => {
 // //  table cam_chi_tiet_phieu_cam_vang
 exports.getChiTietPhieuCam = async (req, res, next) => {
     try {
-      const phieuList = await bao_caoPhieuServices.getChiTietPhieuCam();
+      const phieuList = await camvangServices.getChiTietPhieuCam();
       res.status(200).json(phieuList);
     } catch (error) {
       next(error);
@@ -30,7 +30,7 @@ exports.getChiTietPhieuCam = async (req, res, next) => {
   };
   exports.getChiTietPhieuCamById = async (req, res, next) => {
     try {
-      const phieu = await bao_caoPhieuServices.getChiTietPhieuCamById(req.params.id);
+      const phieu = await camvangServices.getChiTietPhieuCamById(req.params.id);
       res.status(200).json(phieu);
     } catch (error) {
       next(error);

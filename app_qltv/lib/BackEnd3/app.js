@@ -3,7 +3,7 @@ const session = require('express-session');
 const cors = require('cors');
 const os = require('os');
 const bcrypt = require('bcrypt');
-
+const ApiError = require('./app/api-error')
 const db = require('./app/config/index_2');
 const admin = require('./app/routers/admin.router');
 const userRoutes = require('./app/routers/userRoutes');
