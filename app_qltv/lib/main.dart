@@ -12,7 +12,7 @@ import 'package:http/http.dart' as http;
 import 'package:app_qltv/FrontEnd/constants/config.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -21,26 +21,27 @@ class MyApp extends StatelessWidget {
   //Kiểm tra xem tai khoan con hieu luc hay không
   Future<Widget> KiemTraTaiKhoanConHieuLuc(BuildContext context) async{
     //Lấy thông tin
-    String check_valid = CheckValidity;
+    String checkValid = CheckValidity;
 
     // >>>>>>>>>>>>>>>>>>>>>>> Để tạm <<<<<<<<<<<<<<<<<<<<<<<<<
     String tennguoidung = await SessionManager().getString('username');
-    if(tennguoidung!=null || !tennguoidung.isEmpty){
-      return HomeScreen();
+    if(tennguoidung.isEmpty){
+      return const LoginPage();
     }
 
 
-    var res = await http.post(Uri.parse(check_valid), headers: {"Content-Type": "application/json"},);
-
-    print(res.body);
-    final thongtinphanhoi = jsonDecode(res.body);
-    final hieuluc = thongtinphanhoi['valid'] as int;
-
-    //Nếu chưa có tài khoản cn hiệu lực không. Nếu hết hiệu lực thì đăng nhập
-    if(hieuluc == 0){
-      return LoginPage();
-    }
-    return HomeScreen();
+    // >>>>>>>>>>>>>>>>>>>>>>> Vấn đề <<<<<<<<<<<<<<<<<<<<<<<<<
+    // var res = await http.post(Uri.parse(checkValid), headers: {"Content-Type": "application/json"},);
+    //
+    // print(res.body);
+    // final thongtinphanhoi = jsonDecode(res.body);
+    // final hieuluc = thongtinphanhoi['valid'] as int;
+    //
+    // //Nếu chưa có tài khoản cn hiệu lực không. Nếu hết hiệu lực thì đăng nhập
+    // if(hieuluc == 0){
+    //   return const LoginPage();
+    // }
+    return const HomeScreen();
   }
 
   @override
@@ -73,7 +74,7 @@ class MyApp extends StatelessWidget {
             }else if( snapshot.hasError){
               return Text("Error: ${snapshot.error}");
             }else{
-              return CircularProgressIndicator();
+              return const CircularProgressIndicator();
             }
           },
         ),

@@ -20,7 +20,7 @@ class ChinhSuaNhaCungCapScreen extends StatefulWidget {
 class _ChinhSuaNhaCungCapScreenState extends State<ChinhSuaNhaCungCapScreen> {
   final _editForm = GlobalKey<FormState>();
   late NhaCungCap _editedNhaCungCap;
-  TextEditingController _dateController = TextEditingController();
+  final TextEditingController _dateController = TextEditingController();
   late DateTime _selectedDate;
 
   @override
@@ -234,7 +234,7 @@ class _ChinhSuaNhaCungCapScreenState extends State<ChinhSuaNhaCungCapScreen> {
     } catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text("Failed to update data ${error}", style: TextStyle(fontWeight: FontWeight.w900, color: Colors.red), textAlign: TextAlign.center,),
+          content: Text("Failed to update data $error", style: const TextStyle(fontWeight: FontWeight.w900, color: Colors.red), textAlign: TextAlign.center,),
           backgroundColor: Colors.grey,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15.0),

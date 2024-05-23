@@ -13,23 +13,23 @@ class NhaCungCapManager with ChangeNotifier {
   int get nhaCungCapsLength => _nhaCungCaps.length;
 
   Future<List<NhaCungCap>> fetchNhaCungCap() async {
-  final response = await http.get(Uri.parse('$url/api/admin/danhsachnhacungcap'));
+    final response = await http.get(Uri.parse('$url/api/admin/danhsachnhacungcap'));
 
-  if (response.statusCode == 200) {
-    try {
-      List<dynamic> jsonList = jsonDecode(response.body);
-      List<NhaCungCap> nhaCungCapList = jsonList.map((e) => NhaCungCap.fromMap(e)).toList();
-      _nhaCungCaps = nhaCungCapList;
-      notifyListeners();
-      return nhaCungCapList;
-    } catch (e) {
-      print('Error occurred while mapping data: $e');
-      return [];
+    if (response.statusCode == 200) {
+      try {
+        List<dynamic> jsonList = jsonDecode(response.body);
+        List<NhaCungCap> nhaCungCapList = jsonList.map((e) => NhaCungCap.fromMap(e)).toList();
+        _nhaCungCaps = nhaCungCapList;
+        notifyListeners();
+        return nhaCungCapList;
+      } catch (e) {
+        print('Error occurred while mapping data: $e');
+        return [];
+      }
+    } else {
+      throw Exception('Failed to load data');
     }
-  } else {
-    throw Exception('Failed to load data');
   }
-}
 
 
   Future<void> addNhaCungCap(NhaCungCap nhaCungCap) async {
@@ -53,7 +53,7 @@ class NhaCungCapManager with ChangeNotifier {
     }
   }
 
-  Future<NhaCungCap> updateNhaCungCap(String nccMa, String ncc_ten, String ghiChu, String ngayBd) async {
+  Future<NhaCungCap> updateNhaCungCap(String nccMa, String nccTen, String ghiChu, String ngayBd) async {
     try {
       final response = await http.put(
         Uri.parse('$url/api/admin/nhacungcap/$nccMa'),
@@ -61,7 +61,7 @@ class NhaCungCapManager with ChangeNotifier {
           'Content-Type': 'application/json; charset=UTF-8',
         },
         body: jsonEncode({
-          'NCC_TEN': ncc_ten,
+          'NCC_TEN': nccTen,
           'GHI_CHU': ghiChu,
           'NGAYBD': ngayBd,
         }),

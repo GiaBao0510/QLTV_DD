@@ -88,7 +88,7 @@ class _NhaCungCapScreenState extends State<NhaCungCapScreen> {
             child: IconButton(
               onPressed: () async {
                 final result = await Navigator.of(context).push(
-                  createRoute((context) => ThemNhaCungCapScreen()),
+                  createRoute((context) => const ThemNhaCungCapScreen()),
                 );
                 if (result == true) {
                   _loadNhaCungCaps(); // Refresh the list when receiving the result
@@ -130,7 +130,7 @@ class _NhaCungCapScreenState extends State<NhaCungCapScreen> {
         } else {
           return ListView.builder(
             shrinkWrap: true, // shrinkWrap to make ListView fit within Column
-            physics: NeverScrollableScrollPhysics(), // Disable ListView's own scrolling
+            physics: const NeverScrollableScrollPhysics(), // Disable ListView's own scrolling
             itemCount: _filteredNhaCungCapList.length,
             reverse: true,
             itemBuilder: (BuildContext context, int index) {

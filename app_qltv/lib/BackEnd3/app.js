@@ -165,7 +165,7 @@ app.post('/refresh-token', (req, res)=>{
 })
 
 //Hủy phiên - đăng xuất
-app.post('/exit', function(res, req){
+app.post('/exit', function(req, res,next ){
     try{
         //HỦy phiên
         req.session.destroy();
@@ -175,7 +175,7 @@ app.post('/exit', function(res, req){
         res.clearCookie('isLoggedIn', {secure: true});
         res.clearCookie('accessToken', {secure: true});
         res.clearCookie('refreshToken', {secure: true});
-        return res.status(200).json({message: "Hủy phiên thành công"});
+        return res.status(200).json({message: "Hủy phiên thành công, Đăng xuất thành công"});
     }catch(err){
         return next(new ApiError(500,`Loi khi thuc hien huy phien: ${err}`));
     }

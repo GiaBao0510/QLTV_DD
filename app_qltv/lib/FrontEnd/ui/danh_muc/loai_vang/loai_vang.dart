@@ -124,7 +124,7 @@ class _LoaiVangScreenState extends State<LoaiVangScreen> {
         } else {
           return ListView.builder(
             shrinkWrap: true, // shrinkWrap to make ListView fit within Column
-            physics: NeverScrollableScrollPhysics(), // Disable ListView's own scrolling
+            physics: const NeverScrollableScrollPhysics(), // Disable ListView's own scrolling
             itemCount: _filteredLoaiVanngList.length,
             reverse: true,
             itemBuilder: (BuildContext context, int index) {

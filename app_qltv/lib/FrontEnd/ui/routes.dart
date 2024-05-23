@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 
 final Map<String, WidgetBuilder> routes = {
   // LoaiVangScreen.routeName: (ctx) => LoaiVangScreen(),
-  NhomVangScreen.routeName: (ctx) => NhomVangScreen(),
-  ThemNhomVangScreen.routeName: (ctx) => ThemNhomVangScreen(),
+  NhomVangScreen.routeName: (ctx) => const NhomVangScreen(),
+  ThemNhomVangScreen.routeName: (ctx) => const ThemNhomVangScreen(),
 };
 

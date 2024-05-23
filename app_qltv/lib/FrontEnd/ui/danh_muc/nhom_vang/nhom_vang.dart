@@ -123,7 +123,7 @@ class _NhomVangScreenState extends State<NhomVangScreen> {
         } else {
           return ListView.builder(
             shrinkWrap: true, // shrinkWrap to make ListView fit within Column
-            physics: NeverScrollableScrollPhysics(), // Disable ListView's own scrolling
+            physics: const NeverScrollableScrollPhysics(), // Disable ListView's own scrolling
             itemCount: _filteredNhomVangList.length,
             reverse: true,
             itemBuilder: (BuildContext context, int index) {

@@ -1,15 +1,15 @@
-import 'dart:convert';
 import 'package:app_qltv/FrontEnd/controller/danhmuc/nhacungcap_manager.dart';
 import 'package:app_qltv/FrontEnd/model/danhmuc/nhacungcap.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:http/http.dart' as http;
 // ignore: depend_on_referenced_packages
 import 'package:intl/intl.dart';
 
 class ThemNhaCungCapScreen extends StatefulWidget {
   static const routeName = "/themNhaCungCap";
+
+  const ThemNhaCungCapScreen({super.key});
 
   @override
   State<ThemNhaCungCapScreen> createState() => _ThemNhaCungCapScreenState();
@@ -18,7 +18,7 @@ class ThemNhaCungCapScreen extends StatefulWidget {
 class _ThemNhaCungCapScreenState extends State<ThemNhaCungCapScreen> {
   final _addForm = GlobalKey<FormState>();
   NhaCungCap _newNhaCungCap = NhaCungCap();
-  TextEditingController _dateController = TextEditingController();
+  final TextEditingController _dateController = TextEditingController();
   late DateTime _selectedDate;
 
   @override
