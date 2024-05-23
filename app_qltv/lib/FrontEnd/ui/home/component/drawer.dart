@@ -3,6 +3,7 @@ import 'package:app_qltv/FrontEnd/ui/danh_muc/loai_vang/loai_vang.dart';
 import 'package:app_qltv/FrontEnd/ui/danh_muc/nha_cung_cap/nha_cung_cap_green.dart';
 import 'package:app_qltv/FrontEnd/ui/danh_muc/nhom_vang/nhom_vang.dart';
 import 'package:app_qltv/FrontEnd/constants/config.dart';
+import 'package:app_qltv/FrontEnd/ui/hethonng/nhom/nhom.dart';
 import 'package:app_qltv/main.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -199,7 +200,10 @@ class drawer extends StatelessWidget {
                   leading: const Icon(CupertinoIcons.bell),
                   title: const Text('Nhóm Người Dùng'),
                   onTap: () {
-                    // Handle Nhóm Người Dùng tap
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const NhomPage()),
+                    );
                   },
                 ),
               ),

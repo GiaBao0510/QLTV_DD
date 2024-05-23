@@ -28,7 +28,36 @@ class LoaiVangManager with ChangeNotifier {
     }
   }
 
-   Future<LoaiVang> updateLoaiVang(String loaiId, LoaiVang loaiVang) async {
+  Future<void> addLoaiVang(LoaiVang loaiVang) async {
+    // Thêm loaiVang vào backend
+    final response = await http.post(
+      Uri.parse('$url/api/productType/'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, dynamic>{
+          'NHOM_TEN': loaiVang.nhomTen,
+          'DON_GIA_VON': loaiVang.donGiaVon,
+          'DON_GIA_MUA': loaiVang.donGiaMua,
+          'DON_GIA_BAN': loaiVang.donGiaBan, 
+          'DON_GIA_CAM': loaiVang.donGiaCam,
+          'GHI_CHU': loaiVang.ghiChu,
+          'MUA_BAN': 0,
+          'SU_DUNG': 1,
+          'NHOMCHAID': loaiVang.nhomChaId,
+        }),
+    );
+
+    if (response.statusCode == 200) {
+      // Nếu thành công, thêm vào danh sách nội bộ và thông báo thay đổi
+      _loaiVangs.add(loaiVang);
+      notifyListeners();
+    } else {
+      throw Exception('Failed to add loaiVang');
+    }
+  }
+
+   Future<LoaiVang> updateLoaiVang(int loaiId, LoaiVang loaiVang) async {
     try {
       final response = await http.put(
         Uri.parse('$url/api/productType/$loaiId'),
@@ -41,7 +70,8 @@ class LoaiVangManager with ChangeNotifier {
           'DON_GIA_MUA': loaiVang.donGiaMua,
           'DON_GIA_BAN': loaiVang.donGiaBan, 
           'DON_GIA_CAM': loaiVang.donGiaCam,
-          'GHI_CHU': loaiVang.ghiChu 
+          'GHI_CHU': loaiVang.ghiChu,
+          'NHOMCHAID': loaiVang.nhomChaId,
         }),
       );
 

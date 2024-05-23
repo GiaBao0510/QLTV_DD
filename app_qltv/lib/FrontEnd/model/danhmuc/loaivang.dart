@@ -7,10 +7,10 @@ class LoaiVang {
   final String? nhomTen;
   final double? donGiaBan;
   final double? donGiaMua;
-  final bool? muaBan;
+  final int? muaBan;
   final double? donGiaVon;
   final double? donGiaCam;
-  final bool? suDung;
+  final int? suDung;
   final String? ghiChu;
 
   LoaiVang({
@@ -36,10 +36,10 @@ class LoaiVang {
     String? nhomTen,
     double? donGiaBan,
     double? donGiaMua,
-    bool? muaBan,
+    int? muaBan,
     double? donGiaVon,
     double? donGiaCam,
-    bool? suDung,
+    int? suDung,
     String? ghiChu,
   }) {
     return LoaiVang(
@@ -64,12 +64,12 @@ class LoaiVang {
       nhomHangMa: map['NHOMHANGMA'],
       nhomChaId: map['NHOMCHAID'],
       nhomTen: map['NHOM_TEN'],
-      donGiaBan: map['DON_GIA_BAN'],
-      donGiaMua: map['DON_GIA_MUA'],
-      muaBan: map['MUA_BAN'] == 1,
-      donGiaVon: map['DON_GIA_VON'],
-      donGiaCam: map['DON_GIA_CAM'],
-      suDung: map['SU_DUNG'] == 1,
+      donGiaBan: (map['DON_GIA_BAN'] as num).toDouble(),
+      donGiaMua: (map['DON_GIA_MUA'] as num).toDouble(),
+      muaBan: map['MUA_BAN'],
+      donGiaVon: (map['DON_GIA_VON'] as num).toDouble(),
+      donGiaCam: (map['DON_GIA_CAM'] as num).toDouble(),
+      suDung: map['SU_DUNG'],
       ghiChu: map['GHI_CHU'],
     );
   }
@@ -83,10 +83,10 @@ class LoaiVang {
       'NHOM_TEN': nhomTen,
       'DON_GIA_BAN': donGiaBan,
       'DON_GIA_MUA': donGiaMua,
-      'MUA_BAN': muaBan == true ? 1 : 0,
+      'MUA_BAN': muaBan,
       'DON_GIA_VON': donGiaVon,
       'DON_GIA_CAM': donGiaCam,
-      'SU_DUNG': suDung == true ? 1 : 0,
+      'SU_DUNG': suDung,
       'GHI_CHU': ghiChu,
     };
   }

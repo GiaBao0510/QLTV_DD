@@ -1,54 +1,35 @@
-import 'package:app_qltv/FrontEnd/controller/danhmuc/nhacungcap_manager.dart';
-import 'package:app_qltv/FrontEnd/model/danhmuc/nhacungcap.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-// ignore: depend_on_referenced_packages
-import 'package:intl/intl.dart';
+import 'package:provider/provider.dart'; // Import Provider package
 
-class ThemNhaCungCapScreen extends StatefulWidget {
-  static const routeName = "/themNhaCungCap";
+import 'package:app_qltv/FrontEnd/model/hethong/nhom.dart';
+import 'package:app_qltv/FrontEnd/controller/hethong/nhom_manager.dart';
+
+class ThemNhomScreen extends StatefulWidget {
+  static const routeName = "/themnnhom";
+
+  const ThemNhomScreen({Key? key}) : super(key: key);
 
   @override
-  State<ThemNhaCungCapScreen> createState() => _ThemNhaCungCapScreenState();
+  State<ThemNhomScreen> createState() => _ThemNhomScreenState();
 }
 
-class _ThemNhaCungCapScreenState extends State<ThemNhaCungCapScreen> {
+class _ThemNhomScreenState extends State<ThemNhomScreen> {
   final _addForm = GlobalKey<FormState>();
-  NhaCungCap _newNhaCungCap = NhaCungCap();
-  final TextEditingController _dateController = TextEditingController();
-  late DateTime _selectedDate;
-  final DateFormat _dateFormat = DateFormat('dd/MM/yyyy');
+  var _newNhom = Nhom(
+    groupId: null,
+    groupMa: '',
+    groupTen: '',
+    biKhoa: false,
+    lyDoKhoa: '',
+    suDung: true,
+    ngayTao: DateTime.now(),
+  );
 
   @override
   void initState() {
     super.initState();
-    _selectedDate = DateTime.now();
-    _dateController.text = _dateFormat.format(_selectedDate);
-  }
-
-  @override
-  void dispose() {
-    _dateController.dispose();
-    super.dispose();
-  }
-
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: _selectedDate,
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2101),
-    );
-    if (picked != null && picked != _selectedDate) {
-      setState(() {
-        _selectedDate = picked;
-        _dateController.text = _dateFormat.format(_selectedDate);
-        _newNhaCungCap = _newNhaCungCap.copyWith(ngay_bd: _selectedDate.toIso8601String());
-      });
-    } else {
-      _newNhaCungCap = _newNhaCungCap.copyWith(ngay_bd: _selectedDate.toIso8601String());
-    }
+    Provider.of<NhomManager>(context, listen: false).fetchNhoms();
   }
 
   @override
@@ -65,17 +46,13 @@ class _ThemNhaCungCapScreenState extends State<ThemNhaCungCapScreen> {
           },
         ),
         title: const Center(
-          child: Padding(
-            padding: EdgeInsets.only(right: 50.0),
-            child: Text(
-              "Thêm Nhà Cung Cấp",
-              style: TextStyle(color: Colors.black, fontWeight: FontWeight.w900),
-              textAlign: TextAlign.center,
+            child: Padding(
+              padding: EdgeInsets.only(right: 50.0),
+              child: Text("Thêm Nhóm", style: TextStyle(color: Colors.black, fontWeight: FontWeight.w900), textAlign: TextAlign.center,),
             ),
-          ),
         ),
       ),
-      body: Container(
+      body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _addForm,
@@ -91,16 +68,13 @@ class _ThemNhaCungCapScreenState extends State<ThemNhaCungCapScreen> {
                   children: [
                     Padding(
                       padding: const EdgeInsets.only(bottom: 14.0),
-                      child: buildLoaiTenField(),
+                      child: buildGroupTenField(),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(bottom: 14.0),
-                      child: buildKyHieuField(),
+                      child: buildLyDoKhoaField(),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 0.0),
-                      child: buildNgayBdField(context),
-                    ),
+                    buildBiKhoaCheckbox(),
                   ],
                 ),
               ),
@@ -119,10 +93,10 @@ class _ThemNhaCungCapScreenState extends State<ThemNhaCungCapScreen> {
     );
   }
 
-  TextFormField buildLoaiTenField() {
+  TextFormField buildGroupTenField() {
     return TextFormField(
       decoration: const InputDecoration(
-        labelText: 'Tên Nhà Cung Cấp',
+        labelText: 'Tên Nhóm',
         labelStyle: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
         filled: true,
         fillColor: Colors.white,
@@ -136,20 +110,20 @@ class _ThemNhaCungCapScreenState extends State<ThemNhaCungCapScreen> {
       autofocus: true,
       validator: (value) {
         if (value!.isEmpty) {
-          return 'Please provide a value';
+          return 'Vui lòng cung cấp tên nhóm';
         }
         return null;
       },
       onSaved: (value) {
-        _newNhaCungCap = _newNhaCungCap.copyWith(ncc_ten: value);
+        _newNhom = _newNhom.copyWith(groupTen: value);
       },
     );
   }
 
-  TextFormField buildKyHieuField() {
+  TextFormField buildLyDoKhoaField() {
     return TextFormField(
       decoration: const InputDecoration(
-        labelText: 'Địa Chỉ',
+        labelText: 'Lý Do Khóa',
         labelStyle: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
         filled: true,
         fillColor: Colors.white,
@@ -160,40 +134,37 @@ class _ThemNhaCungCapScreenState extends State<ThemNhaCungCapScreen> {
       ),
       textInputAction: TextInputAction.next,
       keyboardType: TextInputType.text,
-      autofocus: true,
-      validator: (value) {
-        if (value!.isEmpty) {
-          return 'Please provide a value';
-        }
-        return null;
-      },
+      // validator: (value) {
+      //   if (value!.isEmpty) {
+      //     return 'Vui lòng cung cấp lý do khóa';
+      //   }
+      //   return null;
+      // },
       onSaved: (value) {
-        _newNhaCungCap = _newNhaCungCap.copyWith(ghi_chu: value);
+        _newNhom = _newNhom.copyWith(lyDoKhoa: value);
       },
     );
   }
 
-  TextFormField buildNgayBdField(BuildContext context) {
-    return TextFormField(
-      controller: _dateController,
-      decoration: const InputDecoration(
-        labelText: 'Ngày Bắt Đầu',
-        labelStyle: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-        filled: true,
-        fillColor: Colors.white,
-        border: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.white, width: 15.0),
-          borderRadius: BorderRadius.all(Radius.circular(15.0)),
+  Row buildBiKhoaCheckbox() {
+    return Row(
+      children: [
+        Checkbox(
+          value: _newNhom.biKhoa,
+          onChanged: (value) {
+            setState(() {
+              _newNhom = _newNhom.copyWith(biKhoa: value);
+            });
+          },
         ),
-      ),
-      readOnly: true,
-      onTap: () => _selectDate(context),
-      validator: (value) {
-        if (value!.isEmpty) {
-          return 'Please provide a value';
-        }
-        return null;
-      },
+        const Text(
+          'Bị Khóa',
+          style: TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ],
     );
   }
 
@@ -203,12 +174,10 @@ class _ThemNhaCungCapScreenState extends State<ThemNhaCungCapScreen> {
       return;
     }
     _addForm.currentState!.save();
-     if (_newNhaCungCap.ngay_bd == null) {
-      _newNhaCungCap = _newNhaCungCap.copyWith(ngay_bd: _selectedDate.toIso8601String());
-    }
+
     try {
-      final nhaCungCapManager = Provider.of<NhaCungCapManager>(context, listen: false); 
-      await nhaCungCapManager.addNhaCungCap(_newNhaCungCap); // Call addNhaCungCap method
+      final nhomManager = Provider.of<NhomManager>(context, listen: false);
+      await nhomManager.addNhom(_newNhom);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: const Text('Thêm thành công!', style: TextStyle(fontWeight: FontWeight.w900), textAlign: TextAlign.center,),
@@ -221,15 +190,11 @@ class _ThemNhaCungCapScreenState extends State<ThemNhaCungCapScreen> {
           margin: const EdgeInsets.only(left: 15.0, right: 15.0, bottom: 15.0), // cách 2 cạnh và đáy màn hình 15px
         ),
       );
-      Navigator.of(context).pop(true); // Go back to the previous screen
+      Navigator.of(context).pop(true); // Quay lại màn hình trước
     } catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(
-            'Failed to add data: $error',
-            style: const TextStyle(fontWeight: FontWeight.w900, color: Colors.red),
-            textAlign: TextAlign.center,
-          ),
+          content: const Text('Không thể thêm nhóm', style: TextStyle(fontWeight: FontWeight.w900, color: Colors.red), textAlign: TextAlign.center,),
           backgroundColor: Colors.grey,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15.0),
