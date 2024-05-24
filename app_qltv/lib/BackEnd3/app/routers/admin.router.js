@@ -56,7 +56,7 @@ router.route('/themnhacungcap').post(nhacungcap.Add_NhaCungCap);
 router.route('/danhsachkho').get(kho.list_wareHouse);
 
 //Thêm 
-router.route('/themkho').post(kho.Add_wareHouse);
+// router.route('/themkho').post(kho.Add_wareHouse);
 
 //Tìm, sửa ,xóa kho
 router.route('/kho/:KHOMA')
