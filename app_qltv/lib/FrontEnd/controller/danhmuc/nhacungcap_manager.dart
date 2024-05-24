@@ -31,7 +31,6 @@ class NhaCungCapManager with ChangeNotifier {
     }
   }
 
-
   Future<void> addNhaCungCap(NhaCungCap nhaCungCap) async {
     final response = await http.post(
       Uri.parse('$url/api/admin/themnhacungcap'),

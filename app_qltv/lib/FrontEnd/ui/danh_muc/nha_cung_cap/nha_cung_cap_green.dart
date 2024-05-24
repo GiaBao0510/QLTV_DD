@@ -6,7 +6,6 @@ import 'package:app_qltv/FrontEnd/ui/danh_muc/nha_cung_cap/components/chinh_sua_
 import 'package:app_qltv/FrontEnd/ui/danh_muc/nha_cung_cap/components/them_nha_cung_cap.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class NhaCungCapScreen extends StatefulWidget {
@@ -54,12 +53,6 @@ class _NhaCungCapScreenState extends State<NhaCungCapScreen> {
         return nhaCungCap.ncc_ten!.toLowerCase().contains(query);
       }).toList();
     });
-  }
-
-  String formatDate(String? date) {
-    if (date == null) return '';
-    DateTime dateTime = DateTime.parse(date);
-    return DateFormat('dd/MM/yyyy').format(dateTime);
   }
 
   @override
@@ -178,7 +171,7 @@ class _NhaCungCapScreenState extends State<NhaCungCapScreen> {
                       Row(
                         children: [
                           Text(
-                            "Ngày bắt đầu: ${formatDate(_filteredNhaCungCapList[index].ngay_bd)}",
+                            "Ngày bắt đầu: ${_filteredNhaCungCapList[index].ngay_bd}",
                             style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w700, fontSize: 14),
                           ),
                         ],

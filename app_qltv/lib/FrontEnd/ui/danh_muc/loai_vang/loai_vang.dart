@@ -172,25 +172,49 @@ class _LoaiVangScreenState extends State<LoaiVangScreen> {
                       Row(
                         children: [
                           Text(
-                            "Đơn giá vốn: ${_filteredLoaiVanngList[index].donGiaVon}",
+                            "Đơn giá vốn: ${_filteredLoaiVanngList[index].donGiaVon?.toStringAsFixed(0).replaceAllMapped(
+                                RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+                                (Match match) => '${match[1]},'
+                            )}",
                             style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w700, fontSize: 14),
                           ),
                         ],
                       ),
-                      // Row(
-                      //   children: [
-                      //     Flexible(
-                      //       child: Tooltip(
-                      //         message: _filteredLoaiVanngList[index].donGiaVon ?? '',
-                      //         child: Text(
-                      //           "Đơn giá vốn: ${_filteredLoaiVanngList[index].donGiaVon}",
-                      //           style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w700, fontSize: 14),
-                      //           overflow: TextOverflow.ellipsis,
-                      //         ),
-                      //       ),
-                      //     ),
-                      //   ],
-                      // ),
+                      Row(
+                        children: [
+                          Text(
+                            "Đơn giá mua: ${_filteredLoaiVanngList[index].donGiaMua?.toStringAsFixed(0).replaceAllMapped(
+                                RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+                                (Match match) => '${match[1]},'
+                            )}",
+                            style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w700, fontSize: 14),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Text(
+                            "Đơn giá bán: ${_filteredLoaiVanngList[index].donGiaBan?.toStringAsFixed(0).replaceAllMapped(
+                                RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+                                (Match match) => '${match[1]},'
+                            )}",
+                            style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w700, fontSize: 14),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Text(
+                            "Đơn giá cầm: ${_filteredLoaiVanngList[index].donGiaCam?.toStringAsFixed(0).replaceAllMapped(
+                                RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+                                (Match match) => '${match[1]},'
+                            )}",
+                            style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w700, fontSize: 14),
+                          ),
+                        ],
+                      ),
+
+                     
                     ],
                   ),
                 ),

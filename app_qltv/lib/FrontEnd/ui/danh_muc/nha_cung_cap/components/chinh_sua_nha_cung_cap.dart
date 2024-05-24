@@ -22,15 +22,16 @@ class _ChinhSuaNhaCungCapScreenState extends State<ChinhSuaNhaCungCapScreen> {
   late NhaCungCap _editedNhaCungCap;
   final TextEditingController _dateController = TextEditingController();
   late DateTime _selectedDate;
+  final DateFormat _dateFormat = DateFormat('dd/MM/yyyy');
 
   @override
   void initState() {
     super.initState();
-    _editedNhaCungCap = widget.nhacungcap; // Initialize _editedNhaCungCap with widget's NhaCungCap
+    _editedNhaCungCap = widget.nhacungcap;
     _selectedDate = _editedNhaCungCap.ngay_bd != null
-        ? DateTime.parse(_editedNhaCungCap.ngay_bd!)
+        ? _dateFormat.parse(_editedNhaCungCap.ngay_bd!)
         : DateTime.now();
-    _dateController.text = DateFormat('dd/MM/yyyy').format(_selectedDate);
+    _dateController.text = _dateFormat.format(_selectedDate);
   }
 
   @override
@@ -49,11 +50,12 @@ class _ChinhSuaNhaCungCapScreenState extends State<ChinhSuaNhaCungCapScreen> {
     if (picked != null && picked != _selectedDate) {
       setState(() {
         _selectedDate = picked;
-        _dateController.text = DateFormat('dd/MM/yyyy').format(_selectedDate);
+        _dateController.text = _dateFormat.format(_selectedDate);
         _editedNhaCungCap = _editedNhaCungCap.copyWith(ngay_bd: _selectedDate.toIso8601String());
       });
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -69,24 +71,28 @@ class _ChinhSuaNhaCungCapScreenState extends State<ChinhSuaNhaCungCapScreen> {
           },
         ),
         title: const Center(
-            child: Padding(
-              padding: EdgeInsets.only(right: 50.0),
-              child: Text("Chỉnh Sửa Nhà Cung Cấp", style: TextStyle(color: Colors.black ,fontWeight: FontWeight.w900), textAlign: TextAlign.center,),
+          child: Padding(
+            padding: EdgeInsets.only(right: 50.0),
+            child: Text(
+              "Chỉnh Sửa Nhà Cung Cấp",
+              style: TextStyle(color: Colors.black, fontWeight: FontWeight.w900),
+              textAlign: TextAlign.center,
             ),
+          ),
         ),
       ),
       body: Container(
-        padding: const EdgeInsets.all(16.0), 
+        padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _editForm,
           child: ListView(
             children: <Widget>[
               Container(
                 decoration: BoxDecoration(
-                  color: const Color.fromARGB(50, 169, 169, 169), 
-                  borderRadius: BorderRadius.circular(15.0), 
+                  color: const Color.fromARGB(50, 169, 169, 169),
+                  borderRadius: BorderRadius.circular(15.0),
                 ),
-                padding: const EdgeInsets.all(16.0), 
+                padding: const EdgeInsets.all(16.0),
                 child: Column(
                   children: [
                     Padding(
@@ -106,11 +112,12 @@ class _ChinhSuaNhaCungCapScreenState extends State<ChinhSuaNhaCungCapScreen> {
               ),
               const SizedBox(height: 10,),
               ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.grey[50]
-                ),
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.grey[50]),
                 onPressed: () => _saveForm(context),
-                child: const Text('Cập Nhật', style: TextStyle(fontWeight: FontWeight.w900, color: Colors.green),),
+                child: const Text(
+                  'Cập Nhật',
+                  style: TextStyle(fontWeight: FontWeight.w900, color: Colors.green),
+                ),
               ),
             ],
           ),
@@ -121,7 +128,7 @@ class _ChinhSuaNhaCungCapScreenState extends State<ChinhSuaNhaCungCapScreen> {
 
   TextFormField buildLoaiTenField() {
     return TextFormField(
-      initialValue: _editedNhaCungCap.ncc_ten.toString(),
+      initialValue: _editedNhaCungCap.ncc_ten,
       decoration: const InputDecoration(
         labelText: 'Tên Nhà Cung Cấp',
         labelStyle: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
@@ -149,7 +156,7 @@ class _ChinhSuaNhaCungCapScreenState extends State<ChinhSuaNhaCungCapScreen> {
 
   TextFormField buildKyHieuField() {
     return TextFormField(
-      initialValue: _editedNhaCungCap.ghi_chu.toString(),
+      initialValue: _editedNhaCungCap.ghi_chu,
       decoration: const InputDecoration(
         labelText: 'Địa Chỉ',
         labelStyle: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
@@ -196,9 +203,6 @@ class _ChinhSuaNhaCungCapScreenState extends State<ChinhSuaNhaCungCapScreen> {
         }
         return null;
       },
-      onSaved: (value) {
-        // No need to save the value here, it's already saved in _selectDate method
-      },
     );
   }
 
@@ -210,38 +214,47 @@ class _ChinhSuaNhaCungCapScreenState extends State<ChinhSuaNhaCungCapScreen> {
     _editForm.currentState!.save();
 
     try {
-      final nhaCungCapManager = Provider.of<NhaCungCapManager>(context, listen: false); 
+      final nhaCungCapManager = Provider.of<NhaCungCapManager>(context, listen: false);
+
       await nhaCungCapManager.updateNhaCungCap(
-        _editedNhaCungCap.ncc_ma as String,
-        _editedNhaCungCap.ncc_ten as String,
-        _editedNhaCungCap.ghi_chu as String,
-        _editedNhaCungCap.ngay_bd as String,
-      ); // Call updateNhaCungCap method
-      print(_editedNhaCungCap.ngay_bd);
+        _editedNhaCungCap.ncc_ma!,
+        _editedNhaCungCap.ncc_ten!,
+        _editedNhaCungCap.ghi_chu!,
+        _selectedDate.toIso8601String(),
+      );
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('Cập nhật thành công!', style: TextStyle(fontWeight: FontWeight.w900), textAlign: TextAlign.center,),
+          content: const Text(
+            'Cập nhật thành công!',
+            style: TextStyle(fontWeight: FontWeight.w900),
+            textAlign: TextAlign.center,
+          ),
           backgroundColor: Colors.grey,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15.0),
-            side: const BorderSide(color: Colors.grey, width: 2.0), // bo viền 15px
+            side: const BorderSide(color: Colors.grey, width: 2.0),
           ),
-          behavior: SnackBarBehavior.floating, // hiển thị ở cách đáy màn hình
-          margin: const EdgeInsets.only(left: 15.0, right: 15.0, bottom: 15.0), // cách 2 cạnh và đáy màn hình 15px
+          behavior: SnackBarBehavior.floating,
+          margin: const EdgeInsets.only(left: 15.0, right: 15.0, bottom: 15.0),
         ),
       );
-      Navigator.of(context).pop(true); // Go back to the previous screen
+      Navigator.of(context).pop(true);
     } catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text("Failed to update data $error", style: const TextStyle(fontWeight: FontWeight.w900, color: Colors.red), textAlign: TextAlign.center,),
+          content: Text(
+            "Failed to update data $error",
+            style: const TextStyle(fontWeight: FontWeight.w900, color: Colors.red),
+            textAlign: TextAlign.center,
+          ),
+
           backgroundColor: Colors.grey,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15.0),
-            side: const BorderSide(color: Colors.grey, width: 2.0), // bo viền 15px
+            side: const BorderSide(color: Colors.grey, width: 2.0),
           ),
-          behavior: SnackBarBehavior.floating, // hiển thị ở cách đáy màn hình
-          margin: const EdgeInsets.only(left: 15.0, right: 15.0, bottom: 15.0), // cách 2 cạnh và đáy màn hình 15px
+          behavior: SnackBarBehavior.floating,
+          margin: const EdgeInsets.only(left: 15.0, right: 15.0, bottom: 15.0),
         ),
       );
     }
