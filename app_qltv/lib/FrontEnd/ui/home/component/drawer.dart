@@ -44,13 +44,17 @@ class drawer extends StatelessWidget {
         context: context,
         type: QuickAlertType.success,
         title: " Đăng xuất thành công",
-        onConfirmBtnTap: () => {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => const MyApp() ), // Sử dụng RegisterPage từ tệp tin register.dart
-          )
-        },
+        // onConfirmBtnTap: () => {
+        //   Navigator.pushReplacement(
+        //     context,
+        //     MaterialPageRoute(builder: (context) => const MyApp() ), // Sử dụng RegisterPage từ tệp tin register.dart
+        //   )
+        // },
       );
+      Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const MyApp())
+    );
     }catch(e){
       print('Lỗi khi thực hiện đăng xuất: $e');
     }
