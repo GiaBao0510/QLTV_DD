@@ -247,6 +247,7 @@ class _ChinhSuaNhaCungCapScreenState extends State<ChinhSuaNhaCungCapScreen> {
             style: const TextStyle(fontWeight: FontWeight.w900, color: Colors.red),
             textAlign: TextAlign.center,
           ),
+
           backgroundColor: Colors.grey,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15.0),

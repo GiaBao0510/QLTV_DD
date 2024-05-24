@@ -14,7 +14,7 @@ void main()async{
 
   runApp(
     MaterialApp(
-      home: Material(
+      home: const Material(
         child: SafeArea(
           child: Scaffold(
             body: LoginPage(),
@@ -72,7 +72,6 @@ class _LoginPage extends State<LoginPage>{
     if(value == 1){
       print('Đăng nhập thành công');
       SessionManager().setString('username', user.username);
-      SessionManager().setString('password',user.password);
 
       QuickAlert.show(
         context: context,
@@ -82,7 +81,7 @@ class _LoginPage extends State<LoginPage>{
         onConfirmBtnTap: () => {
           Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context)=> MyApp())
+              MaterialPageRoute(builder: (context)=> const MyApp())
           )
         }
       );
@@ -116,7 +115,7 @@ class _LoginPage extends State<LoginPage>{
                   child: Container(
                     width: double.infinity,
                     height: double.infinity,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                         gradient: LinearGradient(
                           colors: [Color(0xff4451fd), Color(0xff3f5efb)],
                           stops: [0.25, 0.75],
@@ -136,7 +135,7 @@ class _LoginPage extends State<LoginPage>{
                 alignment: Alignment.center,
                 child: Scrollbar(
                   child: ListView(
-                    padding:EdgeInsets.fromLTRB(15, 0, 15, 0),
+                    padding:const EdgeInsets.fromLTRB(15, 0, 15, 0),
                     children: <Widget>[
                       const SizedBox(height: 150,),
                       Material(
@@ -146,7 +145,7 @@ class _LoginPage extends State<LoginPage>{
                         ),
                         elevation: 5,
                         child: Padding(
-                          padding: EdgeInsets.fromLTRB(10, 20, 10, 20),
+                          padding: const EdgeInsets.fromLTRB(10, 20, 10, 20),
                           child: Column(
                             children: [
                               //Ảnh
@@ -223,7 +222,7 @@ class _LoginPage extends State<LoginPage>{
                                       const SizedBox(height: 30,),
                                       Container(
                                         width: double.infinity,
-                                        padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
+                                        padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
                                         child: ElevatedButton(
                                           onPressed: (){
                                             if(_formKey.currentState !=null && _formKey.currentState!.validate()){
@@ -243,7 +242,7 @@ class _LoginPage extends State<LoginPage>{
                                                 borderRadius: BorderRadius.circular(10.0),
                                               )
                                           ),
-                                          child: Text('Đăng nhập', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18,),),
+                                          child: const Text('Đăng nhập', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18,),),
                                         ),
                                       )
                                     ],

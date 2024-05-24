@@ -2,7 +2,6 @@ var mysql = require('mysql');
 var express = require('express');
 var db = require('../config/index_2');
 var ApiError = require('../api-error');
-const khoService = require('../services/khoservices')
 //1. danh sách thông tin kho
 exports.list_wareHouse = async (req, res, next) =>{
     try{
