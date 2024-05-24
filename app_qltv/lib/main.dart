@@ -29,8 +29,7 @@ class MyApp extends StatelessWidget {
     if(tennguoidung.isEmpty){
       return const LoginPage();
     }
-
-
+    
     // >>>>>>>>>>>>>>>>>>>>>>> Vấn đề <<<<<<<<<<<<<<<<<<<<<<<<<
     // var res = await http.post(Uri.parse(checkValid), headers: {"Content-Type": "application/json"},);
     //

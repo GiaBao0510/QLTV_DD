@@ -34,6 +34,12 @@ exports.baoCaoTonKhoLoaiVang = async (req, res, next)=>{
                     }
 
                     let MangKQ = [];
+                    let tong_TLThuc = 0,
+                        tong_TL_hot =0,
+                        tong_TLvang=0,
+                        tong_CongGoc=0,
+                        tong_GiaCong=0,
+                        SoLuong=0;
                     //Lấy danh sách từng tên loại vàng
                     for(const item of result1) {
                         //console.log(item.NHOM_TEN);
@@ -44,7 +50,36 @@ exports.baoCaoTonKhoLoaiVang = async (req, res, next)=>{
                             JOIN loai_hang lh ON lh.LOAIID = dmh.LOAIID
                             WHERE nh.NHOM_TEN="${item.NHOM_TEN}" AND dmh.SU_DUNG="1"
                         `,item.NHOM_TEN);
-                        Array.prototype.push.apply(MangKQ, ketqua);
+
+                        //Tính tổng
+                        for(const item of ketqua){
+                            tong_TLThuc += item.CAN_TONG;
+                            tong_TL_hot +=item.TL_HOT;
+                            tong_TLvang +=item.TL_vang;
+                            tong_CongGoc +=item.CONG_GOC;
+                            tong_GiaCong +=item.GIA_CONG;
+                            SoLuong++;
+                        }
+
+                        var tinhTong = {
+                            "Số lượng:": SoLuong,
+                            "Tổng TL_Thực":tong_TLThuc, 
+                            "Tổng TL_hột": tong_TL_hot, 
+                            "Tổng TL_Vàng": tong_TLvang, 
+                            "Tổng Công gốc": tong_CongGoc, 
+                            "Tổng giá công":tong_GiaCong
+                        }
+                        
+
+                        let ketQuaTungLoai = {
+                            data: ketqua,
+                            sumary: tinhTong
+                        };
+
+                        //console.log(ketQuaTungLoai);
+                        MangKQ.push(ketQuaTungLoai)
+
+                        //Array.prototype.push.apply(MangKQ, ketqua);
         
                     }
                     return res.status(200).json(MangKQ);
@@ -76,7 +111,8 @@ exports.baoCaoTonKhoLoaiVang_TenLoaiVang = async (req, res, next)=>{
                 tong_TL_hot =0,
                 tong_TLvang=0,
                 tong_CongGoc=0,
-                tong_GiaCong=0;
+                tong_GiaCong=0,
+                SoLuong=0;
 
             for(const item of result){
                 tong_TLThuc += item.CAN_TONG;
@@ -84,11 +120,13 @@ exports.baoCaoTonKhoLoaiVang_TenLoaiVang = async (req, res, next)=>{
                 tong_TLvang +=item.TL_vang;
                 tong_CongGoc +=item.CONG_GOC;
                 tong_GiaCong +=item.GIA_CONG;
+                SoLuong++;
             }
 
             return res.status(200).json({
                 data:result,
                 sumary:{
+                    "Số lượng:": SoLuong,
                     "Tổng TL_Thực":tong_TLThuc, 
                     "Tổng TL_hột": tong_TL_hot, 
                     "Tổng TL_Vàng": tong_TLvang, 

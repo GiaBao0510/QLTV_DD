@@ -20,7 +20,32 @@ exports.baoCaoTonKho = async (req, res, next)=>{
                 return res.status(404).json({message: `Loi khi thực hiện lấy thông tin báo cáo tồn kho.`});
             }
 
-            return res.status(200).json(result);
+
+            let tong_TLThuc = 0,
+                tong_CongGoc = 0,
+                tong_TLvang = 0,
+                tong_TL_hot = 0,
+                tong_GiaCong = 0,
+                thanhTien = 0;
+
+            for(const item of result){
+                tong_TLThuc += item['TL_Thuc'];
+                tong_CongGoc += item['CONG_GOC'];
+                tong_TLvang += item['TL_vang'];
+                tong_TL_hot += item['TL_hot'];
+                tong_GiaCong += item['GIA_CONG'];
+            }
+
+            let KQ_tinhTong = {
+                "tong_TLThuc" :tong_TLThuc,
+                'tong_CongGoc':tong_CongGoc,
+                'tong_TLvang' :tong_TLvang,
+                'tong_TL_hot':tong_TL_hot,
+                'tong_GiaCong':tong_GiaCong,
+                'thanhTien' :tong_TLThuc,
+            };
+            //let Tong = {"TongThong":"thoidi"};
+            return res.status(200).json({result,tinhTong:KQ_tinhTong});
         });
     }catch(err){
         return next(new ApiError(500, `Loi xuat hiện khi thực hiện truy vấn bao cáo tồn kho: ${err.message}`));

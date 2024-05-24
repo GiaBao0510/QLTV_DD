@@ -3,13 +3,10 @@ const session = require('express-session');
 const cors = require('cors');
 const os = require('os');
 const bcrypt = require('bcrypt');
-<<<<<<< HEAD
 const cookieParser = require('cookie-parser');
 const jwt =require('jsonwebtoken');
 
-=======
 const ApiError = require('./app/api-error')
->>>>>>> e243481d3d181a0b3704a52453a24b96bccfe6c2
 const db = require('./app/config/index_2');
 const admin = require('./app/routers/admin.router');
 const userRoutes = require('./app/routers/userRoutes');
