@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:app_qltv/FrontEnd/constants/config.dart';
 
 class Table_BaoCaoTonKhoVang extends StatefulWidget{
+  static const routeName = '/baocaotonkhovang';
+
   const Table_BaoCaoTonKhoVang({super.key});
   State<Table_BaoCaoTonKhoVang> createState() => _Table_BaoCaoTonKhoVang();
 }

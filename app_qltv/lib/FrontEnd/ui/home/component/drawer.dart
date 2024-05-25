@@ -105,14 +105,22 @@ class drawer extends StatelessWidget {
                 ),
 
                 ExpansionTile(
-                  leading: const Icon(CupertinoIcons.settings),
+                  leading: Image.asset(
+                          'assets/images/category.png',
+                          width: 24.0, 
+                          height: 24.0, 
+                        ),
                   title: const Text('Danh Mục' , style: TextStyle( fontWeight:  FontWeight.w800)),
                   children: <Widget>[
 
                     Padding(
                       padding: const EdgeInsets.only(left: 16.0), // Khoảng cách thụt lề
                       child: ListTile(
-                        leading: const Icon(CupertinoIcons.settings),
+                        leading: Image.asset(
+                          'assets/images/gold-ingot.png', 
+                          width: 24.0, 
+                          height: 24.0, 
+                        ),
                         title: const Text('Loại Vàng' , style: TextStyle( fontWeight:  FontWeight.w800)),
                         onTap: () {
                           Navigator.push(
@@ -125,7 +133,11 @@ class drawer extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(left: 16.0), // Khoảng cách thụt lề
                       child: ListTile(
-                        leading: const Icon(CupertinoIcons.settings),
+                        leading: Image.asset(
+                          'assets/images/treasure.png',
+                          width: 24.0, 
+                          height: 24.0, 
+                        ),
                         title: const Text('Nhóm Vàng' , style: TextStyle( fontWeight:  FontWeight.w800)),
                         onTap: () {
                           Navigator.push(
@@ -138,7 +150,11 @@ class drawer extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(left: 16.0), // Khoảng cách thụt lề
                       child: ListTile(
-                        leading: const Icon(CupertinoIcons.settings),
+                        leading: Image.asset(
+                          'assets/images/box.png',
+                          width: 24.0, 
+                          height: 24.0, 
+                        ),
                         title: const Text('Hàng Hóa' , style: TextStyle( fontWeight:  FontWeight.w800)),
                         onTap: () {
                           Navigator.push(
@@ -151,7 +167,11 @@ class drawer extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(left: 16.0), // Khoảng cách thụt lề
                       child: ListTile(
-                        leading: const Icon(CupertinoIcons.settings),
+                        leading: Image.asset(
+                          'assets/images/database.png',
+                          width: 24.0, 
+                          height: 24.0, 
+                        ),
                         title: const Text('Kho' , style: TextStyle( fontWeight:  FontWeight.w800)),
                         onTap: () {
                           Navigator.push(
@@ -164,7 +184,11 @@ class drawer extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(left: 16.0), // Khoảng cách thụt lề
                       child: ListTile(
-                        leading: const Icon(CupertinoIcons.settings),
+                        leading: Image.asset(
+                          'assets/images/boy.png',
+                          width: 24.0, 
+                          height: 24.0, 
+                        ),
                         title: const Text('NCC' , style: TextStyle( fontWeight:  FontWeight.w800)),
                         onTap: () {
                           Navigator.push(
@@ -177,7 +201,11 @@ class drawer extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(left: 16.0), // Khoảng cách thụt lề
                       child: ListTile(
-                        leading: const Icon(CupertinoIcons.settings),
+                        leading: Image.asset(
+                          'assets/images/avatar-design.png',
+                          width: 24.0, 
+                          height: 24.0, 
+                        ),
                         title: const Text('Khách Hàng' , style: TextStyle( fontWeight:  FontWeight.w800)),
                         onTap: () {
                           // Handle Khách Hàng tap
@@ -187,7 +215,11 @@ class drawer extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(left: 16.0), // Khoảng cách thụt lề
                       child: ListTile(
-                        leading: const Icon(CupertinoIcons.settings),
+                        leading: Image.asset(
+                          'assets/images/computer-worker.png',
+                          width: 24.0, 
+                          height: 24.0, 
+                        ),
                         title: const Text('Đơn Vị' , style: TextStyle( fontWeight:  FontWeight.w800)),
                         onTap: () {
                           // Handle Đơn Vị tap
@@ -197,13 +229,21 @@ class drawer extends StatelessWidget {
                   ],
                 ),
                 ExpansionTile(
-                  leading: const Icon(CupertinoIcons.bell),
+                  leading: Image.asset(
+                          'assets/images/management.png',
+                          width: 24.0, 
+                          height: 24.0, 
+                        ),
                   title: const Text('Hệ Thống' , style: TextStyle( fontWeight:  FontWeight.w800)),
                   children: <Widget>[
                     Padding(
                       padding: const EdgeInsets.only(left: 16.0), // Khoảng cách thụt lề
                       child: ListTile(
-                        leading: const Icon(CupertinoIcons.bell),
+                        leading: Image.asset(
+                          'assets/images/users.png',
+                          width: 24.0, 
+                          height: 24.0, 
+                        ),
                         title: const Text('Nhóm Người Dùng' , style: TextStyle( fontWeight:  FontWeight.w800)),
                         onTap: () {
                           Navigator.push(
@@ -216,7 +256,11 @@ class drawer extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(left: 16.0), // Khoảng cách thụt lề
                       child: ListTile(
-                        leading: const Icon(CupertinoIcons.bell),
+                        leading: Image.asset(
+                          'assets/images/person.png',
+                          width: 24.0, 
+                          height: 24.0, 
+                        ),
                         title: const Text('Người Dùng ' , style: TextStyle( fontWeight:  FontWeight.w800)),
                         onTap: () {
                           // Handle Người Dùng tap
@@ -226,7 +270,11 @@ class drawer extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(left: 16.0), // Khoảng cách thụt lề
                       child: ListTile(
-                        leading: const Icon(CupertinoIcons.bell),
+                        leading: Image.asset(
+                          'assets/images/remote-access.png',
+                          width: 24.0, 
+                          height: 24.0, 
+                        ),
                         title: const Text('Kết Nối' , style: TextStyle( fontWeight:  FontWeight.w800)),
                         onTap: () {
                           // Handle Kết Nối tap
@@ -236,7 +284,11 @@ class drawer extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(left: 16.0), // Khoảng cách thụt lề
                       child: ListTile(
-                        leading: const Icon(CupertinoIcons.bell),
+                        leading: Image.asset(
+                          'assets/images/access-control.png',
+                          width: 24.0, 
+                          height: 24.0, 
+                        ),
                         title: const Text('Quản lý quyền' , style: TextStyle( fontWeight:  FontWeight.w800)),
                         onTap: () {
                           _request_permission();
@@ -246,13 +298,21 @@ class drawer extends StatelessWidget {
                   ],
                 ),
                 ExpansionTile(
-                  leading: const Icon(CupertinoIcons.bell),
+                  leading: Image.asset(
+                          'assets/images/clipboard.png',
+                          width: 24.0, 
+                          height: 24.0, 
+                        ),
                   title: const Text('Báo Cáo' , style: TextStyle( fontWeight:  FontWeight.w800)),
                   children: <Widget>[
                     Padding(
                       padding: const EdgeInsets.only(left: 16.0), // Khoảng cách thụt lề
                       child: ListTile(
-                        leading: const Icon(CupertinoIcons.bell),
+                        leading: Image.asset(
+                          'assets/images/budget.png',
+                          width: 24.0, 
+                          height: 24.0, 
+                        ),
                         title: const Text('Báo Cáo Phiếu Xuất' , style: TextStyle( fontWeight:  FontWeight.w800)),
                         onTap: () {
                           // Handle Báo Cáo Phiếu Xuất tap
@@ -262,7 +322,11 @@ class drawer extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(left: 16.0), // Khoảng cách thụt lề
                       child: ListTile(
-                        leading: const Icon(CupertinoIcons.bell),
+                        leading: Image.asset(
+                          'assets/images/report.png',
+                          width: 24.0, 
+                          height: 24.0, 
+                        ),
                         title: const Text('Báo Cáo Tồn Kho Loại Vàng' , style: TextStyle( fontWeight:  FontWeight.w800)),
                         onTap: () {
                           // Handle Báo Cáo Tồn Kho Loại Vàng tap
@@ -272,7 +336,11 @@ class drawer extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(left: 16.0), // Khoảng cách thụt lề
                       child: ListTile(
-                        leading: const Icon(CupertinoIcons.bell),
+                        leading: Image.asset(
+                          'assets/images/clipboards.png',
+                          width: 24.0, 
+                          height: 24.0, 
+                        ),
                         title: const Text('Báo Cáo Tồn Kho Vàng' , style: TextStyle( fontWeight:  FontWeight.w800)),
                         onTap: () {
                           //Handle Báo Cáo Tồn Kho Loại Vàng tap
@@ -286,7 +354,11 @@ class drawer extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(left: 16.0), // Khoảng cách thụt lề
                       child: ListTile(
-                        leading: const Icon(CupertinoIcons.bell),
+                        leading: Image.asset(
+                          'assets/images/computer-worker.png',
+                          width: 24.0, 
+                          height: 24.0, 
+                        ),
                         title: const Text('Báo Cáo Tồn Kho Vàng' , style: TextStyle( fontWeight:  FontWeight.w800)),
                         onTap: () {
                           // Handle Báo Cáo Tồn Kho Loại Vàng tap
@@ -296,8 +368,82 @@ class drawer extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(left: 16.0), // Khoảng cách thụt lề
                       child: ListTile(
-                        leading: const Icon(CupertinoIcons.bell),
+                        leading: Image.asset(
+                          'assets/images/documents.png',
+                          width: 24.0, 
+                          height: 24.0, 
+                        ),
                         title: const Text('Báo Cáo Tồn Theo Nhóm Vàng' , style: TextStyle( fontWeight:  FontWeight.w800)),
+                        onTap: () {
+                          // Handle Báo Cáo Tồn Kho Loại Vàng tap
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 16.0), // Khoảng cách thụt lề
+                      child: ListTile(
+                        leading: Image.asset(
+                          'assets/images/shopping-bag.png',
+                          width: 24.0, 
+                          height: 24.0, 
+                        ),
+                        title: const Text('Kho Vàng Mua Vào' , style: TextStyle( fontWeight:  FontWeight.w800)),
+                        onTap: () {
+                          // Handle Báo Cáo Tồn Kho Loại Vàng tap
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 16.0), // Khoảng cách thụt lề
+                      child: ListTile(
+                        leading: Image.asset(
+                          'assets/images/paper.png',
+                          width: 24.0, 
+                          height: 24.0, 
+                        ),
+                        title: const Text('In Phiếu Xuất' , style: TextStyle( fontWeight:  FontWeight.w800)),
+                        onTap: () {
+                          // Handle Báo Cáo Tồn Kho Loại Vàng tap
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 16.0), // Khoảng cách thụt lề
+                      child: ListTile(
+                        leading: Image.asset(
+                          'assets/images/presentation.png',
+                          width: 24.0, 
+                          height: 24.0, 
+                        ),
+                        title: const Text('Khách Hàng Giao Dịch Nhiều' , style: TextStyle( fontWeight:  FontWeight.w800)),
+                        onTap: () {
+                          // Handle Báo Cáo Tồn Kho Loại Vàng tap
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 16.0), // Khoảng cách thụt lề
+                      child: ListTile(
+                        leading: Image.asset(
+                          'assets/images/shopping-list.png',
+                          width: 24.0, 
+                          height: 24.0, 
+                        ),
+                        title: const Text('Báo Cáo Phiếu Mua Vào' , style: TextStyle( fontWeight:  FontWeight.w800)),
+                        onTap: () {
+                          // Handle Báo Cáo Tồn Kho Loại Vàng tap
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 16.0), // Khoảng cách thụt lề
+                      child: ListTile(
+                        leading: Image.asset(
+                          'assets/images/document.png',
+                          width: 24.0, 
+                          height: 24.0, 
+                        ),
+                        title: const Text('Báo Cáo Phiếu Đổi' , style: TextStyle( fontWeight:  FontWeight.w800)),
                         onTap: () {
                           // Handle Báo Cáo Tồn Kho Loại Vàng tap
                         },
@@ -316,7 +462,7 @@ class drawer extends StatelessWidget {
                 Logout(context);
               },
               style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.grey,
+                  backgroundColor: const Color.fromRGBO(252, 158, 21, 1),
                   foregroundColor: Colors.white,
                   shadowColor: Colors.black,
                   elevation: 8.0,
