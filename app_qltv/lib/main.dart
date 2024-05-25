@@ -1,33 +1,31 @@
+import 'package:app_qltv/FrontEnd/controller/danhmuc/kho_manage.dart';
 import 'package:app_qltv/FrontEnd/controller/danhmuc/loaivang_manager.dart';
 import 'package:app_qltv/FrontEnd/controller/danhmuc/nhacungcap_manager.dart';
 import 'package:app_qltv/FrontEnd/controller/hethong/nhom_manager.dart';
+import 'package:app_qltv/FrontEnd/model/danhmuc/kho.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'dart:convert';
 import 'package:app_qltv/FrontEnd/ui/home/home.dart';
 import 'package:app_qltv/FrontEnd/ui/routes.dart';
 import 'package:app_qltv/FrontEnd/controller/danhmuc/nhomvang_manager.dart'; // Import NhomVangManager của bạn
 import 'package:session_manager/session_manager.dart';
 import 'package:app_qltv/FrontEnd/ui/home/component/login.dart';
-import 'package:http/http.dart' as http;
-import 'package:app_qltv/FrontEnd/constants/config.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  //Kiểm tra xem tai khoan con hieu luc hay không
-  Future<Widget> KiemTraTaiKhoanConHieuLuc(BuildContext context) async{
+  //Kiểm tra xem đang nhap hay chua
+  Future<Widget> KiemTraDangNhap(BuildContext context) async{
     //Lấy thông tin
-    String checkValid = CheckValidity;
+    String taiKhoan = await SessionManager().getString('username');
 
-    // >>>>>>>>>>>>>>>>>>>>>>> Để tạm <<<<<<<<<<<<<<<<<<<<<<<<<
-    String tennguoidung = await SessionManager().getString('username');
-    if(tennguoidung.isEmpty){
-      return const LoginPage();
+    //Nếu chưa có tìa khoản thì chuyển sang trang đăng nhập
+    if(taiKhoan.isEmpty){
+      return LoginPage();
     }
     
     // >>>>>>>>>>>>>>>>>>>>>>> Vấn đề <<<<<<<<<<<<<<<<<<<<<<<<<
@@ -52,6 +50,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => LoaiVangManager()),
         ChangeNotifierProvider(create: (context) => NhaCungCapManager()),
         ChangeNotifierProvider(create: (context) => NhomManager()),
+        ChangeNotifierProvider(create: (context) => KhoManage()),
       ],
       child: MaterialApp(
         title: 'Bao Khoa Gold',
@@ -67,14 +66,14 @@ class MyApp extends StatelessWidget {
           ),
         ),
         home: FutureBuilder<Widget>(
-          future: KiemTraTaiKhoanConHieuLuc(context),
+          future: KiemTraDangNhap(context),
           builder: (context, snapshot){
             if(snapshot.hasData){
               return snapshot.data!;
             }else if( snapshot.hasError){
               return Text("Error: ${snapshot.error}");
             }else{
-              return const CircularProgressIndicator();
+              return CircularProgressIndicator();
             }
           },
         ),

@@ -51,57 +51,55 @@ class _LoginPage extends State<LoginPage>{
   void dispose() {
     super.dispose();
   }
+//Phương thức kiem tra đăng nhập
+//Phương thức kiem tra đăng nhập
+Future Login(BuildContext context) async {
+  String path = login;
+  var res = await http.post(
+    Uri.parse(path),
+    headers: {"Content-Type": "application/json"},
+    body: jsonEncode({
+      "USER_TEN": user.username,
+      "MAT_KHAU": user.password
+    }),
+  );
 
-  //Phương thức kiem tra đăng nhập
-  Future Login(BuildContext context) async{
-    String path = login;
-    var res = await http.post(
-      Uri.parse(path),
-      headers: {"Content-Type": "application/json"},
-      body: jsonEncode({
-        "USER_TEN": user.username,
-        "MAT_KHAU": user.password
-      })
+  print(res.body);
+  final thongtinphanhoi = jsonDecode(res.body);
+  final value = thongtinphanhoi['value'] as int;  //Bien nay dùng để kiểm tra tài khoản hợp lệ không
+
+  //Đăng nhập thành công
+  if (value == 1) {
+    SessionManager().setString('username', user.username);
+
+    QuickAlert.show(
+      context: context,
+      type: QuickAlertType.success,
+      title: "Success",
+      text: "Đăng nhập thành công!",
     );
 
-    print(res.body);
-    final thongtinphanhoi = jsonDecode(res.body);
-    final value = thongtinphanhoi['value'] as int;  //Bien nay dùng để kiểm tra tài khoản hợp lệ không
-
-    //Đăng nhập thành công
-    if(value == 1){
-      print('Đăng nhập thành công');
-      SessionManager().setString('username', user.username);
-
-      QuickAlert.show(
-        context: context,
-        type:  QuickAlertType.success,
-        title: "Success",
-        text: "Đăng nhập thành công!",
-        onConfirmBtnTap: () => {
-          Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context)=> const MyApp())
-          )
-        }
-      );
-    }else if(value == 0){
-      print('Mật khẩu sai');
-      QuickAlert.show(
-          context: context,
-          type:  QuickAlertType.error,
-          title: "Lỗi",
-          text: "Sai mật khẩu",
-      );
-    }else if(value == -1){
-      QuickAlert.show(
-        context: context,
-        type:  QuickAlertType.error,
-        title: "Lỗi",
-        text: "Không tìm thấy tài khoản",
-      );
-    }
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const MyApp())
+    );
+  } else if (value == 0) {
+    print('Mật khẩu sai');
+    QuickAlert.show(
+      context: context,
+      type: QuickAlertType.error,
+      title: "Lỗi",
+      text: "Sai mật khẩu",
+    );
+  } else if (value == -1) {
+    QuickAlert.show(
+      context: context,
+      type: QuickAlertType.error,
+      title: "Lỗi",
+      text: "Không tìm thấy tài khoản",
+    );
   }
+}
 
   @override
   Widget build(BuildContext context) {

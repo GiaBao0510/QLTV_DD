@@ -1,4 +1,5 @@
 
+import 'package:app_qltv/FrontEnd/ui/danh_muc/kho/kho.dart';
 import 'package:app_qltv/FrontEnd/ui/danh_muc/loai_vang/loai_vang.dart';
 import 'package:app_qltv/FrontEnd/ui/danh_muc/nha_cung_cap/nha_cung_cap_green.dart';
 import 'package:app_qltv/FrontEnd/ui/danh_muc/nhom_vang/nhom_vang.dart';
@@ -43,13 +44,17 @@ class drawer extends StatelessWidget {
         context: context,
         type: QuickAlertType.success,
         title: " Đăng xuất thành công",
-        onConfirmBtnTap: () => {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => const MyApp() ), // Sử dụng RegisterPage từ tệp tin register.dart
-          )
-        },
+        // onConfirmBtnTap: () => {
+        //   Navigator.pushReplacement(
+        //     context,
+        //     MaterialPageRoute(builder: (context) => const MyApp() ), // Sử dụng RegisterPage từ tệp tin register.dart
+        //   )
+        // },
       );
+      Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const MyApp())
+    );
     }catch(e){
       print('Lỗi khi thực hiện đăng xuất: $e');
     }
@@ -150,7 +155,10 @@ class drawer extends StatelessWidget {
                   leading: const Icon(CupertinoIcons.settings),
                   title: const Text('Kho'),
                   onTap: () {
-                    // Handle Kho tap
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const KhoScreen()),
+                    );
                   },
                 ),
               ),
