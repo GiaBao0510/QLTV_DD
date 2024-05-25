@@ -289,6 +289,8 @@ class _ThemLoaiVangScreenState extends State<ThemLoaiVangScreen> {
 
   DropdownButtonFormField<int> buildLoaiChaDropdown() {
     return DropdownButtonFormField<int>(
+      dropdownColor: Colors.white,
+      borderRadius: const BorderRadius.all(Radius.circular(15)),
       decoration: const InputDecoration(
         labelText: 'Loại Cha',
         labelStyle: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),

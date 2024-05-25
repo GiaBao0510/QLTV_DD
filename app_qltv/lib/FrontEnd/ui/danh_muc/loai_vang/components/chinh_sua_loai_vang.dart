@@ -282,7 +282,32 @@ class _ChinhSuaLoaiVangScreenState extends State<ChinhSuaLoaiVangScreen> {
   }
 
   DropdownButtonFormField<int> buildLoaiChaDropdown() {
+    int? dropdownValue;
+    
+    // Kiểm tra và gán giá trị mặc định từ _editedLoaiVang.nhomHangMa
+    if (_editedLoaiVang.nhomHangMa != '') {
+      int? parsedValue = int.tryParse(_editedLoaiVang.nhomHangMa!);
+      if (parsedValue != null && _loaiVangList.any((loaiHang) => int.tryParse(loaiHang.nhomHangMa!) == parsedValue)) {
+        dropdownValue = parsedValue;
+      }
+    }
+    
+    // Lấy danh sách các mục cho DropdownButtonFormField
+    final List<DropdownMenuItem<int>> dropdownItems = _loaiVangList.map((LoaiVang loaiHang) {
+      return DropdownMenuItem<int>(
+        value: int.parse(loaiHang.nhomHangMa!),
+        child: Text(loaiHang.nhomTen!),
+      );
+    }).toList();
+    
+    // Nếu giá trị mặc định không tồn tại trong danh sách, gán giá trị mặc định đầu tiên từ danh sách
+    if (dropdownValue == null && dropdownItems.isNotEmpty) {
+      dropdownValue = null;
+    }
+
     return DropdownButtonFormField<int>(
+      dropdownColor: Colors.white,
+      borderRadius: const BorderRadius.all(Radius.circular(15)),
       decoration: const InputDecoration(
         labelText: 'Loại Cha',
         labelStyle: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
@@ -293,26 +318,22 @@ class _ChinhSuaLoaiVangScreenState extends State<ChinhSuaLoaiVangScreen> {
           borderRadius: BorderRadius.all(Radius.circular(15.0)),
         ),
       ),
-      value: _editedLoaiVang.nhomChaId == 0 ? null : _editedLoaiVang.nhomChaId ,
-      items: _loaiVangList.map((LoaiVang loaiHang) {
-        return DropdownMenuItem<int>(
-          value: int.parse(loaiHang.nhomHangMa!),
-          child: Text(loaiHang.nhomTen!),
-        );
-      }).toList(),
+      value: dropdownValue,
+      items: dropdownItems,
       onChanged: (newValue) {
         setState(() {
           _editedLoaiVang = _editedLoaiVang.copyWith(nhomChaId: newValue);
         });
       },
       validator: (value) {
-        if (value == null || value == 0) {
+        if (value == null) {
           return 'Please select a value';
         }
         return null;
       },
     );
   }
+
 
   Future<void> _saveForm(BuildContext context) async {
     final isValid = _editForm.currentState!.validate();
