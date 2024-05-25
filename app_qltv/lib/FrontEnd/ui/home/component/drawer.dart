@@ -63,261 +63,256 @@ class drawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      child: ListView(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-           DrawerHeader(
-            decoration: const BoxDecoration(
-              color: Colors.blue,
-            ),
-            child: Row(
-              children: [
-                const Expanded(
-                  flex: 1,
-                    child: Text(
-                      'Menu',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold
+          Expanded(
+            child: ListView(
+              children: <Widget>[
+                UserAccountsDrawerHeader(
+                  accountName: const Text(
+                    'Bảo Khoa Gold',
+                    style: TextStyle(color: Colors.black, fontWeight: FontWeight.w900, fontSize: 25),
+                  ),
+                  accountEmail: Row(
+                    children: [
+                      const Icon(Icons.account_circle_outlined, size: 35, color: Colors.black),
+                      const SizedBox(width: 8),
+                      FutureBuilder<String>(
+                        future: _getTenAdmin(),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            return Text(
+                              snapshot.data!,
+                              style: const TextStyle(color: Colors.black, fontSize: 20),
+                            );
+                          } else if (snapshot.hasError) {
+                            return Text('Error: ${snapshot.error}');
+                          } else {
+                            return const CircularProgressIndicator();
+                          }
+                        },
+                      ),
+                    ],
+                  ),
+                  decoration: const BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage('assets/images/drawer_header.jpg'),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+
+                ExpansionTile(
+                  leading: const Icon(CupertinoIcons.settings),
+                  title: const Text('Danh Mục' , style: TextStyle( fontWeight:  FontWeight.w800)),
+                  children: <Widget>[
+
+                    Padding(
+                      padding: const EdgeInsets.only(left: 16.0), // Khoảng cách thụt lề
+                      child: ListTile(
+                        leading: const Icon(CupertinoIcons.settings),
+                        title: const Text('Loại Vàng' , style: TextStyle( fontWeight:  FontWeight.w800)),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => const LoaiVangScreen()),
+                          );
+                        },
                       ),
                     ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 16.0), // Khoảng cách thụt lề
+                      child: ListTile(
+                        leading: const Icon(CupertinoIcons.settings),
+                        title: const Text('Nhóm Vàng' , style: TextStyle( fontWeight:  FontWeight.w800)),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => const NhomVangScreen()),
+                          );
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 16.0), // Khoảng cách thụt lề
+                      child: ListTile(
+                        leading: const Icon(CupertinoIcons.settings),
+                        title: const Text('Hàng Hóa' , style: TextStyle( fontWeight:  FontWeight.w800)),
+                        onTap: () {
+                          // Handle Hàng Hóa tap
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 16.0), // Khoảng cách thụt lề
+                      child: ListTile(
+                        leading: const Icon(CupertinoIcons.settings),
+                        title: const Text('Kho' , style: TextStyle( fontWeight:  FontWeight.w800)),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => const KhoScreen()),
+                          );
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 16.0), // Khoảng cách thụt lề
+                      child: ListTile(
+                        leading: const Icon(CupertinoIcons.settings),
+                        title: const Text('NCC' , style: TextStyle( fontWeight:  FontWeight.w800)),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => const NhaCungCapScreen()),
+                          );
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 16.0), // Khoảng cách thụt lề
+                      child: ListTile(
+                        leading: const Icon(CupertinoIcons.settings),
+                        title: const Text('Khách Hàng' , style: TextStyle( fontWeight:  FontWeight.w800)),
+                        onTap: () {
+                          // Handle Khách Hàng tap
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 16.0), // Khoảng cách thụt lề
+                      child: ListTile(
+                        leading: const Icon(CupertinoIcons.settings),
+                        title: const Text('Đơn Vị' , style: TextStyle( fontWeight:  FontWeight.w800)),
+                        onTap: () {
+                          // Handle Đơn Vị tap
+                        },
+                      ),
+                    ),
+                  ],
                 ),
-                Expanded(
-                  flex: 1,
-                    child: Row(
-                      children: [
-                        const Flexible(
-                            child: Icon(Icons.account_circle_outlined, size: 35, color: Colors.white,)
-                        ),
-                        Flexible(
-                            child: FutureBuilder<String>(
-                                future: _getTenAdmin(),
-                                builder: (context, snapshot){
-                                  if(snapshot.hasData){
-                                    return Text( snapshot.data!, style: const TextStyle(color: Colors.white),);
-                                  }else if(snapshot.hasError){
-                                    return Text('Error: ${snapshot.error}');
-                                  }else{
-                                    return const CircularProgressIndicator();
-                                  }
-                                }
-                            )
-                        )
-                      ],
-                    )
-                )
+                ExpansionTile(
+                  leading: const Icon(CupertinoIcons.bell),
+                  title: const Text('Hệ Thống' , style: TextStyle( fontWeight:  FontWeight.w800)),
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.only(left: 16.0), // Khoảng cách thụt lề
+                      child: ListTile(
+                        leading: const Icon(CupertinoIcons.bell),
+                        title: const Text('Nhóm Người Dùng' , style: TextStyle( fontWeight:  FontWeight.w800)),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => const NhomPage()),
+                          );
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 16.0), // Khoảng cách thụt lề
+                      child: ListTile(
+                        leading: const Icon(CupertinoIcons.bell),
+                        title: const Text('Người Dùng ' , style: TextStyle( fontWeight:  FontWeight.w800)),
+                        onTap: () {
+                          // Handle Người Dùng tap
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 16.0), // Khoảng cách thụt lề
+                      child: ListTile(
+                        leading: const Icon(CupertinoIcons.bell),
+                        title: const Text('Kết Nối' , style: TextStyle( fontWeight:  FontWeight.w800)),
+                        onTap: () {
+                          // Handle Kết Nối tap
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 16.0), // Khoảng cách thụt lề
+                      child: ListTile(
+                        leading: const Icon(CupertinoIcons.bell),
+                        title: const Text('Quản lý quyền' , style: TextStyle( fontWeight:  FontWeight.w800)),
+                        onTap: () {
+                          _request_permission();
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+                ExpansionTile(
+                  leading: const Icon(CupertinoIcons.bell),
+                  title: const Text('Báo Cáo' , style: TextStyle( fontWeight:  FontWeight.w800)),
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.only(left: 16.0), // Khoảng cách thụt lề
+                      child: ListTile(
+                        leading: const Icon(CupertinoIcons.bell),
+                        title: const Text('Báo Cáo Phiếu Xuất' , style: TextStyle( fontWeight:  FontWeight.w800)),
+                        onTap: () {
+                          // Handle Báo Cáo Phiếu Xuất tap
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 16.0), // Khoảng cách thụt lề
+                      child: ListTile(
+                        leading: const Icon(CupertinoIcons.bell),
+                        title: const Text('Báo Cáo Tồn Kho Loại Vàng' , style: TextStyle( fontWeight:  FontWeight.w800)),
+                        onTap: () {
+                          // Handle Báo Cáo Tồn Kho Loại Vàng tap
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 16.0), // Khoảng cách thụt lề
+                      child: ListTile(
+                        leading: const Icon(CupertinoIcons.bell),
+                        title: const Text('Báo Cáo Tồn Kho Vàng' , style: TextStyle( fontWeight:  FontWeight.w800)),
+                        onTap: () {
+                          //Handle Báo Cáo Tồn Kho Loại Vàng tap
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => Table_BaoCaoTonKhoVang()),
+                          );
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 16.0), // Khoảng cách thụt lề
+                      child: ListTile(
+                        leading: const Icon(CupertinoIcons.bell),
+                        title: const Text('Báo Cáo Tồn Kho Vàng' , style: TextStyle( fontWeight:  FontWeight.w800)),
+                        onTap: () {
+                          // Handle Báo Cáo Tồn Kho Loại Vàng tap
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 16.0), // Khoảng cách thụt lề
+                      child: ListTile(
+                        leading: const Icon(CupertinoIcons.bell),
+                        title: const Text('Báo Cáo Tồn Theo Nhóm Vàng' , style: TextStyle( fontWeight:  FontWeight.w800)),
+                        onTap: () {
+                          // Handle Báo Cáo Tồn Kho Loại Vàng tap
+                        },
+                      ),
+                    ),
+                  ],
+                ),               
               ],
             ),
           ),
-          ExpansionTile(
-            leading: const Icon(CupertinoIcons.settings),
-            title: const Text('Danh Mục'),
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(left: 16.0), // Khoảng cách thụt lề
-                child: ListTile(
-                  leading: const Icon(CupertinoIcons.settings),
-                  title: const Text('Loại Vàng'),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const LoaiVangScreen()),
-                    );
-                  },
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 16.0), // Khoảng cách thụt lề
-                child: ListTile(
-                  leading: const Icon(CupertinoIcons.settings),
-                  title: const Text('Nhóm Vàng'),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const NhomVangScreen()),
-                    );
-                  },
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 16.0), // Khoảng cách thụt lề
-                child: ListTile(
-                  leading: const Icon(CupertinoIcons.settings),
-                  title: const Text('Hàng Hóa'),
-                  onTap: () {
-                    // Handle Hàng Hóa tap
-                  },
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 16.0), // Khoảng cách thụt lề
-                child: ListTile(
-                  leading: const Icon(CupertinoIcons.settings),
-                  title: const Text('Kho'),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const KhoScreen()),
-                    );
-                  },
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 16.0), // Khoảng cách thụt lề
-                child: ListTile(
-                  leading: const Icon(CupertinoIcons.settings),
-                  title: const Text('NCC'),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const NhaCungCapScreen()),
-                    );
-                  },
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 16.0), // Khoảng cách thụt lề
-                child: ListTile(
-                  leading: const Icon(CupertinoIcons.settings),
-                  title: const Text('Khách Hàng'),
-                  onTap: () {
-                    // Handle Khách Hàng tap
-                  },
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 16.0), // Khoảng cách thụt lề
-                child: ListTile(
-                  leading: const Icon(CupertinoIcons.settings),
-                  title: const Text('Đơn Vị'),
-                  onTap: () {
-                    // Handle Đơn Vị tap
-                  },
-                ),
-              ),
-            ],
-          ),
-          ExpansionTile(
-            leading: const Icon(CupertinoIcons.bell),
-            title: const Text('Hệ Thống'),
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(left: 16.0), // Khoảng cách thụt lề
-                child: ListTile(
-                  leading: const Icon(CupertinoIcons.bell),
-                  title: const Text('Nhóm Người Dùng'),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const NhomPage()),
-                    );
-                  },
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 16.0), // Khoảng cách thụt lề
-                child: ListTile(
-                  leading: const Icon(CupertinoIcons.bell),
-                  title: const Text('Người Dùng'),
-                  onTap: () {
-                    // Handle Người Dùng tap
-                  },
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 16.0), // Khoảng cách thụt lề
-                child: ListTile(
-                  leading: const Icon(CupertinoIcons.bell),
-                  title: const Text('Kết Nối'),
-                  onTap: () {
-                    // Handle Kết Nối tap
-                  },
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 16.0), // Khoảng cách thụt lề
-                child: ListTile(
-                  leading: const Icon(CupertinoIcons.bell),
-                  title: const Text('Quản lý quyền'),
-                  onTap: () {
-                    _request_permission();
-                  },
-                ),
-              ),
-            ],
-          ),
-          ExpansionTile(
-            leading: const Icon(CupertinoIcons.bell),
-            title: const Text('Báo Cáo'),
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(left: 16.0), // Khoảng cách thụt lề
-                child: ListTile(
-                  leading: const Icon(CupertinoIcons.bell),
-                  title: const Text('Báo Cáo Phiếu Xuất'),
-                  onTap: () {
-                    // Handle Báo Cáo Phiếu Xuất tap
-                  },
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 16.0), // Khoảng cách thụt lề
-                child: ListTile(
-                  leading: const Icon(CupertinoIcons.bell),
-                  title: const Text('Báo Cáo Tồn Kho Loại Vàng'),
-                  onTap: () {
-                    // Handle Báo Cáo Tồn Kho Loại Vàng tap
-                  },
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 16.0), // Khoảng cách thụt lề
-                child: ListTile(
-                  leading: const Icon(CupertinoIcons.bell),
-                  title: const Text('Báo Cáo Tồn Kho Vàng'),
-                  onTap: () {
-                    //Handle Báo Cáo Tồn Kho Loại Vàng tap
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => Table_BaoCaoTonKhoVang()),
-                    );
-                  },
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 16.0), // Khoảng cách thụt lề
-                child: ListTile(
-                  leading: const Icon(CupertinoIcons.bell),
-                  title: const Text('Báo Cáo Tồn Kho Vàng'),
-                  onTap: () {
-                    // Handle Báo Cáo Tồn Kho Loại Vàng tap
-                  },
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 16.0), // Khoảng cách thụt lề
-                child: ListTile(
-                  leading: const Icon(CupertinoIcons.bell),
-                  title: const Text('Báo Cáo Tồn Theo Nhóm Vàng'),
-                  onTap: () {
-                    // Handle Báo Cáo Tồn Kho Loại Vàng tap
-                  },
-                ),
-              ),
-            ],
-          ),
-
-          //Nút đăng xuất
-          const SizedBox(height: 20,),
           Container(
-            padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+            padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
             child: ElevatedButton(
               onPressed: (){
                 print('Đã bấm đăng xuất');
                 Logout(context);
               },
               style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.redAccent,
+                  backgroundColor: Colors.grey,
                   foregroundColor: Colors.white,
                   shadowColor: Colors.black,
                   elevation: 8.0,
