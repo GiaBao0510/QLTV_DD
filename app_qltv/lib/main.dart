@@ -23,14 +23,24 @@ class MyApp extends StatelessWidget {
   Future<Widget> KiemTraDangNhap(BuildContext context) async{
     //Lấy thông tin
     String taiKhoan = await SessionManager().getString('username');
-    String matkhau = await SessionManager().getString('password');
 
     //Nếu chưa có tìa khoản thì chuyển sang trang đăng nhập
-    if(taiKhoan.isEmpty || matkhau.isEmpty){
+    if(taiKhoan.isEmpty){
       return LoginPage();
     }
-
-    return HomeScreen();
+    
+    // >>>>>>>>>>>>>>>>>>>>>>> Vấn đề <<<<<<<<<<<<<<<<<<<<<<<<<
+    // var res = await http.post(Uri.parse(checkValid), headers: {"Content-Type": "application/json"},);
+    //
+    // print(res.body);
+    // final thongtinphanhoi = jsonDecode(res.body);
+    // final hieuluc = thongtinphanhoi['valid'] as int;
+    //
+    // //Nếu chưa có tài khoản cn hiệu lực không. Nếu hết hiệu lực thì đăng nhập
+    // if(hieuluc == 0){
+    //   return const LoginPage();
+    // }
+    return const HomeScreen();
   }
 
   @override

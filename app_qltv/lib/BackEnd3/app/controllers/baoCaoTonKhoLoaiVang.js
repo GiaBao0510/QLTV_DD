@@ -7,11 +7,13 @@ exports.baoCaoTonKhoLoaiVang = async (req, res, next)=>{
     try{
         //Lấy theo từng tên loại vàng trước
         db.query(
-            `SELECT DISTINCT nh.NHOM_TEN 
+            `
+            SELECT DISTINCT nh.NHOM_TEN 
             FROM nhom_hang nh
-            INNER JOIN danh_muc_hang_hoa dmh on nh.NHOMHANGID = dmh.NHOMHANGID
-            JOIN loai_hang lh ON lh.LOAIID = dmh.LOAIID
-            WHERE dmh.SU_DUNG="1"
+                INNER JOIN danh_muc_hang_hoa dmh on nh.NHOMHANGID = dmh.NHOMHANGID
+                JOIN loai_hang lh ON lh.LOAIID = dmh.LOAIID
+                JOIN ton_kho tk ON tk.HANGHOAID = dmh.HANGHOAID
+            WHERE dmh.SU_DUNG="1" AND nh.SU_DUNG = 1 AND lh.SU_DUNG = 1 AND  tk.SL_TON = 1
             `,
             async (err, result1)=>{
                 if(err){
@@ -34,18 +36,71 @@ exports.baoCaoTonKhoLoaiVang = async (req, res, next)=>{
                     }
 
                     let MangKQ = [];
+                    let tong_TLThuc = 0,
+                        tong_TL_hot =0,
+                        tong_TLvang=0,
+                        tong_CongGoc=0,
+                        tong_GiaCong=0,
+                        tong_ThanhTien =0,
+                        SoLuong=0;
                     //Lấy danh sách từng tên loại vàng
                     for(const item of result1) {
                         //console.log(item.NHOM_TEN);
                         let ketqua = await TimKiemTheoNhom(`
-                            SELECT nh.NHOM_TEN, dmh.HANGHOAMA, dmh.HANG_HOA_TEN, lh.LOAI_TEN,dmh.CAN_TONG, dmh.TL_HOT, (dmh.CAN_TONG -  dmh.TL_HOT) TL_vang, dmh.CONG_GOC, dmh.GIA_CONG 
+                            SELECT nh.NHOM_TEN, 
+                                dmh.HANGHOAMA, 
+                                dmh.HANG_HOA_TEN, 
+                                lh.LOAI_TEN,
+                                dmh.CAN_TONG, 
+                                dmh.TL_HOT, 
+                                (dmh.CAN_TONG - dmh.TL_HOT) AS TL_vang, 
+                                dmh.CONG_GOC, 
+                                dmh.GIA_CONG,
+                                nh.DON_GIA_BAN AS DonGiaBan,
+                                (nh.DON_GIA_BAN * 10 * ((dmh.CAN_TONG - dmh.TL_HOT) / 1000))+dmh.GIA_CONG AS ThanhTien 
                             FROM nhom_hang nh
-                            INNER JOIN danh_muc_hang_hoa dmh on nh.NHOMHANGID = dmh.NHOMHANGID
+                            INNER JOIN danh_muc_hang_hoa dmh ON nh.NHOMHANGID = dmh.NHOMHANGID
                             JOIN loai_hang lh ON lh.LOAIID = dmh.LOAIID
-                            WHERE nh.NHOM_TEN="${item.NHOM_TEN}" AND dmh.SU_DUNG="1"
+                            JOIN ton_kho tk ON tk.HANGHOAID = dmh.HANGHOAID
+                            WHERE nh.NHOM_TEN = "${item.NHOM_TEN}" 
+                            AND dmh.SU_DUNG = 1 
+                            AND nh.SU_DUNG = 1 
+                            AND lh.SU_DUNG = 1 
+                            AND dmh.SO_LUONG > 0 
+                            AND tk.SL_TON = 1
+                            ORDER BY dmh.HANGHOAMA;    
                         `,item.NHOM_TEN);
-                        Array.prototype.push.apply(MangKQ, ketqua);
-        
+
+                        //Tính tổng
+                        for(const item of ketqua){
+                            tong_TLThuc += item.CAN_TONG;
+                            tong_TL_hot +=item.TL_HOT;
+                            tong_TLvang +=item.TL_vang;
+                            tong_CongGoc +=item.CONG_GOC;
+                            tong_GiaCong +=item.GIA_CONG;
+                            tong_ThanhTien += item.ThanhTien;
+                            SoLuong++;
+                        }
+
+                        var tinhTong = {
+                            "Số lượng:": SoLuong,
+                            "Tổng TL_Thực":tong_TLThuc, 
+                            "Tổng TL_hột": tong_TL_hot, 
+                            "Tổng TL_Vàng": tong_TLvang, 
+                            "Tổng Công gốc": tong_CongGoc, 
+                            "Tổng giá công":tong_GiaCong,
+                            "Tổng thành tiền": tong_ThanhTien,
+                        }
+
+                        //Đặt lại số lượng về 0
+                        SoLuong=0
+
+                        let ketQuaTungLoai = {
+                            data: ketqua,
+                            sumary: tinhTong
+                        };
+
+                        MangKQ.push(ketQuaTungLoai)
                     }
                     return res.status(200).json(MangKQ);
                 }
@@ -76,7 +131,8 @@ exports.baoCaoTonKhoLoaiVang_TenLoaiVang = async (req, res, next)=>{
                 tong_TL_hot =0,
                 tong_TLvang=0,
                 tong_CongGoc=0,
-                tong_GiaCong=0;
+                tong_GiaCong=0,
+                SoLuong=0;
 
             for(const item of result){
                 tong_TLThuc += item.CAN_TONG;
@@ -84,11 +140,13 @@ exports.baoCaoTonKhoLoaiVang_TenLoaiVang = async (req, res, next)=>{
                 tong_TLvang +=item.TL_vang;
                 tong_CongGoc +=item.CONG_GOC;
                 tong_GiaCong +=item.GIA_CONG;
+                SoLuong++;
             }
 
             return res.status(200).json({
                 data:result,
                 sumary:{
+                    "Số lượng:": SoLuong,
                     "Tổng TL_Thực":tong_TLThuc, 
                     "Tổng TL_hột": tong_TL_hot, 
                     "Tổng TL_Vàng": tong_TLvang, 
