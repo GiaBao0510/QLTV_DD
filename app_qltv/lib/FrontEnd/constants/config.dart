@@ -1,5 +1,5 @@
 
-final url = "http://192.168.1.21:3000";
+final url = "http://10.11.128.246:3000";
 final login = "$url/login";
 final logout = "$url/exit";
 
