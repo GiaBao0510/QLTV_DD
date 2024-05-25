@@ -29,7 +29,7 @@ class _ThemLoaiVangScreenState extends State<ThemLoaiVangScreen> {
       donGiaMua: 0,
       donGiaBan: 0,
       donGiaCam: 0,
-      nhomChaId: 1,
+      nhomChaId: 0,
       ghiChu: ''
     );
     _loadLoaiVangs();
@@ -299,26 +299,28 @@ class _ThemLoaiVangScreenState extends State<ThemLoaiVangScreen> {
           borderRadius: BorderRadius.all(Radius.circular(15.0)),
         ),
       ),
-      value: _newLoaiVang.nhomChaId,
-      items: _loaiVangList.map((LoaiVang loaiHang) {
-        return DropdownMenuItem<int>(
-          value: int.parse(loaiHang.nhomHangMa!),
-          child: Text(loaiHang.nhomTen!),
-        );
-      }).toList(),
+      value: _newLoaiVang.nhomChaId == 0 ? null : _newLoaiVang.nhomChaId,
+      items: 
+        _loaiVangList.map((LoaiVang loaiHang) {
+          return DropdownMenuItem<int>(
+            value: int.parse(loaiHang.nhomHangMa!),
+            child: Text(loaiHang.nhomTen!),
+          );
+        }).toList(),
       onChanged: (newValue) {
         setState(() {
-          _newLoaiVang = _newLoaiVang.copyWith(nhomChaId: newValue);
+          _newLoaiVang = _newLoaiVang.copyWith(nhomChaId: newValue ?? 0);
         });
       },
-      validator: (value) {
-        if (value == null || value == 0) {
-          return 'Please select a value';
-        }
-        return null;
-      },
+      // validator: (value) {
+      //   if (value == null || value == 0) {
+      //     return 'Please select a value';
+      //   }
+      //   return null;
+      // },
     );
   }
+
 
   Future<void> _saveForm(BuildContext context) async {
     final isValid = _formKey.currentState!.validate();

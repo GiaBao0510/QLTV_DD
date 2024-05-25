@@ -71,7 +71,8 @@ Future Login(BuildContext context) async {
   //Đăng nhập thành công
   if (value == 1) {
     SessionManager().setString('username', user.username);
-
+    SessionManager().setString('password',user.password);
+     
     QuickAlert.show(
       context: context,
       type: QuickAlertType.success,

@@ -1,33 +1,34 @@
-import 'package:app_qltv/FrontEnd/controller/danhmuc/nhacungcap_manager.dart';
-import 'package:app_qltv/FrontEnd/model/danhmuc/nhacungcap.dart';
+import 'package:app_qltv/FrontEnd/controller/danhmuc/hanghoa_manager.dart';
+import 'package:app_qltv/FrontEnd/model/danhmuc/hanghoa.dart';
 import 'package:app_qltv/FrontEnd/ui/components/search_bar.dart';
 import 'package:app_qltv/FrontEnd/ui/components/transitions.dart';
-import 'package:app_qltv/FrontEnd/ui/danh_muc/nha_cung_cap/components/chinh_sua_nha_cung_cap.dart';
-import 'package:app_qltv/FrontEnd/ui/danh_muc/nha_cung_cap/components/them_nha_cung_cap.dart';
+import 'package:app_qltv/FrontEnd/ui/danh_muc/hang_hoa/components/chinh_sua_hang_hoa.dart';
+import 'package:app_qltv/FrontEnd/ui/danh_muc/hang_hoa/components/them_hang_hoa.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class NhaCungCapScreen extends StatefulWidget {
-  static const routeName = "/nhacungcap";
+class HangHoaScreen extends StatefulWidget {
+  static const routeName = "/hanghoa";
 
-  const NhaCungCapScreen({Key? key}) : super(key: key);
+  const HangHoaScreen({Key? key}) : super(key: key);
 
   @override
-  _NhaCungCapScreenState createState() => _NhaCungCapScreenState();
+  _HangHoaScreenState createState() => _HangHoaScreenState();
 }
 
-class _NhaCungCapScreenState extends State<NhaCungCapScreen> {
-  late Future<List<NhaCungCap>> _nhaCungCapFuture;
+class _HangHoaScreenState extends State<HangHoaScreen> {
+  late Future<List<HangHoa>> _hangHoaFuture;
   final TextEditingController _searchController = TextEditingController();
-  List<NhaCungCap> _filteredNhaCungCapList = [];
-  List<NhaCungCap> _nhaCungCapList = [];
+  List<HangHoa> _filteredHangHoaList = [];
+  List<HangHoa> _hangHoaList = [];
 
   @override
   void initState() {
     super.initState();
-    _loadNhaCungCaps();
-    _searchController.addListener(_filterNhaCungCaps);
+    _loadHangHoas();
+    _searchController.addListener(_filterHangHoas);
   }
 
   @override
@@ -36,21 +37,21 @@ class _NhaCungCapScreenState extends State<NhaCungCapScreen> {
     super.dispose();
   }
 
-  Future<void> _loadNhaCungCaps() async {
-    _nhaCungCapFuture = Provider.of<NhaCungCapManager>(context, listen: false).fetchNhaCungCap();
-    _nhaCungCapFuture.then((nhaCungCaps) {
+  Future<void> _loadHangHoas() async {
+    _hangHoaFuture = Provider.of<HangHoaManager>(context, listen: false).fetchHangHoas();
+    _hangHoaFuture.then((hangHoas) {
       setState(() {
-        _nhaCungCapList = nhaCungCaps;
-        _filteredNhaCungCapList = nhaCungCaps;
+        _hangHoaList = hangHoas;
+        _filteredHangHoaList = hangHoas;
       });
     });
   }
 
-  void _filterNhaCungCaps() {
+  void _filterHangHoas() {
     final query = _searchController.text.toLowerCase();
     setState(() {
-      _filteredNhaCungCapList = _nhaCungCapList.where((nhaCungCap) {
-        return nhaCungCap.ncc_ten!.toLowerCase().contains(query);
+      _filteredHangHoaList = _hangHoaList.where((hangHoa) {
+        return hangHoa.hangHoaTen!.toLowerCase().contains(query);
       }).toList();
     });
   }
@@ -71,7 +72,7 @@ class _NhaCungCapScreenState extends State<NhaCungCapScreen> {
         title: Row(
           children: [
             Expanded(child: Container()), // Spacer
-            const Text("Nhà Cung Cấp", style: TextStyle(color: Colors.black, fontWeight: FontWeight.w900)),
+            const Text("Hàng Hóa", style: TextStyle(color: Colors.black, fontWeight: FontWeight.w900)),
             Expanded(child: Container()), // Spacer
           ],
         ),
@@ -81,10 +82,10 @@ class _NhaCungCapScreenState extends State<NhaCungCapScreen> {
             child: IconButton(
               onPressed: () async {
                 final result = await Navigator.of(context).push(
-                  createRoute((context) => const ThemNhaCungCapScreen()),
+                  createRoute((context) => ThemHangHoaScreen()),
                 );
                 if (result == true) {
-                  _loadNhaCungCaps(); // Refresh the list when receiving the result
+                  _loadHangHoas(); // Refresh the list when receiving the result
                 }
               },
               icon: const Icon(CupertinoIcons.add),
@@ -92,7 +93,6 @@ class _NhaCungCapScreenState extends State<NhaCungCapScreen> {
           ),
         ],
       ),
-
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(12.0),
@@ -110,11 +110,10 @@ class _NhaCungCapScreenState extends State<NhaCungCapScreen> {
     );
   }
 
-
   // ignore: non_constant_identifier_names
-  FutureBuilder<List<NhaCungCap>> ShowList() {
-    return FutureBuilder<List<NhaCungCap>>(
-      future: _nhaCungCapFuture,
+  FutureBuilder<List<HangHoa>> ShowList() {
+    return FutureBuilder<List<HangHoa>>(
+      future: _hangHoaFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
@@ -123,8 +122,8 @@ class _NhaCungCapScreenState extends State<NhaCungCapScreen> {
         } else {
           return ListView.builder(
             shrinkWrap: true, // shrinkWrap to make ListView fit within Column
-            physics: const NeverScrollableScrollPhysics(), // Disable ListView's own scrolling
-            itemCount: _filteredNhaCungCapList.length,
+            physics: NeverScrollableScrollPhysics(), // Disable ListView's own scrolling
+            itemCount: _filteredHangHoaList.length,
             reverse: true,
             itemBuilder: (BuildContext context, int index) {
               return Container(
@@ -146,7 +145,7 @@ class _NhaCungCapScreenState extends State<NhaCungCapScreen> {
                                 alignment: Alignment.centerLeft,
                                 child: 
                                 Text(
-                                  "Loại mã: ${_filteredNhaCungCapList[index].ncc_ma}",
+                                  "Mã Hàng: ${_filteredHangHoaList[index].hangHoaMa}",
                                   style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w700, fontSize: 14),
                                 ),
                               ),
@@ -165,33 +164,41 @@ class _NhaCungCapScreenState extends State<NhaCungCapScreen> {
                       Row(
                         children: [
                           Text(
-                            _filteredNhaCungCapList[index].ncc_ten ?? '',
+                            _filteredHangHoaList[index].hangHoaTen ?? '',
                             style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w800, fontSize: 20),
                           ),
                         ],
                       ),
-                      Row(
-                        children: [
-                          Text(
-                            "Ngày bắt đầu: ${_filteredNhaCungCapList[index].ngay_bd}",
-                            style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w700, fontSize: 14),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Flexible(
-                            child: Tooltip(
-                              message: _filteredNhaCungCapList[index].ghi_chu ?? '',
-                              child: Text(
-                                "Địa chỉ: ${_filteredNhaCungCapList[index].ghi_chu}",
-                                style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w700, fontSize: 14),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+                      //  Row(
+                      //   children: [
+                      //     Text(
+                      //       "Mã Loại Vàng: ${int.parse(_filteredHangHoaList[index].nhomHangId!).toString()}",
+                      //       style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w700, fontSize: 14),
+                      //     ),
+                      //   ],
+                      // ),
+                      // Row(
+                      //   children: [
+                      //     Text(
+                      //       "Ngày Sản Xuất: ${_filteredHangHoaList[index].ngaySanXuat}",
+                      //       style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w700, fontSize: 14),
+                      //     ),
+                      //   ],
+                      // ),
+                      // Row(
+                      //   children: [
+                      //     Flexible(
+                      //       child: Tooltip(
+                      //         message: _filteredHangHoaList[index].ghiChu ?? '',
+                      //         child: Text(
+                      //           "Ghi Chú: ${_filteredHangHoaList[index].ghiChu}",
+                      //           style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w700, fontSize: 14),
+                      //           overflow: TextOverflow.ellipsis,
+                      //         ),
+                      //       ),
+                      //     ),
+                      //   ],
+                      // ),
                     ],
                   ),
                 ),
@@ -208,11 +215,11 @@ class _NhaCungCapScreenState extends State<NhaCungCapScreen> {
       onTap: () async {
         final result = await Navigator.of(context).push(
           createRoute(
-            (context) => ChinhSuaNhaCungCapScreen(nhacungcap: _filteredNhaCungCapList[index]),
+            (context) => ChinhSuaHangHoaScreen(hangHoa: _filteredHangHoaList[index]),
           ),
         );
         if (result == true) {
-          _loadNhaCungCaps(); // Refresh the list when receiving the result
+          _loadHangHoas(); // Refresh the list when receiving the result
         }
       },
       child: const Icon(
@@ -230,7 +237,7 @@ class _NhaCungCapScreenState extends State<NhaCungCapScreen> {
           builder: (BuildContext context) {
             return AlertDialog(
               title: const Text("Xác nhận"),
-              content: Text("Bạn có chắc chắn muốn xóa nhà cung cấp ${_filteredNhaCungCapList[index].ncc_ten?.toUpperCase()}?"),
+              content: Text("Bạn có chắc chắn muốn xóa hàng hóa ${_filteredHangHoaList[index].hangHoaTen?.toUpperCase()}?"),
               actions: <Widget>[
                 TextButton(
                   onPressed: () {
@@ -240,10 +247,10 @@ class _NhaCungCapScreenState extends State<NhaCungCapScreen> {
                 ),
                 TextButton(
                   onPressed: () async {
-                    final nhaCungCapManager = Provider.of<NhaCungCapManager>(context, listen: false);
-                    await nhaCungCapManager.deleteNhaCungCap(_filteredNhaCungCapList[index].ncc_id!); // Use `ncc_id` directly
+                    final hangHoaManager = Provider.of<HangHoaManager>(context, listen: false);
+                    await hangHoaManager.deleteHangHoa(_filteredHangHoaList[index].hangHoaMa!); // Use `hangHoaId` directly
                     Navigator.of(context).pop(); // Close the dialog
-                    _loadNhaCungCaps(); // Refresh the list
+                    _loadHangHoas(); // Refresh the list
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: const Text('Xóa thành công!', style: TextStyle(fontWeight: FontWeight.w900, color: Colors.red), textAlign: TextAlign.center,),
@@ -270,6 +277,4 @@ class _NhaCungCapScreenState extends State<NhaCungCapScreen> {
       ),
     );
   }
-
-
 }

@@ -58,7 +58,8 @@ class Nhom {
       biKhoa: map['BIKHOA'] == 1,
       lyDoKhoa: map['LY_DO_KHOA'] ?? '',
       suDung: map['SU_DUNG'] == 1,
-      ngayTao: DateTime.tryParse(map['NGAY_TAO'] ?? '') ?? DateTime.now(),
+      ngayTao: map['NGAY_TAO'] != null ? DateTime.tryParse(map['NGAY_TAO']) : null,
+      //ngayTao: DateTime.tryParse(map['NGAY_TAO'] ?? '') ?? DateTime.now(),
     );
   }
 
