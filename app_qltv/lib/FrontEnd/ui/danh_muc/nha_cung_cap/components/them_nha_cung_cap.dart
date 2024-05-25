@@ -9,6 +9,8 @@ import 'package:intl/intl.dart';
 class ThemNhaCungCapScreen extends StatefulWidget {
   static const routeName = "/themNhaCungCap";
 
+  const ThemNhaCungCapScreen({super.key});
+
   @override
   State<ThemNhaCungCapScreen> createState() => _ThemNhaCungCapScreenState();
 }

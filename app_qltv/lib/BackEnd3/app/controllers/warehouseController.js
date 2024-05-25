@@ -2,7 +2,6 @@ var mysql = require('mysql');
 var express = require('express');
 var db = require('../config/index_2');
 var ApiError = require('../api-error');
-
 //1. danh sách thông tin kho
 exports.list_wareHouse = async (req, res, next) =>{
     try{
@@ -12,7 +11,7 @@ exports.list_wareHouse = async (req, res, next) =>{
                 return res.status(404).json({message: `Loi khi lấy danh sách thong tin kho`});
             }else{
                 let KetQua = results.map(result =>({
-                    "KHOID": Number(result.KHOID),
+                    "KHOID": result.KHOID,
                     "KHOMA": result.KHOMA,
                     "KHO_TEN": result.KHO_TEN,
                     "SU_DUNG": result.SU_DUNG
@@ -36,7 +35,7 @@ exports.lay_wareHouse= async (req, res, next) =>{
                 return res.status(404).json({message: `Loi khi tìm thong tin kho - ${KHOMA}`});
             }else{
                 let KetQua = results.map(result =>({
-                    "KHOID": Number(result.KHOID),
+                    "KHOID": result.KHOID,
                     "KHOMA": result.KHOMA,
                     "KHO_TEN": result.KHO_TEN,
                     "SU_DUNG": result.SU_DUNG
@@ -50,45 +49,45 @@ exports.lay_wareHouse= async (req, res, next) =>{
 }
 
 //3.Thêm thông tin  kho
-exports.Add_wareHouse= async (req, res, next) =>{
-    try{
-        const KHO_TEN = req.body.KHO_TEN,
-        SU_DUNG = 1;
+// exports.Add_wareHouse= async (req, res, next) =>{
+//     try{
+//         const KHO_TEN = req.body.KHO_TEN,
+//         SU_DUNG = 1;
     
-        //Thêm trước mớ thông tin ngoại trừ ID và mã NCC
-        db.query('insert into gd_kho(KHO_TEN,SU_DUNG) values(?,?)',[KHO_TEN,SU_DUNG],(err, result)=>{
-            if(err){
-                console.log(`Lỗi khi gửi thông tin kho - ${err}`);
-                return res.status(404).json({message: `Loi khi gui thong tin kho`});
-            }else{
+//         //Thêm trước mớ thông tin ngoại trừ ID và mã NCC
+//         db.query('insert into gd_kho(KHO_TEN,SU_DUNG) values(?,?)',[KHO_TEN,SU_DUNG],(err, result)=>{
+//             if(err){
+//                 console.log(`Lỗi khi gửi thông tin kho - ${err}`);
+//                 return res.status(404).json({message: `Loi khi gui thong tin kho`});
+//             }else{
 
-                //lấy ID cuối
-                db.query("SELECT KHOID FROM gd_kho ORDER BY KHOID DESC LIMIT 1",(err, result)=> {
-                    if(err){
-                        console.log(`Lỗi khi lấy ID cuối thông tin kho - ${err}`);
-                        return res.status(404).json({message: `Loi khi lấy ID cuối thong tin kho`});
-                    }else{
-                        let IDcuoi = Number(result[0].KHOID);
+//                 //lấy ID cuối
+//                 db.query("SELECT KHOID FROM gd_kho ORDER BY KHOID DESC LIMIT 1",(err, result)=> {
+//                     if(err){
+//                         console.log(`Lỗi khi lấy ID cuối thông tin kho - ${err}`);
+//                         return res.status(404).json({message: `Loi khi lấy ID cuối thong tin kho`});
+//                     }else{
+//                         let IDcuoi = Number(result[0].KHOID);
 
-                        //Chuyển ID cuối về chuỗi
-                        const IDchuoi = String(IDcuoi);
+//                         //Chuyển ID cuối về chuỗi
+//                         const IDchuoi = String(IDcuoi);
                         
-                        db.query(`update gd_kho set KHOMA="${IDchuoi}" where KHOID = "${IDcuoi}"`, (err, results)=>{
-                            if (err) {
-                                console.log(`Lỗi khi cập nhật KHOMA của kho - ${err}`);
-                                return res.status(404).json({message: `Loi khi cập nhật KHOMA của kho`});
-                            } else {
-                                return res.status(200).json({message: `Thêm thong tin kho thanh cong, ID: ${IDcuoi}`});
-                            }
-                        })
-                    }
-                })
-            }
-        });
-    }catch(err){
-        return next(new ApiError(500, `Loi xuat hien khi them kho: ${err.message}`));
-    }
-}
+//                         db.query(`update gd_kho set KHOMA="${IDchuoi}" where KHOID = "${IDcuoi}"`, (err, results)=>{
+//                             if (err) {
+//                                 console.log(`Lỗi khi cập nhật KHOMA của kho - ${err}`);
+//                                 return res.status(404).json({message: `Loi khi cập nhật KHOMA của kho`});
+//                             } else {
+//                                 return res.status(200).json({message: `Thêm thong tin kho thanh cong, ID: ${IDcuoi}`});
+//                             }
+//                         })
+//                     }
+//                 })
+//             }
+//         });
+//     }catch(err){
+//         return next(new ApiError(500, `Loi xuat hien khi them kho: ${err.message}`));
+//     }
+// }
 
 //4. xóa thông tin kho
 exports.delete_wareHouse= async (req, res, next) =>{
@@ -109,7 +108,7 @@ exports.delete_wareHouse= async (req, res, next) =>{
     }
 }
 
-//5. sửa thông tin kho
+// 5. sửa thông tin kho
 exports.Update_wareHouse= async (req, res, next) =>{
     try{
         //Thông tin truy vẫn
@@ -117,11 +116,10 @@ exports.Update_wareHouse= async (req, res, next) =>{
         KHOMA = String(KHOMA);
 
         //Thông tin sửa
-        const KHO_TEN = req.body.KHO_TEN,
-            SU_DUNG = 1;
+        const KHO_TEN = req.body.KHO_TEN
     
         db.query(`update gd_kho
-                set KHO_TEN="${KHO_TEN}", SU_DUNG="${SU_DUNG}"
+                set KHO_TEN="${KHO_TEN}"
                 where KHOMA="${KHOMA}"`,(err, result)=>{
             if(err){
                 console.log(`Lỗi khi cập nhật thông tin kho - ${err}`);

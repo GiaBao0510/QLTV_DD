@@ -1,9 +1,9 @@
-import 'package:app_qltv/FrontEnd/model/danhmuc/loaivang.dart';
-import 'package:app_qltv/FrontEnd/controller/danhmuc/loaivang_manager.dart';
+import 'package:app_qltv/FrontEnd/model/danhmuc/kho.dart';
+import 'package:app_qltv/FrontEnd/controller/danhmuc/kho_manage.dart';
 import 'package:app_qltv/FrontEnd/ui/components/search_bar.dart';
 import 'package:app_qltv/FrontEnd/ui/components/transitions.dart';
-import 'package:app_qltv/FrontEnd/ui/danh_muc/loai_vang/components/chinh_sua_loai_vang.dart';
-import 'package:app_qltv/FrontEnd/ui/danh_muc/loai_vang/components/them_loai_vang.dart';
+// import 'package:app_qltv/FrontEnd/ui/danh_muc/kho/components/chi_tiet_kho.dart';
+import 'package:app_qltv/FrontEnd/ui/danh_muc/kho/components/chinh_sua_kho.dart';
 // import 'package:app_qltv/FrontEnd/ui/danh_muc/nhom_vang/components/chinh_sua_loai_vang.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -11,26 +11,26 @@ import 'package:provider/provider.dart';
 
 
 
-class LoaiVangScreen extends StatefulWidget {
-  static const routeName = "/loaivang";
+class KhoScreen extends StatefulWidget {
+  static const routeName = "/khohang";
 
-  const LoaiVangScreen({Key? key}) : super(key: key);
+  const KhoScreen({Key? key}) : super(key: key);
 
   @override
-  _LoaiVangScreenState createState() => _LoaiVangScreenState();
+  _KhoScreenState createState() => _KhoScreenState();
 }
 
-class _LoaiVangScreenState extends State<LoaiVangScreen> {
-  late Future<List<LoaiVang>> _loaiVangFuture;
+class _KhoScreenState extends State<KhoScreen> {
+  late Future<List<Kho>> _khoFuture;
   final TextEditingController _searchController = TextEditingController();
-  List<LoaiVang> _filteredLoaiVanngList = [];
-  List<LoaiVang> _loaiVangList = [];
+  List<Kho> _filteredKhoList = [];
+  List<Kho> _khoList = [];
 
   @override
   void initState() {
     super.initState();
-    _loadLoaiVanngs();
-    _searchController.addListener(_filterLoaiVanngs);
+    _loadKho();
+    _searchController.addListener(_filterKho);
   }
 
   @override
@@ -39,21 +39,21 @@ class _LoaiVangScreenState extends State<LoaiVangScreen> {
     super.dispose();
   }
 
-  Future<void> _loadLoaiVanngs() async {
-    _loaiVangFuture = Provider.of<LoaiVangManager>(context, listen: false).fetchLoaiHang();
-    _loaiVangFuture.then((loaiVangs) {
+  Future<void> _loadKho() async {
+    _khoFuture = Provider.of<KhoManage>(context, listen: false).fetchKho();
+    _khoFuture.then((khos) {
       setState(() {
-        _loaiVangList = loaiVangs;
-        _filteredLoaiVanngList = loaiVangs;
+        _khoList = khos;
+        _filteredKhoList = khos;
       });
     });
   }
 
-  void _filterLoaiVanngs() {
+  void _filterKho() {
     final query = _searchController.text.toLowerCase();
     setState(() {
-      _filteredLoaiVanngList = _loaiVangList.where((loaiVang) {
-        return loaiVang.nhomTen!.toLowerCase().contains(query);
+      _filteredKhoList = _khoList.where((kho) {
+        return kho.kho_ten!.toLowerCase().contains(query);
       }).toList();
     });
   }
@@ -74,26 +74,11 @@ class _LoaiVangScreenState extends State<LoaiVangScreen> {
         title: Row(
           children: [
             Expanded(child: Container()), // Spacer
-            const Text("Loại Vàng", style: TextStyle(color: Colors.black, fontWeight: FontWeight.w900)),
+            const Text("Kho", style: TextStyle(color: Colors.black, fontWeight: FontWeight.w900)),
             Expanded(child: Container()), // Spacer
           ],
         ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 12.0),
-            child: IconButton(
-              onPressed: () async {
-                final result = await Navigator.of(context).push(
-                  createRoute((context) => const ThemLoaiVangScreen()),
-                );
-                if (result == true) {
-                  _loadLoaiVanngs(); // Refresh the list when receiving the result
-                }
-              },
-              icon: const Icon(CupertinoIcons.add),
-            ),
-          ),
-        ],
+       
       ),
       body: SafeArea(
         child: Padding(
@@ -113,9 +98,9 @@ class _LoaiVangScreenState extends State<LoaiVangScreen> {
   }
 
   // ignore: non_constant_identifier_names
-  FutureBuilder<List<LoaiVang>> ShowList() {
-    return FutureBuilder<List<LoaiVang>>(
-      future: _loaiVangFuture,
+  FutureBuilder<List<Kho>> ShowList() {
+    return FutureBuilder<List<Kho>>(
+      future: _khoFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
@@ -124,8 +109,8 @@ class _LoaiVangScreenState extends State<LoaiVangScreen> {
         } else {
           return ListView.builder(
             shrinkWrap: true, // shrinkWrap to make ListView fit within Column
-            physics: const NeverScrollableScrollPhysics(), // Disable ListView's own scrolling
-            itemCount: _filteredLoaiVanngList.length,
+            physics: NeverScrollableScrollPhysics(), // Disable ListView's own scrolling
+            itemCount: _filteredKhoList.length,
             reverse: true,
             itemBuilder: (BuildContext context, int index) {
               return Container(
@@ -146,7 +131,7 @@ class _LoaiVangScreenState extends State<LoaiVangScreen> {
                               Align(
                                 alignment: Alignment.centerLeft,
                                 child: Text(
-                                  _filteredLoaiVanngList[index].nhomTen ?? '',
+                                  _filteredKhoList[index].kho_ten ?? '',
                                   style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w800, fontSize: 20),
                                 ),
                               ),
@@ -164,58 +149,12 @@ class _LoaiVangScreenState extends State<LoaiVangScreen> {
                       Row(
                         children: [
                           Text(
-                            "Mã: ${_filteredLoaiVanngList[index].nhomHangMa}",
+                            "Mã: ${_filteredKhoList[index].kho_ma}",
                             style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w700, fontSize: 14),
                           ),
                         ],
                       ),
-                      Row(
-                        children: [
-                          Text(
-                            "Đơn giá vốn: ${_filteredLoaiVanngList[index].donGiaVon?.toStringAsFixed(0).replaceAllMapped(
-                                RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-                                (Match match) => '${match[1]},'
-                            )}",
-                            style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w700, fontSize: 14),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Text(
-                            "Đơn giá mua: ${_filteredLoaiVanngList[index].donGiaMua?.toStringAsFixed(0).replaceAllMapped(
-                                RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-                                (Match match) => '${match[1]},'
-                            )}",
-                            style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w700, fontSize: 14),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Text(
-                            "Đơn giá bán: ${_filteredLoaiVanngList[index].donGiaBan?.toStringAsFixed(0).replaceAllMapped(
-                                RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-                                (Match match) => '${match[1]},'
-                            )}",
-                            style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w700, fontSize: 14),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Text(
-                            "Đơn giá cầm: ${_filteredLoaiVanngList[index].donGiaCam?.toStringAsFixed(0).replaceAllMapped(
-                                RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-                                (Match match) => '${match[1]},'
-                            )}",
-                            style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w700, fontSize: 14),
-                          ),
-                        ],
-                      ),
-
-                     
-                    ],
+                    ]
                   ),
                 ),
               );
@@ -234,7 +173,7 @@ class _LoaiVangScreenState extends State<LoaiVangScreen> {
           builder: (BuildContext context) {
             return AlertDialog(
               title: const Text("Xác nhận"),
-              content: Text("Bạn có chắc chắn muốn xóa nhà cung cấp ${_filteredLoaiVanngList[index].nhomTen?.toUpperCase()}?"),
+              content: Text("Bạn có chắc chắn muốn xóa kho ${_filteredKhoList[index].kho_ten?.toUpperCase()}?"),
               actions: <Widget>[
                 TextButton(
                   onPressed: () {
@@ -244,10 +183,10 @@ class _LoaiVangScreenState extends State<LoaiVangScreen> {
                 ),
                 TextButton(
                   onPressed: () async {
-                    final nhaCungCapManager = Provider.of<LoaiVangManager>(context, listen: false);
-                    await nhaCungCapManager.deleteLoaiVang(_filteredLoaiVanngList[index].nhomHangId!); // Use `ncc_id` directly
+                    final khoManager = Provider.of<KhoManage>(context, listen: false);
+                    await khoManager.deleteKho(int.parse(_filteredKhoList[index].kho_id!)); 
                     Navigator.of(context).pop(); // Close the dialog
-                    _loadLoaiVanngs(); // Refresh the list
+                    _loadKho(); // Refresh the list
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: const Text('Xóa thành công!', style: TextStyle(fontWeight: FontWeight.w900, color: Colors.red), textAlign: TextAlign.center,),
@@ -280,11 +219,11 @@ class _LoaiVangScreenState extends State<LoaiVangScreen> {
       onTap: () async {
         final result = await Navigator.of(context).push(
           createRoute(
-            (context) => ChinhSuaLoaiVangScreen(loaiVang: _filteredLoaiVanngList[index]),
+            (context) => ChinhSuakhoScreen(kho: _filteredKhoList[index]),
           ),
         );
         if (result == true) {
-          _loadLoaiVanngs(); // Refresh the list when receiving the result
+          _loadKho(); // Refresh the list when receiving the result
         }
       },
       child: const Icon(

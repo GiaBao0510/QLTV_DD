@@ -39,17 +39,17 @@ const getChiTietPhieuCam = async () => {
     });
   };
   
-  const getChiTietPhieuCamById = async (id) => {
-    return new Promise((resolve, reject) => {
-      db.query('SELECT * FROM cam_chi_tiet_phieu_cam_vang WHERE PHIEU_CAM_VANG_ID = ?', [id], (error, results) => {
-        if (error) {
-          reject(error);
-        } else {
-          resolve(results[0]);
-        }
-      });
+const getChiTietPhieuCamById = async (id) => {
+  return new Promise((resolve, reject) => {
+    db.query('SELECT * FROM cam_chi_tiet_phieu_cam_vang WHERE PHIEU_CAM_VANG_ID = ?', [id], (error, results) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve(results[0]);
+      }
     });
-  };
+  });
+};
 // create table phx_phieu_xuat
 
 const getPhieuXuat = async () => {

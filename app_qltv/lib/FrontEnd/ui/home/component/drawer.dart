@@ -1,7 +1,9 @@
 
+import 'package:app_qltv/FrontEnd/ui/danh_muc/kho/kho.dart';
 import 'package:app_qltv/FrontEnd/ui/danh_muc/loai_vang/loai_vang.dart';
 import 'package:app_qltv/FrontEnd/ui/danh_muc/nha_cung_cap/nha_cung_cap_green.dart';
 import 'package:app_qltv/FrontEnd/ui/danh_muc/nhom_vang/nhom_vang.dart';
+import 'package:app_qltv/FrontEnd/ui/danh_muc/BaoCaoTonKhoVang/BaoCao_TonKhoVang.dart';
 import 'package:app_qltv/FrontEnd/constants/config.dart';
 import 'package:app_qltv/FrontEnd/ui/hethonng/nhom/nhompage.dart';
 import 'package:app_qltv/main.dart';
@@ -10,7 +12,6 @@ import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:session_manager/session_manager.dart';
 import 'package:http/http.dart' as http;
-import 'package:session_manager/session_manager.dart';
 import 'package:quickalert/quickalert.dart';
 
 // ignore: camel_case_types
@@ -38,19 +39,22 @@ class drawer extends StatelessWidget {
       print(res.body);
 
       SessionManager().setString('username','');
-      SessionManager().setString('password','');
 
       QuickAlert.show(
         context: context,
         type: QuickAlertType.success,
         title: " Đăng xuất thành công",
-        onConfirmBtnTap: () => {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => MyApp() ), // Sử dụng RegisterPage từ tệp tin register.dart
-          )
-        },
+        // onConfirmBtnTap: () => {
+        //   Navigator.pushReplacement(
+        //     context,
+        //     MaterialPageRoute(builder: (context) => const MyApp() ), // Sử dụng RegisterPage từ tệp tin register.dart
+        //   )
+        // },
       );
+      Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const MyApp())
+    );
     }catch(e){
       print('Lỗi khi thực hiện đăng xuất: $e');
     }
@@ -62,12 +66,12 @@ class drawer extends StatelessWidget {
       child: ListView(
         children: <Widget>[
            DrawerHeader(
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: Colors.blue,
             ),
             child: Row(
               children: [
-                Expanded(
+                const Expanded(
                   flex: 1,
                     child: Text(
                       'Menu',
@@ -82,7 +86,7 @@ class drawer extends StatelessWidget {
                   flex: 1,
                     child: Row(
                       children: [
-                        Flexible(
+                        const Flexible(
                             child: Icon(Icons.account_circle_outlined, size: 35, color: Colors.white,)
                         ),
                         Flexible(
@@ -90,11 +94,11 @@ class drawer extends StatelessWidget {
                                 future: _getTenAdmin(),
                                 builder: (context, snapshot){
                                   if(snapshot.hasData){
-                                    return Text( snapshot.data!, style: TextStyle(color: Colors.white),);
+                                    return Text( snapshot.data!, style: const TextStyle(color: Colors.white),);
                                   }else if(snapshot.hasError){
                                     return Text('Error: ${snapshot.error}');
                                   }else{
-                                    return CircularProgressIndicator();
+                                    return const CircularProgressIndicator();
                                   }
                                 }
                             )
@@ -151,7 +155,10 @@ class drawer extends StatelessWidget {
                   leading: const Icon(CupertinoIcons.settings),
                   title: const Text('Kho'),
                   onTap: () {
-                    // Handle Kho tap
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const KhoScreen()),
+                    );
                   },
                 ),
               ),
@@ -269,7 +276,11 @@ class drawer extends StatelessWidget {
                   leading: const Icon(CupertinoIcons.bell),
                   title: const Text('Báo Cáo Tồn Kho Vàng'),
                   onTap: () {
-                    // Handle Báo Cáo Tồn Kho Loại Vàng tap
+                    //Handle Báo Cáo Tồn Kho Loại Vàng tap
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => Table_BaoCaoTonKhoVang()),
+                    );
                   },
                 ),
               ),
@@ -299,7 +310,7 @@ class drawer extends StatelessWidget {
           //Nút đăng xuất
           const SizedBox(height: 20,),
           Container(
-            padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+            padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
             child: ElevatedButton(
               onPressed: (){
                 print('Đã bấm đăng xuất');
@@ -315,7 +326,7 @@ class drawer extends StatelessWidget {
                   )
               ),
               child: const Row(
-                children: const [
+                children: [
                   Expanded(
                     flex:2,
                       child: Text('Đăng xuất', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, fontFamily: 'Align' ),),

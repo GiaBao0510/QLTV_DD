@@ -1,6 +1,3 @@
-
-// //  table cam_phieu_cam_vang
-
 const camvangServices = require('../services/camvangServices');
 
 exports.getPhieuDangCam = async (req, res, next) => {
