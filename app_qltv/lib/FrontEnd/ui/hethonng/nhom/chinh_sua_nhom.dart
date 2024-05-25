@@ -5,33 +5,28 @@ import 'package:provider/provider.dart'; // Import Provider package
 import 'package:app_qltv/FrontEnd/model/hethong/nhom.dart';
 import 'package:app_qltv/FrontEnd/controller/hethong/nhom_manager.dart';
 
-class ThemNhomScreen extends StatefulWidget {
-  static const routeName = "/themnhom";
+class ChinhSuaNhomScreen extends StatefulWidget {
+  static const routeName = "/chinhsuanhom";
 
-  const ThemNhomScreen({super.key});
+  final Nhom nhom;
+
+  const ChinhSuaNhomScreen(this.nhom,{super.key});
 
   @override
-  State<ThemNhomScreen> createState() => _ThemNhomScreenState();
-}
+  State<ChinhSuaNhomScreen> createState() => _ChinhSuaNhomScreenState();
+  }
 
-class _ThemNhomScreenState extends State<ThemNhomScreen> {
-  final _addForm = GlobalKey<FormState>();
-  var _newNhom = Nhom(
-    groupId: null,
-    groupMa: '',
-    groupTen: '',
-    biKhoa: false,
-    lyDoKhoa: '',
-    suDung: true,
-    ngayTao: DateTime.now(),
-  );
+class _ChinhSuaNhomScreenState extends State<ChinhSuaNhomScreen> {
+  final _editForm = GlobalKey<FormState>();
+  late Nhom _editedNhom;
 
   @override
   void initState() {
     super.initState();
-    Provider.of<NhomManager>(context, listen: false).fetchNhoms();
+    _editedNhom = widget.nhom; // Initialize _editedNhomVang with widget's nhomVang
   }
 
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,14 +43,14 @@ class _ThemNhomScreenState extends State<ThemNhomScreen> {
         title: const Center(
             child: Padding(
               padding: EdgeInsets.only(right: 50.0),
-              child: Text("Thêm Nhóm", style: TextStyle(color: Colors.black, fontWeight: FontWeight.w900), textAlign: TextAlign.center,),
+              child: Text("Chỉnh Sửa Nhóm", style: TextStyle(color: Colors.black, fontWeight: FontWeight.w900), textAlign: TextAlign.center,),
             ),
         ),
       ),
-      body: Padding(
+      body: Container(
         padding: const EdgeInsets.all(16.0),
         child: Form(
-          key: _addForm,
+          key: _editForm,
           child: ListView(
             children: <Widget>[
               Container(
@@ -84,7 +79,7 @@ class _ThemNhomScreenState extends State<ThemNhomScreen> {
                   backgroundColor: Colors.grey[50]
                 ),
                 onPressed: () => _saveForm(context),
-                child: const Text('Thêm', style: TextStyle(fontWeight: FontWeight.w900, color: Colors.green),),
+                child: const Text('Cập nhật', style: TextStyle(fontWeight: FontWeight.w900, color: Colors.green),),
               ),
             ],
           ),
@@ -93,8 +88,10 @@ class _ThemNhomScreenState extends State<ThemNhomScreen> {
     );
   }
 
+  
   TextFormField buildGroupTenField() {
     return TextFormField(
+      initialValue: _editedNhom.groupTen.toString(),
       decoration: const InputDecoration(
         labelText: 'Tên Nhóm',
         labelStyle: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
@@ -115,13 +112,14 @@ class _ThemNhomScreenState extends State<ThemNhomScreen> {
         return null;
       },
       onSaved: (value) {
-        _newNhom = _newNhom.copyWith(groupTen: value);
+        _editedNhom = _editedNhom.copyWith(groupTen: value);
       },
     );
   }
 
   TextFormField buildLyDoKhoaField() {
     return TextFormField(
+      initialValue: _editedNhom.lyDoKhoa.toString(),
       decoration: const InputDecoration(
         labelText: 'Lý Do Khóa',
         labelStyle: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
@@ -141,7 +139,7 @@ class _ThemNhomScreenState extends State<ThemNhomScreen> {
       //   return null;
       // },
       onSaved: (value) {
-        _newNhom = _newNhom.copyWith(lyDoKhoa: value);
+        _editedNhom = _editedNhom.copyWith(lyDoKhoa: value);
       },
     );
   }
@@ -150,10 +148,10 @@ class _ThemNhomScreenState extends State<ThemNhomScreen> {
     return Row(
       children: [
         Checkbox(
-          value: _newNhom.biKhoa,
+          value: _editedNhom.biKhoa,
           onChanged: (value) {
             setState(() {
-              _newNhom = _newNhom.copyWith(biKhoa: value);
+              _editedNhom = _editedNhom.copyWith(biKhoa: value);
             });
           },
         ),
@@ -169,18 +167,18 @@ class _ThemNhomScreenState extends State<ThemNhomScreen> {
   }
 
   Future<void> _saveForm(BuildContext context) async {
-    final isValid = _addForm.currentState!.validate();
+    final isValid = _editForm.currentState!.validate();
     if (!isValid) {
       return;
     }
-    _addForm.currentState!.save();
+    _editForm.currentState!.save();
 
     try {
       final nhomManager = Provider.of<NhomManager>(context, listen: false);
-      await nhomManager.addNhom(_newNhom);
+      await nhomManager.updateNhom(_editedNhom.groupId as String, _editedNhom.groupMa as String, _editedNhom.groupTen as String, _editedNhom.biKhoa as bool, _editedNhom.lyDoKhoa as String, _editedNhom.suDung as bool);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('Thêm thành công!', style: TextStyle(fontWeight: FontWeight.w900), textAlign: TextAlign.center,),
+          content: const Text('Cập nhật thành công!', style: TextStyle(fontWeight: FontWeight.w900), textAlign: TextAlign.center,),
           backgroundColor: Colors.grey,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15.0),
@@ -198,7 +196,7 @@ class _ThemNhomScreenState extends State<ThemNhomScreen> {
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content:  Text('Không thể thêm nhóm: $error', style: TextStyle(fontWeight: FontWeight.w900, color: Colors.red), textAlign: TextAlign.center,),
+          content:  Text('Không thể cập nhóm: $error', style: TextStyle(fontWeight: FontWeight.w900, color: Colors.red), textAlign: TextAlign.center,),
           backgroundColor: Colors.grey,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15.0),

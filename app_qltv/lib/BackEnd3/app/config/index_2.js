@@ -2,19 +2,16 @@ var mysql = require('mysql');
 // var mysql2 = require('mysql2');
 
 var db = mysql.createConnection({
-<<<<<<< HEAD
     host: 'baokhoagold.ddns.net',
     port: '3306',
     database: 'QLTV1',
     user:"user_test",
     password:'12345'
-=======
-    host: 'localhost',
-    database: 'tiemvang',
-    port: '3306',
-    user:"root",
-    password:''
->>>>>>> c196fd6ce376b1c9053d01ac4c0fb90c39e7831b
+    // host: 'localhost',
+    // database: 'tiemvang',
+    // port: '3306',
+    // user:"root",
+    // password:''
 
     // database: 'quanlytiemvang',
     // port: '3307',

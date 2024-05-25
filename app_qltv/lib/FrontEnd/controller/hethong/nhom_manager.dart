@@ -32,7 +32,7 @@ class NhomManager with ChangeNotifier {
   Future<void> addNhom(Nhom nhom) async {
     // Thêm nhom vào backend
     final response = await http.post(
-      Uri.parse('$url/api/groupsr'),
+      Uri.parse('$url/api/groups/'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -47,11 +47,37 @@ class NhomManager with ChangeNotifier {
       throw Exception('Failed to add nhom');
     }
   }
+//   Future<void> addNhom(Nhom nhom) async {
+//   try {
+//     // Thêm nhom vào backend
+//     final response = await http.post(
+//       Uri.parse('$url/api/groups/'),
+//       headers: <String, String>{
+//         'Content-Type': 'application/json; charset=UTF-8',
+//       },
+//       body: jsonEncode(nhom.toMap()),
+//     );
+
+//     if (response.statusCode == 200) {
+//       // Nếu thành công, thêm vào danh sách nội bộ và thông báo thay đổi
+//       _nhoms.add(nhom);
+//       notifyListeners();
+//     } else {
+//       print('Failed to add nhom. Status code: ${response.statusCode}, Body: ${response.body}');
+//       throw Exception('Failed to add nhom');
+//     }
+//   } catch (error, stackTrace) {
+//     print('Failed to add nhom: $error');
+//     print('Stack trace: $stackTrace');
+//     throw Exception('Failed to add nhom: $error');
+//   }
+// }
+
 
   Future<Nhom> updateNhom(String groupId, String groupMa, String groupTen, bool biKhoa, String lyDoKhoa, bool suDung) async {
     try {
       final response = await http.put(
-        Uri.parse('$url/api/admin/nhom/$groupId'),
+        Uri.parse('$url/api/groups/$groupId'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -80,10 +106,10 @@ class NhomManager with ChangeNotifier {
     }
   }
 
-  Future<void> deleteNhom(String groupId) async {
+  Future<void> deleteNhom(int groupId) async {
     try {
       final response = await http.delete(
-        Uri.parse('$url/api/admin/nhom/$groupId'),
+        Uri.parse('$url/api/groups/$groupId'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },

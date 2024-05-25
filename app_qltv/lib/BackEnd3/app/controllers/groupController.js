@@ -3,7 +3,7 @@ const groupService = require('../services/groupServices');
 exports.createGroupUser = async (req, res, next) => {
   try {
     const newUser = await groupService.createGroupUser(req.body);
-    res.status(201).json(newUser);
+    res.status(200).json(newUser);
   } catch (error) {
     next(error);
   }
