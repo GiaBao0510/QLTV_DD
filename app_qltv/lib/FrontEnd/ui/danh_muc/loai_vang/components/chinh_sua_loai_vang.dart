@@ -26,6 +26,7 @@ class _ChinhSuaLoaiVangScreenState extends State<ChinhSuaLoaiVangScreen> {
     super.initState();
     _loadLoaiVanngs();
     _editedLoaiVang = widget.loaiVang; // Initialize _editedLoaiVang with widget's nhomVang
+    _editedLoaiVang.copyWith(nhomChaId: widget.loaiVang.nhomChaId);
   }
 
   Future<void> _loadLoaiVanngs() async {
@@ -292,7 +293,7 @@ class _ChinhSuaLoaiVangScreenState extends State<ChinhSuaLoaiVangScreen> {
           borderRadius: BorderRadius.all(Radius.circular(15.0)),
         ),
       ),
-      value: _editedLoaiVang.nhomChaId,
+      value: _editedLoaiVang.nhomChaId == 0 ? null : _editedLoaiVang.nhomChaId ,
       items: _loaiVangList.map((LoaiVang loaiHang) {
         return DropdownMenuItem<int>(
           value: int.parse(loaiHang.nhomHangMa!),
@@ -319,7 +320,7 @@ class _ChinhSuaLoaiVangScreenState extends State<ChinhSuaLoaiVangScreen> {
       return;
     }
     _editForm.currentState!.save();
-
+    
     try {
       final nhomVangManager = Provider.of<LoaiVangManager>(context, listen: false); 
       await nhomVangManager.updateLoaiVang(int.parse(_editedLoaiVang.nhomHangId!), _editedLoaiVang); 
@@ -339,7 +340,7 @@ class _ChinhSuaLoaiVangScreenState extends State<ChinhSuaLoaiVangScreen> {
     } catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('Failed to update data', style: TextStyle(fontWeight: FontWeight.w900, color: Colors.red), textAlign: TextAlign.center,),
+          content: Text('Failed to update data: ${error.toString()}', style: TextStyle(fontWeight: FontWeight.w900, color: Colors.red), textAlign: TextAlign.center,),
           backgroundColor: Colors.grey,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15.0),
