@@ -1,4 +1,5 @@
 
+import 'package:app_qltv/FrontEnd/ui/danh_muc/hang_hoa/hang_hoa.dart';
 import 'package:app_qltv/FrontEnd/ui/danh_muc/kho/kho.dart';
 import 'package:app_qltv/FrontEnd/ui/danh_muc/loai_vang/loai_vang.dart';
 import 'package:app_qltv/FrontEnd/ui/danh_muc/nha_cung_cap/nha_cung_cap_green.dart';
@@ -140,7 +141,10 @@ class drawer extends StatelessWidget {
                         leading: const Icon(CupertinoIcons.settings),
                         title: const Text('Hàng Hóa' , style: TextStyle( fontWeight:  FontWeight.w800)),
                         onTap: () {
-                          // Handle Hàng Hóa tap
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => const HangHoaScreen()),
+                          );
                         },
                       ),
                     ),
