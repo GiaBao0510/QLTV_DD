@@ -2,7 +2,9 @@ import 'package:app_qltv/FrontEnd/ui/danh_muc/hang_hoa/hang_hoa.dart';
 import 'package:app_qltv/FrontEnd/ui/danh_muc/loai_vang/loai_vang.dart';
 import 'package:app_qltv/FrontEnd/ui/danh_muc/nha_cung_cap/nha_cung_cap_green.dart';
 import 'package:app_qltv/FrontEnd/ui/danh_muc/nhom_vang/nhom_vang.dart';
+import 'package:app_qltv/FrontEnd/ui/danh_muc/BaoCaoTonKhoVang/BaoCao_TonKhoVang.dart';
 import 'package:app_qltv/FrontEnd/constants/config.dart';
+import 'package:app_qltv/FrontEnd/ui/hethonng/nhom/nhompage.dart';
 import 'package:app_qltv/main.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -301,6 +303,7 @@ class drawer extends StatelessWidget {
                 ),
               ),
               child: const Row(
+                children: [
                 children: [
                   Expanded(
                     flex: 2,

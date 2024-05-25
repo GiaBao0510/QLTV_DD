@@ -1,6 +1,9 @@
+import 'package:app_qltv/FrontEnd/controller/danhmuc/kho_manage.dart';
 import 'package:app_qltv/FrontEnd/controller/danhmuc/hanghoa_manager.dart';
 import 'package:app_qltv/FrontEnd/controller/danhmuc/loaivang_manager.dart';
 import 'package:app_qltv/FrontEnd/controller/danhmuc/nhacungcap_manager.dart';
+import 'package:app_qltv/FrontEnd/controller/hethong/nhom_manager.dart';
+import 'package:app_qltv/FrontEnd/model/danhmuc/kho.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:app_qltv/FrontEnd/ui/home/home.dart';
@@ -37,6 +40,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => NhomVangManager()),
         ChangeNotifierProvider(create: (context) => LoaiVangManager()),
         ChangeNotifierProvider(create: (context) => NhaCungCapManager()),
+        ChangeNotifierProvider(create: (context) => NhomManager()),
+        ChangeNotifierProvider(create: (context) => KhoManage()),
         ChangeNotifierProvider(create: (context) => HangHoaManager()),
       ],
       child: MaterialApp(
