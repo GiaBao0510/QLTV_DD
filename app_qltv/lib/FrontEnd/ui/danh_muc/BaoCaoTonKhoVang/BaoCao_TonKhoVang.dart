@@ -2,6 +2,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:app_qltv/FrontEnd/constants/config.dart';
+import 'package:app_qltv/FrontEnd/Service/ThuVien.dart';
 
 class Table_BaoCaoTonKhoVang extends StatefulWidget{
   static const routeName = '/baocaotonkhovang';
@@ -58,12 +59,11 @@ class _Table_BaoCaoTonKhoVang extends State<Table_BaoCaoTonKhoVang>{
   //Phương thuc tim tên loại
   void _filterBaoCaoTonKhoVang() {
     final query = _searchController.text.toLowerCase();
-
     setState(() {
       _filterBaoCaoTonKho_list = _BaoCaoTonKho_list.where(
-              (item){
-            return item['NHOM_TEN']!=null && item['NHOM_TEN'].toString().toLowerCase().contains(query);
-          }
+            (item) {
+          return item['NHOM_TEN'] != null && item['NHOM_TEN'].toString().toLowerCase().contains(query);
+        },
       ).toList();
     });
   }
@@ -147,7 +147,7 @@ class _Table_BaoCaoTonKhoVang extends State<Table_BaoCaoTonKhoVang>{
               decoration: BoxDecoration(
                   gradient: LinearGradient(
                       begin: Alignment.topLeft, end: Alignment.bottomRight,
-                      colors: [ Colors.blueAccent, Colors.lightBlue ]
+                      colors: [ Colors.orange, Colors.amber ]
                   )
               ),
             ),
@@ -225,12 +225,12 @@ class _Table_BaoCaoTonKhoVang extends State<Table_BaoCaoTonKhoVang>{
                                               DataCell(Text('${item['NHOM_TEN'] ?? ''}')),
                                               DataCell(Text('${''}')),
                                               DataCell(Text('${item['SoLuong'] ?? ''}')),
-                                              DataCell(Text('${item['TL_Thuc'] ?? ''}')),
-                                              DataCell(Text('${item['TL_hot'] ?? ''}')),
-                                              DataCell(Text('${item['TL_vang'] ?? ''}')),
-                                              DataCell(Text('${item['CONG_GOC'] ?? ''}')),
-                                              DataCell(Text('${item['GIA_CONG'] ?? ''}')),
-                                              DataCell(Text('${''}')),
+                                              DataCell(Text('${DinhDangDonViTien_VND(item['TL_Thuc']) ?? ''}')),
+                                              DataCell(Text('${DinhDangDonViTien_VND(item['TL_hot']) ?? ''}')),
+                                              DataCell(Text('${DinhDangDonViTien_VND(item['TL_vang']) ?? ''}')),
+                                              DataCell(Text('${DinhDangDonViTien_VND(item['CONG_GOC']) ?? ''}')),
+                                              DataCell(Text('${DinhDangDonViTien_VND(item['GIA_CONG']) ?? ''}')),
+                                              DataCell(Text('${DinhDangDonViTien_VND(item['ThanhTien'])}')),
                                             ],
                                             onLongPress: () => ThongTinChiTiet(context, item),
                                           );
@@ -248,7 +248,7 @@ class _Table_BaoCaoTonKhoVang extends State<Table_BaoCaoTonKhoVang>{
                             padding: EdgeInsets.fromLTRB(0, 15, 0, 15),
                             decoration: const BoxDecoration(
                                 gradient: LinearGradient(
-                                  colors: [Color(0xff4463fd), Color(0xff405be2)],
+                                  colors: [Color(0xfff09800), Color(0xffe6b400)],
                                   stops: [0.25, 0.75],
                                   begin: Alignment.topLeft,
                                   end: Alignment.bottomRight,
@@ -258,12 +258,12 @@ class _Table_BaoCaoTonKhoVang extends State<Table_BaoCaoTonKhoVang>{
                             child: Align(
                               alignment: Alignment.centerLeft,
                               child: Column(children: [
-                                Text('Tổng TL_Thực: ${tong_TLThuc.toStringAsFixed(3)}', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white)),
-                                Text('Tổng TL_hột: ${tong_TL_hot.toStringAsFixed(3)}', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white)),
-                                Text('Tổng TL vàng: ${tong_TLvang.toStringAsFixed(3)}', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white)),
-                                Text('Tổng Công gốc: ${tong_CongGoc.toStringAsFixed(3)}', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white)),
-                                Text('Tổng Giá công: ${tong_GiaCong.toStringAsFixed(3)}', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white)),
-                                Text('Tổng Thành tiền: ${thanhTien.toStringAsFixed(3)}', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white)),
+                                Text('Tổng TL_Thực: ${DinhDangDonViTien_VND(tong_TLThuc)}', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white)),
+                                Text('Tổng TL_hột: ${DinhDangDonViTien_VND(tong_TL_hot)}', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white)),
+                                Text('Tổng TL vàng: ${DinhDangDonViTien_VND(tong_TLvang)}', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white)),
+                                Text('Tổng Công gốc: ${DinhDangDonViTien_VND(tong_CongGoc)}', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white)),
+                                Text('Tổng Giá công: ${DinhDangDonViTien_VND(tong_GiaCong)}', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white)),
+                                Text('Tổng Thành tiền: ${DinhDangDonViTien_VND(thanhTien)}', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white)),
                               ],),
                             ),
                           )
@@ -273,9 +273,6 @@ class _Table_BaoCaoTonKhoVang extends State<Table_BaoCaoTonKhoVang>{
                   ),
                 ),
               ),
-
-
-
 
               //Phần đầu
               Align(
@@ -329,23 +326,23 @@ class _Table_BaoCaoTonKhoVang extends State<Table_BaoCaoTonKhoVang>{
                 ],),
                 Row(children: [
                   Text('TL_Thực: ',style: TextStyle(fontWeight: FontWeight.bold)),
-                  Text('${item['TL_Thuc']}')
+                  Text('${DinhDangDonViTien_VND(item['TL_Thuc'])}')
                 ],),
                 Row(children: [
                   Text('TL_Hột: ',style: TextStyle(fontWeight: FontWeight.bold)),
-                  Text('${item['TL_hot']}')
+                  Text('${DinhDangDonViTien_VND(item['TL_hot'])}')
                 ],),
                 Row(children: [
                   Text('TL_vàng: ',style: TextStyle(fontWeight: FontWeight.bold)),
-                  Text('${item['TL_vang']}')
+                  Text('${DinhDangDonViTien_VND(item['TL_vang'])}')
                 ],),
                 Row(children: [
                   Text('Công gốc: ',style: TextStyle(fontWeight: FontWeight.bold)),
-                  Text('${item['CONG_GOC']}')
+                  Text('${DinhDangDonViTien_VND(item['CONG_GOC'])}')
                 ],),
                 Row(children: [
                   Text('Giá công: ',style: TextStyle(fontWeight: FontWeight.bold)),
-                  Text('${item['GIA_CONG']}')
+                  Text('${DinhDangDonViTien_VND(item['GIA_CONG'])}')
                 ],),
                 Row(children: [
                   Text('Thành tiền: ',style: TextStyle(fontWeight: FontWeight.bold)),

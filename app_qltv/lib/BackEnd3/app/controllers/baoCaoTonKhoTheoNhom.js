@@ -67,12 +67,12 @@ exports.baoCaoTonKhoTheoNhom = async (req, res, next)=>{
                         }
 
                         var tinhTong = {
-                            "Số lượng:": SoLuong,
-                            "Tổng TL_Thực":tong_TLThuc, 
-                            "Tổng TL_hột": tong_TL_hot, 
-                            "Tổng TL_Vàng": tong_TLvang, 
-                            "Tổng Công gốc": tong_CongGoc, 
-                            "Tổng giá công":tong_GiaCong,
+                            "SoLuong:": SoLuong,
+                            "TongTL_Thuc":tong_TLThuc, 
+                            "TongTL_hot": tong_TL_hot, 
+                            "TongTL_Vang": tong_TLvang, 
+                            "TongCongGo": tong_CongGoc, 
+                            "TongGiaCong":tong_GiaCong,
                         }
 
                         SoLuong = 0; //Đặt số lượng về 0
