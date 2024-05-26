@@ -52,9 +52,9 @@ class drawer extends StatelessWidget {
         // },
       );
       Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => const MyApp())
-    );
+        context,
+        MaterialPageRoute(builder: (context) => const MyApp())
+      );
     }catch(e){
       print('Lỗi khi thực hiện đăng xuất: $e');
     }
@@ -276,7 +276,6 @@ class drawer extends StatelessWidget {
                   leading: const Icon(CupertinoIcons.bell),
                   title: const Text('Báo Cáo Tồn Kho Vàng'),
                   onTap: () {
-                    //Handle Báo Cáo Tồn Kho Loại Vàng tap
                     Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => Table_BaoCaoTonKhoVang()),
