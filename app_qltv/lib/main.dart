@@ -14,6 +14,7 @@ import 'package:app_qltv/FrontEnd/ui/routes.dart';
 import 'package:app_qltv/FrontEnd/controller/danhmuc/nhomvang_manager.dart'; // Import NhomVangManager của bạn
 import 'package:session_manager/session_manager.dart';
 import 'package:app_qltv/FrontEnd/ui/home/component/login.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   runApp(MyApp());

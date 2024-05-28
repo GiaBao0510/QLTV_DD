@@ -9,6 +9,7 @@ import 'package:app_qltv/FrontEnd/ui/danh_muc/nhom_vang/nhom_vang.dart';
 import 'package:app_qltv/FrontEnd/ui/hethonng/nhom/nhompage.dart';
 import 'package:app_qltv/FrontEnd/ui/hethonng/nhom/them_nhom.dart';
 import 'package:app_qltv/FrontEnd/ui/components/NotConnectInternet.dart';
+import 'package:app_qltv/FrontEnd/ui/danh_muc/BaoCaoTonKhoVang/BaoCao_TonKhoLoaiVang.dart';
 import 'package:flutter/material.dart';
 
 
@@ -23,6 +24,7 @@ final Map<String, WidgetBuilder> routes = {
   NhaCungCapScreen.routeName:(ctx)=>NhaCungCapScreen(),
   InterfaceConnectionError.routerName:(ctx)=>InterfaceConnectionError(),
 
+  Table_BaoCaoTonKhoLoaiVang.routeName:(ctx)=>Table_BaoCaoTonKhoLoaiVang(),
   Table_BaoCaoTonKhoVang.routeName:(ctx)=>Table_BaoCaoTonKhoVang(),
 };
 

@@ -39,11 +39,9 @@ class _Table_BaoCaoTonKhoVang extends State<Table_BaoCaoTonKhoVang>{
   Future<List<dynamic>> BaoCaoTonKhoVang_list() async{
     String path = url+'/api/admin/baocaotonkho';
     var res = await http.get( Uri.parse(path),headers: {"Content-Type": "application/json"} );
-    //print(res.body);
     Map<String,dynamic> jsonData = jsonDecode(res.body);
     List<dynamic> resultList = jsonData['result'];
     Map<String,dynamic> tinhTongList = jsonData['tinhTong'];
-
     return [resultList,tinhTongList];
   }
 

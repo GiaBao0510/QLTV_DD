@@ -6,6 +6,7 @@ import 'package:app_qltv/FrontEnd/ui/danh_muc/nha_cung_cap/nha_cung_cap_green.da
 import 'package:app_qltv/FrontEnd/ui/danh_muc/nhom_vang/nhom_vang.dart';
 import 'package:app_qltv/FrontEnd/ui/danh_muc/BaoCaoTonKhoVang/BaoCao_TonKhoVang.dart';
 import 'package:app_qltv/FrontEnd/ui/danh_muc/BaoCaoTonKhoVang/BaoCao_TonKhoLoaiVang.dart';
+import 'package:app_qltv/FrontEnd/ui/danh_muc/Phieu/PhieuDangCam.dart';
 import 'package:app_qltv/FrontEnd/constants/config.dart';
 import 'package:app_qltv/FrontEnd/ui/hethonng/nhom/nhompage.dart';
 import 'package:app_qltv/main.dart';
@@ -301,6 +302,47 @@ class drawer extends StatelessWidget {
                         title: const Text('Quản lý quyền' , style: TextStyle( fontWeight:  FontWeight.w800)),
                         onTap: () {
                           _request_permission();
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+                ExpansionTile(
+                  leading: Image.asset(
+                    'assets/images/pawnshop.png',
+                    width: 24.0,
+                    height: 24.0,
+                  ),
+                  title: const Text('Cầm Vàng' , style: TextStyle( fontWeight:  FontWeight.w800)),
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.only(left: 16.0), // Khoảng cách thụt lề
+                      child: ListTile(
+                        leading: Image.asset(
+                          'assets/images/MortgageDocument.png',
+                          width: 24.0,
+                          height: 24.0,
+                        ),
+                        title: const Text('Phiếu Đang Cầm' , style: TextStyle( fontWeight:  FontWeight.w800)),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => const PhieuDangCam()),
+                          );
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 16.0), // Khoảng cách thụt lề
+                      child: ListTile(
+                        leading: Image.asset(
+                          'assets/images/DetailOfMortgageDocument.png',
+                          width: 24.0,
+                          height: 24.0,
+                        ),
+                        title: const Text('Phiếu Đang Cầm Chi Tiết ' , style: TextStyle( fontWeight:  FontWeight.w800)),
+                        onTap: () {
+                          // Handle Người Dùng tap
                         },
                       ),
                     ),
