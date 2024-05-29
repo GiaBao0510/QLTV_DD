@@ -1,6 +1,7 @@
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
+import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:app_qltv/FrontEnd/Service/ThuVien.dart';
 
@@ -8,13 +9,14 @@ buildPrintableData(List<dynamic> data) => pw.Container(
   child: pw.Table(
     border: pw.TableBorder.all(
         color: PdfColors.black,
-        width: double.infinity,
+        //width: double.infinity,
     ),
+
     children: [
       pw.TableRow(
         decoration: pw.BoxDecoration(
           color: PdfColors.black,
-          border: pw.TableBorder.all(width: 60)
+          //border: pw.TableBorder.all(width: 60)
         ),
 
         children: [
@@ -47,8 +49,6 @@ buildPrintableData(List<dynamic> data) => pw.Container(
           pw.Column(children: [pw.Text('${ DinhDangDonViTien_VND(item['TIEN_THEM']) }')]),
           pw.Column(children: [pw.Text('${ DinhDangDonViTien_VND(item['TIEN_CAM_MOI']) }')]),
           pw.Column(children: [pw.Text('${item['LAI_XUAT']}%')]),
-
-
         ]
       )).toList(),
 

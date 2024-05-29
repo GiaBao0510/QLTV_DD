@@ -10,6 +10,8 @@ import 'package:app_qltv/FrontEnd/ui/hethonng/nhom/nhompage.dart';
 import 'package:app_qltv/FrontEnd/ui/hethonng/nhom/them_nhom.dart';
 import 'package:app_qltv/FrontEnd/ui/components/NotConnectInternet.dart';
 import 'package:app_qltv/FrontEnd/ui/danh_muc/BaoCaoTonKhoVang/BaoCao_TonKhoLoaiVang.dart';
+import 'package:app_qltv/FrontEnd/ui/camvang/Phieu/PhieuDangCam.dart';
+import 'package:app_qltv/FrontEnd/ui/camvang/Phieu/PhieuDangCamChiTiet.dart';
 import 'package:flutter/material.dart';
 
 
@@ -26,5 +28,8 @@ final Map<String, WidgetBuilder> routes = {
 
   Table_BaoCaoTonKhoLoaiVang.routeName:(ctx)=>Table_BaoCaoTonKhoLoaiVang(),
   Table_BaoCaoTonKhoVang.routeName:(ctx)=>Table_BaoCaoTonKhoVang(),
+  PhieuDangCam.routeName:(ctx)=> PhieuDangCam(),
+  PhieuDangCamChiTiet.routeName:(ctx) => PhieuDangCamChiTiet(),
+
 };
 
