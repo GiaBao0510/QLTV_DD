@@ -106,14 +106,6 @@ class _NhomPageState extends State<NhomPage> {
                       IconButton(
                         icon: Icon(Icons.edit),
                         onPressed: () async {
-                          // // Call edit function
-                          // _editNhom(context, nhom);
-                          //  Navigator.push(
-                          //   context,
-                          //   MaterialPageRoute(
-                          //     builder: (context) => ChinhSuaNhomScreen(nhom),
-                          //   ),
-                          // );
                           final result = await Navigator.of(context).push(
                                 createRoute(
                                   (context) => ChinhSuaNhomScreen(nhom),
