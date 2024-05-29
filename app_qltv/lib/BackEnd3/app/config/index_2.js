@@ -3,20 +3,10 @@ var mysql = require('mysql');
 
 var db = mysql.createConnection({
     host: 'baokhoagold.ddns.net',
-    port: '3306',
     database: 'QLTV1',
+    port: '3306',
     user:"user_test",
     password:'12345'
-    // host: 'localhost',
-    // database: 'tiemvang',
-    // port: '3306',
-    // user:"root",
-    // password:''
-
-    // database: 'quanlytiemvang',
-    // port: '3307',
-    // user:"test131",
-    // password:'123123'
 
 });
 

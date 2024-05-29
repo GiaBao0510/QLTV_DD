@@ -144,9 +144,10 @@ class _NhaCungCapScreenState extends State<NhaCungCapScreen> {
                             children: [
                               Align(
                                 alignment: Alignment.centerLeft,
-                                child: Text(
-                                  _filteredNhaCungCapList[index].ncc_ten ?? '',
-                                  style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w800, fontSize: 20),
+                                child: 
+                                Text(
+                                  "Loại mã: ${_filteredNhaCungCapList[index].ncc_ma}",
+                                  style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w700, fontSize: 14),
                                 ),
                               ),
                             ],
@@ -160,11 +161,12 @@ class _NhaCungCapScreenState extends State<NhaCungCapScreen> {
                           ),
                         ],
                       ),
+                      const SizedBox(height: 5,),
                       Row(
                         children: [
                           Text(
-                            "Loại mã: ${_filteredNhaCungCapList[index].ncc_ma}",
-                            style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w700, fontSize: 14),
+                            _filteredNhaCungCapList[index].ncc_ten ?? '',
+                            style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w800, fontSize: 20),
                           ),
                         ],
                       ),

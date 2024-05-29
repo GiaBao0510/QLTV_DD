@@ -85,6 +85,7 @@ class LoaiVangManager with ChangeNotifier {
       }
     } catch (error) {
       // Nếu có bất kỳ lỗi nào xảy ra trong quá trình gửi request hoặc xử lý response, ném một Exception để thông báo rằng việc cập nhật thất bại
+      print('Error updating LoaiVang: $error');
       throw Exception('Failed to update LoaiHang: $error');
     }
   }

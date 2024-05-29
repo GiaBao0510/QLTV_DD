@@ -60,17 +60,17 @@ class LoaiVang {
   // Phương thức để chuyển đổi từ Map sang đối tượng LoaiVang
   factory LoaiVang.fromMap(Map<String, dynamic> map) {
     return LoaiVang(
-      nhomHangId: map['NHOMHANGID'],
-      nhomHangMa: map['NHOMHANGMA'],
-      nhomChaId: map['NHOMCHAID'],
-      nhomTen: map['NHOM_TEN'],
-      donGiaBan: (map['DON_GIA_BAN'] as num).toDouble(),
-      donGiaMua: (map['DON_GIA_MUA'] as num).toDouble(),
-      muaBan: map['MUA_BAN'],
-      donGiaVon: (map['DON_GIA_VON'] as num).toDouble(),
-      donGiaCam: (map['DON_GIA_CAM'] as num).toDouble(),
-      suDung: map['SU_DUNG'],
-      ghiChu: map['GHI_CHU'],
+      nhomHangId: map['NHOMHANGID'] ?? '',
+      nhomHangMa: map['NHOMHANGMA'] ?? '',
+      nhomChaId: map['NHOMCHAID'] ?? -1,
+      nhomTen: map['NHOM_TEN'] ?? '',
+      donGiaBan: (map['DON_GIA_BAN'] as num).toDouble() ?? 0.0,
+      donGiaMua: (map['DON_GIA_MUA'] as num).toDouble() ?? 0.0,
+      muaBan: map['MUA_BAN'] ?? 0, 
+      donGiaVon: (map['DON_GIA_VON'] as num).toDouble() ?? 0.0,
+      donGiaCam: (map['DON_GIA_CAM'] as num).toDouble() ?? 0.0,
+      suDung: map['SU_DUNG'] ?? 1,
+      ghiChu: map['GHI_CHU'] ?? '',
     );
   }
 

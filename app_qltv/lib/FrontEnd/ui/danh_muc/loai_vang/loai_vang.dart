@@ -12,7 +12,7 @@ import 'package:provider/provider.dart';
 
 
 class LoaiVangScreen extends StatefulWidget {
-  static const routeName = "/loaivang";
+  static const routeName = '/loaivang';
 
   const LoaiVangScreen({Key? key}) : super(key: key);
 

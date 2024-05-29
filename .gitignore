@@ -4,3 +4,4 @@ app_qltv/lib/BackEndV2/node_modules
 
 #bỏ qua thụ mục ghi chí
 ghiChu/
+app_qltv/lib/FrontEnd/constants/config.dart

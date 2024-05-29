@@ -6,25 +6,34 @@ import 'package:app_qltv/FrontEnd/constants/config.dart';
 import 'package:app_qltv/FrontEnd/model/danhmuc/BaoCaoTonKhoVang.dart';
 
 class BaocaotonkhovangManager with ChangeNotifier{
-  List<BaoCaoTonKhoVang> _BaoCaoTonKhoVang = [];
-  List<BaoCaoTonKhoVang> get baoCaoTonKhoVang => _BaoCaoTonKhoVang;
-  
+
+  //Data
+  List<Data> _BaoCaoTonKhoVang = [];
+  List<Data> get baoCaoTonKhoVang => _BaoCaoTonKhoVang;
   int get baoCaoTonKhoVang_lenght => _BaoCaoTonKhoVang.length;
-  
-  Future<List<BaoCaoTonKhoVang>> fetchBaoCaoTonKhoVang() async{
+
+  //Tinh tong
+  List<tinhTong> _tinhTong = [];
+  List<tinhTong> get TinhTong => _tinhTong;
+  int get TinhTong_length => _tinhTong.length;
+
+  Future<List<dynamic>> fetchBaoCaoTonKhoVang() async{
     final res = await http.get( Uri.parse('$url/api/admin/baocaotonkho') );
 
     if(res.statusCode == 200){
-      try{
-        List<dynamic> jsonList = jsonDecode(res.body);
-        List<BaoCaoTonKhoVang> baocaotonkhovangList = jsonList.map((e)=> BaoCaoTonKhoVang.fromMap(e)).toList();
+
+        final jsonList = jsonDecode(res.body);
+        final jsonResult = jsonList['result'] as List<dynamic>;
+        final jsonTinhTong = jsonList['tinhTong'] as  List<dynamic>;
+
+        List<Data>  baocaotonkhovangList = jsonResult.map((e)=> Data.fromMap(e)).toList();
+        List<tinhTong> tinhTongList = jsonTinhTong.map((e) => tinhTong.fromMap(e)).toList();
+        _tinhTong = tinhTongList;
         _BaoCaoTonKhoVang = baocaotonkhovangList;
+
         notifyListeners();
-        return baocaotonkhovangList;
-      }catch(e){
-        print('Error occurred while mapping data: $e');
-        return [];
-      }
+        return [ baocaotonkhovangList,tinhTongList];
+
     }else{
       throw Exception('Failed to load data');
     }

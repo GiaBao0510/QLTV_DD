@@ -26,6 +26,7 @@ class _ChinhSuaLoaiVangScreenState extends State<ChinhSuaLoaiVangScreen> {
     super.initState();
     _loadLoaiVanngs();
     _editedLoaiVang = widget.loaiVang; // Initialize _editedLoaiVang with widget's nhomVang
+    _editedLoaiVang.copyWith(nhomChaId: widget.loaiVang.nhomChaId);
   }
 
   Future<void> _loadLoaiVanngs() async {
@@ -281,7 +282,32 @@ class _ChinhSuaLoaiVangScreenState extends State<ChinhSuaLoaiVangScreen> {
   }
 
   DropdownButtonFormField<int> buildLoaiChaDropdown() {
+    int? dropdownValue;
+    
+    // Kiểm tra và gán giá trị mặc định từ _editedLoaiVang.nhomHangMa
+    if (_editedLoaiVang.nhomHangMa != '') {
+      int? parsedValue = int.tryParse(_editedLoaiVang.nhomHangMa!);
+      if (parsedValue != null && _loaiVangList.any((loaiHang) => int.tryParse(loaiHang.nhomHangMa!) == parsedValue)) {
+        dropdownValue = parsedValue;
+      }
+    }
+    
+    // Lấy danh sách các mục cho DropdownButtonFormField
+    final List<DropdownMenuItem<int>> dropdownItems = _loaiVangList.map((LoaiVang loaiHang) {
+      return DropdownMenuItem<int>(
+        value: int.parse(loaiHang.nhomHangMa!),
+        child: Text(loaiHang.nhomTen!),
+      );
+    }).toList();
+    
+    // Nếu giá trị mặc định không tồn tại trong danh sách, gán giá trị mặc định đầu tiên từ danh sách
+    if (dropdownValue == null && dropdownItems.isNotEmpty) {
+      dropdownValue = null;
+    }
+
     return DropdownButtonFormField<int>(
+      dropdownColor: Colors.white,
+      borderRadius: const BorderRadius.all(Radius.circular(15)),
       decoration: const InputDecoration(
         labelText: 'Loại Cha',
         labelStyle: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
@@ -292,20 +318,15 @@ class _ChinhSuaLoaiVangScreenState extends State<ChinhSuaLoaiVangScreen> {
           borderRadius: BorderRadius.all(Radius.circular(15.0)),
         ),
       ),
-      value: _editedLoaiVang.nhomChaId,
-      items: _loaiVangList.map((LoaiVang loaiHang) {
-        return DropdownMenuItem<int>(
-          value: int.parse(loaiHang.nhomHangMa!),
-          child: Text(loaiHang.nhomTen!),
-        );
-      }).toList(),
+      value: dropdownValue,
+      items: dropdownItems,
       onChanged: (newValue) {
         setState(() {
           _editedLoaiVang = _editedLoaiVang.copyWith(nhomChaId: newValue);
         });
       },
       validator: (value) {
-        if (value == null || value == 0) {
+        if (value == null) {
           return 'Please select a value';
         }
         return null;
@@ -313,13 +334,14 @@ class _ChinhSuaLoaiVangScreenState extends State<ChinhSuaLoaiVangScreen> {
     );
   }
 
+
   Future<void> _saveForm(BuildContext context) async {
     final isValid = _editForm.currentState!.validate();
     if (!isValid) {
       return;
     }
     _editForm.currentState!.save();
-
+    
     try {
       final nhomVangManager = Provider.of<LoaiVangManager>(context, listen: false); 
       await nhomVangManager.updateLoaiVang(int.parse(_editedLoaiVang.nhomHangId!), _editedLoaiVang); 
@@ -339,7 +361,7 @@ class _ChinhSuaLoaiVangScreenState extends State<ChinhSuaLoaiVangScreen> {
     } catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('Failed to update data', style: TextStyle(fontWeight: FontWeight.w900, color: Colors.red), textAlign: TextAlign.center,),
+          content: Text('Failed to update data: ${error.toString()}', style: TextStyle(fontWeight: FontWeight.w900, color: Colors.red), textAlign: TextAlign.center,),
           backgroundColor: Colors.grey,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15.0),
