@@ -7,7 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class NguoiDungPage extends StatefulWidget{
+class NguoiDungPage extends StatefulWidget {
   static const routeName = "/nguoidung";
 
   const NguoiDungPage({super.key});
@@ -84,7 +84,7 @@ class _NguoiDungPageState extends State<NguoiDungPage>{
             return Center(
               child: CircularProgressIndicator(),
             );
-          }else{
+          } else {
             return ListView.builder(
               itemCount: nguoidungmanager.nguoiDungsLength,
               itemBuilder: (context, index) {
@@ -157,8 +157,6 @@ class _NguoiDungPageState extends State<NguoiDungPage>{
               },
             );
           }
-        }
-      )
-    );
+        }));
   }
 }
