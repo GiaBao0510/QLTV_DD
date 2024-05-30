@@ -148,21 +148,6 @@ app.post('/refresh-token', (req, res)=>{
             } 
         });
     }
-
-    // jwt.verify(refreshToken,'quanlytiemvang_long', (err, decode)=> {
-    //     if(err){
-    //         return res.status(403).json({mgs:'Invalid refresh token', valid:0});
-    //     }
-
-        
-    //     //Tạo AccessToken mới
-    //     accessToken = jwt.sign({USER_TEN: decode.USER_TEN}, 'quanlytiemvang_shot', {expiresIn: '5h'} );
-
-    //     //Gửi AccessToken mới
-    //     res.cookie('accessToken', accessToken, {httpOnly: true,  maxAge: 18000000});
-
-    //     return res.status(200).json({mgs:'Access token has been refreshed!',valid:1 });
-    // });
 })
 
 //Hủy phiên - đăng xuất
