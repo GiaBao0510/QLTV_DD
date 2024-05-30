@@ -275,7 +275,10 @@ class drawer extends StatelessWidget {
                         ),
                         title: const Text('Người Dùng ' , style: TextStyle( fontWeight:  FontWeight.w800)),
                         onTap: () {
-                          // Handle Người Dùng tap
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => const NguoiDungPage()),
+                          );
                         },
                       ),
                     ),
