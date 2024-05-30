@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter/material.dart';
@@ -20,6 +22,7 @@ class _PhieuDangCamChiTiet extends State<PhieuDangCamChiTiet> {
   late List<dynamic> thongtin, data;
   late String loaivang;
   PhieuDangCam phieudangcam = PhieuDangCam();
+  var thongTinTinhTong;
 
   @override
   void initState() {
@@ -38,6 +41,44 @@ class _PhieuDangCamChiTiet extends State<PhieuDangCamChiTiet> {
     var res = await http
         .get(Uri.parse(path), headers: {"Content-Type": "application/json"});
     List<dynamic> result = jsonDecode(res.body);
+    int soHang = 0;
+    double tong_CanTong =0.0, tong_TLhot =0.0, tong_TLthuc =0.0,
+        tong_DinhGia =0.0, tong_TienKhachNhan =0.0, tong_TienNhanThem =0.0,
+        tong_TienCamMoi =0.0;
+
+    // //Xử lý tính tổng
+    for(var i =0; i< result.length; i++){
+
+      final item = result[i]['data'];
+
+      for(var j =0; j< item.length; j++){
+        final child_item = item[j];
+        print(' ------- ${soHang} -----------');
+        print('Cân tổng: ${child_item['CAN_TONG']}');
+        print('TL hột: ${child_item['TL_HOT']}');
+
+        tong_CanTong += child_item['CAN_TONG'];
+        tong_TLhot += child_item['TL_HOT'];
+        tong_TLthuc += child_item['TL_THUC'];
+        tong_DinhGia += child_item['DINHGIA'];
+        tong_TienKhachNhan += child_item['TIEN_KHACH_NHAN'];
+        tong_TienNhanThem += child_item['TIEN_THEM'];
+        tong_TienCamMoi += child_item['TIEN_CAM_MOI'];
+        soHang++;
+      }
+
+    }
+    thongTinTinhTong = {
+      "Tong_CANTONG": tong_CanTong,
+      "Tong_TLhot": tong_TLhot,
+      "Tong_TLthuc": tong_TLthuc,
+      "Tong_DinhGia": tong_DinhGia,
+      "tong_TienKhachNhan": tong_TienKhachNhan,
+      "tong_TienNhanThem": tong_TienNhanThem,
+      "tong_TienCamMoi": tong_TienCamMoi,
+      "soHang": soHang,
+    };
+
     return result;
   }
 
@@ -68,8 +109,8 @@ class _PhieuDangCamChiTiet extends State<PhieuDangCamChiTiet> {
                     child: TextButton(
                         onPressed: () {
                           print('Chuyển sang phần chuyển đổi PDF');
-                          print(thongtin);
-                          //printDoc(data);
+                          //print(thongtin);
+                          printDoc(thongtin);
                         },
                         child: Container(
                           width: double.infinity,
@@ -117,7 +158,7 @@ class _PhieuDangCamChiTiet extends State<PhieuDangCamChiTiet> {
                   } else if (snapshot.hasError) {
                     return Center(child: Text('Error: ${snapshot.error}'));
                   } else {
-                    var thongtin = snapshot.data ?? [];
+                    thongtin = snapshot.data ?? [];
                     return Scrollbar(
                       interactive: true,
                       thumbVisibility: true,
@@ -333,7 +374,7 @@ class _PhieuDangCamChiTiet extends State<PhieuDangCamChiTiet> {
     doc.addPage(pw.Page(
       pageFormat: PdfPageFormat.a4,
       build: (pw.Context context){
-        return buildPrintableData(data,font);
+        return buildPrintableData(data,font,thongTinTinhTong);
       }
     ));
     await Printing.layoutPdf(

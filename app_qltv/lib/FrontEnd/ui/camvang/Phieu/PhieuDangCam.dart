@@ -26,6 +26,7 @@ class _PhieuDangCam extends State<PhieuDangCam> {
 
   @override
   void initState() {
+    PhieuDangCam_list();
     super.initState();
   }
 
@@ -161,7 +162,7 @@ class _PhieuDangCam extends State<PhieuDangCam> {
                           )),
                       child: Column(
                         children: [
-                          Expanded(
+                          Flexible(
                             flex: 6,
                             child: ListView.builder(
                               itemCount: data.length,
@@ -310,7 +311,7 @@ class _PhieuDangCam extends State<PhieuDangCam> {
                             ),
                           ),
 
-                          Expanded(
+                          Flexible(
                             flex: 2,
                               child: Container(
                                 decoration: BoxDecoration(
