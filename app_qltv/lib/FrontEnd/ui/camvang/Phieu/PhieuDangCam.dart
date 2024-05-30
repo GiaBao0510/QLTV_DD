@@ -10,7 +10,7 @@ import './ThongTinChiTietPhieuCam.dart';
 import 'package:app_qltv/FrontEnd/Service/export/PDF/PhieuDangCam_PDF.dart';
 
 class PhieuDangCam extends StatefulWidget {
-  static const routeName = 'phieudangcam';
+  static const routeName = '/phieudangcam';
 
   const PhieuDangCam({super.key});
   State<PhieuDangCam> createState() => _PhieuDangCam();

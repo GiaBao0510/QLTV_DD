@@ -10,7 +10,7 @@ import './PhieuDangCam.dart';
 import './ThongTinChiTietPhieuCam.dart';
 
 class PhieuDangCamChiTiet extends StatefulWidget {
-  static const routeName = 'phieudangcamchitiet';
+  static const routeName = '/phieudangcamchitiet';
   const PhieuDangCamChiTiet({super.key});
   State<PhieuDangCamChiTiet> createState() => _PhieuDangCamChiTiet();
 }
