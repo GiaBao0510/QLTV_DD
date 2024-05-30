@@ -11,7 +11,7 @@
     "mysql2": "^3.9.7"
   },
   "scripts": {
-    "start": "node server.js"
+    "start": "nodemon server.js"
   },
   "name": "backendv2",
   "version": "1.0.0",

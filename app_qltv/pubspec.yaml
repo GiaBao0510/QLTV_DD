@@ -76,6 +76,9 @@ flutter:
       fonts:
         - asset: assets/fonts/arialuni.ttf
         - asset: assets/fonts/BeVietnamPro-Thin.ttf
+    - family: Roboto
+      fonts:
+        - asset: assets/fonts/Roboto-Regular.ttf
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
