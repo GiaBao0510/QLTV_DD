@@ -65,7 +65,7 @@ class _NguoiDungPageState extends State<NguoiDungPage>{
                 NguoiDung nguoidung = nguoidungmanager.nguoiDungs[index];
                 return ListTile(
 
-                )
+                );
               },
             );
           }

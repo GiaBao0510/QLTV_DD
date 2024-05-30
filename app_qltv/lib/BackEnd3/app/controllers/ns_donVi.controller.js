@@ -147,7 +147,7 @@ exports.Update_nsDonVi= async (req, res, next) =>{
 
         //Thông tin sửa
         let DON_VI_TEN= req.body.DON_VI_TEN,
-            SU_DUNG= req.body.SU_DUNG,
+            SU_DUNG= 1,
             GHI_CHU= req.body.GHI_CHU,
             DON_VI_TEN_HD= req.body.DON_VI_TEN_HD,
             DIA_CHI_HD= req.body.DIA_CHI_HD,

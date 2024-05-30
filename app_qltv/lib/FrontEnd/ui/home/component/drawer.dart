@@ -1,4 +1,5 @@
 
+import 'package:app_qltv/FrontEnd/ui/danh_muc/dvi/dvi.dart';
 import 'package:app_qltv/FrontEnd/ui/danh_muc/hang_hoa/hang_hoa.dart';
 import 'package:app_qltv/FrontEnd/ui/danh_muc/kho/kho.dart';
 import 'package:app_qltv/FrontEnd/ui/danh_muc/loai_vang/loai_vang.dart';
@@ -234,7 +235,10 @@ class drawer extends StatelessWidget {
                         ),
                         title: const Text('Đơn Vị' , style: TextStyle( fontWeight:  FontWeight.w800)),
                         onTap: () {
-                          // Handle Đơn Vị tap
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => const DonviScreen()),
+                          );
                         },
                       ),
                     ),
