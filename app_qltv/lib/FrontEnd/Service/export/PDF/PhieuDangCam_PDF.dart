@@ -3,15 +3,13 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:app_qltv/FrontEnd/Service/ThuVien.dart';
 
-final int SoHang =0;
-
 Future<pw.Font> loadFont(String fontPath) async {
   final fontData = await rootBundle.load(fontPath);
   final font = pw.Font.ttf(fontData);
   return font;
 }
 
-buildPrintableData(List<dynamic> data, pw.Font font) => pw.Container(
+buildPrintableData(List<dynamic> data, pw.Font font, Map<String, dynamic> thongTinTinhTong) => pw.Container(
   child: pw.Table(
       border: pw.TableBorder.all(
         color: PdfColors.black,
@@ -175,6 +173,23 @@ buildPrintableData(List<dynamic> data, pw.Font font) => pw.Container(
           ]),
         ]))
             .toList(),
+
+        //Hien thi tong thong tin
+        pw.TableRow(
+          children: [
+            pw.Column(children: [pw.Text(' ${thongTinTinhTong['soHang']}', style: pw.TextStyle(font: font,fontSize: 8, color: PdfColors.red))]),
+            pw.Column(children: [pw.Text(' ')]),
+            pw.Column(children: [pw.Text(' ')]),
+            pw.Column(children: [pw.Text('')]),
+            pw.Column(children: [pw.Text(' ${DinhDangDonViTien_VND(thongTinTinhTong['Tong_CANTONG'])}', style: pw.TextStyle(font: font,fontSize: 8, color: PdfColors.red))]),
+            pw.Column(children: [pw.Text(' ${DinhDangDonViTien_VND(thongTinTinhTong['Tong_TLhot'])}', style: pw.TextStyle(font: font,fontSize: 8, color: PdfColors.red))]),
+            pw.Column(children: [pw.Text(' ${DinhDangDonViTien_VND(thongTinTinhTong['Tong_TLthuc'])}', style: pw.TextStyle(font: font,fontSize: 8, color: PdfColors.red))]),
+            pw.Column(children: [pw.Text(' ${DinhDangDonViTien_VND(thongTinTinhTong['Tong_DinhGia'])}', style: pw.TextStyle(font: font,fontSize: 8, color: PdfColors.red))]),
+            pw.Column(children: [pw.Text(' ${DinhDangDonViTien_VND(thongTinTinhTong['tong_TienKhachNhan'])}', style: pw.TextStyle(font: font,fontSize: 8, color: PdfColors.red))]),
+            pw.Column(children: [pw.Text(' ${DinhDangDonViTien_VND(thongTinTinhTong['tong_TienNhanThem'])}', style: pw.TextStyle(font: font,fontSize: 8, color: PdfColors.red))]),
+            pw.Column(children: [pw.Text(' ${DinhDangDonViTien_VND(thongTinTinhTong['tong_TienCamMoi'])}', style: pw.TextStyle(font: font,fontSize: 8, color: PdfColors.red))]),
+          ]
+        ),
 
       ]),
 );
