@@ -11,7 +11,7 @@ import './ThongTinChiTietPhieuCam.dart';
 import '../../../Service/export/PDF/PhieuDangCamChiTiet_PDF.dart';
 
 class PhieuDangCamChiTiet extends StatefulWidget {
-  static const routeName = 'phieudangcamchitiet';
+  static const routeName = '/phieudangcamchitiet';
   const PhieuDangCamChiTiet({super.key});
   State<PhieuDangCamChiTiet> createState() => _PhieuDangCamChiTiet();
 }
