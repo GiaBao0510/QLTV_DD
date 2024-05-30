@@ -2,6 +2,7 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 import 'package:flutter/material.dart';
+import 'dart:convert' show utf8;
 import 'package:google_fonts/google_fonts.dart';
 import 'package:app_qltv/FrontEnd/Service/ThuVien.dart';
 
@@ -20,7 +21,7 @@ buildPrintableData(List<dynamic> data) => pw.Container(
         ),
 
         children: [
-          pw.Column(children: [pw.Text('Mã phiếu', style: pw.TextStyle(fontWeight: pw.FontWeight.bold, color: PdfColors.white, fontSize: 10 ), )]),
+          pw.Column(children: [pw.Text( 'Mã phiếu', style: pw.TextStyle(fontWeight: pw.FontWeight.bold, color: PdfColors.white, fontSize: 10 ), )]),
           pw.Column(children: [pw.Text('Tên khách hàng', style: pw.TextStyle(fontWeight: pw.FontWeight.bold, color: PdfColors.white, fontSize: 10))]),
           pw.Column(children: [pw.Text('Ngày cầm', style: pw.TextStyle(fontWeight: pw.FontWeight.bold,  color: PdfColors.white, fontSize: 10))]),
           pw.Column(children: [pw.Text('Ngày quá hạn', style: pw.TextStyle(fontWeight: pw.FontWeight.bold, color: PdfColors.white, fontSize: 10))]),

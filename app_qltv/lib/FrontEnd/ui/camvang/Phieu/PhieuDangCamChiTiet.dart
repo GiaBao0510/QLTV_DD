@@ -8,6 +8,7 @@ import 'package:app_qltv/FrontEnd/constants/config.dart';
 import 'package:app_qltv/FrontEnd/Service/ThuVien.dart';
 import './PhieuDangCam.dart';
 import './ThongTinChiTietPhieuCam.dart';
+import '../../../Service/export/PDF/PhieuDangCamChiTiet_PDF.dart';
 
 class PhieuDangCamChiTiet extends StatefulWidget{
   static const routeName = 'phieudangcamchitiet';
@@ -51,14 +52,14 @@ class _PhieuDangCamChiTiet extends State<PhieuDangCamChiTiet>{
               children: [
                 Expanded(
                   flex: 2,
-                  child: Text('Phiếu đang cầm', style: TextStyle(color: Colors.white, fontSize: 20, fontFamily: 'Align', fontWeight: FontWeight.bold), ),
+                  child: Text('Phiếu đang cầm chi tiết', style: TextStyle(color: Colors.white, fontSize: 14, fontFamily: 'Align', fontWeight: FontWeight.bold), ),
                 ),
                 Expanded(
                   flex: 1,
                   child: TextButton(
                       onPressed: (){
                         print('Chuyển sang phần chuyển đổi PDF');
-                        //printDoc(data);
+                        printDoc(data);
                       },
                       child: Container(
                         width: double.infinity,
@@ -218,10 +219,10 @@ class _PhieuDangCamChiTiet extends State<PhieuDangCamChiTiet>{
                                               SizedBox(height: 5,),
                                               Row(children: [
                                                 Expanded(
-                                                    child: Text('Ngày cầm: \n\t${item['NGAY_CAM'] ?? 'null'} ')
+                                                    child: Text('Ngày cầm: \n\t${item['NGAY_CAM'] != null ? item['NGAY_CAM']: 'null'} ')
                                                 ),
                                                 Expanded(
-                                                    child: Text('Tên hàng hóa: \n\t${item['TEN_HANG_HOA'] ?? 'null'} ')
+                                                    child: Text('Tên hàng hóa: \n\t${item['TEN_HANG_HOA'] != null ? item['TEN_HANG_HOA']:'null'} ')
                                                 ),
                                               ],),
                                               Row(children: [
@@ -229,15 +230,15 @@ class _PhieuDangCamChiTiet extends State<PhieuDangCamChiTiet>{
                                                     child: Text('Ngày quá hạn:\n\t ${item['NGAY_QUA_HAN'] ?? 'null'} ')
                                                 ),
                                                 Expanded(
-                                                    child: Text('Cân tổng: \n\t${item['CAN_TONG'] ?? 'null'} ')
+                                                    child: Text('Cân tổng: \n\t${item['CAN_TONG'] != null ? item['CAN_TONG']:'null'} ')
                                                 ),
                                               ],),
                                               Row(children: [
                                                 Expanded(
-                                                    child: Text('TL hột: \n\t${item['TL_HOT'] ?? 'null'} ')
+                                                    child: Text('TL hột: \n\t${item['TL_HOT']!= null ? item['TL_HOT']:'null'} ')
                                                 ),
                                                 Expanded(
-                                                    child: Text('TL thực: \n\t${item['TL_THUC'] ?? 'null'} ')
+                                                    child: Text('TL thực: \n\t${item['TL_THUC'] != null ? item['TL_THUC']:'null'} ')
                                                 ),
                                               ],),
                                             ],
@@ -249,7 +250,6 @@ class _PhieuDangCamChiTiet extends State<PhieuDangCamChiTiet>{
                                 ),
                               ),
                             )
-
                           ],);
                         }
                       ),
@@ -262,8 +262,18 @@ class _PhieuDangCamChiTiet extends State<PhieuDangCamChiTiet>{
     );
   }
 
-  //Xem thông tin chi tiết
-
   //Chuyển sang PDF
+  Future<void> printDoc(List<dynamic> data) async{
+    final doc = pw.Document();
+    doc.addPage(pw.Page(
+      pageFormat: PdfPageFormat.a4,
+      build: (pw.Context context){
+        return buildPrintableData(data);
+      }
+    ));
+    await Printing.layoutPdf(
+        onLayout: (PdfPageFormat format) async => doc.save()
+    );
+  }
 
 }
