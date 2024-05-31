@@ -8,13 +8,13 @@ exports.baoCaoTonKhoTheoNhom = async (req, res, next)=>{
         //Lấy theo từng tên nhóm trước
         db.query(
             `
-            SELECT DISTINCT lh.LOAI_TEN 
+            SELECT DISTINCT lh.LOAI_TEN , lh.LOAIID
             FROM loai_hang lh 
                 INNER JOIN danh_muc_hang_hoa dmh on lh.LOAIID = dmh.LOAIID
                 JOIN nhom_hang nh ON dmh.NHOMHANGID = nh.NHOMHANGID
                 JOIN ton_kho tk ON tk.HANGHOAID = dmh.HANGHOAID
             WHERE dmh.SU_DUNG = 1 AND nh.SU_DUNG=1 AND tk.SU_DUNG = 1 AND tk.SL_TON > 0
-            order by lh.LOAI_TEN  
+            order by lh.LOAI_TEN   
             `,
             async (err, result1)=>{
                 if(err){
@@ -28,7 +28,7 @@ exports.baoCaoTonKhoTheoNhom = async (req, res, next)=>{
                                     return res.status(404).json({message: `Loi khi thực hiện lấy thông tin nhóm - ${tenNhom} - ERROR: ${err}`});
                                 }
                                 if(!result || result.length == 0){
-                                    return res.status(404).json({message: `Loi khong tim thay ten nhom ${tenNhom}.`});
+                                    return res.status(404).json({message: `Loi khong tim thay ID nhom ${tenNhom}.`});
                                 }
                                 resolve(result);
                                 return result;
@@ -46,15 +46,14 @@ exports.baoCaoTonKhoTheoNhom = async (req, res, next)=>{
 
                     //Lấy danh sách từng tên nhóm
                     for(const item of result1) {
-                        //console.log(item.LOAI_TEN);
                         let ketqua = await TimKiemTheoNhom(`
                             SELECT lh.LOAIID, dmh.HANGHOAMA, dmh.HANG_HOA_TEN, dmh.CAN_TONG, dmh.TL_HOT, (dmh.CAN_TONG -  dmh.TL_HOT) TL_vang, dmh.CONG_GOC, dmh.GIA_CONG  
                             FROM loai_hang lh 
                                 INNER JOIN danh_muc_hang_hoa dmh on lh.LOAIID = dmh.LOAIID
                                 JOIN nhom_hang nh ON dmh.NHOMHANGID = nh.NHOMHANGID
                                 JOIN ton_kho tk ON tk.HANGHOAID = dmh.HANGHOAID
-                            WHERE lh.LOAI_TEN="${item.LOAI_TEN}" and dmh.SU_DUNG = 1 AND nh.SU_DUNG=1 AND tk.SU_DUNG = 1 AND tk.SL_TON > 0
-                        `,item.LOAI_TEN);
+                            WHERE lh.LOAIID="${item.LOAIID}" and dmh.SU_DUNG = 1 AND nh.SU_DUNG=1 AND tk.SU_DUNG = 1 AND tk.SL_TON > 0
+                        `,item.LOAIID);
 
                         //Vòng lặp để tính tồng
                         for(const item of ketqua){
@@ -71,11 +70,16 @@ exports.baoCaoTonKhoTheoNhom = async (req, res, next)=>{
                             "TongTL_Thuc":tong_TLThuc, 
                             "TongTL_hot": tong_TL_hot, 
                             "TongTL_Vang": tong_TLvang, 
-                            "TongCongGo": tong_CongGoc, 
+                            "TongCongGoc": tong_CongGoc, 
                             "TongGiaCong":tong_GiaCong,
                         }
 
                         SoLuong = 0; //Đặt số lượng về 0
+                        tong_TLThuc = 0;
+                        tong_TL_hot =0;
+                        tong_TLvang=0;
+                        tong_CongGoc=0;
+                        tong_GiaCong=0;
 
                         let ketQuaTungLoai = {
                             data: ketqua,

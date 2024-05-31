@@ -64,7 +64,9 @@ class _NguoiDungPageState extends State<NguoiDungPage> {
               itemCount: nguoidungmanager.nguoiDungsLength,
               itemBuilder: (context, index) {
                 NguoiDung nguoidung = nguoidungmanager.nguoiDungs[index];
-                return ListTile();
+                return ListTile(
+
+                );
               },
             );
           }
