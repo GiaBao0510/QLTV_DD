@@ -1,4 +1,5 @@
 import 'package:app_qltv/FrontEnd/controller/danhmuc/don_vi_manage.dart';
+import 'package:app_qltv/FrontEnd/controller/danhmuc/khachhang_manager.dart';
 import 'package:app_qltv/FrontEnd/controller/danhmuc/kho_manage.dart';
 import 'package:app_qltv/FrontEnd/controller/danhmuc/hanghoa_manager.dart';
 import 'package:app_qltv/FrontEnd/controller/danhmuc/loaivang_manager.dart';
@@ -70,10 +71,11 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => NguoiDungManager()),
         ChangeNotifierProvider(create: (context) => KhoManage()),
         ChangeNotifierProvider(create: (context) => DonviManage()),
+        ChangeNotifierProvider(create: (context) => KhachhangManage()),
         ChangeNotifierProvider(create: (context) => HangHoaManager()),
       ],
       child: MaterialApp(
-        title: 'Bao Khoa Gold',
+        title: 'Phần mềm vàng',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),

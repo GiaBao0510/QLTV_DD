@@ -17,8 +17,8 @@ class _HomeScreenState extends State<HomeScreen> {
       {'image': 'assets/images/box.png', 'text': 'Hàng Hóa', 'routeName' : '/hanghoa'},
       {'image': 'assets/images/database.png', 'text': 'Kho', 'routeName' : '/khohang'},
       {'image': 'assets/images/boy.png', 'text': 'Nhà Cung Cấp', 'routeName' : '/nhacungcap'},
-      {'image': 'assets/images/avatar-design.png', 'text': 'Khách Hàng', 'routeName' : '/loaivang'},
-      {'image': 'assets/images/computer-worker.png', 'text': 'Đơn Vị', 'routeName' : '/loaivang'},
+      {'image': 'assets/images/avatar-design.png', 'text': 'Khách Hàng', 'routeName' : '/khach'},
+      {'image': 'assets/images/computer-worker.png', 'text': 'Đơn Vị', 'routeName' : '/dvi'},
     ];
 
     final hethong_items = [
@@ -128,7 +128,7 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 228, 200, 126),
         title: const Text(
-          'Bao Khoa Gold',
+          'Phần mềm vàng',
           style: TextStyle(color: Colors.black, fontWeight: FontWeight.w900),
         ),
       ),

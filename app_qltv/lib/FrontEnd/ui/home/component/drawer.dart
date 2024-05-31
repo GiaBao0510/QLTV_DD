@@ -1,6 +1,7 @@
 
 import 'package:app_qltv/FrontEnd/ui/danh_muc/dvi/dvi.dart';
 import 'package:app_qltv/FrontEnd/ui/danh_muc/hang_hoa/hang_hoa.dart';
+import 'package:app_qltv/FrontEnd/ui/danh_muc/khachhang/khachhang.dart';
 import 'package:app_qltv/FrontEnd/ui/danh_muc/kho/kho.dart';
 import 'package:app_qltv/FrontEnd/ui/danh_muc/loai_vang/loai_vang.dart';
 import 'package:app_qltv/FrontEnd/ui/danh_muc/nha_cung_cap/nha_cung_cap_green.dart';
@@ -80,7 +81,7 @@ class drawer extends StatelessWidget {
               children: <Widget>[
                 UserAccountsDrawerHeader(
                   accountName: const Text(
-                    'Bảo Khoa Gold',
+                    'Phần mềm vàng',
                     style: TextStyle(color: Colors.black, fontWeight: FontWeight.w900, fontSize: 25),
                   ),
                   accountEmail: Column(
@@ -221,7 +222,10 @@ class drawer extends StatelessWidget {
                         ),
                         title: const Text('Khách Hàng' , style: TextStyle( fontWeight:  FontWeight.w800)),
                         onTap: () {
-                          // Handle Khách Hàng tap
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => const KhachhangScreen()),
+                          );
                         },
                       ),
                     ),
