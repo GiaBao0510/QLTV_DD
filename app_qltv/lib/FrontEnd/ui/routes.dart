@@ -1,4 +1,4 @@
-
+import 'package:app_qltv/FrontEnd/ui/danh_muc/BaoCaoTonKhoVang/BaoCao_TonKhoNhomVang.dart';
 import 'package:app_qltv/FrontEnd/ui/danh_muc/BaoCaoTonKhoVang/BaoCao_TonKhoVang.dart';
 import 'package:app_qltv/FrontEnd/ui/danh_muc/dvi/components/chi_tiet_dvi.dart';
 import 'package:app_qltv/FrontEnd/ui/danh_muc/dvi/components/them_dvi.dart';
@@ -18,7 +18,6 @@ import 'package:app_qltv/FrontEnd/ui/camvang/Phieu/PhieuDangCam.dart';
 import 'package:app_qltv/FrontEnd/ui/camvang/Phieu/PhieuDangCamChiTiet.dart';
 import 'package:flutter/material.dart';
 
-
 final Map<String, WidgetBuilder> routes = {
   LoaiVangScreen.routeName: (ctx) => LoaiVangScreen(),
   NhomVangScreen.routeName: (ctx) => NhomVangScreen(),
@@ -26,18 +25,15 @@ final Map<String, WidgetBuilder> routes = {
   NhomPage.routeName: (ctx) => NhomPage(),
   NguoiDungPage.routeName: (ctx) => NguoiDungPage(),
   ThemNhomScreen.routeName: (ctx) => ThemNhomScreen(),
-  HangHoaScreen.routeName:(ctx)=>HangHoaScreen(),
-  KhoScreen.routeName:(ctx)=>KhoScreen(),
-  NhaCungCapScreen.routeName:(ctx)=>NhaCungCapScreen(),
-  DonviScreen.routeName:(ctx)=>DonviScreen(),
-  ThemDonviScreen.routeName:(ctx)=>ThemDonviScreen(),
-
-  InterfaceConnectionError.routerName:(ctx)=>InterfaceConnectionError(),
-
-  Table_BaoCaoTonKhoLoaiVang.routeName:(ctx)=>Table_BaoCaoTonKhoLoaiVang(),
-  Table_BaoCaoTonKhoVang.routeName:(ctx)=>Table_BaoCaoTonKhoVang(),
-  PhieuDangCam.routeName:(ctx)=> PhieuDangCam(),
-  PhieuDangCamChiTiet.routeName:(ctx) => PhieuDangCamChiTiet(),
-
+  HangHoaScreen.routeName: (ctx) => HangHoaScreen(),
+  KhoScreen.routeName: (ctx) => KhoScreen(),
+  NhaCungCapScreen.routeName: (ctx) => NhaCungCapScreen(),
+  DonviScreen.routeName: (ctx) => DonviScreen(),
+  ThemDonviScreen.routeName: (ctx) => ThemDonviScreen(),
+  InterfaceConnectionError.routerName: (ctx) => InterfaceConnectionError(),
+  Table_BaoCaoTonKhoLoaiVang.routeName: (ctx) => Table_BaoCaoTonKhoLoaiVang(),
+  Table_BaoCaoTonKhoVang.routeName: (ctx) => Table_BaoCaoTonKhoVang(),
+  PhieuDangCam.routeName: (ctx) => PhieuDangCam(),
+  PhieuDangCamChiTiet.routeName: (ctx) => PhieuDangCamChiTiet(),
+  BaoCaoTonKhoNhomVangScreen.routeName: (ctx) => BaoCaoTonKhoNhomVangScreen(),
 };
-

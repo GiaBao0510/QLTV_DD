@@ -2,6 +2,7 @@ import 'package:app_qltv/FrontEnd/model/danhmuc/hanghoa.dart';
 
 class BaoCaoTonKhoNhomVang {
   final List<HangHoa> data;
+  final String loaiTen;
   final int soLuong;
   final double tongTlThuc;
   final double tongTlHot;
@@ -11,6 +12,7 @@ class BaoCaoTonKhoNhomVang {
 
   BaoCaoTonKhoNhomVang({
     required this.data,
+    required this.loaiTen,
     required this.soLuong,
     required this.tongTlThuc,
     required this.tongTlHot,
@@ -25,12 +27,13 @@ class BaoCaoTonKhoNhomVang {
 
     return BaoCaoTonKhoNhomVang(
       data: dataList,
-      soLuong: json['sumary']['SoLuong:'],
-      tongTlThuc: json['sumary']['TongTL_Thuc'].toDouble(),
-      tongTlHot: json['sumary']['TongTL_hot'].toDouble(),
-      tongTlVang: json['sumary']['TongTL_Vang'].toDouble(),
-      tongCongGo: json['sumary']['TongCongGo'].toDouble(),
-      tongGiaCong: json['sumary']['TongGiaCong'],
+      loaiTen: json['sumary']['LOAI_TEN'] ?? '',
+      soLuong: json['sumary']['SoLuong'] ?? 0,
+      tongTlThuc: (json['sumary']['TongTL_Thuc'] ?? 0).toDouble(),
+      tongTlHot: (json['sumary']['TongTL_hot'] ?? 0).toDouble(),
+      tongTlVang: (json['sumary']['TongTL_Vang'] ?? 0).toDouble(),
+      tongCongGo: (json['sumary']['TongCongGo'] ?? 0).toDouble(),
+      tongGiaCong: json['sumary']['TongGiaCong'] ?? 0,
     );
   }
 }

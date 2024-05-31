@@ -20,6 +20,7 @@ class HangHoa {
   final double? giaBanSi;
   final double? canTong;
   final double? tlHot;
+  final double? tlVang;
   final double? giaCong;
   final double? donGiaGoc;
   final double? congGoc;
@@ -50,6 +51,7 @@ class HangHoa {
     this.giaBanSi,
     this.canTong,
     this.tlHot,
+    this.tlVang,
     this.giaCong,
     this.donGiaGoc,
     this.congGoc,
@@ -80,6 +82,7 @@ class HangHoa {
     int? taoMa,
     double? giaBanSi,
     double? canTong,
+    double? tlVang,
     double? tlHot,
     double? giaCong,
     double? donGiaGoc,
@@ -110,6 +113,7 @@ class HangHoa {
       taoMa: taoMa ?? this.taoMa,
       giaBanSi: giaBanSi ?? this.giaBanSi,
       canTong: canTong ?? this.canTong,
+      tlVang: tlVang ?? this.tlVang,
       tlHot: tlHot ?? this.tlHot,
       giaCong: giaCong ?? this.giaCong,
       donGiaGoc: donGiaGoc ?? this.donGiaGoc,
@@ -134,7 +138,8 @@ class HangHoa {
       nccId: map['NCCID'] ?? '',
       giamGiaId: map['GIAM_GIA_ID'] ?? 0,
       hangHoaTen: map['HANG_HOA_TEN'] ?? '',
-      giaBan: (map['GIA_BAN'] == null) ? null : (map['GIA_BAN'] as num).toDouble(),
+      giaBan:
+          (map['GIA_BAN'] == null) ? null : (map['GIA_BAN'] as num).toDouble(),
       vat: map['VAT'] ?? 0,
       thue: map['THUE'] ?? 0,
       suDung: map['SU_DUNG'] ?? 0,
@@ -142,14 +147,30 @@ class HangHoa {
       slIn: map['SL_IN'] ?? 0,
       ghiChu: map['GHI_CHU'] ?? '',
       taoMa: map['TAO_MA'] ?? 0,
-      giaBanSi: (map['GIA_BAN_SI'] == null) ? null : (map['GIA_BAN_SI'] as num).toDouble(),
-      canTong: (map['CAN_TONG'] == null) ? null : (map['CAN_TONG'] as num).toDouble(),
+      giaBanSi: (map['GIA_BAN_SI'] == null)
+          ? null
+          : (map['GIA_BAN_SI'] as num).toDouble(),
+      canTong: (map['CAN_TONG'] == null)
+          ? null
+          : (map['CAN_TONG'] as num).toDouble(),
       tlHot: (map['TL_HOT'] == null) ? null : (map['TL_HOT'] as num).toDouble(),
-      giaCong: (map['GIA_CONG'] == null) ? null : (map['GIA_CONG'] as num).toDouble(),
-      donGiaGoc: (map['DON_GIA_GOC'] == null) ? null : (map['DON_GIA_GOC'] as num).toDouble(),
-      congGoc: (map['CONG_GOC'] == null) ? null : (map['CONG_GOC'] as num).toDouble(),
-      tuoiBan: (map['TUOI_BAN'] == null) ? null : (map['TUOI_BAN'] as num).toDouble(),
-      tuoiMua: (map['TUOI_MUA'] == null) ? null : (map['TUOI_MUA'] as num).toDouble(),
+      tlVang:
+          (map['TL_vang'] == null) ? null : (map['TL_vang'] as num).toDouble(),
+      giaCong: (map['GIA_CONG'] == null)
+          ? null
+          : (map['GIA_CONG'] as num).toDouble(),
+      donGiaGoc: (map['DON_GIA_GOC'] == null)
+          ? null
+          : (map['DON_GIA_GOC'] as num).toDouble(),
+      congGoc: (map['CONG_GOC'] == null)
+          ? null
+          : (map['CONG_GOC'] as num).toDouble(),
+      tuoiBan: (map['TUOI_BAN'] == null)
+          ? null
+          : (map['TUOI_BAN'] as num).toDouble(),
+      tuoiMua: (map['TUOI_MUA'] == null)
+          ? null
+          : (map['TUOI_MUA'] as num).toDouble(),
       xuatXu: map['XUAT_XU'] ?? '',
       kyHieu: map['KY_HIEU'] ?? '',
       ngay: map['NGAY'] ?? '',
@@ -179,6 +200,7 @@ class HangHoa {
       'GIA_BAN_SI': giaBanSi,
       'CAN_TONG': canTong,
       'TL_HOT': tlHot,
+      'TL_vang': tlVang,
       'GIA_CONG': giaCong,
       'DON_GIA_GOC': donGiaGoc,
       'CONG_GOC': congGoc,

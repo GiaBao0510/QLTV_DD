@@ -1,4 +1,6 @@
 import 'package:app_qltv/FrontEnd/controller/danhmuc/BaoCaoTonKhoNhomVang_manager.dart';
+import 'package:app_qltv/FrontEnd/model/danhmuc/hanghoa.dart';
+import 'package:app_qltv/FrontEnd/ui/components/FormatCurrency.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -52,8 +54,7 @@ class _BaoCaoTonKhoNhomVangScreenState
     setState(() {
       _filteredBaoCaoTonKhoNhomVangList =
           _baoCaoTonKhoNhomVangList.where((baoCao) {
-        return baoCao.data.any(
-            (hangHoa) => hangHoa.hangHoaTen!.toLowerCase().contains(query));
+        return baoCao.loaiTen.toLowerCase().contains(query);
       }).toList();
     });
   }
@@ -62,6 +63,7 @@ class _BaoCaoTonKhoNhomVangScreenState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: const Color.fromARGB(255, 228, 200, 126),
         leading: IconButton(
           icon: const Icon(
             CupertinoIcons.left_chevron,
@@ -71,13 +73,14 @@ class _BaoCaoTonKhoNhomVangScreenState
             Navigator.of(context).pop();
           },
         ),
-        title: Row(
+        title: const Row(
           children: [
-            Expanded(child: Container()), // Spacer
-            const Text("Báo Cáo Tồn Kho Nhóm Vàng",
+            Text("Báo Cáo Tồn Kho Nhóm Vàng",
                 style: TextStyle(
                     color: Colors.black, fontWeight: FontWeight.w900)),
-            Expanded(child: Container()), // Spacer
+            SizedBox(
+              width: 30,
+            )
           ],
         ),
       ),
@@ -114,40 +117,84 @@ class _BaoCaoTonKhoNhomVangScreenState
               return Container(
                 margin: const EdgeInsets.only(bottom: 15),
                 decoration: BoxDecoration(
-                  color: Color.fromARGB(255, 218, 218, 218),
-                  borderRadius: BorderRadius.circular(
-                      15), // Sets border radius to 15 pixels
+                  color: const Color.fromARGB(255, 228, 200, 126),
+                  borderRadius: BorderRadius.circular(15),
                 ),
                 child: Column(
                   children: [
                     ExpansionTile(
-                      title: Text('Báo cáo ${index + 1}'),
+                      title: Text(
+                        baoCao.loaiTen,
+                        style: const TextStyle(fontWeight: FontWeight.w700),
+                      ),
+                      tilePadding:
+                          const EdgeInsets.only(left: 20, top: 5, bottom: 0),
+                      backgroundColor: Colors.transparent,
+                      childrenPadding:
+                          const EdgeInsets.only(left: 10, top: 0, bottom: 10),
                       children: baoCao.data.map((hangHoa) {
-                        return ListTile(
-                          title: Text(hangHoa.hangHoaTen!),
-                          subtitle: Text(
-                              'TL Thực: ${hangHoa.canTong}, Giá Công: ${hangHoa.giaCong}'),
+                        return Container(
+                          margin: const EdgeInsets.symmetric(vertical: 8.0),
+                          decoration: BoxDecoration(
+                            color: const Color.fromARGB(50, 169, 169, 169),
+                            borderRadius: BorderRadius.circular(15.0),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              children: [
+                                ListTile(
+                                  title: Text(
+                                    hangHoa.hangHoaTen!,
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                                tableItem(hangHoa),
+                                const SizedBox(height: 10),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
+                                    Text(
+                                      'Công Gốc: ${formatCurrencyDouble(hangHoa.congGoc ?? 0)}',
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    Text(
+                                      'Giá Công: ${formatCurrencyDouble(hangHoa.giaCong ?? 0)}',
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    )
+                                  ],
+                                )
+                              ],
+                            ),
+                          ),
                         );
                       }).toList(),
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(left: 30.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text('Tổng TL Thực: ${baoCao.tongTlThuc}'),
-                              Text('Tổng TL Hột: ${baoCao.tongTlHot}'),
-                              Text('Tổng TL Vàng: ${baoCao.tongTlVang}'),
-                              Text('Tổng Công Gốc: ${baoCao.tongCongGo}'),
-                              Text('Tổng Giá Công: ${baoCao.tongGiaCong}'),
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
+                    Container(
+                        margin: const EdgeInsets.only(
+                            left: 10.0, right: 10.0, bottom: 15.0, top: 10.0),
+                        decoration: BoxDecoration(
+                          color: Color.fromARGB(100, 169, 169, 169),
+                          borderRadius: BorderRadius.circular(15.0),
+                        ),
+                        child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(children: [
+                              const ListTile(
+                                title: Text(
+                                  'Tổng:',
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                              const SizedBox(height: 10),
+                              tableSumary(baoCao),
+                              const SizedBox(height: 10),
+                              tableSumaryCurrency(baoCao),
+                            ]))),
                   ],
                 ),
               );
@@ -155,6 +202,167 @@ class _BaoCaoTonKhoNhomVangScreenState
           );
         }
       },
+    );
+  }
+
+  Table tableItem(HangHoa hangHoa) {
+    return Table(
+      border: TableBorder.all(color: Colors.grey),
+      children: [
+        const TableRow(
+          decoration: BoxDecoration(
+            color: Color.fromARGB(150, 218, 218, 218),
+          ),
+          children: [
+            Center(
+              child: Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text('TL Thực',
+                    style: TextStyle(fontWeight: FontWeight.bold)),
+              ),
+            ),
+            Center(
+              child: Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text('TL Hột',
+                    style: TextStyle(fontWeight: FontWeight.bold)),
+              ),
+            ),
+            Center(
+              child: Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text('TL Vàng',
+                    style: TextStyle(fontWeight: FontWeight.bold)),
+              ),
+            ),
+          ],
+        ),
+        TableRow(
+          children: [
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(formatCurrencyDouble(hangHoa.canTong ?? 0)),
+              ),
+            ),
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(formatCurrencyDouble(hangHoa.tlHot ?? 0)),
+              ),
+            ),
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(formatCurrencyDouble(hangHoa.tlVang ?? 0)),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Table tableSumary(BaoCaoTonKhoNhomVang baoCao) {
+    return Table(
+      border: TableBorder.all(color: Colors.grey),
+      children: [
+        const TableRow(
+          decoration: BoxDecoration(
+            color: Color.fromARGB(150, 218, 218, 218),
+          ),
+          children: [
+            Center(
+              child: Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text('Tổng TL Thực',
+                    style: TextStyle(fontWeight: FontWeight.bold)),
+              ),
+            ),
+            Center(
+              child: Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text('Tổng TL Hột',
+                    style: TextStyle(fontWeight: FontWeight.bold)),
+              ),
+            ),
+            Center(
+              child: Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text('Tổng TL Vàng',
+                    style: TextStyle(fontWeight: FontWeight.bold)),
+              ),
+            ),
+          ],
+        ),
+        TableRow(
+          children: [
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(formatCurrencyDouble(baoCao.tongTlThuc)),
+              ),
+            ),
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(formatCurrencyDouble(baoCao.tongTlHot)),
+              ),
+            ),
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(formatCurrencyDouble(baoCao.tongTlVang)),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Table tableSumaryCurrency(BaoCaoTonKhoNhomVang baoCao) {
+    return Table(
+      border: TableBorder.all(color: Colors.grey),
+      children: [
+        const TableRow(
+          decoration: BoxDecoration(
+            color: Color.fromARGB(150, 218, 218, 218),
+          ),
+          children: [
+            Center(
+              child: Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text('Tổng Công Gốc',
+                    style: TextStyle(fontWeight: FontWeight.bold)),
+              ),
+            ),
+            Center(
+              child: Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text('Tổng Giá Công',
+                    style: TextStyle(fontWeight: FontWeight.bold)),
+              ),
+            ),
+          ],
+        ),
+        TableRow(
+          children: [
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(formatCurrencyDouble(baoCao.tongCongGo)),
+              ),
+            ),
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(formatCurrencyInteger(baoCao.tongGiaCong)),
+              ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 }
