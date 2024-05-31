@@ -1,5 +1,5 @@
-
 import 'package:app_qltv/FrontEnd/ui/danh_muc/dvi/dvi.dart';
+import 'package:app_qltv/FrontEnd/ui/danh_muc/BaoCaoTonKhoVang/BaoCao_TonKhoNhomVang.dart';
 import 'package:app_qltv/FrontEnd/ui/danh_muc/hang_hoa/hang_hoa.dart';
 import 'package:app_qltv/FrontEnd/ui/danh_muc/kho/kho.dart';
 import 'package:app_qltv/FrontEnd/ui/danh_muc/loai_vang/loai_vang.dart';
@@ -29,31 +29,32 @@ class drawer extends StatelessWidget {
   });
 
   //Lấy tên người dùng
-  Future<String> _getTenAdmin() async{
+  Future<String> _getTenAdmin() async {
     return await SessionManager().getString('username');
   }
 
   //Lấy ngày giơ hiện tại
   String _getDate() {
-    var now =  DateTime.now();
-    var formatter =  DateFormat('dd-MM-yyyy');
+    var now = DateTime.now();
+    var formatter = DateFormat('dd-MM-yyyy');
     String formatDate = formatter.format(now);
     return formatDate;
   }
 
   //Quyển của ứng dụng  trên thiết bị
-  Future<void> _request_permission() async{
+  Future<void> _request_permission() async {
     await openAppSettings();
   }
 
   //Thực hiện đănng xuất
-  Future<void> Logout(BuildContext context) async{
-    try{
+  Future<void> Logout(BuildContext context) async {
+    try {
       String path = logout;
-      var res = await http.post(Uri.parse(path), headers: {"Content-Type": "application/json"} );
+      var res = await http
+          .post(Uri.parse(path), headers: {"Content-Type": "application/json"});
       print(res.body);
 
-      SessionManager().setString('username','');
+      SessionManager().setString('username', '');
 
       QuickAlert.show(
         context: context,
@@ -61,10 +62,8 @@ class drawer extends StatelessWidget {
         title: " Đăng xuất thành công",
       );
       Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const MyApp())
-      );
-    }catch(e){
+          context, MaterialPageRoute(builder: (context) => const MyApp()));
+    } catch (e) {
       print('Lỗi khi thực hiện đăng xuất: $e');
     }
   }
@@ -81,13 +80,17 @@ class drawer extends StatelessWidget {
                 UserAccountsDrawerHeader(
                   accountName: const Text(
                     'Bảo Khoa Gold',
-                    style: TextStyle(color: Colors.black, fontWeight: FontWeight.w900, fontSize: 25),
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.w900,
+                        fontSize: 25),
                   ),
                   accountEmail: Column(
                     children: [
                       Row(
                         children: [
-                          const Icon(Icons.account_circle_outlined, size: 33, color: Colors.black),
+                          const Icon(Icons.account_circle_outlined,
+                              size: 33, color: Colors.black),
                           const SizedBox(width: 8),
                           FutureBuilder<String>(
                             future: _getTenAdmin(),
@@ -95,7 +98,8 @@ class drawer extends StatelessWidget {
                               if (snapshot.hasData) {
                                 return Text(
                                   snapshot.data!,
-                                  style: const TextStyle(color: Colors.black, fontSize: 18),
+                                  style: const TextStyle(
+                                      color: Colors.black, fontSize: 18),
                                 );
                               } else if (snapshot.hasError) {
                                 return Text('Error: ${snapshot.error}');
@@ -106,7 +110,10 @@ class drawer extends StatelessWidget {
                           ),
                         ],
                       ),
-                      Text('${_getDate()}', style: TextStyle(fontSize: 12, color: Colors.black),),
+                      Text(
+                        '${_getDate()}',
+                        style: TextStyle(fontSize: 12, color: Colors.black),
+                      ),
                     ],
                   ),
                   decoration: const BoxDecoration(
@@ -116,128 +123,147 @@ class drawer extends StatelessWidget {
                     ),
                   ),
                 ),
-
                 ExpansionTile(
                   leading: Image.asset(
-                          'assets/images/category.png',
-                          width: 24.0, 
-                          height: 24.0, 
-                        ),
-                  title: const Text('Danh Mục' , style: TextStyle( fontWeight:  FontWeight.w800)),
+                    'assets/images/category.png',
+                    width: 24.0,
+                    height: 24.0,
+                  ),
+                  title: const Text('Danh Mục',
+                      style: TextStyle(fontWeight: FontWeight.w800)),
                   children: <Widget>[
-
                     Padding(
-                      padding: const EdgeInsets.only(left: 16.0), // Khoảng cách thụt lề
+                      padding: const EdgeInsets.only(
+                          left: 16.0), // Khoảng cách thụt lề
                       child: ListTile(
                         leading: Image.asset(
-                          'assets/images/gold-ingot.png', 
-                          width: 24.0, 
-                          height: 24.0, 
+                          'assets/images/gold-ingot.png',
+                          width: 24.0,
+                          height: 24.0,
                         ),
-                        title: const Text('Loại Vàng' , style: TextStyle( fontWeight:  FontWeight.w800)),
+                        title: const Text('Loại Vàng',
+                            style: TextStyle(fontWeight: FontWeight.w800)),
                         onTap: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => const LoaiVangScreen()),
+                            MaterialPageRoute(
+                                builder: (context) => const LoaiVangScreen()),
                           );
                         },
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(left: 16.0), // Khoảng cách thụt lề
+                      padding: const EdgeInsets.only(
+                          left: 16.0), // Khoảng cách thụt lề
                       child: ListTile(
                         leading: Image.asset(
                           'assets/images/treasure.png',
-                          width: 24.0, 
-                          height: 24.0, 
+                          width: 24.0,
+                          height: 24.0,
                         ),
-                        title: const Text('Nhóm Vàng' , style: TextStyle( fontWeight:  FontWeight.w800)),
+                        title: const Text('Nhóm Vàng',
+                            style: TextStyle(fontWeight: FontWeight.w800)),
                         onTap: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => const NhomVangScreen()),
+                            MaterialPageRoute(
+                                builder: (context) => const NhomVangScreen()),
                           );
                         },
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(left: 16.0), // Khoảng cách thụt lề
+                      padding: const EdgeInsets.only(
+                          left: 16.0), // Khoảng cách thụt lề
                       child: ListTile(
                         leading: Image.asset(
                           'assets/images/box.png',
-                          width: 24.0, 
-                          height: 24.0, 
+                          width: 24.0,
+                          height: 24.0,
                         ),
-                        title: const Text('Hàng Hóa' , style: TextStyle( fontWeight:  FontWeight.w800)),
+                        title: const Text('Hàng Hóa',
+                            style: TextStyle(fontWeight: FontWeight.w800)),
                         onTap: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => const HangHoaScreen()),
+                            MaterialPageRoute(
+                                builder: (context) => const HangHoaScreen()),
                           );
                         },
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(left: 16.0), // Khoảng cách thụt lề
+                      padding: const EdgeInsets.only(
+                          left: 16.0), // Khoảng cách thụt lề
                       child: ListTile(
                         leading: Image.asset(
                           'assets/images/database.png',
-                          width: 24.0, 
-                          height: 24.0, 
+                          width: 24.0,
+                          height: 24.0,
                         ),
-                        title: const Text('Kho' , style: TextStyle( fontWeight:  FontWeight.w800)),
+                        title: const Text('Kho',
+                            style: TextStyle(fontWeight: FontWeight.w800)),
                         onTap: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => const KhoScreen()),
+                            MaterialPageRoute(
+                                builder: (context) => const KhoScreen()),
                           );
                         },
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(left: 16.0), // Khoảng cách thụt lề
+                      padding: const EdgeInsets.only(
+                          left: 16.0), // Khoảng cách thụt lề
                       child: ListTile(
                         leading: Image.asset(
                           'assets/images/boy.png',
-                          width: 24.0, 
-                          height: 24.0, 
+                          width: 24.0,
+                          height: 24.0,
                         ),
-                        title: const Text('NCC' , style: TextStyle( fontWeight:  FontWeight.w800)),
+                        title: const Text('NCC',
+                            style: TextStyle(fontWeight: FontWeight.w800)),
                         onTap: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => const NhaCungCapScreen()),
+                            MaterialPageRoute(
+                                builder: (context) => const NhaCungCapScreen()),
                           );
                         },
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(left: 16.0), // Khoảng cách thụt lề
+                      padding: const EdgeInsets.only(
+                          left: 16.0), // Khoảng cách thụt lề
                       child: ListTile(
                         leading: Image.asset(
                           'assets/images/avatar-design.png',
-                          width: 24.0, 
-                          height: 24.0, 
+                          width: 24.0,
+                          height: 24.0,
                         ),
-                        title: const Text('Khách Hàng' , style: TextStyle( fontWeight:  FontWeight.w800)),
+                        title: const Text('Khách Hàng',
+                            style: TextStyle(fontWeight: FontWeight.w800)),
                         onTap: () {
                           // Handle Khách Hàng tap
                         },
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(left: 16.0), // Khoảng cách thụt lề
+                      padding: const EdgeInsets.only(
+                          left: 16.0), // Khoảng cách thụt lề
                       child: ListTile(
                         leading: Image.asset(
                           'assets/images/computer-worker.png',
-                          width: 24.0, 
-                          height: 24.0, 
+                          width: 24.0,
+                          height: 24.0,
                         ),
-                        title: const Text('Đơn Vị' , style: TextStyle( fontWeight:  FontWeight.w800)),
+                        title: const Text('Đơn Vị',
+                            style: TextStyle(fontWeight: FontWeight.w800)),
                         onTap: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => const DonviScreen()),
+                            MaterialPageRoute(
+                                builder: (context) => const DonviScreen()),
                           );
                         },
                       ),
@@ -246,66 +272,76 @@ class drawer extends StatelessWidget {
                 ),
                 ExpansionTile(
                   leading: Image.asset(
-                          'assets/images/management.png',
-                          width: 24.0, 
-                          height: 24.0, 
-                        ),
-                  title: const Text('Hệ Thống' , style: TextStyle( fontWeight:  FontWeight.w800)),
+                    'assets/images/management.png',
+                    width: 24.0,
+                    height: 24.0,
+                  ),
+                  title: const Text('Hệ Thống',
+                      style: TextStyle(fontWeight: FontWeight.w800)),
                   children: <Widget>[
                     Padding(
-                      padding: const EdgeInsets.only(left: 16.0), // Khoảng cách thụt lề
+                      padding: const EdgeInsets.only(
+                          left: 16.0), // Khoảng cách thụt lề
                       child: ListTile(
                         leading: Image.asset(
                           'assets/images/users.png',
-                          width: 24.0, 
-                          height: 24.0, 
+                          width: 24.0,
+                          height: 24.0,
                         ),
-                        title: const Text('Nhóm Người Dùng' , style: TextStyle( fontWeight:  FontWeight.w800)),
+                        title: const Text('Nhóm Người Dùng',
+                            style: TextStyle(fontWeight: FontWeight.w800)),
                         onTap: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => const NhomPage()),
+                            MaterialPageRoute(
+                                builder: (context) => const NhomPage()),
                           );
                         },
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(left: 16.0), // Khoảng cách thụt lề
+                      padding: const EdgeInsets.only(
+                          left: 16.0), // Khoảng cách thụt lề
                       child: ListTile(
                         leading: Image.asset(
                           'assets/images/person.png',
-                          width: 24.0, 
-                          height: 24.0, 
+                          width: 24.0,
+                          height: 24.0,
                         ),
-                        title: const Text('Người Dùng ' , style: TextStyle( fontWeight:  FontWeight.w800)),
+                        title: const Text('Người Dùng ',
+                            style: TextStyle(fontWeight: FontWeight.w800)),
                         onTap: () {
                           // Handle Người Dùng tap
                         },
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(left: 16.0), // Khoảng cách thụt lề
+                      padding: const EdgeInsets.only(
+                          left: 16.0), // Khoảng cách thụt lề
                       child: ListTile(
                         leading: Image.asset(
                           'assets/images/remote-access.png',
-                          width: 24.0, 
-                          height: 24.0, 
+                          width: 24.0,
+                          height: 24.0,
                         ),
-                        title: const Text('Kết Nối' , style: TextStyle( fontWeight:  FontWeight.w800)),
+                        title: const Text('Kết Nối',
+                            style: TextStyle(fontWeight: FontWeight.w800)),
                         onTap: () {
                           // Handle Kết Nối tap
                         },
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(left: 16.0), // Khoảng cách thụt lề
+                      padding: const EdgeInsets.only(
+                          left: 16.0), // Khoảng cách thụt lề
                       child: ListTile(
                         leading: Image.asset(
                           'assets/images/access-control.png',
-                          width: 24.0, 
-                          height: 24.0, 
+                          width: 24.0,
+                          height: 24.0,
                         ),
-                        title: const Text('Quản lý quyền' , style: TextStyle( fontWeight:  FontWeight.w800)),
+                        title: const Text('Quản lý quyền',
+                            style: TextStyle(fontWeight: FontWeight.w800)),
                         onTap: () {
                           _request_permission();
                         },
@@ -319,38 +355,46 @@ class drawer extends StatelessWidget {
                     width: 24.0,
                     height: 24.0,
                   ),
-                  title: const Text('Cầm Vàng' , style: TextStyle( fontWeight:  FontWeight.w800)),
+                  title: const Text('Cầm Vàng',
+                      style: TextStyle(fontWeight: FontWeight.w800)),
                   children: <Widget>[
                     Padding(
-                      padding: const EdgeInsets.only(left: 16.0), // Khoảng cách thụt lề
+                      padding: const EdgeInsets.only(
+                          left: 16.0), // Khoảng cách thụt lề
                       child: ListTile(
                         leading: Image.asset(
                           'assets/images/MortgageDocument.png',
                           width: 24.0,
                           height: 24.0,
                         ),
-                        title: const Text('Phiếu Đang Cầm' , style: TextStyle( fontWeight:  FontWeight.w800)),
+                        title: const Text('Phiếu Đang Cầm',
+                            style: TextStyle(fontWeight: FontWeight.w800)),
                         onTap: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => const PhieuDangCam()),
+                            MaterialPageRoute(
+                                builder: (context) => const PhieuDangCam()),
                           );
                         },
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(left: 16.0), // Khoảng cách thụt lề
+                      padding: const EdgeInsets.only(
+                          left: 16.0), // Khoảng cách thụt lề
                       child: ListTile(
                         leading: Image.asset(
                           'assets/images/DetailOfMortgageDocument.png',
                           width: 24.0,
                           height: 24.0,
                         ),
-                        title: const Text('Phiếu Đang Cầm Chi Tiết ' , style: TextStyle( fontWeight:  FontWeight.w800)),
+                        title: const Text('Phiếu Đang Cầm Chi Tiết ',
+                            style: TextStyle(fontWeight: FontWeight.w800)),
                         onTap: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => const PhieuDangCamChiTiet()),
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const PhieuDangCamChiTiet()),
                           );
                         },
                       ),
@@ -359,172 +403,203 @@ class drawer extends StatelessWidget {
                 ),
                 ExpansionTile(
                   leading: Image.asset(
-                          'assets/images/clipboard.png',
-                          width: 24.0, 
-                          height: 24.0, 
-                        ),
-                  title: const Text('Báo Cáo' , style: TextStyle( fontWeight:  FontWeight.w800)),
+                    'assets/images/clipboard.png',
+                    width: 24.0,
+                    height: 24.0,
+                  ),
+                  title: const Text('Báo Cáo',
+                      style: TextStyle(fontWeight: FontWeight.w800)),
                   children: <Widget>[
                     Padding(
-                      padding: const EdgeInsets.only(left: 16.0), // Khoảng cách thụt lề
+                      padding: const EdgeInsets.only(
+                          left: 16.0), // Khoảng cách thụt lề
                       child: ListTile(
                         leading: Image.asset(
                           'assets/images/budget.png',
-                          width: 24.0, 
-                          height: 24.0, 
+                          width: 24.0,
+                          height: 24.0,
                         ),
-                        title: const Text('Báo Cáo Phiếu Xuất' , style: TextStyle( fontWeight:  FontWeight.w800)),
+                        title: const Text('Báo Cáo Phiếu Xuất',
+                            style: TextStyle(fontWeight: FontWeight.w800)),
                         onTap: () {
                           // Handle Báo Cáo Phiếu Xuất tap
                         },
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(left: 16.0), // Khoảng cách thụt lề
+                      padding: const EdgeInsets.only(
+                          left: 16.0), // Khoảng cách thụt lề
                       child: ListTile(
                         leading: Image.asset(
                           'assets/images/report.png',
-                          width: 24.0, 
-                          height: 24.0, 
+                          width: 24.0,
+                          height: 24.0,
                         ),
-                        title: const Text('Báo Cáo Tồn Kho Loại Vàng' , style: TextStyle( fontWeight:  FontWeight.w800)),
+                        title: const Text('Báo Cáo Tồn Kho Loại Vàng',
+                            style: TextStyle(fontWeight: FontWeight.w800)),
                         onTap: () {
                           // Handle Báo Cáo Tồn Kho Loại Vàng tap
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => Table_BaoCaoTonKhoLoaiVang()),
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    Table_BaoCaoTonKhoLoaiVang()),
                           );
                         },
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(left: 16.0), // Khoảng cách thụt lề
+                      padding: const EdgeInsets.only(
+                          left: 16.0), // Khoảng cách thụt lề
                       child: ListTile(
                         leading: Image.asset(
                           'assets/images/clipboards.png',
-                          width: 24.0, 
-                          height: 24.0, 
+                          width: 24.0,
+                          height: 24.0,
                         ),
-                        title: const Text('Báo Cáo Tồn Kho Vàng' , style: TextStyle( fontWeight:  FontWeight.w800)),
+                        title: const Text('Báo Cáo Tồn Kho Vàng',
+                            style: TextStyle(fontWeight: FontWeight.w800)),
                         onTap: () {
                           //Handle Báo Cáo Tồn Kho Loại Vàng tap
                           Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => Table_BaoCaoTonKhoVang()),
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Table_BaoCaoTonKhoVang()),
                           );
                         },
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(left: 16.0), // Khoảng cách thụt lề
+                      padding: const EdgeInsets.only(
+                          left: 16.0), // Khoảng cách thụt lề
                       child: ListTile(
                         leading: Image.asset(
                           'assets/images/computer-worker.png',
-                          width: 24.0, 
-                          height: 24.0, 
+                          width: 24.0,
+                          height: 24.0,
                         ),
-                        title: const Text('Báo Cáo Tồn Kho Vàng' , style: TextStyle( fontWeight:  FontWeight.w800)),
+                        title: const Text('Báo Cáo Tồn Kho Vàng',
+                            style: TextStyle(fontWeight: FontWeight.w800)),
                         onTap: () {
                           // Handle Báo Cáo Tồn Kho Loại Vàng tap
                         },
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(left: 16.0), // Khoảng cách thụt lề
+                      padding: const EdgeInsets.only(
+                          left: 16.0), // Khoảng cách thụt lề
                       child: ListTile(
                         leading: Image.asset(
                           'assets/images/documents.png',
-                          width: 24.0, 
-                          height: 24.0, 
+                          width: 24.0,
+                          height: 24.0,
                         ),
-                        title: const Text('Báo Cáo Tồn Theo Nhóm Vàng' , style: TextStyle( fontWeight:  FontWeight.w800)),
+                        title: const Text('Báo Cáo Tồn Theo Nhóm Vàng',
+                            style: TextStyle(fontWeight: FontWeight.w800)),
                         onTap: () {
-                          // Handle Báo Cáo Tồn Kho Loại Vàng tap
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const BaoCaoTonKhoNhomVangScreen()),
+                          );
                         },
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(left: 16.0), // Khoảng cách thụt lề
+                      padding: const EdgeInsets.only(
+                          left: 16.0), // Khoảng cách thụt lề
                       child: ListTile(
                         leading: Image.asset(
                           'assets/images/shopping-bag.png',
-                          width: 24.0, 
-                          height: 24.0, 
+                          width: 24.0,
+                          height: 24.0,
                         ),
-                        title: const Text('Kho Vàng Mua Vào' , style: TextStyle( fontWeight:  FontWeight.w800)),
+                        title: const Text('Kho Vàng Mua Vào',
+                            style: TextStyle(fontWeight: FontWeight.w800)),
                         onTap: () {
                           // Handle Báo Cáo Tồn Kho Loại Vàng tap
                         },
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(left: 16.0), // Khoảng cách thụt lề
+                      padding: const EdgeInsets.only(
+                          left: 16.0), // Khoảng cách thụt lề
                       child: ListTile(
                         leading: Image.asset(
                           'assets/images/paper.png',
-                          width: 24.0, 
-                          height: 24.0, 
+                          width: 24.0,
+                          height: 24.0,
                         ),
-                        title: const Text('In Phiếu Xuất' , style: TextStyle( fontWeight:  FontWeight.w800)),
+                        title: const Text('In Phiếu Xuất',
+                            style: TextStyle(fontWeight: FontWeight.w800)),
                         onTap: () {
                           // Handle Báo Cáo Tồn Kho Loại Vàng tap
                         },
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(left: 16.0), // Khoảng cách thụt lề
+                      padding: const EdgeInsets.only(
+                          left: 16.0), // Khoảng cách thụt lề
                       child: ListTile(
                         leading: Image.asset(
                           'assets/images/presentation.png',
-                          width: 24.0, 
-                          height: 24.0, 
+                          width: 24.0,
+                          height: 24.0,
                         ),
-                        title: const Text('Khách Hàng Giao Dịch Nhiều' , style: TextStyle( fontWeight:  FontWeight.w800)),
+                        title: const Text('Khách Hàng Giao Dịch Nhiều',
+                            style: TextStyle(fontWeight: FontWeight.w800)),
                         onTap: () {
                           // Handle Báo Cáo Tồn Kho Loại Vàng tap
                         },
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(left: 16.0), // Khoảng cách thụt lề
+                      padding: const EdgeInsets.only(
+                          left: 16.0), // Khoảng cách thụt lề
                       child: ListTile(
                         leading: Image.asset(
                           'assets/images/shopping-list.png',
-                          width: 24.0, 
-                          height: 24.0, 
+                          width: 24.0,
+                          height: 24.0,
                         ),
-                        title: const Text('Báo Cáo Phiếu Mua Vào' , style: TextStyle( fontWeight:  FontWeight.w800)),
+                        title: const Text('Báo Cáo Phiếu Mua Vào',
+                            style: TextStyle(fontWeight: FontWeight.w800)),
                         onTap: () {
                           // Handle Báo Cáo Tồn Kho Loại Vàng tap
                         },
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(left: 16.0), // Khoảng cách thụt lề
+                      padding: const EdgeInsets.only(
+                          left: 16.0), // Khoảng cách thụt lề
                       child: ListTile(
                         leading: Image.asset(
                           'assets/images/document.png',
-                          width: 24.0, 
-                          height: 24.0, 
+                          width: 24.0,
+                          height: 24.0,
                         ),
-                        title: const Text('Báo Cáo Phiếu Đổi' , style: TextStyle( fontWeight:  FontWeight.w800)),
+                        title: const Text('Báo Cáo Phiếu Đổi',
+                            style: TextStyle(fontWeight: FontWeight.w800)),
                         onTap: () {
                           // Handle Báo Cáo Tồn Kho Loại Vàng tap
                         },
                       ),
                     ),
                   ],
-                ),               
+                ),
               ],
             ),
           ),
 
           //Nút đăng xuất
-          const SizedBox(height: 20,),
+          const SizedBox(
+            height: 20,
+          ),
           Container(
             padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
             child: ElevatedButton(
-              onPressed: (){
+              onPressed: () {
                 print('Đã bấm đăng xuất');
                 Logout(context);
               },
@@ -535,18 +610,20 @@ class drawer extends StatelessWidget {
                   elevation: 8.0,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10.0),
-                  )
-              ),
+                  )),
               child: const Row(
                 children: [
                   Expanded(
-                    flex:2,
-                      child: Text('Đăng xuất', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, fontFamily: 'Align' ),),
+                    flex: 2,
+                    child: Text(
+                      'Đăng xuất',
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                          fontFamily: 'Align'),
+                    ),
                   ),
-                  Expanded(
-                      flex:1,
-                      child: Icon(Icons.logout)
-                  ),
+                  Expanded(flex: 1, child: Icon(Icons.logout)),
                 ],
               ),
             ),
