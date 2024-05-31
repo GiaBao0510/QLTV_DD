@@ -14,6 +14,7 @@ const groupRoutes = require ('./app/routers/groupRoutes');
 const productype = require('./app/routers/productTypeRoute');
 const cam = require ('./app/routers/camvangRoute');
 const phieu = require ('./app/routers/phieuRoute');
+const kiemtra =require('./app/services/KiemTra.servie');
 const { decode } = require('punycode');
 const app = express();
 
@@ -21,7 +22,10 @@ require('dotenv').config();
 
 app.use(express.json());
 app.use(cookieParser('quanlytiemvang'));
-app.use(cors());
+app.use(cors({
+    origin: '*',            //Cho phép CORS có thể xử lý bất kỳ tên miền nào ,Nên đặt địa chỉ ứng dụng thay vì "*", vì đây tiềm ẩn nhiều nguy cơ bảo mật
+    credentials: true,     //Cho phép nhận cookie cùng với yêu cầu cors. Điều này giúp xác thực người dùng
+}));
 
 app.use(express.urlencoded({extended: true}));
 app.use('/api/admin',admin);
@@ -36,7 +40,7 @@ app.use(
     session({
         secret: 'somesecret',
         cookie: {maxAge:3600000},
-        resave:true,
+        resave: true,
         saveUninitialized:false,
     })
 );
@@ -44,7 +48,11 @@ app.use(
 //Đăng nhập
 app.post('/login', async (req, res, next) => {
     try{
-        const {USER_TEN,MAT_KHAU} = req.body;
+
+        const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress || req.socket.remoteAddress || (req.connection.socket ? req.connection.socket.remoteAddress : null);
+
+        //--- Phần này dành cho đăng nhập ghi thông tin
+        const {USER_TEN,MAT_KHAU} = req.body;   //Lấy thông tin đầu vào
         
         //Tìm tài khoán có khớp không
         db.query(`select * from pq_user where USER_TEN="${USER_TEN}"`,async (err, result)=>{
@@ -62,31 +70,35 @@ app.post('/login', async (req, res, next) => {
                     return res.status(400).json({message: `Mật khẩu không hợp lệ`, value:0});
                 }
                 
-                //Nếu đăng nhập thành công thì lưu thông tin vào phiên
+                  // Lưu thông tin vào phiên
                 req.session.authenticated = true;
                 req.session.user = USER_TEN;
 
-                //Tạo AccessToken và RefreshToken
-                const accesstoken = jwt.sign({user:USER_TEN, _id: userID }, process.env.ACCESS_TOKEN, {expiresIn: '1h'}) ,
-                    refreshtoken = jwt.sign({user:USER_TEN, _id: userID }, process.env.REFRESH_TOKEN, {expiresIn:'7d'}) ;
+                // Tạo AccessToken và RefreshToken
+                const accessToken = jwt.sign({ user: USER_TEN, _id: userID }, process.env.ACCESS_TOKEN, { expiresIn: '1h' }),
+                    refreshToken = jwt.sign({ user: USER_TEN, _id: userID }, process.env.REFRESH_TOKEN, { expiresIn: '7d' });
 
-                //Lưu thông tin vào cookie
-                res.cookie('accessToken', accesstoken, {httpOnly: true,  maxAge: 3600000});
-                res.cookie('refreshToken',refreshtoken,{httpOnly:true, maxAge: 604800000});
-                res.cookie('username', String(USER_TEN), {maxAge:3600000, secure: true});
-                res.cookie('isLoggedIn',true, {maxAge:3600000, httpOnly:true, secure: true});
+                // Lưu thông tin vào cookie
+                res.cookie('accessToken', accessToken, { httpOnly: true, maxAge: 3600000 });
+                res.cookie('refreshToken', refreshToken, { httpOnly: true, maxAge: 604800000 });
                 
-                const isLoggedIn = req.cookies.isLoggedIn;
-                const username = req.cookies.username;
-                const AccessToken = req.cookies.accessToken;
-                const RefreshToken = req.cookies.refreshToken;
 
+                //Trả thông tin thông báo đăng nhập thành công
+                console.log("Đăng nhập thành công");
+                console.log('USER: ',USER_TEN);
+                console.log('accessToken: ',accessToken);
+                console.log('refreshToken: ',USER_TEN);
+                console.log('ipV4Address: ',ip);
                 return res.status(200).json({
-                    message: `Đăng nhập thành công!` ,USER: username ,value:1, isLoggedIn: isLoggedIn,
+                    message: 'Đăng nhập thành công!',
+                    USER: USER_TEN,
+                    value: 1,
+                    isLoggedIn: true,
                     data: {
-                        accesstoken: AccessToken,
-                        refreshtoken: RefreshToken
-                    }
+                      accessToken: accessToken,
+                      refreshToken: refreshToken
+                    },
+                    accessToken: accessToken,
                 });
             }
         });
@@ -97,77 +109,10 @@ app.post('/login', async (req, res, next) => {
 });
 
 //Làm mới Accesstoken, Khi mà Accesstoken hết hạn thì dựa vào RefreshToken để làm mới
-app.post('/refresh-token', (req, res)=>{
-    const refreshToken = req.cookies.refreshToken;
-    let accessToken  = req.cookies.accessToken;
-
-    //Kiểm tra xem AccessToken còn hiệu lực hay không ,Nếu hết thì làm mới
-    if(!accessToken){
-        //Kiểm tra luôn RefreshToken còn hiệu lực hay không ,Nếu hết đăng xuất
-        if(!refreshToken){
-            return res.status(403).json({
-                mgs:'Hết hiệu lực - refreshToken', valid:0,
-                data: {
-                    accesstoken: accessToken,
-                    refreshtoken: refreshToken
-                } 
-            });
-        }
-        //Ngược lại thì làm mới AccessToken
-        else{
-            jwt.verify(refreshToken,'quanlytiemvang_long', (err, decode)=> {
-                if(err){
-                    return res.status(403).json({
-                        mgs:'Invalid refresh token', valid:0,
-                        data: {
-                            accesstoken: accessToken,
-                            refreshtoken: refreshToken
-                        } 
-                    });
-                }
-        
-                //Tạo AccessToken mới
-                accessToken = jwt.sign({USER_TEN: decode.USER_TEN}, 'quanlytiemvang_shot', {expiresIn: '5h'} );
-        
-                //Gửi AccessToken mới
-                res.cookie('accessToken', accessToken, {httpOnly: true,  maxAge: 18000000});
-        
-                return res.status(200).json({
-                    mgs:'Access token has been refreshed!',valid:1,
-                    data: {
-                        accesstoken: accessToken,
-                        refreshtoken: refreshToken
-                    } 
-                });
-            });
-        }
-    }else{
-        return res.status(203).json({
-            mgs:'Còn hiệu lực - refreshToken', valid:1,
-            data: {
-                accesstoken: accessToken,
-                refreshtoken: refreshToken
-            } 
-        });
-    }
-})
+app.post('/refresh-token', kiemtra.KiemTraHieuLucCuaToken);
 
 //Hủy phiên - đăng xuất
-app.post('/exit', function(req, res,next ){
-    try{
-        //HỦy phiên
-        req.session.destroy();
-
-        //Xóa cookie
-        res.clearCookie('username', {secure: true});
-        res.clearCookie('isLoggedIn', {secure: true});
-        res.clearCookie('accessToken', {secure: true});
-        res.clearCookie('refreshToken', {secure: true});
-        return res.status(200).json({message: "Hủy phiên thành công, Đăng xuất thành công"});
-    }catch(err){
-        return next(new ApiError(500,`Loi khi thuc hien huy phien: ${err}`));
-    }
-});
+app.post('/exit', kiemtra.DangXuat);
 
 //Xử lý lỗi từ máy khách
 app.use((req, res, next) =>{
