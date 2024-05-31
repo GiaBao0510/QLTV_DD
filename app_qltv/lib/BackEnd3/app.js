@@ -17,6 +17,8 @@ const phieu = require ('./app/routers/phieuRoute');
 const { decode } = require('punycode');
 const app = express();
 
+require('dotenv').config();
+
 app.use(express.json());
 app.use(cookieParser('quanlytiemvang'));
 app.use(cors());
@@ -33,7 +35,7 @@ app.use('/api/phieu',phieu);
 app.use(
     session({
         secret: 'somesecret',
-        cookie: {maxAge:60000},
+        cookie: {maxAge:3600000},
         resave:true,
         saveUninitialized:false,
     })
@@ -52,6 +54,7 @@ app.post('/login', async (req, res, next) => {
                 return res.status(400).json({message: `Tài khoản không tồn tại ${USER_TEN}`,value:-1});
             }else{
                 const MatKhauDaBam = result[0].MAT_KHAU;
+                const userID = result[0].USER_ID;
                 
                 //So sánh mật khẩu
                 const kqSoSanh = await bcrypt.compare(MAT_KHAU, MatKhauDaBam);
@@ -64,12 +67,12 @@ app.post('/login', async (req, res, next) => {
                 req.session.user = USER_TEN;
 
                 //Tạo AccessToken và RefreshToken
-                const accesstoken = jwt.sign({USER_TEN}, 'quanlytiemvang_shot', {expiresIn: '5h'}) ,
-                    refreshtoken = jwt.sign({USER_TEN}, 'quanlytiemvang_long', {expiresIn:'14d'}) ;
+                const accesstoken = jwt.sign({user:USER_TEN, _id: userID }, process.env.ACCESS_TOKEN, {expiresIn: '1h'}) ,
+                    refreshtoken = jwt.sign({user:USER_TEN, _id: userID }, process.env.REFRESH_TOKEN, {expiresIn:'7d'}) ;
 
                 //Lưu thông tin vào cookie
-                res.cookie('accessToken', accesstoken, {httpOnly: true,  maxAge: 18000000});
-                res.cookie('refreshToken',refreshtoken,{httpOnly:true, maxAge: 1209600000});
+                res.cookie('accessToken', accesstoken, {httpOnly: true,  maxAge: 3600000});
+                res.cookie('refreshToken',refreshtoken,{httpOnly:true, maxAge: 604800000});
                 res.cookie('username', String(USER_TEN), {maxAge:3600000, secure: true});
                 res.cookie('isLoggedIn',true, {maxAge:3600000, httpOnly:true, secure: true});
                 
@@ -83,8 +86,7 @@ app.post('/login', async (req, res, next) => {
                     data: {
                         accesstoken: AccessToken,
                         refreshtoken: RefreshToken
-                    } ,
-                    RefreshToken: RefreshToken
+                    }
                 });
             }
         });

@@ -56,6 +56,6 @@ exports.baoCaoTonKho = async (req, res, next)=>{
             return res.status(200).json({result,tinhTong:KQ_tinhTong});
         });
     }catch(err){
-        return next(new ApiError(500, `Loi xuat hiện khi thực hiện truy vấn bao cáo tồn kho: ${err.message}`));
+        return next(new ApiError(500, `Loi ben server: ${err.message}`));
     }
 };

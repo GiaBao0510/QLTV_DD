@@ -127,7 +127,6 @@ exports.lay_KhachHang = async (req, res, next) =>{
                 console.log(`Lỗi khi lấy thông tin khách hàng - ${err}`);
                 return res.status(404).json({message: `Loi khi lấy thong tin khách hang - ${KH_MA}`});
             }else{
-
                 return res.status(200).json(result);
             }
         })

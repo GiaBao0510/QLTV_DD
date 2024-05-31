@@ -9,4 +9,6 @@ let data ={
 
 Object.assign(data['danhsach'] , {"diachi":"cantho"});
 
-console.log(data);
+let day = new Date().toISOString().split('T')[0]
+
+console.log(day);
