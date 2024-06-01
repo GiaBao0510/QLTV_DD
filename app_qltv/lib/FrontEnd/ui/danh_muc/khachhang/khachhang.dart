@@ -168,8 +168,49 @@ class _KhachhangScreenState extends State<KhachhangScreen> {
                             "Mã: ${_filteredKhachhangList[index].kh_ma}",
                             style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w700, fontSize: 14),
                           ),
+                          
                         ],
                       ),
+                      Row(
+                        children: [
+                          
+                          Text(
+                            "CMND: ${_filteredKhachhangList[index].kh_cmnd}",
+                            style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w700, fontSize: 14),
+                          ),
+                          
+                        ],
+                      ),
+                      Row(
+                        children: [
+                         
+                          Text(
+                            "Điện thoại: ${_filteredKhachhangList[index].kh_sdt}",
+                            style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w700, fontSize: 14),
+                          ),
+                          
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          
+                          Text(
+                            "Địa chỉ: ${_filteredKhachhangList[index].kh_dia_chi}",
+                            style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w700, fontSize: 14),
+                          ),
+                          
+                        ],
+                      ),
+                      Row(
+                        children: [
+                         
+                          Text(
+                            "Ghi chú: ${_filteredKhachhangList[index].kh_dia_chi}",
+                            style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w700, fontSize: 14),
+                          ),
+                        ],
+                      ),
+                      
                     ]
                   ),
                 ),

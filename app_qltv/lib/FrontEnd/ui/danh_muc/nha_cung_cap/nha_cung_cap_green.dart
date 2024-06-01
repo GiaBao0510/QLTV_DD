@@ -37,7 +37,8 @@ class _NhaCungCapScreenState extends State<NhaCungCapScreen> {
   }
 
   Future<void> _loadNhaCungCaps() async {
-    _nhaCungCapFuture = Provider.of<NhaCungCapManager>(context, listen: false).fetchNhaCungCap();
+    _nhaCungCapFuture = Provider.of<NhaCungCapManager>(context, listen: false)
+        .fetchNhaCungCap();
     _nhaCungCapFuture.then((nhaCungCaps) {
       setState(() {
         _nhaCungCapList = nhaCungCaps;
@@ -71,7 +72,9 @@ class _NhaCungCapScreenState extends State<NhaCungCapScreen> {
         title: Row(
           children: [
             Expanded(child: Container()), // Spacer
-            const Text("Nhà Cung Cấp", style: TextStyle(color: Colors.black, fontWeight: FontWeight.w900)),
+            const Text("Nhà Cung Cấp",
+                style: TextStyle(
+                    color: Colors.black, fontWeight: FontWeight.w900)),
             Expanded(child: Container()), // Spacer
           ],
         ),
@@ -92,11 +95,11 @@ class _NhaCungCapScreenState extends State<NhaCungCapScreen> {
           ),
         ],
       ),
-
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(12.0),
-          child: SingleChildScrollView( // SingleChildScrollView for scrolling
+          child: SingleChildScrollView(
+            // SingleChildScrollView for scrolling
             child: Column(
               children: [
                 Search_Bar(searchController: _searchController),
@@ -110,7 +113,6 @@ class _NhaCungCapScreenState extends State<NhaCungCapScreen> {
     );
   }
 
-
   // ignore: non_constant_identifier_names
   FutureBuilder<List<NhaCungCap>> ShowList() {
     return FutureBuilder<List<NhaCungCap>>(
@@ -123,12 +125,14 @@ class _NhaCungCapScreenState extends State<NhaCungCapScreen> {
         } else {
           return ListView.builder(
             shrinkWrap: true, // shrinkWrap to make ListView fit within Column
-            physics: const NeverScrollableScrollPhysics(), // Disable ListView's own scrolling
+            physics:
+                const NeverScrollableScrollPhysics(), // Disable ListView's own scrolling
             itemCount: _filteredNhaCungCapList.length,
             reverse: true,
             itemBuilder: (BuildContext context, int index) {
               return Container(
-                margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                margin:
+                    const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
                 decoration: BoxDecoration(
                   color: const Color.fromARGB(50, 169, 169, 169),
                   borderRadius: BorderRadius.circular(15.0),
@@ -144,10 +148,17 @@ class _NhaCungCapScreenState extends State<NhaCungCapScreen> {
                             children: [
                               Align(
                                 alignment: Alignment.centerLeft,
-                                child: 
-                                Text(
-                                  "Loại mã: ${_filteredNhaCungCapList[index].ncc_ma}",
-                                  style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w700, fontSize: 14),
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      _filteredNhaCungCapList[index].ncc_ten ??
+                                          '',
+                                      style: const TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.w800,
+                                          fontSize: 20),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ],
@@ -161,12 +172,17 @@ class _NhaCungCapScreenState extends State<NhaCungCapScreen> {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 5,),
+                      const SizedBox(
+                        height: 5,
+                      ),
                       Row(
                         children: [
                           Text(
-                            _filteredNhaCungCapList[index].ncc_ten ?? '',
-                            style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w800, fontSize: 20),
+                            "Mã: ${_filteredNhaCungCapList[index].ncc_ma}",
+                            style: const TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w700,
+                                fontSize: 14),
                           ),
                         ],
                       ),
@@ -174,7 +190,10 @@ class _NhaCungCapScreenState extends State<NhaCungCapScreen> {
                         children: [
                           Text(
                             "Ngày bắt đầu: ${_filteredNhaCungCapList[index].ngay_bd}",
-                            style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w700, fontSize: 14),
+                            style: const TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w700,
+                                fontSize: 14),
                           ),
                         ],
                       ),
@@ -182,10 +201,14 @@ class _NhaCungCapScreenState extends State<NhaCungCapScreen> {
                         children: [
                           Flexible(
                             child: Tooltip(
-                              message: _filteredNhaCungCapList[index].ghi_chu ?? '',
+                              message:
+                                  _filteredNhaCungCapList[index].ghi_chu ?? '',
                               child: Text(
                                 "Địa chỉ: ${_filteredNhaCungCapList[index].ghi_chu}",
-                                style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w700, fontSize: 14),
+                                style: const TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 14),
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ),
@@ -208,7 +231,8 @@ class _NhaCungCapScreenState extends State<NhaCungCapScreen> {
       onTap: () async {
         final result = await Navigator.of(context).push(
           createRoute(
-            (context) => ChinhSuaNhaCungCapScreen(nhacungcap: _filteredNhaCungCapList[index]),
+            (context) => ChinhSuaNhaCungCapScreen(
+                nhacungcap: _filteredNhaCungCapList[index]),
           ),
         );
         if (result == true) {
@@ -230,7 +254,8 @@ class _NhaCungCapScreenState extends State<NhaCungCapScreen> {
           builder: (BuildContext context) {
             return AlertDialog(
               title: const Text("Xác nhận"),
-              content: Text("Bạn có chắc chắn muốn xóa nhà cung cấp ${_filteredNhaCungCapList[index].ncc_ten?.toUpperCase()}?"),
+              content: Text(
+                  "Bạn có chắc chắn muốn xóa nhà cung cấp ${_filteredNhaCungCapList[index].ncc_ten?.toUpperCase()}?"),
               actions: <Widget>[
                 TextButton(
                   onPressed: () {
@@ -240,20 +265,33 @@ class _NhaCungCapScreenState extends State<NhaCungCapScreen> {
                 ),
                 TextButton(
                   onPressed: () async {
-                    final nhaCungCapManager = Provider.of<NhaCungCapManager>(context, listen: false);
-                    await nhaCungCapManager.deleteNhaCungCap(_filteredNhaCungCapList[index].ncc_id!); // Use `ncc_id` directly
+                    final nhaCungCapManager =
+                        Provider.of<NhaCungCapManager>(context, listen: false);
+                    await nhaCungCapManager.deleteNhaCungCap(
+                        _filteredNhaCungCapList[index]
+                            .ncc_id!); // Use `ncc_id` directly
                     Navigator.of(context).pop(); // Close the dialog
                     _loadNhaCungCaps(); // Refresh the list
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content: const Text('Xóa thành công!', style: TextStyle(fontWeight: FontWeight.w900, color: Colors.red), textAlign: TextAlign.center,),
+                        content: const Text(
+                          'Xóa thành công!',
+                          style: TextStyle(
+                              fontWeight: FontWeight.w900, color: Colors.red),
+                          textAlign: TextAlign.center,
+                        ),
                         backgroundColor: Colors.grey,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(15.0),
-                          side: const BorderSide(color: Colors.grey, width: 2.0), // bo viền 15px
+                          side: const BorderSide(
+                              color: Colors.grey, width: 2.0), // bo viền 15px
                         ),
-                        behavior: SnackBarBehavior.floating, // hiển thị ở cách đáy màn hình
-                        margin: const EdgeInsets.only(left: 15.0, right: 15.0, bottom: 15.0), // cách 2 cạnh và đáy màn hình 15px
+                        behavior: SnackBarBehavior
+                            .floating, // hiển thị ở cách đáy màn hình
+                        margin: const EdgeInsets.only(
+                            left: 15.0,
+                            right: 15.0,
+                            bottom: 15.0), // cách 2 cạnh và đáy màn hình 15px
                       ),
                     );
                   },
@@ -270,6 +308,4 @@ class _NhaCungCapScreenState extends State<NhaCungCapScreen> {
       ),
     );
   }
-
-
 }

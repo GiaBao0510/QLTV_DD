@@ -1,91 +1,5 @@
-// import 'package:flutter/material.dart';
-// import 'package:app_qltv/FrontEnd/model/danhmuc/hanghoa.dart';
-// import 'package:app_qltv/FrontEnd/model/danhmuc/loaivang.dart';
-// import 'package:app_qltv/FrontEnd/model/danhmuc/nhomvang.dart';
-
-// class ChiTietHangHoaScreen extends StatelessWidget {
-//   static const routeName = "/chitiethanghoa";
-
-//   final HangHoa hangHoa;
-//   final List<LoaiVang> loaiVangList;
-//   final List<NhomVang> nhomVangList;
-
-//   const ChiTietHangHoaScreen({
-//     Key? key,
-//     required this.hangHoa,
-//     required this.loaiVangList,
-//     required this.nhomVangList,
-//   }) : super(key: key);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     final double truHot = (hangHoa.canTong ?? 0) - (hangHoa.tlHot ?? 0);
-
-//     // Tìm thông tin loại và nhóm vang từ danh sách
-//     LoaiVang? loaiVang = loaiVangList.firstWhere(
-//       (element) => element.nhomHangMa == hangHoa.loaiId,
-//       orElse: () => LoaiVang(nhomTen: "Unknown"),
-//     );
-//     NhomVang? nhomVang = nhomVangList.firstWhere(
-//       (element) => element.loaiId == hangHoa.nhomHangId,
-//       orElse: () => NhomVang(loaiTen: "Unknown"),
-//     );
-
-//     return Scaffold(
-//       appBar: AppBar(
-//         leading: const BackButton(color: Colors.black),
-//         title: Text(hangHoa.hangHoaTen ?? ''),
-//       ),
-//       body: SafeArea(
-//         child: Padding(
-//           padding: const EdgeInsets.all(16.0),
-//           child: Column(
-//             crossAxisAlignment: CrossAxisAlignment.start,
-//             children: [
-//               buildDetailRow('Mã Hàng:', '${hangHoa.hangHoaMa}'),
-//               buildDetailRow('Tên Hàng Hóa:', '${hangHoa.hangHoaTen}'),
-//               buildDetailRow('Loại Vàng:', '${loaiVang?.nhomTen ?? "Unknown"}'),
-//               buildDetailRow('Nhóm:', '${nhomVang?.loaiTen ?? "Unknown"}'),
-//               buildDetailRow('Cân Tổng:', '${hangHoa.canTong}'),
-//               buildDetailRow('TL Hột:', '${hangHoa.tlHot}'),
-//               buildDetailRow('Trừ Hột:', '$truHot'),
-//               buildDetailRow('Công Gốc:', '${hangHoa.congGoc}'),
-//               buildDetailRow('Giá Công:', '${hangHoa.giaCong}'),
-//               buildDetailRow('Đơn Giá Gốc:', '${hangHoa.donGiaGoc}'),
-//               buildDetailRow('Ghi Chú:', '${hangHoa.ghiChu}'),
-//               buildDetailRow('Xuất Xứ:', '${hangHoa.xuatXu}'),
-//               buildDetailRow('Ký Hiệu:', '${hangHoa.kyHieu}'),
-//             ],
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-
-//   Widget buildDetailRow(String label, String value) {
-//     return Padding(
-//       padding: const EdgeInsets.symmetric(vertical: 8.0),
-//       child: Row(
-//         crossAxisAlignment: CrossAxisAlignment.start,
-//         children: [
-//           Text(
-//             '$label ',
-//             style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-//           ),
-//           Expanded(
-//             child: Text(
-//               value,
-//               style: const TextStyle(fontSize: 16),
-//               maxLines: 2,
-//               overflow: TextOverflow.ellipsis,
-//             ),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:app_qltv/FrontEnd/model/danhmuc/hanghoa.dart';
 import 'package:app_qltv/FrontEnd/model/danhmuc/loaivang.dart';
 import 'package:app_qltv/FrontEnd/model/danhmuc/nhomvang.dart';
@@ -121,7 +35,7 @@ class ChiTietHangHoaScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              buildDetailRow('Mã Hàng:', '${hangHoa.hangHoaMa}'),
+              buildDetailRow('Mã Hàng:', '${int.parse(hangHoa.hangHoaMa!)}'),
               buildDetailRow('Tên Hàng Hóa:', '${hangHoa.hangHoaTen}'),
               FutureBuilder<LoaiVang>(
                 future: _getLoaiVangById(hangHoa.nhomHangId),
@@ -152,10 +66,10 @@ class ChiTietHangHoaScreen extends StatelessWidget {
               buildDetailRow('Cân Tổng:', '${hangHoa.canTong}'),
               buildDetailRow('TL Hột:', '${hangHoa.tlHot}'),
               buildDetailRow('Trừ Hột:', '$truHot'),
-              buildDetailRow('nhom:', '${int.parse(hangHoa.loaiId!)}'),
-              buildDetailRow('Công Gốc:', '${hangHoa.congGoc}'),
-              buildDetailRow('Giá Công:', '${hangHoa.giaCong}'),
-              buildDetailRow('Đơn Giá Gốc:', '${hangHoa.donGiaGoc}'),
+
+              buildDetailRow('Công Gốc:', formatCurrency(hangHoa.congGoc ?? 0.0)),
+              buildDetailRow('Giá Công:', formatCurrency(hangHoa.giaCong ?? 0.0)),
+              buildDetailRow('Đơn Giá Gốc:', formatCurrency(hangHoa.donGiaGoc ?? 0.0)),
               buildDetailRow('Ghi Chú:', '${hangHoa.ghiChu}'),
               buildDetailRow('Xuất Xứ:', '${hangHoa.xuatXu}'),
               buildDetailRow('Ký Hiệu:', '${hangHoa.kyHieu}'),
@@ -209,4 +123,9 @@ class ChiTietHangHoaScreen extends StatelessWidget {
     }
   }
 
+  // Hàm định dạng tiền tệ
+  String formatCurrency(double amount) {
+    final NumberFormat formatter = NumberFormat('#,##0', 'vi_VN');
+    return formatter.format(amount);
+  }
 }
