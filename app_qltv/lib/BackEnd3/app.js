@@ -82,6 +82,7 @@ app.post('/login', async (req, res, next) => {
                 res.cookie('accessToken', accessToken, { httpOnly: true, maxAge: 3600000 });
                 res.cookie('refreshToken', refreshToken, { httpOnly: true, maxAge: 604800000 });
                 
+                ///req.headers['authentization'] = accessToken;
 
                 //Trả thông tin thông báo đăng nhập thành công
                 console.log("Đăng nhập thành công");
