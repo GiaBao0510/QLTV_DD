@@ -1,5 +1,9 @@
 import 'package:app_qltv/FrontEnd/controller/danhmuc/don_vi_manage.dart';
+
 import 'package:app_qltv/FrontEnd/controller/danhmuc/khachhang_manager.dart';
+
+import 'package:app_qltv/FrontEnd/controller/danhmuc/BaoCaoTonKhoNhomVang_manager.dart';
+
 import 'package:app_qltv/FrontEnd/controller/danhmuc/kho_manage.dart';
 import 'package:app_qltv/FrontEnd/controller/danhmuc/hanghoa_manager.dart';
 import 'package:app_qltv/FrontEnd/controller/danhmuc/loaivang_manager.dart';
@@ -17,7 +21,7 @@ import 'package:app_qltv/FrontEnd/ui/routes.dart';
 import 'package:app_qltv/FrontEnd/controller/danhmuc/nhomvang_manager.dart'; // Import NhomVangManager của bạn
 import 'package:session_manager/session_manager.dart';
 import 'package:app_qltv/FrontEnd/ui/home/component/login.dart';
-import 'package:provider/provider.dart';
+
 
 void main() {
   runApp(MyApp());
@@ -25,20 +29,20 @@ void main() {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-  
+
   //Kiểm tra xem đang nhap hay chua voi kiem tra có ket noi mang hay chua
-  Future<Widget> KiemTraDangNhap(BuildContext context) async{
-      // >>>>>> kIỂM TRA KẾT NỐI MẠNG
+  Future<Widget> KiemTraDangNhap(BuildContext context) async {
+    // >>>>>> kIỂM TRA KẾT NỐI MẠNG
     final result = await ActiveConnection();
     print("Ket noi: $result");
-    if(result == true){
+    if (result == true) {
       //Nếu kết nôi mạng thành công thi chuyeen sang kiem tra dang nhap
-        // >>>>>> kIỂM TRA ĐĂNG NHẬP
+      // >>>>>> kIỂM TRA ĐĂNG NHẬP
       //Lấy thông tin
       String taiKhoan = await SessionManager().getString('username');
 
       //Nếu chưa có tìa khoản thì chuyển sang trang đăng nhập
-      if(taiKhoan.isEmpty){
+      if (taiKhoan.isEmpty) {
         return LoginPage();
       }
 
@@ -54,8 +58,7 @@ class MyApp extends StatelessWidget {
       //   return const LoginPage();
       // }
       return const HomeScreen();
-
-    }else{
+    } else {
       return InterfaceConnectionError();
     }
   }
@@ -73,6 +76,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => DonviManage()),
         ChangeNotifierProvider(create: (context) => KhachhangManage()),
         ChangeNotifierProvider(create: (context) => HangHoaManager()),
+        ChangeNotifierProvider(
+            create: (context) => BaoCaoTonKhoNhomVangManager()),
       ],
       child: MaterialApp(
         title: 'Phần mềm vàng',
@@ -89,12 +94,12 @@ class MyApp extends StatelessWidget {
         ),
         home: FutureBuilder<Widget>(
           future: KiemTraDangNhap(context),
-          builder: (context, snapshot){
-            if(snapshot.hasData){
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
               return snapshot.data!;
-            }else if( snapshot.hasError){
+            } else if (snapshot.hasError) {
               return Text("Error: ${snapshot.error}");
-            }else{
+            } else {
               return CircularProgressIndicator();
             }
           },

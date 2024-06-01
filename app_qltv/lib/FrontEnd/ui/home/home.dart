@@ -12,6 +12,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final danhmuc_items = [
+
       {'image': 'assets/images/gold-ingot.png', 'text': 'Loại Vàng', 'routeName' : '/loaivang'},
       {'image': 'assets/images/treasure.png', 'text': 'Nhóm Vàng', 'routeName' : '/nhomvang'},
       {'image': 'assets/images/box.png', 'text': 'Hàng Hóa', 'routeName' : '/hanghoa'},
@@ -19,6 +20,43 @@ class _HomeScreenState extends State<HomeScreen> {
       {'image': 'assets/images/boy.png', 'text': 'Nhà Cung Cấp', 'routeName' : '/nhacungcap'},
       {'image': 'assets/images/avatar-design.png', 'text': 'Khách Hàng', 'routeName' : '/khach'},
       {'image': 'assets/images/computer-worker.png', 'text': 'Đơn Vị', 'routeName' : '/dvi'},
+
+      {
+        'image': 'assets/images/gold-ingot.png',
+        'text': 'Loại Vàng',
+        'routeName': '/loaivang'
+      },
+      {
+        'image': 'assets/images/treasure.png',
+        'text': 'Nhóm Vàng',
+        'routeName': '/nhomvang'
+      },
+      {
+        'image': 'assets/images/box.png',
+        'text': 'Hàng Hóa',
+        'routeName': '/hanghoa'
+      },
+      {
+        'image': 'assets/images/database.png',
+        'text': 'Kho',
+        'routeName': '/khohang'
+      },
+      {
+        'image': 'assets/images/boy.png',
+        'text': 'Nhà Cung Cấp',
+        'routeName': '/nhacungcap'
+      },
+      {
+        'image': 'assets/images/avatar-design.png',
+        'text': 'Khách Hàng',
+        'routeName': '/khach'
+      },
+      {
+        'image': 'assets/images/computer-worker.png',
+        'text': 'Đơn Vị',
+        'routeName': '/dvi'
+      },
+
     ];
 
     final hethong_items = [
@@ -76,7 +114,7 @@ class _HomeScreenState extends State<HomeScreen> {
       {
         'image': 'assets/images/documents.png',
         'text': 'Báo Cáo Tồn Kho Theo Nhóm Vàng',
-        'routeName': '/loaivang'
+        'routeName': '/baocaotonkhonhomvang'
       },
       {
         'image': 'assets/images/shopping-bag.png',
@@ -128,7 +166,9 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 228, 200, 126),
         title: const Text(
-          'Phần mềm vàng',
+
+          'Phần Mềm Vàng',
+
           style: TextStyle(color: Colors.black, fontWeight: FontWeight.w900),
         ),
       ),

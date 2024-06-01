@@ -21,6 +21,15 @@ exports.getPhieuXuatById = async (req, res, next) => {
   }
 };
 
+exports.getPhieuXuatByDate = async (req, res, next) => {
+  try{
+    const phieu = await bao_caoPhieuServices.getPhieuXuatByDate(req.body);
+    res.status(201).json(phieu);
+  }catch(err){
+    next(err);
+  }
+}
+
 // Table: ton_kho
 
 exports.getTonKho = async (req, res, next) => {
