@@ -205,7 +205,7 @@ class _KhachhangScreenState extends State<KhachhangScreen> {
                         children: [
                          
                           Text(
-                            "Ghi chú: ${_filteredKhachhangList[index].kh_dia_chi}",
+                            "Ghi chú: ${_filteredKhachhangList[index].kh_ghi_chu}",
                             style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w700, fontSize: 14),
                           ),
                         ],
