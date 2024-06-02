@@ -113,26 +113,55 @@ exports.list_LoaiHang = async (req, res, next) =>{
 }
 
 //5. Lấy thông tin loại hàng theo ID
-exports.lay_LoaiHang = async (req, res, next) =>{
-    try{
-        const LOAIID = req.params.LOAIID;
+// exports.lay_LoaiHang = async (req, res, next) =>{
+//     try{
+//         const LOAIID = req.params.LOAIID;
     
-        db.query(`select * from loai_hang where LOAIID = "${LOAIID}" AND SU_DUNG="1"`,(err, result)=>{
-            if(err){
+//         db.query(`select * from loai_hang where LOAIID = "${LOAIID}" AND SU_DUNG="1"`,(err, result)=>{
+//             if(err){
+//                 console.log(`Lỗi khi lấy thông tin loại hàng - ${err}`);
+//                 return res.status(404).json({message: `Loi khi lấy thong tin loai hang - ${LOAIID}`});
+//             }else{
+//                 let KetQua = result.map(result =>({
+//                     "LOAIID": Number(result.LOAIID),
+//                     "LOAIMA": result.LOAIMA,
+//                     "LOAI_TEN": result.LOAI_TEN,
+//                     "GHI_CHU": result.GHI_CHU,
+//                     "SU_DUNG": result.SU_DUNG,
+//                 }));
+//                 return res.status(200).json(KetQua);
+//             }
+//         })
+//     }catch(err){
+//         return next(new ApiError(500, `Loi xuat hien khi xóa loai hang: ${err.message}`));
+//     }
+// }
+exports.lay_LoaiHang = async (req, res, next) => {
+    try {
+        const LOAIID = req.params.LOAIID;
+
+        db.query(`SELECT * FROM loai_hang WHERE LOAIID = "${LOAIID}" AND SU_DUNG="1"`, (err, result) => {
+            if (err) {
                 console.log(`Lỗi khi lấy thông tin loại hàng - ${err}`);
-                return res.status(404).json({message: `Loi khi lấy thong tin loai hang - ${LOAIID}`});
-            }else{
-                let KetQua = result.map(i =>({
-                    "LOAIID": Number(i.LOAIID),
-                    "LOAIMA": i.LOAIMA,
-                    "LOAI_TEN": i.LOAI_TEN,
-                    "GHI_CHU": i.GHI_CHU,
-                    "SU_DUNG": i.SU_DUNG,
-                }));
+                return res.status(404).json({ message: `Lỗi khi lấy thông tin loại hàng - ${LOAIID}` });
+            } else {
+                if (result.length === 0) {
+                    return res.status(200).json({});
+                }
+
+                const item = result[0];
+                const KetQua = {
+                    "LOAIID": Number(item.LOAIID),
+                    "LOAIMA": item.LOAIMA,
+                    "LOAI_TEN": item.LOAI_TEN,
+                    "GHI_CHU": item.GHI_CHU,
+                    "SU_DUNG": item.SU_DUNG,
+                };
+                
                 return res.status(200).json(KetQua);
             }
-        })
-    }catch(err){
-        return next(new ApiError(500, `Loi xuat hien khi xóa loai hang: ${err.message}`));
+        });
+    } catch (err) {
+        return next(new ApiError(500, `Lỗi xuất hiện khi lấy loại hàng: ${err.message}`));
     }
 }

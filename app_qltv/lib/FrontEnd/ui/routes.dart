@@ -1,9 +1,11 @@
-import 'package:app_qltv/FrontEnd/ui/danh_muc/BaoCaoTonKhoVang/BaoCao_TonKhoNhomVang.dart';
-import 'package:app_qltv/FrontEnd/ui/danh_muc/BaoCaoTonKhoVang/BaoCao_TonKhoVang.dart';
+import 'package:app_qltv/FrontEnd/ui/danh_muc/BaoCao/BaoCao_TonKhoNhomVang.dart';
+import 'package:app_qltv/FrontEnd/ui/danh_muc/BaoCao/BaoCao_TonKhoVang.dart';
 import 'package:app_qltv/FrontEnd/ui/danh_muc/dvi/components/chi_tiet_dvi.dart';
 import 'package:app_qltv/FrontEnd/ui/danh_muc/dvi/components/them_dvi.dart';
 import 'package:app_qltv/FrontEnd/ui/danh_muc/dvi/dvi.dart';
 import 'package:app_qltv/FrontEnd/ui/danh_muc/hang_hoa/hang_hoa.dart';
+import 'package:app_qltv/FrontEnd/ui/danh_muc/khachhang/components/them_kh.dart';
+import 'package:app_qltv/FrontEnd/ui/danh_muc/khachhang/khachhang.dart';
 import 'package:app_qltv/FrontEnd/ui/danh_muc/loai_vang/loai_vang.dart';
 import 'package:app_qltv/FrontEnd/ui/danh_muc/kho/kho.dart';
 import 'package:app_qltv/FrontEnd/ui/danh_muc/nha_cung_cap/nha_cung_cap_green.dart';
@@ -13,7 +15,8 @@ import 'package:app_qltv/FrontEnd/ui/hethonng/nguoidung/nguoi_dung_page.dart';
 import 'package:app_qltv/FrontEnd/ui/hethonng/nhom/nhompage.dart';
 import 'package:app_qltv/FrontEnd/ui/hethonng/nhom/them_nhom.dart';
 import 'package:app_qltv/FrontEnd/ui/components/NotConnectInternet.dart';
-import 'package:app_qltv/FrontEnd/ui/danh_muc/BaoCaoTonKhoVang/BaoCao_TonKhoLoaiVang.dart';
+import 'package:app_qltv/FrontEnd/ui/danh_muc/BaoCao/BaoCao_TonKhoLoaiVang.dart';
+import 'package:app_qltv/FrontEnd/ui/danh_muc/BaoCao/BaoCao_PhieuXuat.dart';
 import 'package:app_qltv/FrontEnd/ui/camvang/Phieu/PhieuDangCam.dart';
 import 'package:app_qltv/FrontEnd/ui/camvang/Phieu/PhieuDangCamChiTiet.dart';
 import 'package:flutter/material.dart';
@@ -36,4 +39,5 @@ final Map<String, WidgetBuilder> routes = {
   PhieuDangCam.routeName: (ctx) => PhieuDangCam(),
   PhieuDangCamChiTiet.routeName: (ctx) => PhieuDangCamChiTiet(),
   BaoCaoTonKhoNhomVangScreen.routeName: (ctx) => BaoCaoTonKhoNhomVangScreen(),
+  BaoCaoPhieuXuatScreen.routeName: (ctx) => BaoCaoPhieuXuatScreen(),
 };

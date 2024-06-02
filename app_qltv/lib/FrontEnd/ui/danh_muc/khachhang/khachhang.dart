@@ -1,10 +1,9 @@
-import 'package:app_qltv/FrontEnd/model/danhmuc/donvi.dart';
-import 'package:app_qltv/FrontEnd/controller/danhmuc/don_vi_manage.dart';
+import 'package:app_qltv/FrontEnd/model/danhmuc/khachhang.dart';
+import 'package:app_qltv/FrontEnd/controller/danhmuc/khachhang_manager.dart';
 import 'package:app_qltv/FrontEnd/ui/components/search_bar.dart';
 import 'package:app_qltv/FrontEnd/ui/components/transitions.dart';
-import 'package:app_qltv/FrontEnd/ui/danh_muc/dvi/components/chi_tiet_dvi.dart';
-import 'package:app_qltv/FrontEnd/ui/danh_muc/dvi/components/chinh_sua_dv.dart';
-import 'package:app_qltv/FrontEnd/ui/danh_muc/dvi/components/them_dvi.dart';
+import 'package:app_qltv/FrontEnd/ui/danh_muc/khachhang/components/chi_tiet_kh.dart';
+import 'package:app_qltv/FrontEnd/ui/danh_muc/khachhang/components/them_kh.dart';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -12,26 +11,26 @@ import 'package:provider/provider.dart';
 
 
 
-class DonviScreen extends StatefulWidget {
-  static const routeName = "/dvi";
+class KhachhangScreen extends StatefulWidget {
+  static const routeName = "/khach";
 
-  const DonviScreen({Key? key}) : super(key: key);
+  const KhachhangScreen({Key? key}) : super(key: key);
 
   @override
-  _DonviScreenState createState() => _DonviScreenState();
+  _KhachhangScreenState createState() => _KhachhangScreenState();
 }
 
-class _DonviScreenState extends State<DonviScreen> {
-  late Future<List<Donvi>> _donviFuture;
+class _KhachhangScreenState extends State<KhachhangScreen> {
+  late Future<List<Khachhang>> _khachhangFuture;
   final TextEditingController _searchController = TextEditingController();
-  List<Donvi> _filteredDonviList = [];
-  List<Donvi> _donviList = [];
+  List<Khachhang> _filteredKhachhangList = [];
+  List<Khachhang> _khachhangList = [];
 
   @override
   void initState() {
     super.initState();
-    _loadDonvi();
-    _searchController.addListener(_filterDonvi);
+    _loadKhachhang();
+    _searchController.addListener(_filterKhachhang);
   }
 
   @override
@@ -40,21 +39,21 @@ class _DonviScreenState extends State<DonviScreen> {
     super.dispose();
   }
 
-  Future<void> _loadDonvi() async {
-    _donviFuture = Provider.of<DonviManage>(context, listen: false).fetchDonvi();
-    _donviFuture.then((donvis) {
+  Future<void> _loadKhachhang() async {
+    _khachhangFuture = Provider.of<KhachhangManage>(context, listen: false).fetchKhachhang();
+    _khachhangFuture.then((khachhangs) {
       setState(() {
-        _donviList = donvis;
-        _filteredDonviList = donvis;
+        _khachhangList = khachhangs;
+        _filteredKhachhangList = khachhangs;
       });
     });
   }
 
-  void _filterDonvi() {
+  void _filterKhachhang() {
     final query = _searchController.text.toLowerCase();
     setState(() {
-      _filteredDonviList = _donviList.where((donvi) {
-        return donvi.dvi_ten!.toLowerCase().contains(query);
+      _filteredKhachhangList = _khachhangList.where((khachhang) {
+        return khachhang.kh_ten!.toLowerCase().contains(query);
       }).toList();
     });
   }
@@ -75,7 +74,7 @@ class _DonviScreenState extends State<DonviScreen> {
         title: Row(
           children: [
             Expanded(child: Container()), // Spacer
-            const Text("Đơn vị", style: TextStyle(color: Colors.black, fontWeight: FontWeight.w900)),
+            const Text("Khách hàng", style: TextStyle(color: Colors.black, fontWeight: FontWeight.w900)),
             Expanded(child: Container()), // Spacer
           ],
         ),
@@ -85,10 +84,10 @@ class _DonviScreenState extends State<DonviScreen> {
             child: IconButton(
               onPressed: () async {
                 final result = await Navigator.of(context).push(
-                  createRoute((context) => const ThemDonviScreen()),
+                  createRoute((context) => const ThemKhachhangScreen()),
                 );
                 if (result == true) {
-                  _loadDonvi(); // Refresh the list when receiving the result
+                  _loadKhachhang(); // Refresh the list when receiving the result
                 }
               },
               icon: const Icon(CupertinoIcons.add),
@@ -115,9 +114,9 @@ class _DonviScreenState extends State<DonviScreen> {
   }
 
   // ignore: non_constant_identifier_names
-  FutureBuilder<List<Donvi>> ShowList() {
-    return FutureBuilder<List<Donvi>>(
-      future: _donviFuture,
+  FutureBuilder<List<Khachhang>> ShowList() {
+    return FutureBuilder<List<Khachhang>>(
+      future: _khachhangFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
@@ -127,7 +126,7 @@ class _DonviScreenState extends State<DonviScreen> {
           return ListView.builder(
             shrinkWrap: true, // shrinkWrap to make ListView fit within Column
             physics: NeverScrollableScrollPhysics(), // Disable ListView's own scrolling
-            itemCount: _filteredDonviList.length,
+            itemCount: _filteredKhachhangList.length,
             reverse: true,
             itemBuilder: (BuildContext context, int index) {
               return Container(
@@ -148,7 +147,7 @@ class _DonviScreenState extends State<DonviScreen> {
                               Align(
                                 alignment: Alignment.centerLeft,
                                 child: Text(
-                                  _filteredDonviList[index].dvi_ten ?? '',
+                                  _filteredKhachhangList[index].kh_ten ?? '',
                                   style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w800, fontSize: 20),
                                 ),
                               ),
@@ -156,7 +155,7 @@ class _DonviScreenState extends State<DonviScreen> {
                           ),
                           Row(
                             children: [
-                              editMethod(context, index),
+                              
                               const SizedBox(width: 10),
                               deleteMethod(context, index),
                             ],
@@ -166,59 +165,52 @@ class _DonviScreenState extends State<DonviScreen> {
                       Row(
                         children: [
                           Text(
-                            "Mã: ${_filteredDonviList[index].dvi_ma}",
+                            "Mã: ${_filteredKhachhangList[index].kh_ma}",
                             style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w700, fontSize: 14),
                           ),
+                          
                         ],
                       ),
                       Row(
                         children: [
+                          
                           Text(
-                            "Địa chỉ: ${_filteredDonviList[index].dvi_ghichu}",
+                            "CMND: ${_filteredKhachhangList[index].kh_cmnd}",
                             style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w700, fontSize: 14),
                           ),
+                          
                         ],
                       ),
                       Row(
                         children: [
+                         
                           Text(
-                            "Tên hóa đơn: ${_filteredDonviList[index].dvi_ten_hd}",
+                            "Điện thoại: ${_filteredKhachhangList[index].kh_sdt}",
                             style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w700, fontSize: 14),
                           ),
+                          
                         ],
                       ),
                       Row(
                         children: [
+                          
                           Text(
-                            "Địa chỉ hóa đơn: ${_filteredDonviList[index].dvi_dia_chi_hd}",
+                            "Địa chỉ: ${_filteredKhachhangList[index].kh_dia_chi}",
                             style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w700, fontSize: 14),
                           ),
+                          
                         ],
                       ),
                       Row(
                         children: [
+                         
                           Text(
-                            "SĐT: ${_filteredDonviList[index].dvi_sdt}",
+                            "Ghi chú: ${_filteredKhachhangList[index].kh_ghi_chu}",
                             style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w700, fontSize: 14),
                           ),
                         ],
                       ),
-                      Row(
-                        children: [
-                          Text(
-                            "Tên giao dịch: ${_filteredDonviList[index].dvi_ten_gd}",
-                            style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w700, fontSize: 14),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Text(
-                            "Lưu ý: ${_filteredDonviList[index].dvi_luu_y}",
-                            style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w700, fontSize: 14),
-                          ),
-                        ],
-                      ),
+                      
                     ]
                   ),
                 ),
@@ -238,7 +230,7 @@ class _DonviScreenState extends State<DonviScreen> {
           builder: (BuildContext context) {
             return AlertDialog(
               title: const Text("Xác nhận"),
-              content: Text("Bạn có chắc chắn muốn xóa đơn vị ${_filteredDonviList[index].dvi_ten?.toUpperCase()}?"),
+              content: Text("Bạn có chắc chắn muốn xóa đơn vị ${_filteredKhachhangList[index].kh_ten?.toUpperCase()}?"),
               actions: <Widget>[
                 TextButton(
                   onPressed: () {
@@ -248,10 +240,10 @@ class _DonviScreenState extends State<DonviScreen> {
                 ),
                 TextButton(
                   onPressed: () async {
-                    final donviManage = Provider.of<DonviManage>(context, listen: false);
-                    await donviManage.deleteDonvi(int.parse(_filteredDonviList[index].dvi_id!)); 
+                    final khachhangManage = Provider.of<KhachhangManage>(context, listen: false);
+                    await khachhangManage.deleteKhachhang(int.parse(_filteredKhachhangList[index].kh_id!)); 
                     Navigator.of(context).pop(); // Close the dialog
-                    _loadDonvi(); // Refresh the list
+                    _loadKhachhang(); // Refresh the list
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: const Text('Xóa thành công!', style: TextStyle(fontWeight: FontWeight.w900, color: Colors.red), textAlign: TextAlign.center,),
@@ -279,25 +271,5 @@ class _DonviScreenState extends State<DonviScreen> {
     );
   }
 
-  GestureDetector editMethod(BuildContext context, int index) {
-    return GestureDetector(
-      onTap: () async {
-        final result = await Navigator.of(context).push(
-          createRoute(
-            (context) => ChinhSuaDonViScreen(donvi: _filteredDonviList[index]),
-          ),
-        );
-        if (result == true) {
-          _loadDonvi(); // Refresh the list when receiving the result
-        }
-      },
-      child: const Icon(
-        CupertinoIcons.pencil_circle,
-        color: Colors.black,
-      ),
-    );
-  }
-
-
-
+  
 }

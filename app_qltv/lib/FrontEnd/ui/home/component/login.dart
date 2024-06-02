@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:session_manager/session_manager.dart';
 import 'package:quickalert/quickalert.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:app_qltv/FrontEnd/Objects/user-login.dart';
 import 'package:app_qltv/main.dart';
@@ -51,7 +52,7 @@ class _LoginPage extends State<LoginPage>{
   void dispose() {
     super.dispose();
   }
-//Phương thức kiem tra đăng nhập
+
 //Phương thức kiem tra đăng nhập
 Future Login(BuildContext context) async {
   String path = login;
@@ -68,10 +69,17 @@ Future Login(BuildContext context) async {
   final thongtinphanhoi = jsonDecode(res.body);
   final value = thongtinphanhoi['value'] as int;  //Bien nay dùng để kiểm tra tài khoản hợp lệ không
 
+  //Tao ra doi tuong de luu trữ token
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+
   //Đăng nhập thành công
-  if (value == 1) {
+  if (res.statusCode == 200) {
     SessionManager().setString('username', user.username);
     SessionManager().setString('password',user.password);
+    SessionManager().setString('accesstoken', thongtinphanhoi['accessToken']);
+    print('AccessToken: ${thongtinphanhoi['accessToken']}');
+
+    await prefs.setString('accesstoken', thongtinphanhoi['accessToken']);
      
     QuickAlert.show(
       context: context,

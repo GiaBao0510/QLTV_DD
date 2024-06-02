@@ -150,10 +150,16 @@ class _NhomVangScreenState extends State<NhomVangScreen> {
                           Row(
                             children: [
                               Text(
-                                "Loại mã: ${_filteredNhomVangList[index].loaiMa}",
+                                "Mã: ${_filteredNhomVangList[index].loaiMa}",
                                 style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w700, fontSize: 14),
                               ),
                               const SizedBox(width: 20),
+                             
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              
                               Text(
                                 "Ký hiệu: ${_filteredNhomVangList[index].ghiChu}",
                                 style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w700, fontSize: 14),
