@@ -40,7 +40,7 @@ class _HangHoaScreenState extends State<HangHoaScreen> {
     _searchController.addListener(_filterHangHoas);
     // Gán giá trị cho loaiVangList và nhomVangList ở đây
     loaiVangList = []; // Gán giá trị ban đầu cho loaiVangList
-    nhomVangList = []; 
+    nhomVangList = [];
   }
 
   @override
@@ -145,16 +145,17 @@ class _HangHoaScreenState extends State<HangHoaScreen> {
             itemBuilder: (BuildContext context, int index) {
               return GestureDetector(
                 onTap: () {
-                 Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => ChiTietHangHoaScreen(
-                      hangHoa: _filteredHangHoaList[index],
-                      loaiVangList: loaiVangList, // Thêm tham số loaiVangList vào đây
-                      nhomVangList: nhomVangList, // Đảm bảo cũng cung cấp tham số nhomVangList
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => ChiTietHangHoaScreen(
+                        hangHoa: _filteredHangHoaList[index],
+                        loaiVangList:
+                            loaiVangList, // Thêm tham số loaiVangList vào đây
+                        nhomVangList:
+                            nhomVangList, // Đảm bảo cũng cung cấp tham số nhomVangList
+                      ),
                     ),
-                  ),
-                );
-
+                  );
                 },
                 child: Container(
                   margin: const EdgeInsets.symmetric(
@@ -166,6 +167,18 @@ class _HangHoaScreenState extends State<HangHoaScreen> {
                   child: ListTile(
                     title: Column(
                       children: [
+                        
+                        Row(
+                          children: [
+                            Text(
+                              _filteredHangHoaList[index].hangHoaTen ?? '',
+                              style: const TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w800,
+                                  fontSize: 20),
+                            ),
+                          ],
+                        ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -174,8 +187,16 @@ class _HangHoaScreenState extends State<HangHoaScreen> {
                               children: [
                                 Align(
                                   alignment: Alignment.centerLeft,
-                                  child: Text(
-                                    "Mã Hàng: ${_filteredHangHoaList[index].hangHoaMa}",
+                                  child:
+                                      // Text(
+                                      //   "Mã Hàng: ${_filteredHangHoaList[index].hangHoaMa}",
+                                      //   style: const TextStyle(
+                                      //       color: Colors.black,
+                                      //       fontWeight: FontWeight.w700,
+                                      //       fontSize: 14),
+                                      // ),
+                                      Text(
+                                    "Mã: ${int.parse(_filteredHangHoaList[index].hangHoaMa!).toString()}",
                                     style: const TextStyle(
                                         color: Colors.black,
                                         fontWeight: FontWeight.w700,
@@ -195,17 +216,6 @@ class _HangHoaScreenState extends State<HangHoaScreen> {
                         ),
                         const SizedBox(
                           height: 5,
-                        ),
-                        Row(
-                          children: [
-                            Text(
-                              _filteredHangHoaList[index].hangHoaTen ?? '',
-                              style: const TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w800,
-                                  fontSize: 20),
-                            ),
-                          ],
                         ),
                         //  Row(
                         //   children: [
