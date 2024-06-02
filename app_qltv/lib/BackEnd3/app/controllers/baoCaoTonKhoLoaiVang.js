@@ -70,9 +70,10 @@ exports.baoCaoTonKhoLoaiVang = async (req, res, next)=>{
                                 AND tk.SL_TON = 1
                             ORDER BY dmh.HANGHOAMA;    
                         `,item.NHOMHANGID);
-
+                  
                         //Tính tổng
                         for(const item of ketqua){
+                            nhomTen = item.NHOM_TEN;
                             tong_TLThuc += item.CAN_TONG;
                             tong_TL_hot +=item.TL_HOT;
                             tong_TLvang +=item.TL_vang;
@@ -83,6 +84,7 @@ exports.baoCaoTonKhoLoaiVang = async (req, res, next)=>{
                         }
 
                         var tinhTong = {
+                            "NhomTen": nhomTen,
                             "SoLuong:": SoLuong,
                             "TongTL_Thuc":tong_TLThuc, 
                             "TongTL_hot": tong_TL_hot, 

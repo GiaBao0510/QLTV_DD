@@ -1,132 +1,130 @@
-class BaoCaoTonKhoLoaiVang{
-  final String? NHOM_TEN;
-  final String? HANGHOAMA;
-  final String? HANG_HOA_TEN;
-  final double? CAN_TONG;
-  final double? TL_HOT;
-  final double? TL_vang;
-  final double? CONG_GOC;
-  final double? GIA_CONG;
-  final double? DonGiaBan;
-  final double? ThanhTien;
+class LoaiVangTonKho {
+  final String? nhomTen;
+  final String? hangHoaMa;
+  final String? hangHoaTen;
+  final double? canTong;
+  final double? tlHot;
+  final double? tlVang;
+  final double? congGoc;
+  final double? giaCong;
+  final double? donGiaBan;
+  final double? thanhTien;
 
-  //Hàm mặc nhiên
-  BaoCaoTonKhoLoaiVang({
-   required this.NHOM_TEN, required this.HANGHOAMA, required this.HANG_HOA_TEN,
-   required this.CAN_TONG, required this.TL_HOT, required this.TL_vang,
-   required this.CONG_GOC, required this.GIA_CONG, required this.DonGiaBan,
-   required this.ThanhTien
+  // Constructor
+  LoaiVangTonKho({
+    required this.nhomTen,
+    required this.hangHoaMa,
+    required this.hangHoaTen,
+    required this.canTong,
+    required this.tlHot,
+    required this.tlVang,
+    required this.congGoc,
+    required this.giaCong,
+    required this.donGiaBan,
+    required this.thanhTien,
   });
 
-  //Hàm sao chép
-  BaoCaoTonKhoLoaiVang copyWith({
-     String? NHOM_TEN, String? HANGHOAMA, String? HANG_HOA_TEN,
-     double? CAN_TONG, double? TL_HOT, double? TL_vang, double? CONG_GOC,
-     double? GIA_CONG, double? DonGiaBan, double? ThanhTien
-  }){
-    return BaoCaoTonKhoLoaiVang(
-        NHOM_TEN: NHOM_TEN ?? this.NHOM_TEN,
-        HANGHOAMA: HANGHOAMA ?? this.HANGHOAMA,
-        HANG_HOA_TEN: HANG_HOA_TEN ?? this.HANG_HOA_TEN,
-        CAN_TONG: CAN_TONG ?? this.CAN_TONG,
-        TL_HOT: TL_HOT ?? this.TL_HOT,
-        TL_vang: TL_vang ?? this.TL_vang,
-        CONG_GOC: CONG_GOC ?? this.CONG_GOC,
-        GIA_CONG: GIA_CONG ?? this.GIA_CONG,
-        DonGiaBan: DonGiaBan ?? this.DonGiaBan,
-        ThanhTien: ThanhTien ?? this.ThanhTien,
+  // Copy constructor
+  LoaiVangTonKho copyWith({
+    String? nhomTen,
+    String? hangHoaMa,
+    String? hangHoaTen,
+    double? canTong,
+    double? tlHot,
+    double? tlVang,
+    double? congGoc,
+    double? giaCong,
+    double? donGiaBan,
+    double? thanhTien,
+  }) {
+    return LoaiVangTonKho(
+      nhomTen: nhomTen ?? this.nhomTen,
+      hangHoaMa: hangHoaMa ?? this.hangHoaMa,
+      hangHoaTen: hangHoaTen ?? this.hangHoaTen,
+      canTong: canTong ?? this.canTong,
+      tlHot: tlHot ?? this.tlHot,
+      tlVang: tlVang ?? this.tlVang,
+      congGoc: congGoc ?? this.congGoc,
+      giaCong: giaCong ?? this.giaCong,
+      donGiaBan: donGiaBan ?? this.donGiaBan,
+      thanhTien: thanhTien ?? this.thanhTien,
     );
   }
 
-  //Phương thức chuyển từ Map sang đôi tượng
-  factory BaoCaoTonKhoLoaiVang.fromMap(Map<String, dynamic> map){
-    return BaoCaoTonKhoLoaiVang(
-      NHOM_TEN: map['NHOM_TEN'] ?? '',
-      HANGHOAMA: map['NHOM_TEN'] ?? '',
-      HANG_HOA_TEN: map['HANG_HOA_TEN'] ?? '',
-      CAN_TONG: (map['CAN_TONG'] as num).toDouble() ?? 0.0,
-      TL_HOT: (map['TL_HOT'] as num).toDouble() ?? 0.0,
-      TL_vang: (map['TL_vang'] as num).toDouble() ?? 0.0,
-      CONG_GOC: (map['CONG_GOC'] as num).toDouble() ?? 0.0,
-      GIA_CONG: (map['GIA_CONG'] as num).toDouble() ?? 0.0,
-      DonGiaBan: (map['DonGiaBan'] as num).toDouble() ?? 0.0,
-      ThanhTien: (map['ThanhTien'] as num).toDouble() ?? 0.0,
+  // Factory constructor to create an instance from a Map
+  factory LoaiVangTonKho.fromMap(Map<String, dynamic> map) {
+    return LoaiVangTonKho(
+      nhomTen: map['NHOM_TEN'] ?? '',
+      hangHoaMa: map['HANGHOAMA'] ?? '',
+      hangHoaTen: map['HANG_HOA_TEN'] ?? '',
+      canTong: (map['CAN_TONG'] as num?)?.toDouble() ?? 0.0,
+      tlHot: (map['TL_HOT'] as num?)?.toDouble() ?? 0.0,
+      tlVang: (map['TL_vang'] as num?)?.toDouble() ?? 0.0,
+      congGoc: (map['CONG_GOC'] as num?)?.toDouble() ?? 0.0,
+      giaCong: (map['GIA_CONG'] as num?)?.toDouble() ?? 0.0,
+      donGiaBan: (map['DonGiaBan'] as num?)?.toDouble() ?? 0.0,
+      thanhTien: (map['ThanhTien'] as num?)?.toDouble() ?? 0.0,
     );
   }
 
-  //Phương thức chuyển Object sang Map
-  Map<String, dynamic> toMap(){
+  // Method to convert an instance to a Map
+  Map<String, dynamic> toMap() {
     return {
-      'NHOM_TEN': NHOM_TEN,
-      'HANGHOAMA': HANGHOAMA,
-      'HANG_HOA_TEN': HANG_HOA_TEN,
-      'CAN_TONG': CAN_TONG,
-      'TL_HOT': TL_HOT,
-      'TL_vang': TL_vang,
-      'CONG_GOC': CONG_GOC,
-      'GIA_CONG': GIA_CONG,
-      'DonGiaBan': DonGiaBan,
-      'ThanhTien': ThanhTien
+      'NHOM_TEN': nhomTen,
+      'HANGHOAMA': hangHoaMa,
+      'HANG_HOA_TEN': hangHoaTen,
+      'CAN_TONG': canTong,
+      'TL_HOT': tlHot,
+      'TL_vang': tlVang,
+      'CONG_GOC': congGoc,
+      'GIA_CONG': giaCong,
+      'DonGiaBan': donGiaBan,
+      'ThanhTien': thanhTien,
     };
   }
 }
 
-class TinhTong{
-  final int? SoLuong;
-  final double? TongTL_Thuc;
-  final double? TongTL_hot;
-  final double? TongTL_Vang;
-  final double? TongCongGoc;
-  final double? TongGiaCong;
-  final double? TongThanhTien;
+class BaoCaoTonKhoLoaiVang {
+  final List<LoaiVangTonKho> data;
+  final String nhomTen;
+  final int? soLuong;
+  final double? tongTlThuc;
+  final double? tongTlHot;
+  final double? tongTlVang;
+  final double? tongCongGoc;
+  final double? tongGiaCong;
+  final double? tongThanhTien;
 
-  //Hàm mặc nhiên
-  TinhTong({
-    required this.SoLuong, required this.TongTL_Thuc, required this.TongTL_hot,
-    required this.TongTL_Vang, required this.TongCongGoc, required this.TongGiaCong,
-    required this.TongThanhTien
+  // Constructor
+  BaoCaoTonKhoLoaiVang({
+    required this.data,
+    required this.nhomTen,
+    required this.soLuong,
+    required this.tongTlThuc,
+    required this.tongTlHot,
+    required this.tongTlVang,
+    required this.tongCongGoc,
+    required this.tongGiaCong,
+    required this.tongThanhTien,
   });
 
-  //Hàm sao chép
-  TinhTong copyWith({
-    int? SoLuong, double? TongTL_Thuc, double? TongTL_hot,
-    double? TongTL_Vang, double? TongCongGoc,
-    double? TongGiaCong, double? TongThanhTien
-  }){
-    return TinhTong(
-      SoLuong: SoLuong ?? this.SoLuong,
-      TongTL_Thuc: TongTL_Thuc ?? this.TongTL_Thuc,
-      TongTL_hot: TongTL_hot ?? this.TongTL_hot,
-      TongTL_Vang: TongTL_Vang ?? this.TongTL_Vang,
-      TongCongGoc: TongCongGoc ?? this.TongCongGoc,
-      TongGiaCong: TongGiaCong ?? this.TongGiaCong,
-      TongThanhTien: TongThanhTien ?? this.TongThanhTien
-    );
-  }
+  // Factory constructor to create an instance from a Map
+  factory BaoCaoTonKhoLoaiVang.fromMap(Map<String, dynamic> json) {
+    var list = json['data'] as List;
+    List<LoaiVangTonKho> dataList =
+        list.map((i) => LoaiVangTonKho.fromMap(i)).toList();
 
-  //Phương thức chuyển từ Map sang đôi tượng
-  factory TinhTong.fromMap(Map<String, dynamic> map){
-    return TinhTong(
-      SoLuong: map['SoLuong'] ?? 0,
-      TongTL_Thuc: (map['TongTL_Thuc'] as num).toDouble() ?? 0.0,
-      TongTL_hot: (map['TongTL_hot'] as num).toDouble() ?? 0.0,
-      TongTL_Vang: (map['TongTL_Vang'] as num).toDouble() ?? 0.0,
-      TongCongGoc: (map['TongCongGoc'] as num).toDouble() ?? 0.0,
-      TongGiaCong: (map['TongGiaCong'] as num).toDouble() ?? 0.0,
-      TongThanhTien: (map['TongThanhTien'] as num).toDouble() ?? 0.0
+    return BaoCaoTonKhoLoaiVang(
+      data: dataList,
+      nhomTen: json['sumary']['NhomTen'] ?? '',
+      soLuong: json['sumary']['SoLuong'] ?? 0,
+      tongTlThuc: (json['sumary']['TongTL_Thuc'] as num?)?.toDouble() ?? 0.0,
+      tongTlHot: (json['sumary']['TongTL_hot'] as num?)?.toDouble() ?? 0.0,
+      tongTlVang: (json['sumary']['TongTL_Vang'] as num?)?.toDouble() ?? 0.0,
+      tongCongGoc: (json['sumary']['TongCongGoc'] as num?)?.toDouble() ?? 0.0,
+      tongGiaCong: (json['sumary']['TongGiaCong'] as num?)?.toDouble() ?? 0.0,
+      tongThanhTien:
+          (json['sumary']['TongThanhTien'] as num?)?.toDouble() ?? 0.0,
     );
-  }
-
-  //Phương thức chuyển Object sang Map
-  Map<String, dynamic> toMap(){
-    return {
-      'SoLuong': SoLuong,
-      'TongTL_Thuc': TongTL_Thuc,
-      'TongTL_hot': TongTL_hot,
-      'TongTL_Vang': TongTL_Vang,
-      'TongCongGoc': TongCongGoc,
-      'TongGiaCong': TongGiaCong,
-      'TongThanhTien': TongThanhTien
-    };
   }
 }

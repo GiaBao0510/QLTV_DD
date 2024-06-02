@@ -1,3 +1,4 @@
+import 'package:app_qltv/FrontEnd/controller/danhmuc/BaoCaoTonKhoLoaiVang_manager.dart';
 import 'package:app_qltv/FrontEnd/controller/danhmuc/don_vi_manage.dart';
 import 'package:app_qltv/FrontEnd/controller/danhmuc/BaoCaoTonKhoNhomVang_manager.dart';
 import 'package:app_qltv/FrontEnd/controller/danhmuc/kho_manage.dart';
@@ -73,6 +74,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => HangHoaManager()),
         ChangeNotifierProvider(
             create: (context) => BaoCaoTonKhoNhomVangManager()),
+        ChangeNotifierProvider(
+            create: (context) => BaoCaoTonKhoLoaiVangManager()),
       ],
       child: MaterialApp(
         title: 'Bao Khoa Gold',

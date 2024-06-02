@@ -15,7 +15,11 @@ String formatCurrencyDouble(double value) {
       integerPart.replaceAllMapped(regExp, (Match match) => ',');
 
   // Combine the integer part and decimal part
-  return '$formattedIntegerPart.$decimalPart';
+  if (decimalPart == '00') {
+    return formattedIntegerPart;
+  } else {
+    return '$formattedIntegerPart.$decimalPart';
+  }
 }
 
 String formatCurrencyInteger(int value) {

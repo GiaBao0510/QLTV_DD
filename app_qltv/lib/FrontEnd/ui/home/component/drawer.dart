@@ -443,7 +443,7 @@ class drawer extends StatelessWidget {
                             context,
                             MaterialPageRoute(
                                 builder: (context) =>
-                                    Table_BaoCaoTonKhoLoaiVang()),
+                                    const BaoCaoTonKhoLoaiVangScreen()),
                           );
                         },
                       ),
