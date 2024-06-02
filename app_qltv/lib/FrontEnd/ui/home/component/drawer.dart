@@ -1,12 +1,14 @@
 import 'package:app_qltv/FrontEnd/ui/danh_muc/dvi/dvi.dart';
-import 'package:app_qltv/FrontEnd/ui/danh_muc/BaoCaoTonKhoVang/BaoCao_TonKhoNhomVang.dart';
+import 'package:app_qltv/FrontEnd/ui/danh_muc/BaoCao/BaoCao_TonKhoNhomVang.dart';
 import 'package:app_qltv/FrontEnd/ui/danh_muc/hang_hoa/hang_hoa.dart';
+import 'package:app_qltv/FrontEnd/ui/danh_muc/khachhang/khachhang.dart';
 import 'package:app_qltv/FrontEnd/ui/danh_muc/kho/kho.dart';
 import 'package:app_qltv/FrontEnd/ui/danh_muc/loai_vang/loai_vang.dart';
 import 'package:app_qltv/FrontEnd/ui/danh_muc/nha_cung_cap/nha_cung_cap_green.dart';
 import 'package:app_qltv/FrontEnd/ui/danh_muc/nhom_vang/nhom_vang.dart';
-import 'package:app_qltv/FrontEnd/ui/danh_muc/BaoCaoTonKhoVang/BaoCao_TonKhoVang.dart';
-import 'package:app_qltv/FrontEnd/ui/danh_muc/BaoCaoTonKhoVang/BaoCao_TonKhoLoaiVang.dart';
+import 'package:app_qltv/FrontEnd/ui/danh_muc/BaoCao/BaoCao_TonKhoVang.dart';
+import 'package:app_qltv/FrontEnd/ui/danh_muc/BaoCao/BaoCao_TonKhoLoaiVang.dart';
+import '../../danh_muc/BaoCao/BaoCao_PhieuXuat.dart';
 import 'package:app_qltv/FrontEnd/ui/camvang/Phieu/PhieuDangCam.dart';
 import 'package:app_qltv/FrontEnd/ui/camvang/Phieu/PhieuDangCamChiTiet.dart';
 import 'package:app_qltv/FrontEnd/constants/config.dart';
@@ -79,11 +81,9 @@ class drawer extends StatelessWidget {
               children: <Widget>[
                 UserAccountsDrawerHeader(
                   accountName: const Text(
-                    'Bảo Khoa Gold',
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.w900,
-                        fontSize: 25),
+                    'Phần mềm vàng',
+                    style: TextStyle(color: Colors.black, fontWeight: FontWeight.w900, fontSize: 25),
+
                   ),
                   accountEmail: Column(
                     children: [
@@ -244,7 +244,10 @@ class drawer extends StatelessWidget {
                         title: const Text('Khách Hàng',
                             style: TextStyle(fontWeight: FontWeight.w800)),
                         onTap: () {
-                          // Handle Khách Hàng tap
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => const KhachhangScreen()),
+                          );
                         },
                       ),
                     ),
@@ -422,7 +425,12 @@ class drawer extends StatelessWidget {
                         title: const Text('Báo Cáo Phiếu Xuất',
                             style: TextStyle(fontWeight: FontWeight.w800)),
                         onTap: () {
-                          // Handle Báo Cáo Phiếu Xuất tap
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                const BaoCaoPhieuXuatScreen()),
+                          );
                         },
                       ),
                     ),

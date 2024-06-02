@@ -27,6 +27,23 @@ class LoaiVangManager with ChangeNotifier {
       throw Exception('Failed to load data');
     }
   }
+  Future<LoaiVang> getLoaiVangById(int loaiId) async {
+  try {
+    final response = await http.get(
+        Uri.parse('$url/api/productType/$loaiId'));
+    if (response.statusCode == 200) {
+      final jsonData = jsonDecode(response.body);
+      final loaiVang = LoaiVang.fromMap(jsonData);
+      return loaiVang;
+    } else {
+      throw Exception('Failed to load nhom vang by id');
+    }
+  } catch (error) {
+    print('Error fetching Loai vang by id: $error');
+    throw Exception('Failed to load nhom vang by id');
+  }
+}
+
 
   Future<void> addLoaiVang(LoaiVang loaiVang) async {
     // Thêm loaiVang vào backend

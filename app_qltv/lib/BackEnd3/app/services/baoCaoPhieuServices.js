@@ -18,7 +18,22 @@ const getPhieuXuat = async () => {
       if (error) {
         reject(error);
       } else {
-        resolve(results);
+
+        let ketQua = results.map(e => ({
+          "PHIEU_XUAT_MA": e.PHIEU_XUAT_MA,
+          "HANGHOAMA": e.HANGHOAMA,
+          "HANG_HOA_TEN": e.HANG_HOA_TEN,
+          "LOAIVANG": e.LOAIVANG,
+          "CAN_TONG": e.CAN_TONG,
+          "TL_HOT": e.TL_HOT,
+          "TL_Vang": e.TL_Vang,
+          "NGAY_XUAT": new Date(e.NGAY_XUAT).toLocaleDateString('vi-VN'),
+          "DON_GIA": e.DON_GIA,
+          "THANH_TIEN": e.THANH_TIEN,
+          "GiaGoc": e.GiaGoc,
+          "LaiLo": e.LaiLo
+        }));
+        resolve(ketQua);
       }
     });
   });

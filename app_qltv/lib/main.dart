@@ -1,5 +1,9 @@
 import 'package:app_qltv/FrontEnd/controller/danhmuc/don_vi_manage.dart';
+
+import 'package:app_qltv/FrontEnd/controller/danhmuc/khachhang_manager.dart';
+
 import 'package:app_qltv/FrontEnd/controller/danhmuc/BaoCaoTonKhoNhomVang_manager.dart';
+
 import 'package:app_qltv/FrontEnd/controller/danhmuc/kho_manage.dart';
 import 'package:app_qltv/FrontEnd/controller/danhmuc/hanghoa_manager.dart';
 import 'package:app_qltv/FrontEnd/controller/danhmuc/loaivang_manager.dart';
@@ -17,7 +21,7 @@ import 'package:app_qltv/FrontEnd/ui/routes.dart';
 import 'package:app_qltv/FrontEnd/controller/danhmuc/nhomvang_manager.dart'; // Import NhomVangManager của bạn
 import 'package:session_manager/session_manager.dart';
 import 'package:app_qltv/FrontEnd/ui/home/component/login.dart';
-import 'package:provider/provider.dart';
+
 
 void main() {
   runApp(MyApp());
@@ -70,12 +74,13 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => NguoiDungManager()),
         ChangeNotifierProvider(create: (context) => KhoManage()),
         ChangeNotifierProvider(create: (context) => DonviManage()),
+        ChangeNotifierProvider(create: (context) => KhachhangManage()),
         ChangeNotifierProvider(create: (context) => HangHoaManager()),
         ChangeNotifierProvider(
             create: (context) => BaoCaoTonKhoNhomVangManager()),
       ],
       child: MaterialApp(
-        title: 'Bao Khoa Gold',
+        title: 'Phần mềm vàng',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
