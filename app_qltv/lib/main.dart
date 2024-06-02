@@ -1,3 +1,4 @@
+import 'package:app_qltv/FrontEnd/controller/danhmuc/BaoCaoPhieuXuat_manage.dart';
 import 'package:app_qltv/FrontEnd/controller/danhmuc/BaoCaoTonKhoLoaiVang_manager.dart';
 import 'package:app_qltv/FrontEnd/controller/danhmuc/don_vi_manage.dart';
 
@@ -22,7 +23,6 @@ import 'package:app_qltv/FrontEnd/ui/routes.dart';
 import 'package:app_qltv/FrontEnd/controller/danhmuc/nhomvang_manager.dart'; // Import NhomVangManager của bạn
 import 'package:session_manager/session_manager.dart';
 import 'package:app_qltv/FrontEnd/ui/home/component/login.dart';
-
 
 void main() {
   runApp(MyApp());
@@ -81,6 +81,7 @@ class MyApp extends StatelessWidget {
             create: (context) => BaoCaoTonKhoNhomVangManager()),
         ChangeNotifierProvider(
             create: (context) => BaoCaoTonKhoLoaiVangManager()),
+        ChangeNotifierProvider(create: (context) => BaocaophieuxuatManage()),
       ],
       child: MaterialApp(
         title: 'Phần mềm vàng',

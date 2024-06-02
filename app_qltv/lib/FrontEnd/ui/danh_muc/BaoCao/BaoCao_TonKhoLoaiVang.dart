@@ -2,7 +2,7 @@ import 'package:app_qltv/FrontEnd/Service/export/PDF/BaoCaoTonKhoLoaiVang_PDF.da
 import 'package:app_qltv/FrontEnd/controller/danhmuc/BaoCaoTonKhoLoaiVang_manager.dart';
 import 'package:app_qltv/FrontEnd/model/danhmuc/BaoCaoTonKhoLoaiVang.dart';
 import 'package:app_qltv/FrontEnd/ui/components/FormatCurrency.dart';
-import 'package:app_qltv/FrontEnd/ui/danh_muc/BaoCaoTonKhoVang/Chart_LoaiVang.dart';
+import 'package:app_qltv/FrontEnd/ui/danh_muc/BaoCao/Chart_LoaiVang.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pdf/pdf.dart';
