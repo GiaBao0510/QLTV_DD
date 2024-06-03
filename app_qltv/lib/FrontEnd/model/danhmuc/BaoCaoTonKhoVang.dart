@@ -1,23 +1,25 @@
-class Data{
-  final String? NHOM_TEN;
-  final int? SoLuong;
-  final double? TL_Thuc;
-  final double? TL_hot;
-  final double? TL_vang;
-  final double? CONG_GOC;
-  final double? GIA_CONG;
-  final double? DonGiaBanLoaiVang;
-  final double? ThanhTien;
+class BaoCaoTonKhoVang_Model{
+  final String NHOM_TEN;
+  final int SoLuong;
+  final double TL_Thuc;
+  final double TL_hot;
+  final double TL_vang;
+  final double CONG_GOC;
+  final double GIA_CONG;
+  final double DonGiaBanLoaiVang;
+  final double ThanhTien;
 
   //Hàm khoi tao
-  Data({
-    this.NHOM_TEN, this.SoLuong, this.TL_Thuc,
-    this.TL_hot, this.TL_vang, this.CONG_GOC, this.GIA_CONG,
-    this.DonGiaBanLoaiVang, this.ThanhTien
+  BaoCaoTonKhoVang_Model({
+    required this.NHOM_TEN, required this.SoLuong,
+    required this.TL_Thuc, required this.TL_hot,
+    required this.TL_vang, required this.CONG_GOC,
+    required this.GIA_CONG, required this.DonGiaBanLoaiVang,
+    required this.ThanhTien
   });
 
   //Ham sao chep
-  Data copyWith({
+  BaoCaoTonKhoVang_Model copyWith({
    String? NHOM_TEN,
    int? SoLuong,
    double? TL_Thuc,
@@ -28,7 +30,7 @@ class Data{
    double? DonGiaBanLoaiVang,
    double? ThanhTien
   }){
-    return Data(
+    return BaoCaoTonKhoVang_Model(
         NHOM_TEN: NHOM_TEN ?? this.NHOM_TEN,
         SoLuong: SoLuong ?? this.SoLuong,
         TL_Thuc: TL_Thuc ?? this.TL_Thuc,
@@ -42,17 +44,31 @@ class Data{
   }
 
   //Phương thức chuyển Map sang Object
-  factory Data.fromMap(Map<String, dynamic> map){
-    return Data(
-        NHOM_TEN: map['NHOM_TEN'],
-        SoLuong: map['SoLuong'],
-        TL_Thuc: map['TL_Thuc'],
-        TL_hot: map['NHOM_TEN'],
-        TL_vang: map['TL_hot'],
-        CONG_GOC: map['NHOM_TEN'],
-        GIA_CONG: map['CONG_GOC'],
-        DonGiaBanLoaiVang: map['DonGiaBanLoaiVang'],
-        ThanhTien: map['ThanhTien'],
+  factory BaoCaoTonKhoVang_Model.fromMap(Map<String, dynamic> map){
+    return BaoCaoTonKhoVang_Model(
+        NHOM_TEN: map['NHOM_TEN'] ?? '',
+        SoLuong: (map['SoLuong'] is int) ? map['SoLuong'] : 0,
+        TL_Thuc: (map['TL_Thuc'] is int) ?
+          (map['TL_Thuc'] as int).toDouble() : (map['TL_Thuc'] is double) ?
+          map['TL_Thuc'] : 0.0,
+        TL_hot: (map['TL_hot'] is int) ?
+          (map['TL_hot'] as int).toDouble() : (map['TL_hot'] is double)?
+          map['TL_hot'] : 0.0,
+        TL_vang: (map['TL_vang'] is int) ?
+          (map['TL_vang'] as int).toDouble() : (map['TL_vang'] is double)?
+          map['TL_vang'] : 0.0,
+        CONG_GOC: (map['CONG_GOC'] is int) ?
+          (map['CONG_GOC'] as int).toDouble() : (map['CONG_GOC'] is double)?
+          map['CONG_GOC'] : 0.0,
+        GIA_CONG: (map['GIA_CONG'] is int) ?
+          (map['GIA_CONG'] as int).toDouble() : (map['GIA_CONG'] is double)?
+          map['GIA_CONG'] : 0.0,
+        DonGiaBanLoaiVang: (map['DonGiaBanLoaiVang'] is int) ?
+          (map['DonGiaBanLoaiVang'] as int).toDouble() : (map['DonGiaBanLoaiVang'] is double)?
+          map['DonGiaBanLoaiVang'] : 0.0,
+        ThanhTien: (map['ThanhTien'] is int) ?
+          (map['ThanhTien'] as int).toDouble() : (map['ThanhTien'] is double)?
+          map['ThanhTien'] : 0.0,
     );
   }
 
@@ -68,64 +84,6 @@ class Data{
       'GIA_CONG': GIA_CONG,
       'DonGiaBanLoaiVang':DonGiaBanLoaiVang,
       'ThanhTien':ThanhTien
-    };
-  }
-
-}
-
-class tinhTong{
-  final double? tong_TLThuc;
-  final double? tong_CongGoc;
-  final double? tong_TLvang;
-  final double? tong_TL_hot;
-  final double? tong_GiaCong;
-  final double? thanhTien;
-
-  tinhTong({
-    this.tong_TLThuc, this.tong_CongGoc, this.tong_TL_hot,
-    this.tong_TLvang, this.tong_GiaCong, this.thanhTien
-  });
-
-  //Ham sao chep
-  tinhTong copyWith({
-    double? tong_TLThuc,
-    double? tong_CongGoc,
-    double? tong_TLvang,
-    double? tong_TL_hot,
-    double? tong_GiaCong,
-    double? thanhTien,
-  }){
-    return tinhTong(
-      tong_TLThuc: tong_TLThuc ?? this.tong_TLThuc,
-      tong_CongGoc: tong_CongGoc ?? this.tong_CongGoc,
-      tong_TLvang: tong_TLvang ?? this.tong_TLvang,
-      tong_TL_hot: tong_TL_hot ?? this.tong_TL_hot,
-      tong_GiaCong: tong_GiaCong ?? this.tong_GiaCong,
-      thanhTien: thanhTien ?? this.thanhTien,
-    );
-  }
-
-  //Chuyen Object sang Map
-  factory tinhTong.fromMap(Map<String, dynamic> map){
-    return tinhTong(
-      tong_TLThuc: map['tong_TLThuc'],
-      tong_CongGoc: map['tong_CongGoc'],
-      tong_TLvang: map['tong_TLvang'],
-      tong_TL_hot: map['tong_TL_hot'],
-      tong_GiaCong: map['tong_GiaCong'],
-      thanhTien: map['thanhTien'],
-    );
-  }
-
-  //Chuyen Map sang Object
-  Map<String, dynamic> toMap(){
-    return {
-      'tong_TLThuc':tong_TLThuc,
-      'tong_CongGoc':tong_CongGoc,
-      'tong_TLvang':tong_TLvang,
-      'tong_TL_hot':tong_TL_hot,
-      'tong_GiaCong':tong_GiaCong,
-      'thanhTien':thanhTien
     };
   }
 }

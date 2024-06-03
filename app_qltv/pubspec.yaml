@@ -53,10 +53,11 @@ dependencies:
   fl_chart: ^0.68.0
   shared_preferences: ^2.2.3
 
+# Logo ưng dụng
 flutter_icons:
   android: true
   ios: true
-  image_path: "assets/images/logoApp.jpg"
+  image_path: "assets/images/logoApp2.ico"
 
 dev_dependencies:
   flutter_test:

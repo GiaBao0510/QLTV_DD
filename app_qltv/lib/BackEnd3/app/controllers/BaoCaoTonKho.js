@@ -27,33 +27,8 @@ exports.baoCaoTonKho = async (req, res, next)=>{
             if(!result || result.length == 0){
                 return res.status(404).json({message: `Loi khi thực hiện lấy thông tin báo cáo tồn kho.`});
             }
-
-            let tong_TLThuc = 0,
-                tong_CongGoc = 0,
-                tong_TLvang = 0,
-                tong_TL_hot = 0,
-                tong_GiaCong = 0,
-                TongThanhTien = 0;
-
-            for(const item of result){
-                tong_TLThuc += parseFloat( item['TL_Thuc']);
-                tong_CongGoc += parseFloat(item['CONG_GOC']);
-                tong_TLvang += parseFloat(item['TL_vang']);
-                tong_TL_hot += parseFloat(item['TL_hot']);
-                tong_GiaCong += parseFloat(item['GIA_CONG']);
-                TongThanhTien += parseFloat(item['ThanhTien']);
-            }
-
-            let KQ_tinhTong = {
-                "tong_TLThuc" :tong_TLThuc,
-                'tong_CongGoc':tong_CongGoc,
-                'tong_TLvang' :tong_TLvang,
-                'tong_TL_hot':tong_TL_hot,
-                'tong_GiaCong':tong_GiaCong,
-                'thanhTien' : TongThanhTien
-            };
             //let Tong = {"TongThong":"thoidi"};
-            return res.status(200).json({result,tinhTong:KQ_tinhTong});
+            return res.status(200).json(result);
         });
     }catch(err){
         return next(new ApiError(500, `Loi ben server: ${err.message}`));

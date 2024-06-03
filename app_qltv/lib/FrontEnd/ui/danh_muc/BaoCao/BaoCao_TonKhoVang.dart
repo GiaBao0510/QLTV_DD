@@ -1,32 +1,38 @@
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:app_qltv/FrontEnd/constants/config.dart';
-import 'package:app_qltv/FrontEnd/Service/ThuVien.dart';
+import 'package:provider/provider.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:pdf/pdf.dart';
+import 'package:printing/printing.dart';
 
-class Table_BaoCaoTonKhoVang extends StatefulWidget{
+import '../../../model/danhmuc/BaoCaoTonKhoVang.dart';
+import '../../../controller/danhmuc/BaoCaoTonKhoVang_manager.dart';
+import '../../components/search_bar.dart';
+import '../../../ui/components/FormatCurrency.dart';
+import '../../../Service/export/PDF/BaoCaoTonKhoVang_PDF.dart';
+
+class BaoCaoTonKhoVangScreen extends StatefulWidget{
   static const routeName = '/baocaotonkhovang';
-
-  const Table_BaoCaoTonKhoVang({super.key});
-  State<Table_BaoCaoTonKhoVang> createState() => _Table_BaoCaoTonKhoVang();
+  const BaoCaoTonKhoVangScreen ({Key? key}) : super(key: key);
+  @override
+  _BaoCaoTonKhoVangScreen createState() => _BaoCaoTonKhoVangScreen();
 }
 
-class _Table_BaoCaoTonKhoVang extends State<Table_BaoCaoTonKhoVang>{
-  List<dynamic> _filterBaoCaoTonKho_list = [];
-  List<dynamic> _BaoCaoTonKho_list = [];
+class _BaoCaoTonKhoVangScreen extends State<BaoCaoTonKhoVangScreen>{
+  late Future<List<BaoCaoTonKhoVang_Model>> _BaoCaoTonKhoVangFuture;
   final TextEditingController _searchController = TextEditingController();
-  Map<String,dynamic> ThongTinTinhTong = {};
-  bool isListVisible = false;             //Kiểm tra hiên thị danh sach
-  bool isLoadData = false;                //Kiểm tra xem dữ liệu đã được load hay chưa
-  double tong_TLThuc = 0.0, tong_CongGoc= 0.0,
-      tong_TLvang= 0.0, tong_TL_hot=0.0,
-      tong_GiaCong=0.0, thanhTien=0.0;
+  List<BaoCaoTonKhoVang_Model> _filterBaoCaoTonKhoVang = [];
+  List<BaoCaoTonKhoVang_Model> _BaoCaoTonKhoVangList = [];
+  var thongTinTinhTong2;
+
+  double tong_TLthuc =0.0, tong_TLhot =0.0, tong_TLvang =0.0,
+        tong_CongGoc =0.0, tong_GiaCong =0.0, tong_ThanhTien =0.0;
 
   @override
   void initState() {
     super.initState();
-    Load_BaoCaoTonKhoVang();
-    _searchController.addListener(_filterBaoCaoTonKhoVang);
+    LoadData();
+    _searchController.addListener(_filterBaocaoTonKho);
   }
 
   @override
@@ -35,328 +41,305 @@ class _Table_BaoCaoTonKhoVang extends State<Table_BaoCaoTonKhoVang>{
     super.dispose();
   }
 
-  //Lấy danh sách báo cáo được phản hòi về
-  Future<List<dynamic>> BaoCaoTonKhoVang_list() async{
-    String path = url+'/api/admin/baocaotonkho';
-    var res = await http.get( Uri.parse(path),headers: {"Content-Type": "application/json"} );
-    Map<String,dynamic> jsonData = jsonDecode(res.body);
-    List<dynamic> resultList = jsonData['result'];
-    Map<String,dynamic> tinhTongList = jsonData['tinhTong'];
-    return [resultList,tinhTongList];
-  }
+  // ----- Phương thức ------
+    //1. Load dữ liệu
+  Future<void> LoadData() async{
+    _BaoCaoTonKhoVangFuture =
+        Provider.of<BaocaotonkhovangManager>(context, listen: false).fetchBaoCaoTonKhoVang();
+    _BaoCaoTonKhoVangFuture.then((baocao){
+      setState(() {
+        _BaoCaoTonKhoVangList = baocao;
+        _filterBaoCaoTonKhoVang = baocao;
+      });
 
-  //Phuong thuc load dư liệu
-  Future<void> Load_BaoCaoTonKhoVang() async{
-    final result =  await BaoCaoTonKhoVang_list();
-    _filterBaoCaoTonKho_list = result[0];
-    _BaoCaoTonKho_list = result[0];
-    ThongTinTinhTong = result[1];
-    isLoadData = true;    //Dánh dấu đa load
-  }
-
-  //Phương thuc tim tên loại
-  void _filterBaoCaoTonKhoVang() {
-    final query = _searchController.text.toLowerCase();
-    setState(() {
-      _filterBaoCaoTonKho_list = _BaoCaoTonKho_list.where(
-            (item) {
-          return item['NHOM_TEN'] != null && item['NHOM_TEN'].toString().toLowerCase().contains(query);
-        },
-      ).toList();
+      //Xu ly tinh tong
+      for(int i = 0 ; i< _filterBaoCaoTonKhoVang.length; i++){
+        final item = _filterBaoCaoTonKhoVang[i];
+        tong_TLvang += item.TL_vang;
+        tong_TLthuc += item.TL_Thuc;
+        tong_TLhot += item.TL_hot;
+        tong_GiaCong += item.GIA_CONG;
+        tong_CongGoc += item.CONG_GOC;
+        tong_ThanhTien += item.ThanhTien;
+      }
     });
   }
 
-  //Tạo tiện ích thanh tìm kiếm
-  Widget Search_Bar({required TextEditingController seachController}){
-    return Padding(
-      padding: EdgeInsets.fromLTRB(10, 15, 10, 0),
-      child: TextField(
-        controller: seachController,
-        decoration: InputDecoration(
-            hintText: "Tìm kiếm",
-            border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8)
+    //2. Lọc dữ liệu
+    void _filterBaocaoTonKho(){
+      final query = _searchController.text.toLowerCase();
+      setState(() {
+        _filterBaoCaoTonKhoVang = _BaoCaoTonKhoVangList.where(
+            (element){
+              return element.NHOM_TEN.toLowerCase().contains(query);
+            }
+        ).toList();
+      });
+    }
+
+    //3. Xuất bảng PDF
+  Future<void> printDoc(List<BaoCaoTonKhoVang_Model> data, Map<String, dynamic> GetThongTinTinhTong) async{
+    final font = await loadFont('assets/fonts/Roboto-Regular.ttf');
+    final doc = pw.Document();
+    doc.addPage(
+        pw.Page(
+            pageFormat: PdfPageFormat.a4,
+            build: (pw.Context context){
+              return buildPrintableData(data, font, GetThongTinTinhTong);
+            }
+        )
+    );
+    await Printing.layoutPdf(
+        onLayout: (PdfPageFormat format) async => doc.save());
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        iconTheme: IconThemeData(
+          color: Colors.white,
+          size: 28,
+        ),
+        title: FittedBox(
+          fit: BoxFit.fitWidth,
+          child: Text("Báo cáo tồn kho", style: TextStyle(fontSize: 20,
+              color: Colors.white,
+              fontFamily: 'Align',
+              fontWeight: FontWeight.bold),),
+        ),
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [Colors.orange, Colors.amber])),
+        ),
+        actions: [
+          PopupMenuButton<String>(
+            icon: Icon(Icons.more_horiz),
+              itemBuilder: (BuildContext context){
+                return <PopupMenuEntry<String>>[
+                  PopupMenuItem(
+                      child: TextButton(
+                        onPressed: () {
+
+                          thongTinTinhTong2 = {
+                            'tong_TLvang' : tong_TLvang,
+                            'tong_TLthuc' :tong_TLthuc,
+                            'tong_TLhot' :tong_TLhot,
+                            'tong_GiaCong' : tong_GiaCong,
+                            'tong_CongGoc' :tong_CongGoc,
+                            'tong_ThanhTien' : tong_ThanhTien
+                          };
+
+                          printDoc(_filterBaoCaoTonKhoVang, thongTinTinhTong2);
+                        },
+                        child: Text('Export PDF'),
+                      )
+                  ),
+                ];
+              }
+          ),
+        ],
+      ),
+      body: SafeArea(
+        child: Container(
+          padding: EdgeInsets.fromLTRB(10, 15, 10, 0),
+          child: Column(children: [
+            Search_Bar(searchController: _searchController),
+            const SizedBox(height: 12,),
+
+            Expanded(
+                child: Scrollbar(
+                  child: ListView(
+                    children: [
+                      ShowList()
+                    ],
+                  ),
+                )
             ),
-            suffixIcon: Icon(Icons.search)
+
+          ],),
         ),
       ),
     );
   }
 
-  //Tạo tiện ích danh sach  chứa toong tin ve export
-  Widget ExportList ( bool hienthi){
-    return Positioned(
-      top:10,
-      right: 10,
-      child: Visibility(
-          visible: hienthi,
-          child: Container(
-            padding: EdgeInsets.fromLTRB(20, 15, 20, 15),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.5),
-                  spreadRadius: 2,
-                  blurRadius: 5,
-                  offset: Offset(0, 3),
-                ),
-              ],
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Flexible(
-                  child: TextButton(
-                    onPressed: (){
-                      print('Chuyển qua phần xem trước PDF');
-                    },
-                    child: Text('PDF'),
-                  ),
-                ),
-                const SizedBox(height: 20,),
-                Flexible(
-                  child: TextButton(
-                    onPressed: (){
-                      print('Chuyển qua phần xem trước Excel');
-                    },
-                    child: Text('Excel'),
-                  ),
-                ),
+  //Giao diện bang báo cáo
+  FutureBuilder<List<BaoCaoTonKhoVang_Model>> ShowList(){
+    return FutureBuilder<List<BaoCaoTonKhoVang_Model>>(
+        future: _BaoCaoTonKhoVangFuture,
+        builder: (context, snapshot){
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text(
+              'Error: ${snapshot.error}', style: TextStyle(fontSize: 10),));
+          }else{
+            return ListView.builder(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                reverse: true,
+                itemCount: _filterBaoCaoTonKhoVang.length,
+                itemBuilder: (BuildContext context, int index){
+                  final baocao = _filterBaoCaoTonKhoVang[index];
 
-              ],
-            ),
-          )
-      ),
+                  return Container(
+                      margin: EdgeInsets.fromLTRB(5, 15, 5, 10),
+                      padding: EdgeInsets.fromLTRB(5, 10, 5, 10),
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [Color(0xffe65c00), Color(0xfff9d423)],
+                          stops: [0, 1],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        borderRadius: BorderRadius.circular(10),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.5),
+                            spreadRadius: 2,
+                            blurRadius: 5,
+                            offset: Offset(0, 3),
+                          ),
+                        ],
+                      ),
+
+                    child: Column(
+                      children: [
+                      Row(children:[
+                        Expanded(
+                            child: Column(children: [
+                              Text(' Loại: ${baocao.NHOM_TEN}', style: TextStyle(fontWeight: FontWeight.bold),),
+                              Text(' Số lượng: ${baocao.SoLuong}', style: TextStyle(fontWeight: FontWeight.bold),),
+                            ],),
+                        ),
+                        Expanded(
+                            child: IconButton(
+                              onPressed: () {
+                                print('nút chi tiết');
+                                ThongTinChiTiet(context, baocao);
+                              },
+                              icon: Icon(Icons.info_outline, size: 30,),
+                            )
+                        ),
+                      ]),
+                      const SizedBox(height: 20,),
+                      SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: DataTable(
+                              headingRowColor: MaterialStateColor.resolveWith((
+                                  states) => Colors.black87),
+                              columns: [
+                                DataColumn(label: Text('TL thực',style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white) )),
+                                DataColumn(label: Text('TL hột',style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white) )),
+                                DataColumn(label: Text('TL vàng',style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white) )),
+                                DataColumn(label: Text('Công gốc',style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white) )),
+                                DataColumn(label: Text('Giá công',style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white) )),
+                                DataColumn(label: Text('Thành tiền',style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white) )),
+                              ],
+                              rows: [
+                                DataRow(
+                                    cells:[
+                                      DataCell(Text('${ formatCurrencyDouble(baocao.TL_Thuc)}')),
+                                      DataCell(Text('${ formatCurrencyDouble(baocao.TL_hot)}')),
+                                      DataCell(Text('${ formatCurrencyDouble(baocao.TL_vang)}')),
+                                      DataCell(Text('${ formatCurrencyDouble(baocao.CONG_GOC)}')),
+                                      DataCell(Text('${ formatCurrencyDouble(baocao.GIA_CONG)}')),
+                                      DataCell(Text('${ formatCurrencyDouble(baocao.ThanhTien)}')),
+                                    ],
+                                  color: MaterialStateColor.resolveWith((
+                                      states) => Colors.white)
+                                )
+                              ],
+                            ),
+                          ),
+                      ],
+                    )
+                  );
+                }
+            );
+          }
+        }
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return
-      Scaffold(
-          appBar:AppBar(
-            iconTheme: IconThemeData(
-              color: Colors.white,
-              size: 28,
-            ),
-            title: Text('Báo cáo tồn kho', style: TextStyle(color: Colors.white, fontSize: 25, fontFamily: 'Align', fontWeight: FontWeight.bold), ),
-            flexibleSpace: Container(
-              decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                      begin: Alignment.topLeft, end: Alignment.bottomRight,
-                      colors: [ Colors.orange, Colors.amber ]
-                  )
-              ),
-            ),
-          ),
-          body: Stack(
-            children: [
-              //Phần kiem tra cham man hinh - Phần thân
-              GestureDetector(
-                onTap: (){
-                  if(!isListVisible && isLoadData){
-                    _filterBaoCaoTonKhoVang();
-                    print('Koong can load nưa');
-                  }
-                  setState(() {
-                    isListVisible = false;
-                  });
-                },
-                child: Scrollbar(
-                  child: ListView(
-                    children: [
-                      Column(
-                        children: [
-                          const SizedBox(height: 90,),
-
-                          //Bảng hiên thi
-                          FutureBuilder<List<dynamic>>(
-                            future: BaoCaoTonKhoVang_list(),
-                            builder: (context, snapshot){
-                              if(snapshot.connectionState == ConnectionState.waiting){
-                                return Center(child: CircularProgressIndicator(),);
-                              }
-                              else if(snapshot.hasError){
-                                return Center(child: Text('Error: ${snapshot.error}'),);
-                              }else{
-                                final data = snapshot.data!;
-                                final ThongTinChung = data[0];
-                                ThongTinTinhTong = data[1];
-
-                                //Khởi tạo biến tính tổng
-                                tong_TLThuc = double.parse(ThongTinTinhTong['tong_TLThuc']?.toString() ?? '0.0');
-                                tong_TL_hot = double.parse(ThongTinTinhTong['tong_TL_hot']?.toString() ?? '0.0');
-                                tong_TLvang = double.parse(ThongTinTinhTong['tong_TLvang']?.toString() ?? '0.0');
-                                tong_CongGoc = double.parse(ThongTinTinhTong['tong_CongGoc']?.toString() ?? '0.0');
-                                tong_GiaCong = double.parse(ThongTinTinhTong['tong_GiaCong']?.toString() ?? '0.0');
-                                thanhTien = double.parse(ThongTinTinhTong['thanhTien']?.toString() ?? '0.0');
-                                _filterBaoCaoTonKho_list = ThongTinChung;
-
-                                return  SingleChildScrollView(
-                                  scrollDirection:  Axis.horizontal,
-                                  child: DataTable(
-                                    headingRowColor: MaterialStateColor.resolveWith((states) => Colors.black87),
-                                    //Tiêu đề
-                                    columns: [
-                                      DataColumn(label: Text('Loại', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.white),)),
-                                      DataColumn(label: Text('Tên', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.white))),
-                                      DataColumn(label: Text('Số lượng', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.white))),
-                                      DataColumn(label: Text('TL_Thực', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.white))),
-                                      DataColumn(label: Text('TL hột', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.white))),
-                                      DataColumn(label: Text('TL vàng', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.white))),
-                                      DataColumn(label: Text('Công gốc', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.white))),
-                                      DataColumn(label: Text('Giá công', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.white))),
-                                      DataColumn(label: Text('Thành tiền', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.white))),
-                                    ],
-
-                                    //Nội dung hàng
-                                    rows: List.generate(
-                                        _filterBaoCaoTonKho_list.length,
-                                            (index){
-                                          final item = _filterBaoCaoTonKho_list[index];
-                                          return DataRow(
-                                            color: MaterialStateColor.resolveWith((state){
-                                              return index %2 == 0 ? Colors.black12: Colors.white;
-                                            }),
-                                            cells: [
-                                              DataCell(Text('${item['NHOM_TEN'] ?? ''}')),
-                                              DataCell(Text('${''}')),
-                                              DataCell(Text('${item['SoLuong'] ?? ''}')),
-                                              DataCell(Text('${DinhDangDonViTien_VND(item['TL_Thuc']) ?? ''}')),
-                                              DataCell(Text('${DinhDangDonViTien_VND(item['TL_hot']) ?? ''}')),
-                                              DataCell(Text('${DinhDangDonViTien_VND(item['TL_vang']) ?? ''}')),
-                                              DataCell(Text('${DinhDangDonViTien_VND(item['CONG_GOC']) ?? ''}')),
-                                              DataCell(Text('${DinhDangDonViTien_VND(item['GIA_CONG']) ?? ''}')),
-                                              DataCell(Text('${DinhDangDonViTien_VND(item['ThanhTien'])}')),
-                                            ],
-                                            onLongPress: () => ThongTinChiTiet(context, item),
-                                          );
-                                        }
-                                    ),
-                                  ),
-                                );
-                              }
-                            },
-                          ),
-
-                          //Hiên thị thông tin đã tính toán
-                          Container(
-                            width: double.infinity,
-                            padding: EdgeInsets.fromLTRB(0, 15, 0, 15),
-                            decoration: const BoxDecoration(
-                                gradient: LinearGradient(
-                                  colors: [Color(0xfff09800), Color(0xffe6b400)],
-                                  stops: [0.25, 0.75],
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                )
-
-                            ),
-                            child: Align(
-                              alignment: Alignment.centerLeft,
-                              child: Column(children: [
-                                Text('Tổng TL_Thực: ${DinhDangDonViTien_VND(tong_TLThuc)}', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white)),
-                                Text('Tổng TL_hột: ${DinhDangDonViTien_VND(tong_TL_hot)}', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white)),
-                                Text('Tổng TL vàng: ${DinhDangDonViTien_VND(tong_TLvang)}', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white)),
-                                Text('Tổng Công gốc: ${DinhDangDonViTien_VND(tong_CongGoc)}', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white)),
-                                Text('Tổng Giá công: ${DinhDangDonViTien_VND(tong_GiaCong)}', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white)),
-                                Text('Tổng Thành tiền: ${DinhDangDonViTien_VND(thanhTien)}', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white)),
-                              ],),
-                            ),
-                          )
-                        ],
+  //Hiển thi chi tiết
+  Future<void> ThongTinChiTiet(BuildContext context , BaoCaoTonKhoVang_Model item){
+    return showDialog(
+        context: context,
+        builder: (BuildContext context){
+          return AlertDialog(
+            title: Text('Thông tin chi tiết',style: TextStyle(decoration: TextDecoration.underline),),
+            content: FractionallySizedBox(
+              heightFactor: 0.5,
+              child: Scrollbar(
+                child: ListView(
+                  children: [
+                    Column(children: [
+                      Text.rich(
+                        TextSpan(children: [
+                          TextSpan(text: 'Loại: ',style: TextStyle(fontWeight: FontWeight.bold)),
+                          TextSpan(text: ' ${item.NHOM_TEN}')
+                        ])
                       ),
-                    ],
-                  ),
+                      Text.rich(
+                          TextSpan(children: [
+                            TextSpan(text: 'Số lượng: ',style: TextStyle(fontWeight: FontWeight.bold)),
+                            TextSpan(text: ' ${item.SoLuong}')
+                          ])
+                      ),
+                      Text.rich(
+                          TextSpan(children: [
+                            TextSpan(text: 'TL thực: ',style: TextStyle(fontWeight: FontWeight.bold)),
+                            TextSpan(text: ' ${formatCurrencyDouble(item.TL_Thuc)}')
+                          ])
+                      ),
+                      Text.rich(
+                          TextSpan(children: [
+                            TextSpan(text: 'TL hột: ',style: TextStyle(fontWeight: FontWeight.bold)),
+                            TextSpan(text: ' ${formatCurrencyDouble(item.TL_hot)}')
+                          ])
+                      ),
+                      Text.rich(
+                          TextSpan(children: [
+                            TextSpan(text: 'TL vàng: ',style: TextStyle(fontWeight: FontWeight.bold)),
+                            TextSpan(text: ' ${formatCurrencyDouble(item.TL_vang)}')
+                          ])
+                      ),
+                      Text.rich(
+                          TextSpan(children: [
+                            TextSpan(text: 'Công gốc: ',style: TextStyle(fontWeight: FontWeight.bold)),
+                            TextSpan(text: ' ${formatCurrencyDouble(item.CONG_GOC)}')
+                          ])
+                      ),
+                      Text.rich(
+                          TextSpan(children: [
+                            TextSpan(text: 'Giá công: ',style: TextStyle(fontWeight: FontWeight.bold)),
+                            TextSpan(text: ' ${formatCurrencyDouble(item.GIA_CONG)}')
+                          ])
+                      ),
+                      Text.rich(
+                          TextSpan(children: [
+                            TextSpan(text: 'Than tiền: ',style: TextStyle(fontWeight: FontWeight.bold)),
+                            TextSpan(text: ' ${formatCurrencyDouble(item.ThanhTien)}')
+                          ])
+                      ),
+                    ],)
+                  ],
                 ),
               ),
-
-              //Phần đầu
-              Align(
-                alignment: Alignment.topCenter,
-                child: Row(children: [
-                  Expanded(
-                    flex: 2,
-                    child: Search_Bar(seachController: _searchController),
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: TextButton(
-                      onPressed: (){
-                        print('Xuất file PDF');
-                        setState(() {
-                          isListVisible = true;
-                        });
-
-                      },
-                      child: Text('Export'),
-                    ),
-                  ),
-                ],),
-              ),
-
-              ExportList(isListVisible),
-            ],
-          )
-      );
-  }
-
-  //Show thông tin chi tiết
-  Future<void> ThongTinChiTiet(BuildContext context, Map<String,dynamic> item) {
-    return showDialog<void>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Thông tin chi tiết'),
-          content: FractionallySizedBox(
-            heightFactor: 0.5,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(children: [
-                  Text('Loại: ',style: TextStyle(fontWeight: FontWeight.bold),),
-                  Text('${item['NHOM_TEN']}')
-                ],),
-                Row(children: [
-                  Text('Số lượng: ',style: TextStyle(fontWeight: FontWeight.bold)),
-                  Text('${item['SoLuong']}')
-                ],),
-                Row(children: [
-                  Text('TL_Thực: ',style: TextStyle(fontWeight: FontWeight.bold)),
-                  Text('${DinhDangDonViTien_VND(item['TL_Thuc'])}')
-                ],),
-                Row(children: [
-                  Text('TL_Hột: ',style: TextStyle(fontWeight: FontWeight.bold)),
-                  Text('${DinhDangDonViTien_VND(item['TL_hot'])}')
-                ],),
-                Row(children: [
-                  Text('TL_vàng: ',style: TextStyle(fontWeight: FontWeight.bold)),
-                  Text('${DinhDangDonViTien_VND(item['TL_vang'])}')
-                ],),
-                Row(children: [
-                  Text('Công gốc: ',style: TextStyle(fontWeight: FontWeight.bold)),
-                  Text('${DinhDangDonViTien_VND(item['CONG_GOC'])}')
-                ],),
-                Row(children: [
-                  Text('Giá công: ',style: TextStyle(fontWeight: FontWeight.bold)),
-                  Text('${DinhDangDonViTien_VND(item['GIA_CONG'])}')
-                ],),
-                Row(children: [
-                  Text('Thành tiền: ',style: TextStyle(fontWeight: FontWeight.bold)),
-                  Text('${item['NHOM_TEN']}')
-                ],),
-              ],
             ),
-          ),
-          actions: <Widget>[
-            TextButton(
-                onPressed:() => Navigator.of(context).pop(),
-                child: Text('Đóng', style: TextStyle(color: Colors.red,fontWeight: FontWeight.bold),)
-            )
-          ],
-        );
-      },
+            actions: <Widget>[
+              ListTile(
+                leading: Icon(Icons.close_outlined, color: Colors.red),
+                title: Text('Đóng', style: TextStyle(color: Colors.red,fontWeight: FontWeight.bold, fontSize: 20),),
+                onTap: () => Navigator.pop(context),
+              )
+            ],
+          );
+        }
     );
   }
 }

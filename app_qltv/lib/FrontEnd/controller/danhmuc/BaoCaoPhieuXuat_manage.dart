@@ -15,7 +15,6 @@ class BaocaophieuxuatManage with ChangeNotifier{
     final response = await http.get(
       Uri.parse('$url/api/phieu/phieuxuat')
     );
-    print(response.body);
     if(response.statusCode == 200){
       List<dynamic> jsonList = jsonDecode(response.body);
       List<BaoCaoPhieuXuat_model> BaoCaoPhieuXuatList = jsonList.map((e) => BaoCaoPhieuXuat_model.fromMap(e)).toList();

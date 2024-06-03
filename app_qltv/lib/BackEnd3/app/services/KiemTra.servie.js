@@ -118,9 +118,10 @@ const DangXuat = async(req, res) =>{
 
 //4. Xác thực Token
 const authenticationToken = async (req, res, next) =>{
-    const autHeader = req.headers['authentization'];
+    const autHeader = req.headers['Cookie'];
     console.log('- xác thực Token: ',autHeader);
     const token = autHeader && autHeader.split(' ')[1];
+    console.log(token)
     if(token == null) return res.status(401).json({message: "Token không được cấp"});
     jwt.verify(token, process.env.ACCESS_TOKEN, (err, user) =>{
         if(err) return res.status(403).json({message: 'Token không hợp lệ'});

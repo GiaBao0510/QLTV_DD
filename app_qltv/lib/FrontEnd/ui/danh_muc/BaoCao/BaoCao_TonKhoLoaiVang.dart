@@ -191,13 +191,11 @@ class _BaoCaoTonKhoLoaiVangScreenState
             Navigator.of(context).pop();
           },
         ),
-        title: const Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text("Báo Cáo Tồn Kho Loại Vàng",
-                style: TextStyle(
-                    color: Colors.black, fontWeight: FontWeight.w900)),
-          ],
+        title:  const FittedBox(
+          fit: BoxFit.fitWidth,
+          child: Text("Báo Cáo Tồn Kho Nhóm Vàng",
+              style: TextStyle(
+                  color: Colors.black, fontWeight: FontWeight.w900)),
         ),
         actions: [
           PopupMenuButton<String>(

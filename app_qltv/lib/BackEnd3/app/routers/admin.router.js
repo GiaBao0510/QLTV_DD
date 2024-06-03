@@ -29,7 +29,7 @@ router.route('/loaihang/:LOAIID')
             .delete(loaihang.Delete_LoaiHang);
 
 //3.Lấy danh sách thông tin loại hàng
-router.route('/danhsachloaihang').get( /*KiemTra.authenticationToken,*/loaihang.list_LoaiHang);
+router.route('/danhsachloaihang').get(/* KiemTra.authenticationToken, */loaihang.list_LoaiHang);
 
     // >>>>>>>>     Khách hàng
 //Thêm

@@ -78,4 +78,22 @@ class BaoCaoPhieuXuat_model {
               : 0.0,
     );
   }
+
+  //Chuyển Object sang Map
+  Map<String, dynamic> toMap(Map<String, dynamic> map){
+    return{
+      'PHIEU_XUAT_MA': PHIEU_XUAT_MA,
+      'HANGHOAMA': HANGHOAMA,
+      'HANG_HOA_TEN': HANG_HOA_TEN,
+      'LOAIVANG': LOAIVANG,
+      'CAN_TONG': CAN_TONG,
+      'TL_HOT': TL_HOT,
+      'TL_Vang': TL_Vang,
+      'NGAY_XUAT': NGAY_XUAT,
+      'DON_GIA': DON_GIA,
+      'THANH_TIEN': THANH_TIEN,
+      'GiaGoc': GiaGoc,
+      'LaiLo':LaiLo
+    };
+  }
 }
