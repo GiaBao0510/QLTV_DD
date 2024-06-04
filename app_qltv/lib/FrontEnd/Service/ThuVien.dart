@@ -1,6 +1,9 @@
   //>>>>  Thự viện
 import 'package:flutter/material.dart';
 import 'dart:io';
+import 'package:intl/intl.dart';
+
+import 'package:intl/intl.dart';
   //>>>>    Biến
 
 
@@ -41,3 +44,11 @@ Future<bool> ActiveConnection() async{
     return false;
   }
 }
+
+String CurrentDateAndTime(){
+  final now = DateTime.now();
+  final formatter = DateFormat('dd/MM/yyyy HH:mm a');
+  String formatterDate = formatter.format(now);
+  return formatterDate;
+}
+//('dd/MM/yyyy HH:mm');

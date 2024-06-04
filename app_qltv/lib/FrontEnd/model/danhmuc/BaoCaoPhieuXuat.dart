@@ -11,20 +11,34 @@ class BaoCaoPhieuXuat_model {
   final double THANH_TIEN;
   final double GiaGoc;
   final double LaiLo;
+  final String KH_TEN;
+  final double TIEN_BOT;
+  final int SO_LUONG;
+  final double GIA_CONG;
+  final double TONG_TIEN;
+  final double THANH_TOAN;
 
-  BaoCaoPhieuXuat_model(
-      {required this.PHIEU_XUAT_MA,
-      required this.HANGHOAMA,
-      required this.HANG_HOA_TEN,
-      required this.LOAIVANG,
-      required this.CAN_TONG,
-      required this.TL_HOT,
-      required this.TL_Vang,
-      required this.NGAY_XUAT,
-      required this.DON_GIA,
-      required this.THANH_TIEN,
-      required this.GiaGoc,
-      required this.LaiLo});
+
+  BaoCaoPhieuXuat_model({
+    required this.PHIEU_XUAT_MA,
+    required this.HANGHOAMA,
+    required this.HANG_HOA_TEN,
+    required this.LOAIVANG,
+    required this.CAN_TONG,
+    required this.TL_HOT,
+    required this.TL_Vang,
+    required this.NGAY_XUAT,
+    required this.DON_GIA,
+    required this.THANH_TIEN,
+    required this.GiaGoc,
+    required this.LaiLo,
+    required this.KH_TEN,
+    required this.TIEN_BOT,
+    required this.SO_LUONG,
+    required this.GIA_CONG,
+    required this.TONG_TIEN,
+    required this.THANH_TOAN,
+  });
 
   //Chuyển đôi Map sang Object
   factory BaoCaoPhieuXuat_model.fromMap(Map<String, dynamic> map) {
@@ -76,6 +90,16 @@ class BaoCaoPhieuXuat_model {
           : (map['LaiLo'] is double)
               ? map['LaiLo']
               : 0.0,
+      KH_TEN: map['KH_TEN'] ?? '',
+      TIEN_BOT: (map['TIEN_BOT'] is int) ? (map['TIEN_BOT'] as int).toDouble() :
+        (map['TIEN_BOT'] is double) ? map['TIEN_BOT']: 0.0,
+      SO_LUONG: (map['SO_LUONG'] is int) ? map['SO_LUONG']:0,
+      GIA_CONG: (map['GIA_CONG'] is int)? (map['GIA_CONG'] as int).toDouble() :
+        (map['GIA_CONG'] is double) ? map['GIA_CONG'] : 0.0,
+      TONG_TIEN: (map['TONG_TIEN'] is int)? (map['TONG_TIEN'] as int).toDouble() :
+      (map['TONG_TIEN'] is double) ? map['TONG_TIEN'] : 0.0,
+      THANH_TOAN: (map['THANH_TOAN'] is int)? (map['THANH_TOAN'] as int).toDouble() :
+        (map['THANH_TOAN'] is double) ? map['THANH_TOAN'] : 0.0,
     );
   }
 
@@ -93,7 +117,13 @@ class BaoCaoPhieuXuat_model {
       'DON_GIA': DON_GIA,
       'THANH_TIEN': THANH_TIEN,
       'GiaGoc': GiaGoc,
-      'LaiLo':LaiLo
+      'LaiLo':LaiLo,
+      'KH_TEN':KH_TEN,
+      'TIEN_BOT':TIEN_BOT,
+      'SO_LUONG':SO_LUONG,
+      'GIA_CONG':GIA_CONG,
+      'TONG_TIEN':TONG_TIEN,
+      'THANH_TOAN':THANH_TOAN,
     };
   }
 }

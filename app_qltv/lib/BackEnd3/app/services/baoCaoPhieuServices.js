@@ -8,7 +8,8 @@ const getPhieuXuat = async () => {
     SELECT px.PHIEU_XUAT_MA, ctpx.HANGHOAMA, dmhh.HANG_HOA_TEN, ctpx.LOAIVANG,
         dmhh.CAN_TONG, dmhh.TL_HOT, (dmhh.CAN_TONG - dmhh.TL_HOT) TL_Vang,
         px.NGAY_XUAT, ctpx.DON_GIA, ctpx.THANH_TIEN, dmhh.CONG_GOC GiaGoc,
-        (ctpx.THANH_TIEN - dmhh.CONG_GOC) LaiLo
+        (ctpx.THANH_TIEN - dmhh.CONG_GOC) LaiLo, px.TIEN_BOT, px.TIEN_VANG_THEM,
+        kh.KH_TEN, ctpx.SO_LUONG, dmhh.GIA_CONG, px.TONG_TIEN, px.THANH_TOAN
     FROM phx_phieu_xuat px
       INNER JOIN phx_khach_hang kh ON kh.KH_ID = px.KH_ID
       JOIN phx_chi_tiet_phieu_xuat ctpx ON ctpx.PHIEU_XUAT_ID = px.PHIEU_XUAT_ID
@@ -31,7 +32,13 @@ const getPhieuXuat = async () => {
           "DON_GIA": Number(e.DON_GIA),
           "THANH_TIEN": Number(e.THANH_TIEN),
           "GiaGoc": Number(e.GiaGoc),
-          "LaiLo": Number(e.LaiLo)
+          "LaiLo": Number(e.LaiLo),
+          "KH_TEN": e.KH_TEN,
+          "TIEN_BOT": Number(e.TIEN_BOT),
+          "SO_LUONG": Number(e.SO_LUONG),
+          "GIA_CONG": Number(e.GIA_CONG),
+          "TONG_TIEN": Number(e.TONG_TIEN),
+          "THANH_TOAN": Number(e.THANH_TOAN),
         }));
         resolve(ketQua);
       }
@@ -59,7 +66,8 @@ const getPhieuXuatByDate = async(payload) => {
     SELECT px.PHIEU_XUAT_MA, ctpx.HANGHOAMA, dmhh.HANG_HOA_TEN, ctpx.LOAIVANG,
         dmhh.CAN_TONG, dmhh.TL_HOT, (dmhh.CAN_TONG - dmhh.TL_HOT) TL_Vang,
         px.NGAY_XUAT, ctpx.DON_GIA, ctpx.THANH_TIEN, dmhh.CONG_GOC GiaGoc,
-        (ctpx.THANH_TIEN - dmhh.CONG_GOC) LaiLo
+        (ctpx.THANH_TIEN - dmhh.CONG_GOC) LaiLo, px.TIEN_BOT, px.TIEN_VANG_THEM,
+        kh.KH_TEN, ctpx.SO_LUONG, dmhh.GIA_CONG, px.TONG_TIEN, px.THANH_TOAN
     FROM phx_phieu_xuat px
       INNER JOIN phx_khach_hang kh ON kh.KH_ID = px.KH_ID
       JOIN phx_chi_tiet_phieu_xuat ctpx ON ctpx.PHIEU_XUAT_ID = px.PHIEU_XUAT_ID
@@ -82,7 +90,13 @@ const getPhieuXuatByDate = async(payload) => {
           "DON_GIA": e.DON_GIA,
           "THANH_TIEN": e.THANH_TIEN,
           "GiaGoc": e.GiaGoc,
-          "LaiLo": e.LaiLo
+          "LaiLo": e.LaiLo,
+          "KH_TEN": e.KH_TEN,
+          "TIEN_BOT": Number(e.TIEN_BOT),
+          "SO_LUONG": Number(e.SO_LUONG),
+          "GIA_CONG": Number(e.GIA_CONG),
+          "TONG_TIEN": Number(e.TONG_TIEN),
+          "THANH_TOAN": Number(e.THANH_TOAN),
         }));
         resolve(ketQua);
       }

@@ -52,6 +52,8 @@ dependencies:
   google_fonts: ^6.2.1
   fl_chart: ^0.68.0
   shared_preferences: ^2.2.3
+  number_to_vietnamese_words: ^1.0.1+1
+  qr_flutter: ^4.1.0
 
 # Logo ưng dụng
 flutter_icons:

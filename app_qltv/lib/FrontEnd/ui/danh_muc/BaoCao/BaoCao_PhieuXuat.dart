@@ -10,6 +10,7 @@ import '../../../controller/danhmuc/BaoCaoPhieuXuat_manage.dart';
 import '../../../ui/components/FormatCurrency.dart';
 import 'package:app_qltv/FrontEnd/ui/components/search_bar.dart';
 import '../../../Service/export/PDF/BangBaoCaoPhieuXuat_PDF.dart';
+import '../../../Service/export/PDF/PhieuXuat_PDF.dart';
 
 class BaoCaoPhieuXuatScreen extends StatefulWidget{
   static const routeName = '/baocaophieuxuat';
@@ -48,7 +49,7 @@ class _BaoCaoPhieuXuat extends State<BaoCaoPhieuXuatScreen> {
   }
 
   // --- Phương thức
-  //Load dữ liệu
+    //1.Load dữ liệu
   Future<void> _loadBaoCaoPhieuXuat() async {
     _phieuXuatFuture =
         Provider.of<BaocaophieuxuatManage>(context, listen: false)
@@ -72,7 +73,7 @@ class _BaoCaoPhieuXuat extends State<BaoCaoPhieuXuatScreen> {
     });
   }
 
-  //Lọc dữ liệu
+    //2.Lọc dữ liệu
   void _filterBaoCaoPhieuXuat() {
     final query = _searchController.text.toLowerCase();
     setState(() {
@@ -80,6 +81,39 @@ class _BaoCaoPhieuXuat extends State<BaoCaoPhieuXuatScreen> {
         return phieuxuat.HANGHOAMA.toLowerCase().contains(query);
       }).toList();
     });
+  }
+
+    //3.Chuyển sang phần xuất file PDF Dang bảng
+  Future<void> printDoc(List<BaoCaoPhieuXuat_model> data, Map<String, dynamic> GetThongTinTinhTong) async{
+    final font = await loadFont('assets/fonts/Roboto-Regular.ttf');
+    final doc = pw.Document();
+    doc.addPage(
+        pw.Page(
+            pageFormat: PdfPageFormat.a4,
+            build: (pw.Context context){
+              return buildPrintableData(data,font ,GetThongTinTinhTong);
+            }
+        )
+    );
+    await Printing.layoutPdf(
+        onLayout: (PdfPageFormat format) async => doc.save());
+  }
+
+    //4. Chuyển sang xuất phiếu PDF theo tưng hàng
+  Future<void> printInvoice(BaoCaoPhieuXuat_model item) async{
+    final font = await LoadFont('assets/fonts/Roboto-Regular.ttf');
+    final Doc = pw.Document();
+    Doc.addPage(
+      pw.Page(
+          orientation: pw.PageOrientation.landscape,
+          pageFormat: PdfPageFormat.a4,
+        build: (pw.Context context){
+          return CreateInvoice(item, font);
+        }
+      )
+    );
+    await Printing.layoutPdf(
+        onLayout: (PdfPageFormat format) async => Doc.save());
   }
 
   //Giao diện
@@ -456,6 +490,12 @@ class _BaoCaoPhieuXuat extends State<BaoCaoPhieuXuatScreen> {
                               TextSpan(text:' ${formatCurrencyDouble(item.LaiLo)}'),
                             ])
                         ),
+                        Text.rich(
+                            TextSpan(children: [
+                              TextSpan(text:'Thanh toán: ',style: TextStyle(fontWeight: FontWeight.bold)),
+                              TextSpan(text:' ${formatCurrencyDouble(item.THANH_TOAN)}'),
+                            ])
+                        ),
                       ],
                     )
                   ],
@@ -470,6 +510,7 @@ class _BaoCaoPhieuXuat extends State<BaoCaoPhieuXuatScreen> {
                       title: Text('In'),
                       onTap: (){
                         print('in phiếu xuất');
+                        printInvoice(item);
                       },
                     )
                 ),
@@ -485,21 +526,5 @@ class _BaoCaoPhieuXuat extends State<BaoCaoPhieuXuatScreen> {
           );
         },
     );
-  }
-
-  //Chuyển sang phần xuất file PDF Dang bảng
-  Future<void> printDoc(List<BaoCaoPhieuXuat_model> data, Map<String, dynamic> GetThongTinTinhTong) async{
-    final font = await loadFont('assets/fonts/Roboto-Regular.ttf');
-    final doc = pw.Document();
-    doc.addPage(
-      pw.Page(
-        pageFormat: PdfPageFormat.a4,
-        build: (pw.Context context){
-          return buildPrintableData(data,font ,GetThongTinTinhTong);
-        }
-      )
-    );
-    await Printing.layoutPdf(
-        onLayout: (PdfPageFormat format) async => doc.save());
   }
 }
