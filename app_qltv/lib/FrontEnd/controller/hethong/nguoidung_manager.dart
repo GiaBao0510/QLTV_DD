@@ -12,6 +12,23 @@ class NguoiDungManager with ChangeNotifier {
 
   int get nguoiDungsLength => _nguoiDungs.length;
 
+    // Method to filter users by groupid
+  List<NguoiDung> filterNguoiDungsByGroupId(String groupId) {
+    return _nguoiDungs.where((user) => groupId == user.groupId.toString()).toList();
+  }
+
+  // Method to fetch and filter users by groupid
+  Future<List<NguoiDung>> fetchAndFilterNguoiDungsByGroupId(String groupId) async {
+    await fetchNguoiDungs(); // Fetch all users
+    return filterNguoiDungsByGroupId(groupId); // Return filtered list
+  }
+
+  // List<NguoiDung> filterNguoiDung (String groupId){
+  //   return _nguoiDungs.where((nguoidung) => nguoidung.groupId.toString() == groupId).toList();
+  // }
+
+  // bool get isDataLoaded => _nguoiDungs.isNotEmpty;
+
   Future<List<NguoiDung>> fetchNguoiDungs() async {
     final response = await http.get(Uri.parse('$url/api/users/'));
 
