@@ -16,6 +16,7 @@ const cam = require ('./app/routers/camvangRoute');
 const phieu = require ('./app/routers/phieuRoute');
 const { decode } = require('punycode');
 const app = express();
+const dbRoutes = require('./app/config/dbRoutes');
 
 app.use(express.json());
 app.use(cookieParser('quanlytiemvang'));
@@ -28,6 +29,7 @@ app.use('/api/groups', groupRoutes);
 app.use('/api/productType', productype);
 app.use('/api/cam', cam);
 app.use('/api/phieu',phieu);
+app.use('/api/db', dbRoutes);
 
 //Áp dụng cấu hình phiên
 app.use(
