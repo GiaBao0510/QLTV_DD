@@ -47,7 +47,7 @@ exports.baoCaoTonKhoTheoNhom = async (req, res, next)=>{
                     //Lấy danh sách từng tên nhóm
                     for(const item of result1) {
                         let ketqua = await TimKiemTheoNhom(`
-                            SELECT lh.LOAIID, dmh.HANGHOAMA, dmh.HANG_HOA_TEN, dmh.CAN_TONG, dmh.TL_HOT, (dmh.CAN_TONG -  dmh.TL_HOT) TL_vang, dmh.CONG_GOC, dmh.GIA_CONG  
+                            SELECT lh.LOAIID , lh.LOAI_TEN , dmh.HANGHOAMA, dmh.HANG_HOA_TEN, dmh.CAN_TONG, dmh.TL_HOT, (dmh.CAN_TONG -  dmh.TL_HOT) TL_vang, dmh.CONG_GOC, dmh.GIA_CONG  
                             FROM loai_hang lh 
                                 INNER JOIN danh_muc_hang_hoa dmh on lh.LOAIID = dmh.LOAIID
                                 JOIN nhom_hang nh ON dmh.NHOMHANGID = nh.NHOMHANGID
@@ -57,6 +57,7 @@ exports.baoCaoTonKhoTheoNhom = async (req, res, next)=>{
 
                         //Vòng lặp để tính tồng
                         for(const item of ketqua){
+                            loaiTen = item.LOAI_TEN;
                             tong_TLThuc += item.CAN_TONG;
                             tong_TL_hot +=item.TL_HOT;
                             tong_TLvang +=item.TL_vang;
@@ -66,6 +67,7 @@ exports.baoCaoTonKhoTheoNhom = async (req, res, next)=>{
                         }
 
                         var tinhTong = {
+                            "LOAI_TEN": loaiTen,
                             "SoLuong:": SoLuong,
                             "TongTL_Thuc":tong_TLThuc, 
                             "TongTL_hot": tong_TL_hot, 

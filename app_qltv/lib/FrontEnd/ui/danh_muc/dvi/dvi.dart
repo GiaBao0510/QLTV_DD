@@ -171,6 +171,54 @@ class _DonviScreenState extends State<DonviScreen> {
                           ),
                         ],
                       ),
+                      Row(
+                        children: [
+                          Text(
+                            "Địa chỉ: ${_filteredDonviList[index].dvi_ghichu}",
+                            style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w700, fontSize: 14),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Text(
+                            "Tên hóa đơn: ${_filteredDonviList[index].dvi_ten_hd}",
+                            style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w700, fontSize: 14),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Text(
+                            "Địa chỉ hóa đơn: ${_filteredDonviList[index].dvi_dia_chi_hd}",
+                            style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w700, fontSize: 14),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Text(
+                            "SĐT: ${_filteredDonviList[index].dvi_sdt}",
+                            style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w700, fontSize: 14),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Text(
+                            "Tên giao dịch: ${_filteredDonviList[index].dvi_ten_gd}",
+                            style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w700, fontSize: 14),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Text(
+                            "Lưu ý: ${_filteredDonviList[index].dvi_luu_y}",
+                            style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w700, fontSize: 14),
+                          ),
+                        ],
+                      ),
                     ]
                   ),
                 ),

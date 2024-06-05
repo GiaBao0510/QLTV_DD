@@ -29,6 +29,23 @@ class NhomVangManager with ChangeNotifier {
       throw Exception('Failed to load data');
     }
   }
+Future<NhomVang> getNhomVangById(int loaiId) async {
+  try {
+    final response = await http.get(
+        Uri.parse('$url/api/admin/loaihang/$loaiId'));
+    if (response.statusCode == 200) {
+      final jsonData = jsonDecode(response.body);
+      final nhomVang = NhomVang.fromMap(jsonData);
+      return nhomVang;
+    } else {
+      throw Exception('Failed to load nhom vang by id');
+    }
+  } catch (error) {
+    print('Error fetching Loai vang by id: $error');
+    throw Exception('Failed to load nhom vang by id');
+  }
+}
+
 
   Future<void> addNhomVang(NhomVang nhomVang) async {
     // Thêm nhomVang vào backend

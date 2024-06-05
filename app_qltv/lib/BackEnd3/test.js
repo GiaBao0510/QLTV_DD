@@ -1,12 +1,6 @@
-let data ={
-    "danhsach":{
-        "sinhvien":"NguyenVanA",
-        "tuoi":21,
-        "mssv":"b2016947",
-    },
-    "STT": 1
-};
 
-Object.assign(data['danhsach'] , {"diachi":"cantho"});
 
-console.log(data);
+let xacThuc1 = null;
+let xacthuc2 = "ejbfeujbd,zxjh43i6u9w8efyhbfo34_ow8ir.0sf239ieokk";
+let kq = xacThuc1 || xacthuc2;
+console.log(kq)
