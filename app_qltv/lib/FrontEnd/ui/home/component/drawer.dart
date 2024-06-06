@@ -82,8 +82,10 @@ class drawer extends StatelessWidget {
                 UserAccountsDrawerHeader(
                   accountName: const Text(
                     'Phần mềm vàng',
-                    style: TextStyle(color: Colors.black, fontWeight: FontWeight.w900, fontSize: 25),
-
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.w900,
+                        fontSize: 25),
                   ),
                   accountEmail: Column(
                     children: [
@@ -246,7 +248,8 @@ class drawer extends StatelessWidget {
                         onTap: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => const KhachhangScreen()),
+                            MaterialPageRoute(
+                                builder: (context) => const KhachhangScreen()),
                           );
                         },
                       ),
@@ -314,7 +317,11 @@ class drawer extends StatelessWidget {
                         title: const Text('Người Dùng ',
                             style: TextStyle(fontWeight: FontWeight.w800)),
                         onTap: () {
-                          // Handle Người Dùng tap
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const NguoiDungPage()),
+                          );
                         },
                       ),
                     ),
@@ -429,7 +436,7 @@ class drawer extends StatelessWidget {
                             context,
                             MaterialPageRoute(
                                 builder: (context) =>
-                                const BaoCaoPhieuXuatScreen()),
+                                    const BaoCaoPhieuXuatScreen()),
                           );
                         },
                       ),
@@ -474,22 +481,6 @@ class drawer extends StatelessWidget {
                             MaterialPageRoute(
                                 builder: (context) => BaoCaoTonKhoVangScreen()),
                           );
-                        },
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          left: 16.0), // Khoảng cách thụt lề
-                      child: ListTile(
-                        leading: Image.asset(
-                          'assets/images/computer-worker.png',
-                          width: 24.0,
-                          height: 24.0,
-                        ),
-                        title: const Text('Báo Cáo Tồn Kho Vàng',
-                            style: TextStyle(fontWeight: FontWeight.w800)),
-                        onTap: () {
-                          // Handle Báo Cáo Tồn Kho Loại Vàng tap
                         },
                       ),
                     ),

@@ -15,18 +15,15 @@ class NhaCungCapManager with ChangeNotifier {
 
   Future<List<NhaCungCap>> fetchNhaCungCap() async {
     //Lay acctoken hien da luu ơ phan dang nhap
-    final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString('accesstoken') ?? '';
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
 
     final response = await http.get(
       Uri.parse('$url/api/admin/danhsachnhacungcap'),
       headers:{
-        'authorization':token,
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        "accesstoken": "${prefs.getString('accesstoken')}",
       }
     );
-
-    print('- Token: $token');
     if (response.statusCode == 200) {
       try {
         List<dynamic> jsonList = jsonDecode(response.body);
@@ -45,10 +42,12 @@ class NhaCungCapManager with ChangeNotifier {
   }
 
   Future<void> addNhaCungCap(NhaCungCap nhaCungCap) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
     final response = await http.post(
       Uri.parse('$url/api/admin/themnhacungcap'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
+        "accesstoken": "${prefs.getString('accesstoken')}",
       },
       body: jsonEncode({
         'NCC_TEN': nhaCungCap.ncc_ten,
@@ -67,10 +66,12 @@ class NhaCungCapManager with ChangeNotifier {
 
   Future<NhaCungCap> updateNhaCungCap(String nccMa, String nccTen, String ghiChu, String ngayBd) async {
     try {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
       final response = await http.put(
         Uri.parse('$url/api/admin/nhacungcap/$nccMa'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
+          "accesstoken": "${prefs.getString('accesstoken')}",
         },
         body: jsonEncode({
           'NCC_TEN': nccTen,
@@ -92,10 +93,12 @@ class NhaCungCapManager with ChangeNotifier {
 
   Future<void> deleteNhaCungCap(int nccMa) async {
     try {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
       final response = await http.delete(
         Uri.parse('$url/api/admin/nhacungcap/$nccMa'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
+          "accesstoken": "${prefs.getString('accesstoken')}",
         },
       );
 

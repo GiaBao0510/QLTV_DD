@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'package:app_qltv/FrontEnd/constants/config.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class KhachhangManage with ChangeNotifier {
   List<Khachhang> _khachhang = [];
@@ -13,7 +14,13 @@ class KhachhangManage with ChangeNotifier {
   int get khachhangLength => _khachhang.length;
 
   Future<List<Khachhang>> fetchKhachhang() async {
-    final response = await http.get(Uri.parse('$url/api/admin/danhsachkhachhang/'));
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final response = await http.get(
+      Uri.parse('$url/api/admin/danhsachkhachhang/'),
+      headers: {
+        "accesstoken": "${prefs.getString('accesstoken')}",
+      }
+    );
     if (response.statusCode == 200) {
 
       final List<dynamic> data = json.decode(response.body);
@@ -25,10 +32,12 @@ class KhachhangManage with ChangeNotifier {
   }
   Future<void> addKhachhang(Khachhang khachhang) async {
     // Thêm Khachhang vào backend
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
     final response = await http.post(
       Uri.parse('$url/api/admin/themkhachhang/'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
+        "accesstoken": "${prefs.getString('accesstoken')}",
       },
       body: jsonEncode(<String, dynamic>{
         'KH_TEN': khachhang.kh_ten,
@@ -62,10 +71,12 @@ class KhachhangManage with ChangeNotifier {
  
   Future<Khachhang> deleteKhachhang(int kh_id) async {
     try {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
       final response = await http.delete(
         Uri.parse('$url/api/admin/khachhang/$kh_id'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
+          "accesstoken": "${prefs.getString('accesstoken')}",
         },
         body: jsonEncode(<String, dynamic>{
         }),

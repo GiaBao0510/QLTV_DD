@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'package:app_qltv/FrontEnd/constants/config.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class KhoManage with ChangeNotifier {
   List<Kho> _kho = [];
@@ -13,7 +14,13 @@ class KhoManage with ChangeNotifier {
   int get khoLength => _kho.length;
 
   Future<List<Kho>> fetchKho() async {
-    final response = await http.get(Uri.parse('$url/api/admin/danhsachkho/'));
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final response = await http.get(
+      Uri.parse('$url/api/admin/danhsachkho/'),
+      headers: {
+        "accesstoken": "${prefs.getString('accesstoken')}",
+      }
+    );
     if (response.statusCode == 200) {
       // Parse JSON array and convert to list of NhomVang objects
       List<dynamic> jsonList = jsonDecode(response.body);
@@ -33,10 +40,12 @@ class KhoManage with ChangeNotifier {
 //     this.su_dung
   Future<Kho> updateKho(int kho_id,Kho kho) async {
     try {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
       final response = await http.put(
         Uri.parse('$url/api/admin/kho/$kho_id'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
+          "accesstoken": "${prefs.getString('accesstoken')}",
         },
         body: jsonEncode(<String, dynamic>{
           'KHO_TEN': kho.kho_ten,
@@ -59,10 +68,12 @@ class KhoManage with ChangeNotifier {
 
   Future<Kho> deleteKho(int kho_id) async {
     try {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
       final response = await http.delete(
         Uri.parse('$url/api/admin/kho/$kho_id'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
+          "accesstoken": "${prefs.getString('accesstoken')}",
         },
         body: jsonEncode(<String, dynamic>{
         }),

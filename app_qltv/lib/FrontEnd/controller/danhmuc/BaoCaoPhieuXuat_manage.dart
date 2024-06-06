@@ -3,6 +3,7 @@ import 'package:app_qltv/FrontEnd/model/danhmuc/BaoCaoPhieuXuat.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class BaocaophieuxuatManage with ChangeNotifier{
   List<BaoCaoPhieuXuat_model> _PhieuXuats = [];
@@ -12,8 +13,12 @@ class BaocaophieuxuatManage with ChangeNotifier{
 
   //Lấy dư liệu
   Future<List<BaoCaoPhieuXuat_model>> fetchBaoCaoPhieuXuat() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
     final response = await http.get(
-      Uri.parse('$url/api/phieu/phieuxuat')
+      Uri.parse('$url/api/phieu/phieuxuat'),
+      headers: {
+        "accesstoken": "${prefs.getString('accesstoken')}",
+      }
     );
     if(response.statusCode == 200){
       List<dynamic> jsonList = jsonDecode(response.body);
@@ -25,6 +30,22 @@ class BaocaophieuxuatManage with ChangeNotifier{
     }else{
       throw Exception('Failed to load data');
     }
+  }
+
+  Future<void> LayDuLieuPhieuXuat_test () async{
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final response = await http.get(
+        Uri.parse('$url/api/phieu/phieuxuat'),
+        headers: {
+          "accesstoken": "${prefs.getString('accesstoken')}",
+        }
+    );
+    print(response.body);
+    if(response.statusCode == 200){
+      List<dynamic> jsonList = jsonDecode(response.body);
+      //print(jsonList['data']);
+    }
+    notifyListeners();
   }
 
 }

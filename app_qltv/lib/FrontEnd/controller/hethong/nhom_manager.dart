@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:app_qltv/FrontEnd/constants/config.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class NhomManager with ChangeNotifier {
   List<Nhom> _nhoms = [];
@@ -13,7 +14,14 @@ class NhomManager with ChangeNotifier {
   int get nhomsLength => _nhoms.length;
 
   Future<List<Nhom>> fetchNhoms() async {
-    final response = await http.get(Uri.parse('$url/api/groups/'));
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final response = await http.get(
+      Uri.parse('$url/api/groups/'),
+      headers: {
+        "Content-Type": "application/json",
+        "accesstoken": "${prefs.getString('accesstoken')}",
+      },
+    );
 
     if (response.statusCode == 200) {
       // Parse JSON array and convert to list of Nhom objects
@@ -31,10 +39,12 @@ class NhomManager with ChangeNotifier {
 
   Future<void> addNhom(Nhom nhom) async {
     // Thêm nhom vào backend
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
     final response = await http.post(
       Uri.parse('$url/api/groups/'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
+        "accesstoken": "${prefs.getString('accesstoken')}",
       },
       body: jsonEncode(nhom.toMap()),
     );
@@ -73,13 +83,15 @@ class NhomManager with ChangeNotifier {
 //   }
 // }
 
-
-  Future<Nhom> updateNhom(String groupId, String groupMa, String groupTen, bool biKhoa, String lyDoKhoa, bool suDung) async {
+  Future<Nhom> updateNhom(String groupId, String groupMa, String groupTen,
+      bool biKhoa, String lyDoKhoa, bool suDung) async {
     try {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
       final response = await http.put(
         Uri.parse('$url/api/groups/$groupId'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
+          "accesstoken": "${prefs.getString('accesstoken')}",
         },
         body: jsonEncode(<String, dynamic>{
           'GROUP_MA': groupMa,
@@ -92,8 +104,11 @@ class NhomManager with ChangeNotifier {
 
       if (response.statusCode == 200) {
         // Nếu server trả về mã status 200 OK, tiến hành parse JSON để tạo ra một đối tượng Nhom từ dữ liệu nhận được
-        Nhom updatedNhom = Nhom.fromMap(jsonDecode(response.body) as Map<String, dynamic>);
-        _nhoms = _nhoms.map((nhom) => nhom.groupId == groupId ? updatedNhom : nhom).toList();
+        Nhom updatedNhom =
+            Nhom.fromMap(jsonDecode(response.body) as Map<String, dynamic>);
+        _nhoms = _nhoms
+            .map((nhom) => nhom.groupId == groupId ? updatedNhom : nhom)
+            .toList();
         notifyListeners();
         return updatedNhom;
       } else {
