@@ -1,15 +1,13 @@
 const db = require('../config/index_2');
 //  table phx_phieu_xuat
-
 const getPhieuXuat = async () => {
   return new Promise((resolve, reject) => {
     db.query(
     `
     SELECT px.PHIEU_XUAT_MA, ctpx.HANGHOAMA, dmhh.HANG_HOA_TEN, ctpx.LOAIVANG,
-        dmhh.CAN_TONG, dmhh.TL_HOT, (dmhh.CAN_TONG - dmhh.TL_HOT) TL_Vang,
-        px.NGAY_XUAT, ctpx.DON_GIA, ctpx.THANH_TIEN, dmhh.CONG_GOC GiaGoc,
-        (ctpx.THANH_TIEN - dmhh.CONG_GOC) LaiLo, px.TIEN_BOT, px.TIEN_VANG_THEM,
-        kh.KH_TEN, ctpx.SO_LUONG, dmhh.GIA_CONG, px.TONG_TIEN, px.THANH_TOAN
+        ctpx.CAN_TONG, ctpx.TL_HOT, (ctpx.CAN_TONG - ctpx.TL_HOT) TL_Vang,
+        px.NGAY_XUAT, ctpx.DON_GIA, ctpx.THANH_TIEN, ctpx.GIA_GOC,
+        (ctpx.THANH_TIEN -  ctpx.GIA_GOC) LaiLo
     FROM phx_phieu_xuat px
       INNER JOIN phx_khach_hang kh ON kh.KH_ID = px.KH_ID
       JOIN phx_chi_tiet_phieu_xuat ctpx ON ctpx.PHIEU_XUAT_ID = px.PHIEU_XUAT_ID
@@ -45,65 +43,28 @@ const getPhieuXuat = async () => {
     });
   });
 };
-
-const getPhieuXuatByDate = async(payload) => {
-  let ngayBatDau,ngayKetThuc;
-  
-  //Nếu đầu vào rỗng hoặc không điền thì mặc định lấy ngày hiện tại
-  if(Array.isArray(payload) || payload.length == 0 || payload.ngayBD.length == 0 || payload.ngayKT.length == 0){
-    ngayBatDau = new Date();
-    ngayKetThuc = new Date();
-  }else{
-    ngayBatDau = payload.ngayBD;
-    ngayKetThuc = payload.ngayKT;
-  }
-  ngayBatDau = String( new Date(ngayBatDau).toISOString().split('T')[0] );
-  ngayKetThuc = String( new Date(ngayKetThuc).toISOString().split('T')[0] );
-
-  
-  return new Promise((resolve, reject)=> {
-    db.query(`
-    SELECT px.PHIEU_XUAT_MA, ctpx.HANGHOAMA, dmhh.HANG_HOA_TEN, ctpx.LOAIVANG,
-        dmhh.CAN_TONG, dmhh.TL_HOT, (dmhh.CAN_TONG - dmhh.TL_HOT) TL_Vang,
-        px.NGAY_XUAT, ctpx.DON_GIA, ctpx.THANH_TIEN, dmhh.CONG_GOC GiaGoc,
-        (ctpx.THANH_TIEN - dmhh.CONG_GOC) LaiLo, px.TIEN_BOT, px.TIEN_VANG_THEM,
-        kh.KH_TEN, ctpx.SO_LUONG, dmhh.GIA_CONG, px.TONG_TIEN, px.THANH_TOAN
+const getPhieuXuatByDate = async (ngayBD, ngayKT) => {
+  return new Promise((resolve, reject) => {
+    const query = `
+    SELECT px.PHIEU_XUAT_ID, px.PHIEU_XUAT_MA, px.NGAY_XUAT,
+      ctpx.HANGHOAMA, ctpx.HANG_HOA_TEN, ctpx.LOAIVANG, 
+      ctpx.CAN_TONG, ctpx.TL_HOT, (ctpx.CAN_TONG - ctpx.TL_HOT) AS TL_VANG, 
+      ctpx.DON_GIA, ctpx.THANH_TIEN, ctpx.GIA_GOC,
+      (ctpx.THANH_TIEN - ctpx.GIA_GOC) AS LAI_LO
     FROM phx_phieu_xuat px
-      INNER JOIN phx_khach_hang kh ON kh.KH_ID = px.KH_ID
-      JOIN phx_chi_tiet_phieu_xuat ctpx ON ctpx.PHIEU_XUAT_ID = px.PHIEU_XUAT_ID
-      JOIN danh_muc_hang_hoa dmhh ON dmhh.HANGHOAID = ctpx.HANGHOAID
-    WHERE px.NGAY_XUAT <= "${ngayKetThuc}" AND px.NGAY_XUAT >= "${ngayBatDau}"
-    `, (err, results) => {
-      if(err){
-        reject(err);
-      }else{
+    JOIN phx_chi_tiet_phieu_xuat ctpx ON px.PHIEU_XUAT_ID = ctpx.PHIEU_XUAT_ID
+    WHERE px.NGAY_XUAT BETWEEN ? AND ?
 
-        let ketQua = results.map(e => ({
-          "PHIEU_XUAT_MA": e.PHIEU_XUAT_MA,
-          "HANGHOAMA": e.HANGHOAMA,
-          "HANG_HOA_TEN": e.HANG_HOA_TEN,
-          "LOAIVANG": e.LOAIVANG,
-          "CAN_TONG": e.CAN_TONG,
-          "TL_HOT": e.TL_HOT,
-          "TL_Vang": e.TL_Vang,
-          "NGAY_XUAT": new Date(e.NGAY_XUAT).toLocaleDateString('vi-VN'),
-          "DON_GIA": e.DON_GIA,
-          "THANH_TIEN": e.THANH_TIEN,
-          "GiaGoc": e.GiaGoc,
-          "LaiLo": e.LaiLo,
-          "KH_TEN": e.KH_TEN,
-          "TIEN_BOT": Number(e.TIEN_BOT),
-          "SO_LUONG": Number(e.SO_LUONG),
-          "GIA_CONG": Number(e.GIA_CONG),
-          "TONG_TIEN": Number(e.TONG_TIEN),
-          "THANH_TOAN": Number(e.THANH_TOAN),
-        }));
-        resolve(ketQua);
+    `;
+    db.query(query, [ngayBD, ngayKT], (error, results) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve(results);
       }
     });
   });
-}
-
+};
 const getPhieuXuatById = async (id) => {
   return new Promise((resolve, reject) => {
     db.query('SELECT * FROM phx_phieu_xuat WHERE PHIEU_XUAT_ID = ?', [id], (error, results) => {
@@ -139,6 +100,8 @@ const getTonKhoById = async (id) => {
     });
   });
 };
+// // Table nhom_hang
+
 const getTonKhoGroupProduct = async () => {
   return new Promise((resolve, reject) => {
     db.query(`
@@ -169,8 +132,57 @@ const getTonKhoGroupProduct = async () => {
 //     });
 //   });
 // };
-///////
-// // Table nhom_hang
+///////phm_kho_vang_mua_vao
+
+const getBCPhieuMuaVao = async () => {
+  return new Promise((resolve, reject) => {
+    db.query(
+    `
+    SELECT *
+    FROM phm_kho_vang_mua_vao`
+    , (error, results) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve(results);
+      }
+    });
+  });
+};
+const getBCPhieuMuaVaoByDate = async (ngayBD, ngayKT) => {
+  return new Promise((resolve, reject) => {
+    const query = `
+      SELECT km.PHIEU_MA, km.MA_HANG_HOA, km.TEN_HANG_HOA, km.NGAY_NHAP, km.NGAY_PHIEU,
+             km.CAN_TONG, km.TL_HOT, (km.CAN_TONG - km.TL_HOT) AS TL_VANG, 
+             km.DON_GIA, km.THANH_TIEN
+      FROM phm_kho_vang_mua_vao km
+      WHERE DATE(km.NGAY_NHAP) BETWEEN ? AND ?
+    `;
+    // console.log('Query:', query); // In ra query
+    // console.log('Parameters:', [ngayBD, ngayKT]); // In ra tham số
+
+    db.query(query, [ngayBD, ngayKT], (error, results) => {
+      if (error) {
+        reject(error);
+      } else {
+        console.log('Results:', results); // In ra kết quả
+        resolve(results);
+      }
+    });
+  });
+};
+
+const getBCPhieuMuaVaoById = async (id) => {
+  return new Promise((resolve, reject) => {
+    db.query('SELECT * FROM phm_kho_vang_mua_vao WHERE KHO_ID = ?', [id], (error, results) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve(results[0]);
+      }
+    });
+  });
+};
 module.exports = {
   getPhieuXuat,
   getPhieuXuatById,
@@ -179,4 +191,7 @@ module.exports = {
   getTonKhoGroupProduct,
   getPhieuXuatByDate,
   // getTonKhoGPById
+  getBCPhieuMuaVao,
+  getBCPhieuMuaVaoByDate,
+  getBCPhieuMuaVaoById
 };
