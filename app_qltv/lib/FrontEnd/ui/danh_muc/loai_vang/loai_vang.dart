@@ -9,8 +9,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-
-
 class LoaiVangScreen extends StatefulWidget {
   static const routeName = '/loaivang';
 
@@ -40,7 +38,8 @@ class _LoaiVangScreenState extends State<LoaiVangScreen> {
   }
 
   Future<void> _loadLoaiVanngs() async {
-    _loaiVangFuture = Provider.of<LoaiVangManager>(context, listen: false).fetchLoaiHang();
+    _loaiVangFuture =
+        Provider.of<LoaiVangManager>(context, listen: false).fetchLoaiHang();
     _loaiVangFuture.then((loaiVangs) {
       setState(() {
         _loaiVangList = loaiVangs;
@@ -74,7 +73,9 @@ class _LoaiVangScreenState extends State<LoaiVangScreen> {
         title: Row(
           children: [
             Expanded(child: Container()), // Spacer
-            const Text("Loại Vàng", style: TextStyle(color: Colors.black, fontWeight: FontWeight.w900)),
+            const Text("Loại Vàng",
+                style: TextStyle(
+                    color: Colors.black, fontWeight: FontWeight.w900)),
             Expanded(child: Container()), // Spacer
           ],
         ),
@@ -98,7 +99,8 @@ class _LoaiVangScreenState extends State<LoaiVangScreen> {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(12.0),
-          child: SingleChildScrollView( // SingleChildScrollView for scrolling
+          child: SingleChildScrollView(
+            // SingleChildScrollView for scrolling
             child: Column(
               children: [
                 Search_Bar(searchController: _searchController),
@@ -124,12 +126,14 @@ class _LoaiVangScreenState extends State<LoaiVangScreen> {
         } else {
           return ListView.builder(
             shrinkWrap: true, // shrinkWrap to make ListView fit within Column
-            physics: const NeverScrollableScrollPhysics(), // Disable ListView's own scrolling
+            physics:
+                const NeverScrollableScrollPhysics(), // Disable ListView's own scrolling
             itemCount: _filteredLoaiVanngList.length,
             reverse: true,
             itemBuilder: (BuildContext context, int index) {
               return Container(
-                margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                margin:
+                    const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
                 decoration: BoxDecoration(
                   color: const Color.fromARGB(50, 169, 169, 169),
                   borderRadius: BorderRadius.circular(15.0),
@@ -147,7 +151,10 @@ class _LoaiVangScreenState extends State<LoaiVangScreen> {
                                 alignment: Alignment.centerLeft,
                                 child: Text(
                                   _filteredLoaiVanngList[index].nhomTen ?? '',
-                                  style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w800, fontSize: 20),
+                                  style: const TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w800,
+                                      fontSize: 20),
                                 ),
                               ),
                             ],
@@ -165,56 +172,57 @@ class _LoaiVangScreenState extends State<LoaiVangScreen> {
                         children: [
                           Text(
                             "Mã: ${_filteredLoaiVanngList[index].nhomHangMa}",
-                            style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w700, fontSize: 14),
+                            style: const TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w700,
+                                fontSize: 14),
                           ),
                         ],
                       ),
                       Row(
                         children: [
                           Text(
-                            "Đơn giá vốn: ${_filteredLoaiVanngList[index].donGiaVon?.toStringAsFixed(0).replaceAllMapped(
-                                RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-                                (Match match) => '${match[1]},'
-                            )}",
-                            style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w700, fontSize: 14),
+                            "Đơn giá vốn: ${_filteredLoaiVanngList[index].donGiaVon?.toStringAsFixed(0).replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match match) => '${match[1]},')}",
+                            style: const TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w700,
+                                fontSize: 14),
                           ),
                         ],
                       ),
                       Row(
                         children: [
                           Text(
-                            "Đơn giá mua: ${_filteredLoaiVanngList[index].donGiaMua?.toStringAsFixed(0).replaceAllMapped(
-                                RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-                                (Match match) => '${match[1]},'
-                            )}",
-                            style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w700, fontSize: 14),
+                            "Đơn giá mua: ${_filteredLoaiVanngList[index].donGiaMua?.toStringAsFixed(0).replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match match) => '${match[1]},')}",
+                            style: const TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w700,
+                                fontSize: 14),
                           ),
                         ],
                       ),
                       Row(
                         children: [
                           Text(
-                            "Đơn giá bán: ${_filteredLoaiVanngList[index].donGiaBan?.toStringAsFixed(0).replaceAllMapped(
-                                RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-                                (Match match) => '${match[1]},'
-                            )}",
-                            style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w700, fontSize: 14),
+                            "Đơn giá bán: ${_filteredLoaiVanngList[index].donGiaBan?.toStringAsFixed(0).replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match match) => '${match[1]},')}",
+                            style: const TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w700,
+                                fontSize: 14),
                           ),
                         ],
                       ),
                       Row(
                         children: [
                           Text(
-                            "Đơn giá cầm: ${_filteredLoaiVanngList[index].donGiaCam?.toStringAsFixed(0).replaceAllMapped(
-                                RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-                                (Match match) => '${match[1]},'
-                            )}",
-                            style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w700, fontSize: 14),
+                            "Đơn giá cầm: ${_filteredLoaiVanngList[index].donGiaCam?.toStringAsFixed(0).replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match match) => '${match[1]},')}",
+                            style: const TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w700,
+                                fontSize: 14),
                           ),
                         ],
                       ),
-
-                     
                     ],
                   ),
                 ),
@@ -234,7 +242,8 @@ class _LoaiVangScreenState extends State<LoaiVangScreen> {
           builder: (BuildContext context) {
             return AlertDialog(
               title: const Text("Xác nhận"),
-              content: Text("Bạn có chắc chắn muốn xóa nhà cung cấp ${_filteredLoaiVanngList[index].nhomTen?.toUpperCase()}?"),
+              content: Text(
+                  "Bạn có chắc chắn muốn xóa nhà cung cấp ${_filteredLoaiVanngList[index].nhomTen?.toUpperCase()}?"),
               actions: <Widget>[
                 TextButton(
                   onPressed: () {
@@ -244,20 +253,33 @@ class _LoaiVangScreenState extends State<LoaiVangScreen> {
                 ),
                 TextButton(
                   onPressed: () async {
-                    final nhaCungCapManager = Provider.of<LoaiVangManager>(context, listen: false);
-                    await nhaCungCapManager.deleteLoaiVang(_filteredLoaiVanngList[index].nhomHangId!); // Use `ncc_id` directly
+                    final nhaCungCapManager =
+                        Provider.of<LoaiVangManager>(context, listen: false);
+                    await nhaCungCapManager.deleteLoaiVang(
+                        _filteredLoaiVanngList[index]
+                            .nhomHangId!); // Use `ncc_id` directly
                     Navigator.of(context).pop(); // Close the dialog
                     _loadLoaiVanngs(); // Refresh the list
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content: const Text('Xóa thành công!', style: TextStyle(fontWeight: FontWeight.w900, color: Colors.red), textAlign: TextAlign.center,),
+                        content: const Text(
+                          'Xóa thành công!',
+                          style: TextStyle(
+                              fontWeight: FontWeight.w900, color: Colors.red),
+                          textAlign: TextAlign.center,
+                        ),
                         backgroundColor: Colors.grey,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(15.0),
-                          side: const BorderSide(color: Colors.grey, width: 2.0), // bo viền 15px
+                          side: const BorderSide(
+                              color: Colors.grey, width: 2.0), // bo viền 15px
                         ),
-                        behavior: SnackBarBehavior.floating, // hiển thị ở cách đáy màn hình
-                        margin: const EdgeInsets.only(left: 15.0, right: 15.0, bottom: 15.0), // cách 2 cạnh và đáy màn hình 15px
+                        behavior: SnackBarBehavior
+                            .floating, // hiển thị ở cách đáy màn hình
+                        margin: const EdgeInsets.only(
+                            left: 15.0,
+                            right: 15.0,
+                            bottom: 15.0), // cách 2 cạnh và đáy màn hình 15px
                       ),
                     );
                   },
@@ -280,7 +302,8 @@ class _LoaiVangScreenState extends State<LoaiVangScreen> {
       onTap: () async {
         final result = await Navigator.of(context).push(
           createRoute(
-            (context) => ChinhSuaLoaiVangScreen(loaiVang: _filteredLoaiVanngList[index]),
+            (context) =>
+                ChinhSuaLoaiVangScreen(loaiVang: _filteredLoaiVanngList[index]),
           ),
         );
         if (result == true) {
@@ -293,7 +316,4 @@ class _LoaiVangScreenState extends State<LoaiVangScreen> {
       ),
     );
   }
-
-
-
 }
