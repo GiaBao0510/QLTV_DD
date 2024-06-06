@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'package:app_qltv/FrontEnd/constants/config.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class NhaCungCapManager with ChangeNotifier {
   List<NhaCungCap> _nhaCungCaps = [];
@@ -13,8 +14,19 @@ class NhaCungCapManager with ChangeNotifier {
   int get nhaCungCapsLength => _nhaCungCaps.length;
 
   Future<List<NhaCungCap>> fetchNhaCungCap() async {
-    final response = await http.get(Uri.parse('$url/api/admin/danhsachnhacungcap'));
+    //Lay acctoken hien da luu ơ phan dang nhap
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('accesstoken') ?? '';
 
+    final response = await http.get(
+      Uri.parse('$url/api/admin/danhsachnhacungcap'),
+      headers:{
+        'authorization':token,
+        'Content-Type': 'application/json'
+      }
+    );
+
+    print('- Token: $token');
     if (response.statusCode == 200) {
       try {
         List<dynamic> jsonList = jsonDecode(response.body);
@@ -27,6 +39,7 @@ class NhaCungCapManager with ChangeNotifier {
         return [];
       }
     } else {
+      print('Không có quyền truy cập');
       throw Exception('Failed to load data');
     }
   }

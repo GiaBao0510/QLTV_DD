@@ -1,6 +1,9 @@
   //>>>>  Thự viện
 import 'package:flutter/material.dart';
 import 'dart:io';
+import 'package:intl/intl.dart';
+
+import 'package:intl/intl.dart';
   //>>>>    Biến
 
 
@@ -10,13 +13,19 @@ String DinhDangDonViTien_VND(value) {
   late String formattedValue;
   if(value is int){
     formattedValue = value.toString().replaceAllMapped(
-      RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+      RegExp(r"(\d{1,3})(?=(\d{3})+(?!\d))"),
           (Match m) => '${m[1]}.',
     );
   }
   if(value is double){
     formattedValue = value.toStringAsFixed(3).replaceAllMapped(
-      RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+      RegExp(r"(\d{1,3})(?=(\d{3})+(?!\d))"),
+          (Match m) => '${m[1]}.',
+    );
+  }
+  if(value is num){
+    formattedValue = value.toStringAsFixed(3).replaceAllMapped(
+      RegExp(r"(\d{1,3})(?=(\d{3})+(?!\d))"),
           (Match m) => '${m[1]}.',
     );
   }
@@ -35,3 +44,11 @@ Future<bool> ActiveConnection() async{
     return false;
   }
 }
+
+String CurrentDateAndTime(){
+  final now = DateTime.now();
+  final formatter = DateFormat('dd/MM/yyyy HH:mm a');
+  String formatterDate = formatter.format(now);
+  return formatterDate;
+}
+//('dd/MM/yyyy HH:mm');

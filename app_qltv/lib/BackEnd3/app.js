@@ -14,7 +14,7 @@ const groupRoutes = require ('./app/routers/groupRoutes');
 const productype = require('./app/routers/productTypeRoute');
 const cam = require ('./app/routers/camvangRoute');
 const phieu = require ('./app/routers/phieuRoute');
-const kiemtra =require('./app/services/KiemTra.servie');
+const kiemtra =require('./app/services/KiemTra.services');
 const { decode } = require('punycode');
 const app = express();
 
@@ -73,7 +73,7 @@ app.post('/login', async (req, res, next) => {
                   // Lưu thông tin vào phiên
                 req.session.authenticated = true;
                 req.session.user = USER_TEN;
-
+ 
                 // Tạo AccessToken và RefreshToken
                 const accessToken = jwt.sign({ user: USER_TEN, _id: userID }, process.env.ACCESS_TOKEN, { expiresIn: '1h' }),
                     refreshToken = jwt.sign({ user: USER_TEN, _id: userID }, process.env.REFRESH_TOKEN, { expiresIn: '7d' });
@@ -85,11 +85,12 @@ app.post('/login', async (req, res, next) => {
                 ///req.headers['authentization'] = accessToken;
 
                 //Trả thông tin thông báo đăng nhập thành công
-                console.log("Đăng nhập thành công");
+                console.log(" Đăng nhập thành công vào lúc", new Date().toLocaleString('vi-VN'));
                 console.log('USER: ',USER_TEN);
                 console.log('accessToken: ',accessToken);
                 console.log('refreshToken: ',USER_TEN);
                 console.log('ipV4Address: ',ip);
+                console.log('\t---------------------');
                 return res.status(200).json({
                     message: 'Đăng nhập thành công!',
                     USER: USER_TEN,
@@ -112,6 +113,11 @@ app.post('/login', async (req, res, next) => {
 //Làm mới Accesstoken, Khi mà Accesstoken hết hạn thì dựa vào RefreshToken để làm mới
 app.post('/refresh-token', kiemtra.KiemTraHieuLucCuaToken);
 
+//Kiểm tra đăng nhập
+app.get('/checkloggedin', kiemtra.CheckLogin, (req, res) =>{
+    return res.status(200).json({"message": "Đã đăng nhập"});
+});
+
 //Hủy phiên - đăng xuất
 app.post('/exit', kiemtra.DangXuat);
 
@@ -122,6 +128,7 @@ app.use((req, res, next) =>{
 
 //Xử lý lỗi từ phía máy chủ
 app.use((err, req, res, next)=>{
+    console.log('Internal server error! - Error: ',err);
     return res.status(err.statusCode || 500).json({
         message: err.message || 'Internal server error!',
     });

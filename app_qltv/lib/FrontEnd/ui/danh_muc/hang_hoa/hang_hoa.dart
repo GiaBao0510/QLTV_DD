@@ -167,7 +167,6 @@ class _HangHoaScreenState extends State<HangHoaScreen> {
                   child: ListTile(
                     title: Column(
                       children: [
-                        
                         Row(
                           children: [
                             Text(

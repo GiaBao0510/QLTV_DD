@@ -24,20 +24,49 @@ const TruyVan_ID_NguoiDung = async (iduser) =>{
 //1. Kiểm tra đăng nhập
 const CheckLogin = async (req, res, next)=>{
     try{
-        var token = req.cookies.refreshToken;
-        console.log('- Token: ',token);
-        var InforUser = jwt.verify(token,process.env.REFRESH_TOKEN)
-        const id = InforUser['_id'];
-        console.log('- id: ',id);
-        console.log('- inforUser',InforUser);
-        const KT = await TruyVan_ID_NguoiDung(id);
+        //
+        console.log("\n\t------ Kiểm tra đăng nhập ------- ");
+
+        var tokenOnHeader = req.headers['accesstoken'];  //Lấy token trên Headers
+        var tokenOnCookie = req.cookies['accessToken']; //Lấy token trên cookies
+        var Token = tokenOnCookie || tokenOnHeader;
+
+        //ĐK 1: Lấy accesstoken trên phần header và kiểm tra xem phần này nếu trống thì trả về không có token
         
-        if(!KT || KT.length == 0 ){
-            console.log('Không có quyền truy cập. Phần ID');
-            return res.status(400).json({message: "Bạn không có quyền truy cập", valid: 0});
-        }
-        console.log('Có quyền truy cập');
-        next();
+        if(Token == null) return res.status(400).json({message: "Token không được cấp", valid: 0});
+        console.log(' - AccessToken in Cookies or Headers: ',Token);
+
+        jwt.verify(Token,process.env.ACCESS_TOKEN ,async (err, decoded) => {
+            
+            //ĐK 2: Nếu xuất hiện lỗi thì báo Token không hợp lệ
+            if(err){
+                return res.status(401).json({message: "Token không hợp lệ", valid: 0});
+            }
+            let InforUser = decoded;
+            console.log(" - InforUser: ",decoded);
+            const id = InforUser['_id'];
+            const expire = InforUser['exp']* 1000;
+            const current = new Date().getTime();
+            const HetHan = new Date(expire),
+                HienTai = new Date(current);
+            console.log('- id: ',id);
+            console.log('- HienTai: ',HienTai.toLocaleString('vi-VN'));
+            console.log('- HetHan: ',HetHan.toLocaleString('vi-VN'));
+           
+            //ĐK 3: Nếu Token hết hạn thì không cho đăng nhập
+            if(HetHan < HienTai) return res.status(402).json({message: "Token không hợp lệ", valid: 0});
+
+            //ĐK 4: Truy vấn Nếu không tìm thấy ID người dùng thì trả về không đăng nhập
+            const KT = await TruyVan_ID_NguoiDung(id);
+            if(!KT || KT.length == 0 ){
+                console.log('Không có quyền truy cập. Phần ID');
+                return res.status(400).json({message: "Bạn không có quyền truy cập", valid: 0});
+            }
+            console.log('Có quyền truy cập');
+            next();
+        });
+        
+        
     }catch(err){
         console.log('Không có quyền truy cập');
         return res.status(403).json({message: "Token không hợp lệ", valid: 0});
@@ -107,6 +136,7 @@ const DangXuat = async(req, res) =>{
         res.clearCookie('isLoggedIn', {secure: true});
         res.clearCookie('accessToken', {secure: true});
         res.clearCookie('refreshToken', {secure: true});
+        console.log(' \t Đăng xuất thành công ');
         return res.status(200).json({message: "Hủy phiên thành công, Đăng xuất thành công"});
     }catch(err){
         return res.status(500).json({
@@ -118,15 +148,16 @@ const DangXuat = async(req, res) =>{
 
 //4. Xác thực Token
 const authenticationToken = async (req, res, next) =>{
-    const autHeader = req.headers['authentization'];
-    console.log('- xác thực Token: ',autHeader);
-    const token = autHeader && autHeader.split(' ')[1];
-    if(token == null) return res.status(401).json({message: "Token không được cấp"});
-    jwt.verify(token, process.env.ACCESS_TOKEN, (err, user) =>{
+    const Authorization = String(req.headers['authorization']).trim();
+    console.log('- xác thực Token hiện tại:',Authorization);
+    if(Authorization == null) return res.status(401).json({message: "Token không được cấp"});
+    jwt.verify(Authorization, process.env.ACCESS_TOKEN, (err, user) =>{
         if(err) return res.status(403).json({message: 'Token không hợp lệ'});
         req.user = user;
+        console.log('- Có quyền truy cập');
         next();
     });
+    //next();
 };
 
 module.exports = {
