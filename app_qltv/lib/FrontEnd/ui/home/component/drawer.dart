@@ -472,7 +472,7 @@ class drawer extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => Table_BaoCaoTonKhoVang()),
+                                builder: (context) => BaoCaoTonKhoVangScreen()),
                           );
                         },
                       ),

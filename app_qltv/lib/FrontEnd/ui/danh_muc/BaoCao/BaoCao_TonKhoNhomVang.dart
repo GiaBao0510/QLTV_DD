@@ -73,16 +73,12 @@ class _BaoCaoTonKhoNhomVangScreenState
             Navigator.of(context).pop();
           },
         ),
-        title: const Row(
-          children: [
-            Text("Báo Cáo Tồn Kho Nhóm Vàng",
-                style: TextStyle(
-                    color: Colors.black, fontWeight: FontWeight.w900)),
-            SizedBox(
-              width: 30,
-            )
-          ],
-        ),
+        title: const FittedBox(
+          fit: BoxFit.fitWidth,
+          child: Text("Báo Cáo Tồn Kho Nhóm Vàng",
+            style: TextStyle(
+                color: Colors.black, fontWeight: FontWeight.w900)),
+        )
       ),
       body: SafeArea(
         child: Padding(
