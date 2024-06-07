@@ -21,15 +21,21 @@ exports.getPhieuXuatById = async (req, res, next) => {
   }
 };
 
+
 exports.getPhieuXuatByDate = async (req, res, next) => {
-  try{
-    const phieu = await bao_caoPhieuServices.getPhieuXuatByDate(req.body);
-    res.status(201).json(phieu);
-  }catch(err){
+  try {
+    const { ngayBD, ngayKT } = req.query;
+    if (!ngayBD || !ngayKT) {
+      return res.status(400).json({ error: "Ngày bắt đầu và ngày kết thúc là bắt buộc." });
+    }
+
+    const phieu = await bao_caoPhieuServices.getPhieuXuatByDate(ngayBD, ngayKT);
+
+    res.status(200).json(phieu);
+  } catch(err) {
     next(err);
   }
-}
-
+};
 // Table: ton_kho
 
 exports.getTonKho = async (req, res, next) => {
@@ -63,5 +69,37 @@ exports.getTonKhoGroupProductById = async (req, res, next) => {
     res.status(200).json(phieuList);
   } catch (error) {
     next(error);
+  }
+};
+exports.getBCPhieuMuaVao = async (req, res, next) => {
+  try {
+    const phieuList = await bao_caoPhieuServices.getBCPhieuMuaVao();
+    res.status(200).json(phieuList);
+  } catch (error) {
+    next(error);
+  }
+};
+exports.getBCPhieuMuaVaoById = async (req, res, next) => {
+  try {
+    const phieu = await bao_caoPhieuServices.getBCPhieuMuaVaoById(req.params.id);
+    res.status(200).json(phieu);
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+exports.getBCPhieuMuaVaoByDate = async (req, res, next) => {
+  try {
+    const { ngayBD, ngayKT } = req.query;
+    if (!ngayBD || !ngayKT) {
+      return res.status(400).json({ error: "Ngày bắt đầu và ngày kết thúc là bắt buộc." });
+    }
+
+    const phieu = await bao_caoPhieuServices.getBCPhieuMuaVaoByDate(ngayBD, ngayKT);
+
+    res.status(200).json(phieu);
+  } catch(err) {
+    next(err);
   }
 };

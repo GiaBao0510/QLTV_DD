@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'package:app_qltv/FrontEnd/constants/config.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DonviManage with ChangeNotifier {
   List<Donvi> _donvi = [];
@@ -17,7 +18,13 @@ class DonviManage with ChangeNotifier {
 
   //   return data.map((item) => Donvi.fromMap(item)).toList();
   Future<List<Donvi>> fetchDonvi() async {
-    final response = await http.get(Uri.parse('$url/api/admin/danhsachNSdonvi/'));
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final response = await http.get(
+      Uri.parse('$url/api/admin/danhsachNSdonvi/'),
+      headers:{
+        "accesstoken": "${prefs.getString('accesstoken')}",
+      }
+    );
     if (response.statusCode == 200) {
       // Parse JSON array and convert to list of Donvi objects
       // List<dynamic> jsonList = jsonDecode(response.body);
@@ -34,10 +41,12 @@ class DonviManage with ChangeNotifier {
   }
   Future<void> addDonvi(Donvi donvi) async {
     // Thêm Donvi vào backend
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
     final response = await http.post(
       Uri.parse('$url/api/admin/themNSdonvi/'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
+        "accesstoken": "${prefs.getString('accesstoken')}",
       },
       body: jsonEncode(<String, dynamic>{
         'DON_VI_TEN': donvi.dvi_ten,
@@ -62,10 +71,12 @@ class DonviManage with ChangeNotifier {
 
   Future<Donvi> updateDonvi(int dvi_id,Donvi donvi) async {
     try {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
       final response = await http.put(
         Uri.parse('$url/api/admin/nsDonVi/$dvi_id'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
+          "accesstoken": "${prefs.getString('accesstoken')}",
         },
         body: jsonEncode(<String, dynamic>{
           'DON_VI_TEN': donvi.dvi_ten,
@@ -95,10 +106,12 @@ class DonviManage with ChangeNotifier {
 
   Future<Donvi> deleteDonvi(int dvi_id) async {
     try {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
       final response = await http.delete(
         Uri.parse('$url/api/admin/nsDonVi/$dvi_id'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
+          "accesstoken": "${prefs.getString('accesstoken')}",
         },
         body: jsonEncode(<String, dynamic>{
         }),

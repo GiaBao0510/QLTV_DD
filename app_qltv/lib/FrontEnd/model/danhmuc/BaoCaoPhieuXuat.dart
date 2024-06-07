@@ -17,7 +17,7 @@ class BaoCaoPhieuXuat_model {
   final double GIA_CONG;
   final double TONG_TIEN;
   final double THANH_TOAN;
-
+  final double TRI_GIA_MUA;
 
   BaoCaoPhieuXuat_model({
     required this.PHIEU_XUAT_MA,
@@ -38,6 +38,7 @@ class BaoCaoPhieuXuat_model {
     required this.GIA_CONG,
     required this.TONG_TIEN,
     required this.THANH_TOAN,
+    required this.TRI_GIA_MUA,
   });
 
   //Chuyển đôi Map sang Object
@@ -100,6 +101,8 @@ class BaoCaoPhieuXuat_model {
       (map['TONG_TIEN'] is double) ? map['TONG_TIEN'] : 0.0,
       THANH_TOAN: (map['THANH_TOAN'] is int)? (map['THANH_TOAN'] as int).toDouble() :
         (map['THANH_TOAN'] is double) ? map['THANH_TOAN'] : 0.0,
+      TRI_GIA_MUA: (map['TRI_GIA_MUA'] is int)? (map['TRI_GIA_MUA'] as int).toDouble() :
+        (map['TRI_GIA_MUA'] is double) ? map['TRI_GIA_MUA'] : 0.0,
     );
   }
 
@@ -125,5 +128,25 @@ class BaoCaoPhieuXuat_model {
       'TONG_TIEN':TONG_TIEN,
       'THANH_TOAN':THANH_TOAN,
     };
+  }
+}
+
+class BangBaoCaoPhieuXuat_model{
+  final List<BaoCaoPhieuXuat_model> PhieuXuat;
+  final String MaPhieuXuat;
+
+  BangBaoCaoPhieuXuat_model({
+    required this.PhieuXuat,
+    required this.MaPhieuXuat,
+  });
+
+  //Chuyen tu Map sang object
+  factory BangBaoCaoPhieuXuat_model.fromMap(Map<String, dynamic> json){
+    var list = json['data'] as List;
+    List<BaoCaoPhieuXuat_model> dataList = list.map((e) => BaoCaoPhieuXuat_model.fromMap(e)).toList();
+    return BangBaoCaoPhieuXuat_model(
+      MaPhieuXuat: json['PhieuXuatMa'] ?? "",
+      PhieuXuat: dataList,
+    );
   }
 }

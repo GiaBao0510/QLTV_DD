@@ -3,6 +3,7 @@ import 'package:app_qltv/FrontEnd/model/danhmuc/nhomvang.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:app_qltv/FrontEnd/constants/config.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:http/http.dart' as http;
 
@@ -14,7 +15,13 @@ class NhomVangManager with ChangeNotifier {
   int get nhomVangsLength => _nhomVangs.length;
 
   Future<List<NhomVang>> fetchLoaiHang() async {
-    final response = await http.get(Uri.parse('$url/api/admin/danhsachloaihang'));
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final response = await http.get(
+      Uri.parse('$url/api/admin/danhsachloaihang'),
+      headers: {
+        "accesstoken": "${prefs.getString('accesstoken')}",
+      }
+    );
 
     if (response.statusCode == 200) {
       // Parse JSON array and convert to list of NhomVang objects
@@ -31,8 +38,13 @@ class NhomVangManager with ChangeNotifier {
   }
 Future<NhomVang> getNhomVangById(int loaiId) async {
   try {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
     final response = await http.get(
-        Uri.parse('$url/api/admin/loaihang/$loaiId'));
+        Uri.parse('$url/api/admin/loaihang/$loaiId'),
+      headers: {
+        "accesstoken": "${prefs.getString('accesstoken')}",
+      }
+    );
     if (response.statusCode == 200) {
       final jsonData = jsonDecode(response.body);
       final nhomVang = NhomVang.fromMap(jsonData);
@@ -49,16 +61,19 @@ Future<NhomVang> getNhomVangById(int loaiId) async {
 
   Future<void> addNhomVang(NhomVang nhomVang) async {
     // Thêm nhomVang vào backend
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
     final response = await http.post(
       Uri.parse('$url/api/admin/themloaihang'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
+        "accesstoken": "${prefs.getString('accesstoken')}",
       },
       body: jsonEncode(<String, dynamic>{
           'LOAI_TEN': nhomVang.loaiTen,
           'GHI_CHU': nhomVang.ghiChu,
         }),
     );
+    print(response.body);
 
     if (response.statusCode == 200) {
       // Nếu thành công, thêm vào danh sách nội bộ và thông báo thay đổi
@@ -71,10 +86,12 @@ Future<NhomVang> getNhomVangById(int loaiId) async {
 
   Future<NhomVang> updateLoaiHang(int loaiId, String loaiMa, String loaiTen, String ghiChu, int suDung) async {
     try {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
       final response = await http.put(
         Uri.parse('$url/api/admin/loaihang/$loaiId'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
+          "accesstoken": "${prefs.getString('accesstoken')}",
         },
         body: jsonEncode(<String, dynamic>{
           'LOAIMA': loaiMa,
@@ -83,6 +100,7 @@ Future<NhomVang> getNhomVangById(int loaiId) async {
           'SU_DUNG': suDung, 
         }),
       );
+      print(response.body);
 
       if (response.statusCode == 200) {
         // Nếu server trả về mã status 200 OK, tiến hành parse JSON để tạo ra một đối tượng NhomVang từ dữ liệu nhận được
@@ -100,14 +118,17 @@ Future<NhomVang> getNhomVangById(int loaiId) async {
 
   Future<NhomVang> deleteNhomVang(int loaiId) async {
     try {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
       final response = await http.delete(
         Uri.parse('$url/api/admin/loaihang/$loaiId'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
+          "accesstoken": "${prefs.getString('accesstoken')}",
         },
         body: jsonEncode(<String, dynamic>{
         }),
       );
+      print(response.body);
 
       if (response.statusCode == 200) {
         // Nếu server trả về mã status 200 OK, tiến hành parse JSON để tạo ra một đối tượng NhomVang từ dữ liệu nhận được

@@ -28,6 +28,7 @@ class _BaoCaoTonKhoLoaiVangScreenState
   List<BaoCaoTonKhoLoaiVang> _filteredBaoCaoTonKhoLoaiVangList = [];
   List<BaoCaoTonKhoLoaiVang> _baoCaoTonKhoLoaiVangList = [];
   late Map<String, double> _summary;
+  late Map<String, double> _percentage;
   // ignore: unused_field
   String _selectedItem = '';
 
@@ -124,7 +125,7 @@ class _BaoCaoTonKhoLoaiVangScreenState
   void _calculatePercentage() {
     // Khởi tạo một map để lưu trữ tổng trọng lượng của mỗi nhóm
     Map<String, double> totalWeightByGroup = {};
-
+    double totalWeightAllGroups = 0;
     // Tính tổng trọng lượng của mỗi nhóm
     for (BaoCaoTonKhoLoaiVang baoCao in _baoCaoTonKhoLoaiVangList) {
       String nhomTen = baoCao.nhomTen;
@@ -132,20 +133,25 @@ class _BaoCaoTonKhoLoaiVangScreenState
       // Thêm trọng lượng vào tổng của nhóm
       totalWeightByGroup[nhomTen] =
           (totalWeightByGroup[nhomTen] ?? 0.0) + trongLuong;
+      totalWeightAllGroups += baoCao.tongThanhTien!;
+      // In ra giá trị để kiểm tra
+      print('Nhóm: $nhomTen, Trọng lượng: $trongLuong');
     }
-
-    // Tính tổng trọng lượng của toàn bộ dữ liệu
-    double totalWeightAllGroups =
-        totalWeightByGroup.values.reduce((a, b) => a + b);
-
+    // In ra tổng trọng lượng của tất cả các nhóm
+    print('Tổng trọng lượng tất cả các nhóm: $totalWeightAllGroups');
     // Tính phần trăm cho mỗi nhóm
     Map<String, double> percentageByGroup = {};
     totalWeightByGroup.forEach((nhomTen, totalWeight) {
-      percentageByGroup[nhomTen] = totalWeight / totalWeightAllGroups * 100;
+      double percentage = totalWeight / totalWeightAllGroups * 100;
+      percentageByGroup[nhomTen] = percentage;
+      print(
+          'Nhóm: $nhomTen, Tổng trọng lượng: $totalWeight, Phần trăm: $percentage');
     });
 
-    // Gán kết quả vào _summary
-    // _summary = percentageByGroup;
+    // Gán kết quả vào _percentage
+    setState(() {
+      _percentage = percentageByGroup;
+    });
   }
 
   Future<void> _handleExport(
@@ -169,10 +175,11 @@ class _BaoCaoTonKhoLoaiVangScreenState
 
   void _handleThongKe() {
     print('Option 3 selected');
+    _calculatePercentage();
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return const PieChartDialog();
+        return PieChartDialog(_percentage);
       },
     );
   }

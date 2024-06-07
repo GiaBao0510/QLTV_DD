@@ -9,7 +9,8 @@ class ChinhSuaLoaiVangScreen extends StatefulWidget {
 
   final LoaiVang loaiVang;
 
-  const ChinhSuaLoaiVangScreen({Key? key, required this.loaiVang}) : super(key: key);
+  const ChinhSuaLoaiVangScreen({Key? key, required this.loaiVang})
+      : super(key: key);
 
   @override
   State<ChinhSuaLoaiVangScreen> createState() => _ChinhSuaLoaiVangScreenState();
@@ -25,12 +26,19 @@ class _ChinhSuaLoaiVangScreenState extends State<ChinhSuaLoaiVangScreen> {
   void initState() {
     super.initState();
     _loadLoaiVanngs();
-    _editedLoaiVang = widget.loaiVang; // Initialize _editedLoaiVang with widget's nhomVang
+    _editedLoaiVang = widget.loaiVang;
     _editedLoaiVang.copyWith(nhomChaId: widget.loaiVang.nhomChaId);
+    _editedLoaiVang.copyWith(donGiaBan: widget.loaiVang.donGiaBan);
+    _editedLoaiVang.copyWith(donGiaMua: widget.loaiVang.donGiaMua);
+    _editedLoaiVang.copyWith(muaBan: widget.loaiVang.muaBan);
+    _editedLoaiVang.copyWith(donGiaVon: widget.loaiVang.donGiaVon);
+    _editedLoaiVang.copyWith(donGiaCam: widget.loaiVang.donGiaCam);
+    _editedLoaiVang.copyWith(suDung: widget.loaiVang.suDung);
   }
 
   Future<void> _loadLoaiVanngs() async {
-    _loaiVangFuture = Provider.of<LoaiVangManager>(context, listen: false).fetchLoaiHang();
+    _loaiVangFuture =
+        Provider.of<LoaiVangManager>(context, listen: false).fetchLoaiHang();
     _loaiVangFuture.then((loaiVangs) {
       setState(() {
         _loaiVangList = loaiVangs;
@@ -52,24 +60,29 @@ class _ChinhSuaLoaiVangScreenState extends State<ChinhSuaLoaiVangScreen> {
           },
         ),
         title: const Center(
-            child: Padding(
-              padding: EdgeInsets.only(right: 50.0),
-              child: Text("Chỉnh Sửa Loại Vàng", style: TextStyle(color: Colors.black ,fontWeight: FontWeight.w900), textAlign: TextAlign.center,),
+          child: Padding(
+            padding: EdgeInsets.only(right: 50.0),
+            child: Text(
+              "Chỉnh Sửa Loại Vàng",
+              style:
+                  TextStyle(color: Colors.black, fontWeight: FontWeight.w900),
+              textAlign: TextAlign.center,
             ),
+          ),
         ),
       ),
       body: Container(
-        padding: const EdgeInsets.all(16.0), 
+        padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _editForm,
           child: ListView(
             children: <Widget>[
               Container(
                 decoration: BoxDecoration(
-                  color: const Color.fromARGB(50, 169, 169, 169), 
-                  borderRadius: BorderRadius.circular(15.0), 
+                  color: const Color.fromARGB(50, 169, 169, 169),
+                  borderRadius: BorderRadius.circular(15.0),
                 ),
-                padding: const EdgeInsets.all(16.0), 
+                padding: const EdgeInsets.all(16.0),
                 child: Column(
                   children: [
                     Padding(
@@ -100,13 +113,18 @@ class _ChinhSuaLoaiVangScreenState extends State<ChinhSuaLoaiVangScreen> {
                   ],
                 ),
               ),
-              const SizedBox(height: 10,),
+              const SizedBox(
+                height: 10,
+              ),
               ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.grey[50]
-                ),
+                style:
+                    ElevatedButton.styleFrom(backgroundColor: Colors.grey[50]),
                 onPressed: () => _saveForm(context),
-                child: const Text('Cập Nhật', style: TextStyle(fontWeight: FontWeight.w900, color: Colors.green),),
+                child: const Text(
+                  'Cập Nhật',
+                  style: TextStyle(
+                      fontWeight: FontWeight.w900, color: Colors.green),
+                ),
               ),
             ],
           ),
@@ -115,8 +133,7 @@ class _ChinhSuaLoaiVangScreenState extends State<ChinhSuaLoaiVangScreen> {
     );
   }
 
-
- TextFormField buildLoaiVangField() {
+  TextFormField buildLoaiVangField() {
     return TextFormField(
       initialValue: _editedLoaiVang.nhomTen.toString(),
       decoration: const InputDecoration(
@@ -167,17 +184,17 @@ class _ChinhSuaLoaiVangScreenState extends State<ChinhSuaLoaiVangScreen> {
         return null;
       },
       onSaved: (value) {
-        _editedLoaiVang = _editedLoaiVang.copyWith(donGiaVon: double.parse(value!));
+        _editedLoaiVang =
+            _editedLoaiVang.copyWith(donGiaVon: double.parse(value!));
       },
     );
   }
 
-
-    TextFormField buildDonGiaMuaField() {
+  TextFormField buildDonGiaMuaField() {
     return TextFormField(
       initialValue: _editedLoaiVang.donGiaMua.toString(),
       decoration: const InputDecoration(
-        labelText: 'Đơn Giá Vốn',
+        labelText: 'Đơn Giá Mua',
         labelStyle: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
         filled: true,
         fillColor: Colors.white,
@@ -196,7 +213,8 @@ class _ChinhSuaLoaiVangScreenState extends State<ChinhSuaLoaiVangScreen> {
         return null;
       },
       onSaved: (value) {
-        _editedLoaiVang = _editedLoaiVang.copyWith(donGiaMua: double.parse(value!));
+        _editedLoaiVang =
+            _editedLoaiVang.copyWith(donGiaMua: double.parse(value!));
       },
     );
   }
@@ -214,7 +232,6 @@ class _ChinhSuaLoaiVangScreenState extends State<ChinhSuaLoaiVangScreen> {
           borderRadius: BorderRadius.all(Radius.circular(15.0)),
         ),
       ),
-
       textInputAction: TextInputAction.next,
       keyboardType: TextInputType.number,
       autofocus: true,
@@ -225,7 +242,8 @@ class _ChinhSuaLoaiVangScreenState extends State<ChinhSuaLoaiVangScreen> {
         return null;
       },
       onSaved: (value) {
-        _editedLoaiVang = _editedLoaiVang.copyWith(donGiaBan: double.parse(value!));
+        _editedLoaiVang =
+            _editedLoaiVang.copyWith(donGiaBan: double.parse(value!));
       },
     );
   }
@@ -243,7 +261,6 @@ class _ChinhSuaLoaiVangScreenState extends State<ChinhSuaLoaiVangScreen> {
           borderRadius: BorderRadius.all(Radius.circular(15.0)),
         ),
       ),
-
       textInputAction: TextInputAction.next,
       keyboardType: TextInputType.number,
       autofocus: true,
@@ -254,7 +271,8 @@ class _ChinhSuaLoaiVangScreenState extends State<ChinhSuaLoaiVangScreen> {
         return null;
       },
       onSaved: (value) {
-       _editedLoaiVang = _editedLoaiVang.copyWith(donGiaCam: double.parse(value!));
+        _editedLoaiVang =
+            _editedLoaiVang.copyWith(donGiaCam: double.parse(value!));
       },
     );
   }
@@ -271,7 +289,6 @@ class _ChinhSuaLoaiVangScreenState extends State<ChinhSuaLoaiVangScreen> {
           borderRadius: BorderRadius.all(Radius.circular(15.0)),
         ),
       ),
-
       textInputAction: TextInputAction.next,
       keyboardType: TextInputType.text,
       autofocus: true,
@@ -283,23 +300,26 @@ class _ChinhSuaLoaiVangScreenState extends State<ChinhSuaLoaiVangScreen> {
 
   DropdownButtonFormField<int> buildLoaiChaDropdown() {
     int? dropdownValue;
-    
+
     // Kiểm tra và gán giá trị mặc định từ _editedLoaiVang.nhomHangMa
     if (_editedLoaiVang.nhomHangMa != '') {
       int? parsedValue = int.tryParse(_editedLoaiVang.nhomHangMa!);
-      if (parsedValue != null && _loaiVangList.any((loaiHang) => int.tryParse(loaiHang.nhomHangMa!) == parsedValue)) {
+      if (parsedValue != null &&
+          _loaiVangList.any((loaiHang) =>
+              int.tryParse(loaiHang.nhomHangMa!) == parsedValue)) {
         dropdownValue = parsedValue;
       }
     }
-    
+
     // Lấy danh sách các mục cho DropdownButtonFormField
-    final List<DropdownMenuItem<int>> dropdownItems = _loaiVangList.map((LoaiVang loaiHang) {
+    final List<DropdownMenuItem<int>> dropdownItems =
+        _loaiVangList.map((LoaiVang loaiHang) {
       return DropdownMenuItem<int>(
         value: int.parse(loaiHang.nhomHangMa!),
         child: Text(loaiHang.nhomTen!),
       );
     }).toList();
-    
+
     // Nếu giá trị mặc định không tồn tại trong danh sách, gán giá trị mặc định đầu tiên từ danh sách
     if (dropdownValue == null && dropdownItems.isNotEmpty) {
       dropdownValue = null;
@@ -334,41 +354,60 @@ class _ChinhSuaLoaiVangScreenState extends State<ChinhSuaLoaiVangScreen> {
     );
   }
 
-
   Future<void> _saveForm(BuildContext context) async {
     final isValid = _editForm.currentState!.validate();
     if (!isValid) {
       return;
     }
     _editForm.currentState!.save();
-    
+
     try {
-      final nhomVangManager = Provider.of<LoaiVangManager>(context, listen: false); 
-      await nhomVangManager.updateLoaiVang(int.parse(_editedLoaiVang.nhomHangId!), _editedLoaiVang); 
+      final nhomVangManager =
+          Provider.of<LoaiVangManager>(context, listen: false);
+      print("_editedLoaiVang");
+      print(_editedLoaiVang.donGiaVon);
+      await nhomVangManager.updateLoaiVang(
+          int.parse(_editedLoaiVang.nhomHangId!), _editedLoaiVang);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('Cập nhật thành công!', style: TextStyle(fontWeight: FontWeight.w900), textAlign: TextAlign.center,),
+          content: const Text(
+            'Cập nhật thành công!',
+            style: TextStyle(fontWeight: FontWeight.w900),
+            textAlign: TextAlign.center,
+          ),
           backgroundColor: Colors.grey,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15.0),
-            side: const BorderSide(color: Colors.grey, width: 2.0), // bo viền 15px
+            side: const BorderSide(
+                color: Colors.grey, width: 2.0), // bo viền 15px
           ),
           behavior: SnackBarBehavior.floating, // hiển thị ở cách đáy màn hình
-          margin: const EdgeInsets.only(left: 15.0, right: 15.0, bottom: 15.0), // cách 2 cạnh và đáy màn hình 15px
+          margin: const EdgeInsets.only(
+              left: 15.0,
+              right: 15.0,
+              bottom: 15.0), // cách 2 cạnh và đáy màn hình 15px
         ),
       );
       Navigator.of(context).pop(true); // Go back to the previous screen
     } catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Failed to update data: ${error.toString()}', style: TextStyle(fontWeight: FontWeight.w900, color: Colors.red), textAlign: TextAlign.center,),
+          content: Text(
+            'Failed to update data: ${error.toString()}',
+            style: TextStyle(fontWeight: FontWeight.w900, color: Colors.red),
+            textAlign: TextAlign.center,
+          ),
           backgroundColor: Colors.grey,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15.0),
-            side: const BorderSide(color: Colors.grey, width: 2.0), // bo viền 15px
+            side: const BorderSide(
+                color: Colors.grey, width: 2.0), // bo viền 15px
           ),
           behavior: SnackBarBehavior.floating, // hiển thị ở cách đáy màn hình
-          margin: const EdgeInsets.only(left: 15.0, right: 15.0, bottom: 15.0), // cách 2 cạnh và đáy màn hình 15px
+          margin: const EdgeInsets.only(
+              left: 15.0,
+              right: 15.0,
+              bottom: 15.0), // cách 2 cạnh và đáy màn hình 15px
         ),
       );
     }

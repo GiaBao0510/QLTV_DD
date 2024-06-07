@@ -24,9 +24,9 @@ router.route('/themloaihang').post( KiemTra.CheckLogin, loaihang.Add_LoaiHang);
 
 //2. lấy,Xóa và sửa loại hàng
 router.route('/loaihang/:LOAIID')
-            .get(loaihang.lay_LoaiHang)
-            .put(loaihang.update_LoaiHang)
-            .delete(loaihang.Delete_LoaiHang);
+            .get(KiemTra.CheckLogin,loaihang.lay_LoaiHang)
+            .put(KiemTra.CheckLogin,loaihang.update_LoaiHang)
+            .delete(KiemTra.CheckLogin,loaihang.Delete_LoaiHang);
 
 //3.Lấy danh sách thông tin loại hàng
 router.route('/danhsachloaihang').get(KiemTra.CheckLogin, loaihang.list_LoaiHang);

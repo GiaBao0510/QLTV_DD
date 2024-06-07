@@ -4,6 +4,7 @@ import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'package:app_qltv/FrontEnd/constants/config.dart';
 import 'package:app_qltv/FrontEnd/model/hethong/nguoidung.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class NguoiDungManager with ChangeNotifier {
   List<NguoiDung> _nguoiDungs = [];
@@ -30,7 +31,13 @@ class NguoiDungManager with ChangeNotifier {
   // bool get isDataLoaded => _nguoiDungs.isNotEmpty;
 
   Future<List<NguoiDung>> fetchNguoiDungs() async {
-    final response = await http.get(Uri.parse('$url/api/users/'));
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final response = await http.get(
+      Uri.parse('$url/api/users/'),
+      headers: {
+        "accesstoken": "${prefs.getString('accesstoken')}",
+      },
+    );
 
     if (response.statusCode == 200) {
       // Parse JSON array and convert to list of NguoiDung objects

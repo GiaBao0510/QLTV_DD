@@ -3,6 +3,7 @@ import 'package:app_qltv/FrontEnd/model/danhmuc/BaoCaoTonKhoLoaiVang.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class BaoCaoTonKhoLoaiVangManager with ChangeNotifier {
   List<BaoCaoTonKhoLoaiVang> _baoCaoTonKhoLoaiVang = [];
@@ -12,8 +13,14 @@ class BaoCaoTonKhoLoaiVangManager with ChangeNotifier {
   int get baoCaoTonKhoLoaiVangLength => _baoCaoTonKhoLoaiVang.length;
 
   Future<List<BaoCaoTonKhoLoaiVang>> fetchBaoCaoTonKhoLoaiVang() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
     final response =
-        await http.get(Uri.parse('$url/api/admin/baocaotonkholoaivang'));
+        await http.get(
+          Uri.parse('$url/api/admin/baocaotonkholoaivang'),
+          headers: {
+            "accesstoken": "${prefs.getString('accesstoken')}",
+          }
+        );
     if (response.statusCode == 200) {
       // Parse JSON array and convert to list of LoaiVang objects
       List<dynamic> jsonList = jsonDecode(response.body);

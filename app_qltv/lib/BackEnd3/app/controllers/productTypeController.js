@@ -2,7 +2,7 @@ const productTypeService = require('../services/productTypeServices');
 exports.createProductType = async (req, res, next) => {
   try {
     const newUser = await productTypeService.createProductType(req.body);
-    res.status(201).json(newUser);
+    res.status(200).json(newUser);
   } catch (error) {
     next(error);
   }

@@ -8,6 +8,7 @@ import 'package:app_qltv/FrontEnd/constants/config.dart';
 import 'package:app_qltv/FrontEnd/Service/ThuVien.dart';
 import './ThongTinChiTietPhieuCam.dart';
 import 'package:app_qltv/FrontEnd/Service/export/PDF/PhieuDangCam_PDF.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class PhieuDangCam extends StatefulWidget {
   static const routeName = '/phieudangcam';
@@ -37,9 +38,15 @@ class _PhieuDangCam extends State<PhieuDangCam> {
 
   // ------------ Phương thức ----------------
   Future<List<dynamic>> PhieuDangCam_list() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
     String path = url + '/api/cam/dangcam';
-    var res = await http
-        .get(Uri.parse(path), headers: {"Content-Type": "application/json"});
+    var res = await http.get(
+        Uri.parse(path),
+        headers: {
+          "Content-Type": "application/json",
+          "accesstoken": "${prefs.getString('accesstoken')}",
+        }
+    );
     List<dynamic> list = jsonDecode(res.body);
 
     //Xử lý tính tổng
