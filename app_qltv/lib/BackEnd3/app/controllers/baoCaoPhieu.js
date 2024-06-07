@@ -71,6 +71,16 @@ exports.getTonKhoGroupProductById = async (req, res, next) => {
     next(error);
   }
 };
+
+exports.getKhoVangMuaVaoController = async (req, res, next) => {
+  try {
+    const phieuList = await bao_caoPhieuServices.getKhoVangMuaVao();
+    res.status(200).json(phieuList);
+  } catch (error) {
+    next(error);
+  }
+};
+
 exports.getBCPhieuMuaVao = async (req, res, next) => {
   try {
     const phieuList = await bao_caoPhieuServices.getBCPhieuMuaVao();
