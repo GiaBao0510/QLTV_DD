@@ -65,26 +65,28 @@ class NguoiDung {
     );
   }
 
-  factory NguoiDung.fromJson(Map<String, dynamic> json) {
+  factory NguoiDung.fromMap(Map<String, dynamic> map) {
     return NguoiDung(
-      userId: json['USER_ID'],
-      groupId: json['GROUP_ID'],
-      userMa: json['USER_MA'],
-      userTen: json['USER_TEN'],
-      matKhau: json['MAT_KHAU'],
-      biKhoa: json['BIKHOA'] == 1,
-      lyDoKhoa: json['LY_DO_KHOA'],
-      ngayTao: json['NGAY_TAO'] != null ? DateTime.parse(json['NGAY_TAO']) : null,
-      suDung: json['SU_DUNG'] == 1,
-      realm: json['REALM'],
-      email: json['EMAIL'],
-      emailVerified: json['EMAILVERIFIED'],
-      verificationToken: json['VERIFICATIONTOKEN'],
-      mac: json['MAC'],
+      // userId: map['USER_ID'],
+      // groupId: map['GROUP_ID'],
+      userId: map['USER_ID'] is int ? map['USER_ID'] : int.tryParse(map['USER_ID'] ?? ''),
+      groupId: map['GROUP_ID'] is int ? map['GROUP_ID'] : int.tryParse(map['GROUP_ID'] ?? ''),
+      userMa: map['USER_MA'],
+      userTen: map['USER_TEN'],
+      matKhau: map['MAT_KHAU'],
+      biKhoa: map['BIKHOA'] == 1,
+      lyDoKhoa: map['LY_DO_KHOA'],
+      ngayTao: map['NGAY_TAO'] != null ? DateTime.parse(map['NGAY_TAO']) : null,
+      suDung: map['SU_DUNG'] == 1,
+      realm: map['REALM'],
+      email: map['EMAIL'],
+      emailVerified: map['EMAILVERIFIED'],
+      verificationToken: map['VERIFICATIONTOKEN'],
+      mac: map['MAC'],
     );
   }
 
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toMap() {
     return {
       'USER_ID': userId,
       'GROUP_ID': groupId,
@@ -102,6 +104,5 @@ class NguoiDung {
       'MAC': mac,
     };
   }
-
   
 }

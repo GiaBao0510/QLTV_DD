@@ -81,7 +81,7 @@ const getPhieuXuat = async () => {
 
 const getPhieuXuatByDate = async (ngayBD, ngayKT) => {
   return new Promise((resolve, reject) => {
-    const query = `
+const query = `
     SELECT px.PHIEU_XUAT_ID, px.PHIEU_XUAT_MA, px.NGAY_XUAT,
       ctpx.HANGHOAMA, ctpx.HANG_HOA_TEN, ctpx.LOAIVANG, 
       ctpx.CAN_TONG, ctpx.TL_HOT, (ctpx.CAN_TONG - ctpx.TL_HOT) AS TL_VANG, 
@@ -168,15 +168,40 @@ const getTonKhoGroupProduct = async () => {
 //     });
 //   });
 // };
-///////phm_kho_vang_mua_vao
 
+///////Kho_vang_mua_vao
+const getKhoVangMuaVao = async () => {
+  return new Promise((resolve, reject) => {
+    db.query(`
+      SELECT khmv.TEN_HANG_HOA, nh.NHOM_TEN, khmv.CAN_TONG, khmv.TL_LOC, khmv.TL_HOT, khmv.TL_THUC, khmv.SO_LUONG, khmv.DON_GIA 
+      FROM phm_kho_vang_mua_vao khmv 
+      JOIN nhom_hang nh 
+      WHERE khmv.NHOMHANGID = nh.NHOMHANGID`, (error, results) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve(results);
+      }
+    });
+  });
+};
+
+///////phm_chi_tiet_phieu_mua_vao
 const getBCPhieuMuaVao = async () => {
   return new Promise((resolve, reject) => {
-    db.query(
-    `
-    SELECT *
-    FROM phm_kho_vang_mua_vao`
-    , (error, results) => {
+    const query = `
+      SELECT pmv.PHIEU_MUA_VAO_ID, pmv.PHIEU_MA, pmv.KHACH_HANG_ID, pmv.USER_ID, pmv.CAN_TONG, pmv.TL_HOT, pmv.THANH_TOAN,
+             pmv.NGAY_PHIEU, pmv.NGAY_NHAP, pmv.SU_DUNG, pmv.GHI_CHU, pmv.PHIEU_DOI,
+             ctpv.CHI_TIET_ID, ctpv.HANG_HOA_MA, ctpv.HANG_HOA_TEN, ctpv.DVT_ID, ctpv.NHOM_ID,
+ctpv.CAN_TONG AS CTPV_CAN_TONG, ctpv.TL_HOT AS CTPV_TL_HOT, ctpv.SO_LUONG, 
+             ctpv.DON_GIA, ctpv.THANH_TIEN AS CTPV_THANH_TIEN, ctpv.SU_DUNG AS CTPV_SU_DUNG, 
+             ctpv.GHI_CHU AS CTPV_GHI_CHU, ctpv.TL_LOC,
+             nh.NHOM_TEN
+      FROM phm_phieu_mua_vao pmv
+      JOIN phm_chi_tiet_phieu_mua_vao ctpv ON pmv.PHIEU_MUA_VAO_ID = ctpv.PHIEU_MUA_VAO_ID
+      LEFT JOIN nhom_hang nh ON ctpv.NHOM_ID = nh.NHOMHANGID
+    `;
+    db.query(query, (error, results) => {
       if (error) {
         reject(error);
       } else {
@@ -188,37 +213,44 @@ const getBCPhieuMuaVao = async () => {
 const getBCPhieuMuaVaoByDate = async (ngayBD, ngayKT) => {
   return new Promise((resolve, reject) => {
     const query = `
-      SELECT km.PHIEU_MA, km.MA_HANG_HOA, km.TEN_HANG_HOA, km.NGAY_NHAP, km.NGAY_PHIEU,
-             km.CAN_TONG, km.TL_HOT, (km.CAN_TONG - km.TL_HOT) AS TL_VANG, 
-             km.DON_GIA, km.THANH_TIEN
-      FROM phm_kho_vang_mua_vao km
-      WHERE DATE(km.NGAY_NHAP) BETWEEN ? AND ?
+      SELECT pmv.PHIEU_MA, ctpv.HANG_HOA_MA, ctpv.HANG_HOA_TEN, pmv.NGAY_NHAP, pmv.NGAY_PHIEU,
+             ctpv.CAN_TONG AS CTPV_CAN_TONG, ctpv.TL_HOT AS CTPV_TL_HOT, 
+             (ctpv.CAN_TONG - ctpv.TL_HOT) AS TL_VANG, 
+             ctpv.DON_GIA, ctpv.THANH_TIEN AS CTPV_THANH_TIEN,
+             nh.NHOM_TEN
+      FROM phm_phieu_mua_vao pmv
+      JOIN phm_chi_tiet_phieu_mua_vao ctpv ON pmv.PHIEU_MUA_VAO_ID = ctpv.PHIEU_MUA_VAO_ID
+      LEFT JOIN nhom_hang nh ON ctpv.NHOM_ID = nh.NHOMHANGID
+      WHERE DATE(pmv.NGAY_NHAP) BETWEEN ? AND ?
     `;
-    // console.log('Query:', query); // In ra query
-    // console.log('Parameters:', [ngayBD, ngayKT]); // In ra tham số
-
     db.query(query, [ngayBD, ngayKT], (error, results) => {
       if (error) {
         reject(error);
       } else {
-        console.log('Results:', results); // In ra kết quả
+        resolve(results);
+      }
+    });
+  });
+};
+const getBCPhieuMuaVaoById = async (id) => {
+  return new Promise((resolve, reject) => {
+    const query = `
+      SELECT pmv.*, ctpv.*, nh.NHOM_TEN
+      FROM phm_phieu_mua_vao pmv
+      JOIN phm_chi_tiet_phieu_mua_vao ctpv ON pmv.PHIEU_MUA_VAO_ID = ctpv.PHIEU_MUA_VAO_ID
+      LEFT JOIN nhom_hang nh ON ctpv.NHOM_ID = nh.NHOMHANGID
+      WHERE pmv.PHIEU_MUA_VAO_ID = ?
+    `;
+    db.query(query, [id], (error, results) => {
+      if (error) {
+        reject(error);
+      } else {
         resolve(results);
       }
     });
   });
 };
 
-const getBCPhieuMuaVaoById = async (id) => {
-  return new Promise((resolve, reject) => {
-    db.query('SELECT * FROM phm_kho_vang_mua_vao WHERE KHO_ID = ?', [id], (error, results) => {
-      if (error) {
-        reject(error);
-      } else {
-        resolve(results[0]);
-      }
-    });
-  });
-};
 module.exports = {
   getPhieuXuat,
   getPhieuXuatById,
@@ -227,6 +259,7 @@ module.exports = {
   getTonKhoGroupProduct,
   getPhieuXuatByDate,
   // getTonKhoGPById
+  getKhoVangMuaVao,
   getBCPhieuMuaVao,
   getBCPhieuMuaVaoByDate,
   getBCPhieuMuaVaoById
