@@ -23,6 +23,7 @@ import 'package:flutter/material.dart';
 
 final Map<String, WidgetBuilder> routes = {
   LoaiVangScreen.routeName: (ctx) => LoaiVangScreen(),
+  KhachhangScreen.routeName: (ctx) => KhachhangScreen(),
   NhomVangScreen.routeName: (ctx) => NhomVangScreen(),
   ThemNhomVangScreen.routeName: (ctx) => ThemNhomVangScreen(),
   NhomPage.routeName: (ctx) => NhomPage(),

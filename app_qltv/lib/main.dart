@@ -2,7 +2,7 @@ import 'package:app_qltv/FrontEnd/controller/danhmuc/BaoCaoPhieuXuat_manage.dart
 import 'package:app_qltv/FrontEnd/controller/danhmuc/BaoCaoTonKhoVang_manager.dart';
 import 'package:app_qltv/FrontEnd/controller/danhmuc/BaoCaoTonKhoLoaiVang_manager.dart';
 import 'package:app_qltv/FrontEnd/controller/danhmuc/don_vi_manage.dart';
-
+import 'package:app_qltv/FrontEnd/constants/config.dart';
 import 'package:app_qltv/FrontEnd/controller/danhmuc/khachhang_manager.dart';
 
 import 'package:app_qltv/FrontEnd/controller/danhmuc/BaoCaoTonKhoNhomVang_manager.dart';
@@ -18,6 +18,8 @@ import 'package:app_qltv/FrontEnd/Service/ThuVien.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'dart:io';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 import 'package:app_qltv/FrontEnd/ui/components/NotConnectInternet.dart';
 import 'package:app_qltv/FrontEnd/ui/home/home.dart';
 import 'package:app_qltv/FrontEnd/ui/routes.dart';
@@ -36,6 +38,7 @@ class MyApp extends StatelessWidget {
   Future<Widget> KiemTraDangNhap(BuildContext context) async {
     // >>>>>> kIỂM TRA KẾT NỐI MẠNG
     final result = await ActiveConnection();
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
     print("Ket noi: $result");
     if (result == true) {
       //Nếu kết nôi mạng thành công thi chuyeen sang kiem tra dang nhap
@@ -48,17 +51,21 @@ class MyApp extends StatelessWidget {
         return LoginPage();
       }
 
-      // >>>>>>>>>>>>>>>>>>>>>>> Vấn đề <<<<<<<<<<<<<<<<<<<<<<<<<
-      // var res = await http.post(Uri.parse(checkValid), headers: {"Content-Type": "application/json"},);
-      //
-      // print(res.body);
-      // final thongtinphanhoi = jsonDecode(res.body);
-      // final hieuluc = thongtinphanhoi['valid'] as int;
-      //
-      // //Nếu chưa có tài khoản cn hiệu lực không. Nếu hết hiệu lực thì đăng nhập
-      // if(hieuluc == 0){
-      //   return const LoginPage();
-      // }
+      // >>>>>>>>>>>>>>>>>>>>>>> Kiểm tra token <<<<<<<<<<<<<<<<<<<<<<<<<
+      var res = await http.get(
+        Uri.parse(CheckLoggedIn),
+        headers: {
+          "Content-Type": "application/json",
+          "accesstoken": "${prefs.getString('accesstoken')}",
+        },
+      );
+      print(res.body);
+
+      if (res.statusCode == 200) {
+        return const HomeScreen();
+      } else {
+        return LoginPage();
+      }
       return const HomeScreen();
     } else {
       return InterfaceConnectionError();
@@ -102,7 +109,10 @@ class MyApp extends StatelessWidget {
           future: KiemTraDangNhap(context),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              return snapshot.data!;
+              return RefreshIndicator(
+                child: snapshot.data!,
+                onRefresh: () => KiemTraDangNhap(context),
+              );
             } else if (snapshot.hasError) {
               return Text("Error: ${snapshot.error}");
             } else {

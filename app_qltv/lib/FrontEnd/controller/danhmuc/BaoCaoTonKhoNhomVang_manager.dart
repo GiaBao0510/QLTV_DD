@@ -3,6 +3,7 @@ import 'package:app_qltv/FrontEnd/model/danhmuc/BaoCaoTonKhoNhomVang.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class BaoCaoTonKhoNhomVangManager with ChangeNotifier {
   List<BaoCaoTonKhoNhomVang> _baoCaoTonKhoNhomVang = [];
@@ -12,8 +13,12 @@ class BaoCaoTonKhoNhomVangManager with ChangeNotifier {
   int get baoCaoTonKhoNhomVangLength => _baoCaoTonKhoNhomVang.length;
 
   Future<List<BaoCaoTonKhoNhomVang>> fetchBaoCaoTonKhoNhomVang() async {
-    final response =
-        await http.get(Uri.parse('$url/api/admin/baocaotonkhotheonhomvang'));
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final response = await http
+        .get(Uri.parse('$url/api/admin/baocaotonkhotheonhomvang'), headers: {
+      "accesstoken": "${prefs.getString('accesstoken')}",
+    });
+    print(response.body);
     if (response.statusCode == 200) {
       // Parse JSON array and convert to list of NhomVang objects
       List<dynamic> jsonList = jsonDecode(response.body);

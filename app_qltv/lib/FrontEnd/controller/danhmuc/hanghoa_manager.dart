@@ -4,6 +4,7 @@ import 'package:app_qltv/FrontEnd/model/danhmuc/hanghoa.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:app_qltv/FrontEnd/constants/config.dart';
 
 
@@ -16,7 +17,13 @@ class HangHoaManager with ChangeNotifier {
 
   Future<List<HangHoa>> fetchHangHoas() async {
     try {
-      final response = await http.get(Uri.parse('$url/api/admin/danhsachhanghoa'));
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      final response = await http.get(
+        Uri.parse('$url/api/admin/danhsachhanghoa'),
+        headers: {
+            "accesstoken": "${prefs.getString('accesstoken')}",
+        }
+      );
       if (response.statusCode == 200) {
         List<dynamic> jsonList = jsonDecode(response.body);
         List<HangHoa> hangHoaList = jsonList.map((e) => HangHoa.fromMap(e)).toList();
@@ -40,13 +47,16 @@ class HangHoaManager with ChangeNotifier {
   }
 
   Future<void> addHangHoa(HangHoa hangHoa) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
     final response = await http.post(
       Uri.parse('$url/api/admin/themhanghoa'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
+        "accesstoken": "${prefs.getString('accesstoken')}",
       },
       body: jsonEncode(hangHoa.toMap()),
     );
+    print(response.body);
 
     if (response.statusCode == 200) {
       _hangHoas.add(hangHoa);
@@ -58,10 +68,12 @@ class HangHoaManager with ChangeNotifier {
 
   Future<HangHoa> updateHangHoa(String hangHoaMa, HangHoa updatedHangHoa) async {
     try {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
       final response = await http.put(
         Uri.parse('$url/api/admin/hanghoa/$hangHoaMa'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
+          "accesstoken": "${prefs.getString('accesstoken')}",
         },
         body: jsonEncode(updatedHangHoa.toMap()),
       );
@@ -83,10 +95,12 @@ class HangHoaManager with ChangeNotifier {
 
   Future<void> deleteHangHoa(String hangHoaMa) async {
     try {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
       final response = await http.delete(
         Uri.parse('$url/api/admin/hanghoa/$hangHoaMa'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
+          "accesstoken": "${prefs.getString('accesstoken')}",
         },
       );
 

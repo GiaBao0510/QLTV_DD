@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import '../../model/danhmuc/loaivang.dart';
 import 'package:app_qltv/FrontEnd/constants/config.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoaiVangManager with ChangeNotifier {
   List<LoaiVang> _loaiVangs = [];
@@ -12,7 +13,11 @@ class LoaiVangManager with ChangeNotifier {
   int get loaiVangsLength => _loaiVangs.length;
 
   Future<List<LoaiVang>> fetchLoaiHang() async {
-    final response = await http.get(Uri.parse('$url/api/productType/'));
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final response =
+        await http.get(Uri.parse('$url/api/productType/'), headers: {
+      "accesstoken": "${prefs.getString('accesstoken')}",
+    });
     if (response.statusCode == 200) {
       // Parse JSON array and convert to list of NhomVang objects
       List<dynamic> jsonList = jsonDecode(response.body);
@@ -30,8 +35,11 @@ class LoaiVangManager with ChangeNotifier {
 
   Future<LoaiVang> getLoaiVangById(int loaiId) async {
     try {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
       final response =
-          await http.get(Uri.parse('$url/api/productType/$loaiId'));
+          await http.get(Uri.parse('$url/api/productType/$loaiId'), headers: {
+        "accesstoken": "${prefs.getString('accesstoken')}",
+      });
       if (response.statusCode == 200) {
         final jsonData = jsonDecode(response.body);
         final loaiVang = LoaiVang.fromMap(jsonData);
@@ -46,11 +54,13 @@ class LoaiVangManager with ChangeNotifier {
   }
 
   Future<void> addLoaiVang(LoaiVang loaiVang) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
     // Thêm loaiVang vào backend
     final response = await http.post(
       Uri.parse('$url/api/productType/'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
+        "accesstoken": "${prefs.getString('accesstoken')}",
       },
       body: jsonEncode(<String, dynamic>{
         'NHOM_TEN': loaiVang.nhomTen,
@@ -64,6 +74,7 @@ class LoaiVangManager with ChangeNotifier {
         'NHOMCHAID': loaiVang.nhomChaId,
       }),
     );
+    print(response.body);
 
     if (response.statusCode == 200) {
       // Nếu thành công, thêm vào danh sách nội bộ và thông báo thay đổi
@@ -76,10 +87,12 @@ class LoaiVangManager with ChangeNotifier {
 
   Future<void> updateLoaiVang(int loaiId, LoaiVang loaiVang) async {
     try {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
       final response = await http.put(
         Uri.parse('$url/api/productType/$loaiId'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
+          "accesstoken": "${prefs.getString('accesstoken')}",
         },
         body: jsonEncode(<String, dynamic>{
           'NHOM_TEN': loaiVang.nhomTen,
@@ -91,14 +104,12 @@ class LoaiVangManager with ChangeNotifier {
           'NHOMCHAID': loaiVang.nhomChaId,
         }),
       );
+      print(response.body);
 
       if (response.statusCode == 200) {
         // Nếu server trả về mã status 200 OK, tiến hành parse JSON để tạo ra một đối tượng NhomVang từ dữ liệu nhận được
         notifyListeners();
-        // print('Status 200!');
-        // print(response.body);
-        // return LoaiVang.fromMap(
-        //     jsonDecode(response.body) as Map<String, dynamic>);
+        // return LoaiVang.fromMap(jsonDecode(response.body) as Map<String, dynamic>);
       } else {
         // Nếu server không trả về mã status 200 OK, ném một Exception để thông báo rằng việc cập nhật thất bại
         throw Exception('Failed to update LoaiHang: ${response.statusCode}');
@@ -112,19 +123,21 @@ class LoaiVangManager with ChangeNotifier {
 
   Future<void> deleteLoaiVang(String loaiId) async {
     try {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
       final response = await http.delete(
         Uri.parse('$url/api/productType/$loaiId'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
+          "accesstoken": "${prefs.getString('accesstoken')}",
         },
         body: jsonEncode(<String, dynamic>{}),
       );
+      print(response.body);
 
       if (response.statusCode == 200) {
         // Nếu server trả về mã status 200 OK, tiến hành parse JSON để tạo ra một đối tượng LoaiVang từ dữ liệu nhận được
         notifyListeners();
-        // return LoaiVang.fromMap(
-        // jsonDecode(response.body) as Map<String, dynamic>);
+        // return LoaiVang.fromMap(jsonDecode(response.body) as Map<String, dynamic>);
       } else {
         // Nếu server không trả về mã status 200 OK, ném một Exception để thông báo rằng việc cập nhật thất bại
         throw Exception('Failed to update LoaiHang: ${response.statusCode}');
