@@ -109,6 +109,22 @@ class _BaoCaoPhieuXuat extends State<BaoCaoPhieuXuatScreen> {
         onLayout: (PdfPageFormat format) async => Doc.save());
   }
 
+      //4.Chuyển sang phần xuất file PDF Dang bảng
+  Future<void> printDoc(List<BangBaoCaoPhieuXuat_model> data, Map<String, dynamic> GetThongTinTinhTong) async{
+    final font = await loadFont('assets/fonts/Roboto-Regular.ttf');
+    final doc = pw.Document();
+    doc.addPage(
+        pw.Page(
+            pageFormat: PdfPageFormat.a4,
+            build: (pw.Context context){
+              return buildPrintableData(data,font ,GetThongTinTinhTong);
+            }
+        )
+    );
+    await Printing.layoutPdf(
+        onLayout: (PdfPageFormat format) async => doc.save());
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -137,6 +153,7 @@ class _BaoCaoPhieuXuat extends State<BaoCaoPhieuXuatScreen> {
                     child:TextButton(
                       onPressed: () {
                         print('Chuyen sang PDF');
+                        printDoc(_filterPhieuXuatList, ThongTinTinhTong);
                       },
                       child: Text('Export PDF'),
                     ),
