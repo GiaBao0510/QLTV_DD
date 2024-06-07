@@ -32,7 +32,12 @@ class BaocaophieuxuatManage with ChangeNotifier{
     }
   }
 
-  Future<void> LayDuLieuPhieuXuat_test () async{
+  //-----------------------
+  List<BangBaoCaoPhieuXuat_model> _bangBaoCaoPhieuXuat = [];
+  List<BangBaoCaoPhieuXuat_model> get bangBaoCaoPhieuXuat => _bangBaoCaoPhieuXuat;
+  int get bangBaoCaoPhieuXuatLenght => _bangBaoCaoPhieuXuat.length;
+
+  Future<List<BangBaoCaoPhieuXuat_model>> LayDuLieuPhieuXuat_test () async{
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final response = await http.get(
         Uri.parse('$url/api/phieu/phieuxuat'),
@@ -43,9 +48,17 @@ class BaocaophieuxuatManage with ChangeNotifier{
     print(response.body);
     if(response.statusCode == 200){
       List<dynamic> jsonList = jsonDecode(response.body);
-      //print(jsonList['data']);
+      List<BangBaoCaoPhieuXuat_model> BangBaoCaoPhieuXuatList = jsonList.map(
+          (e) => BangBaoCaoPhieuXuat_model.fromMap(e)
+      ).toList();
+
+      _bangBaoCaoPhieuXuat = jsonList.map((e)=>BangBaoCaoPhieuXuat_model.fromMap(e) ).toList();
+
+      notifyListeners();
+      return BangBaoCaoPhieuXuatList;
+    }else{
+      throw Exception('Failed to load data');
     }
-    notifyListeners();
   }
 
 }

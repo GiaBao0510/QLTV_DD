@@ -7,6 +7,7 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 import 'package:app_qltv/FrontEnd/constants/config.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:app_qltv/FrontEnd/Service/ThuVien.dart';
 import './PhieuDangCam.dart';
 import './ThongTinChiTietPhieuCam.dart';
@@ -38,8 +39,14 @@ class _PhieuDangCamChiTiet extends State<PhieuDangCamChiTiet> {
   //1. Lấy thông tin
   Future<List<dynamic>> PhieuDangCamChiTiet_List() async {
     String path = url + '/api/cam/chitietphieucam';
-    var res = await http
-        .get(Uri.parse(path), headers: {"Content-Type": "application/json"});
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    var res = await http.get(
+        Uri.parse(path),
+        headers: {
+          "Content-Type": "application/json",
+          "accesstoken": "${prefs.getString('accesstoken')}",
+        },
+    );
     List<dynamic> result = jsonDecode(res.body);
     int soHang = 0;
     double tong_CanTong =0.0, tong_TLhot =0.0, tong_TLthuc =0.0,

@@ -21,22 +21,16 @@ class BaoCaoPhieuXuatScreen extends StatefulWidget{
 }
 
 class _BaoCaoPhieuXuat extends State<BaoCaoPhieuXuatScreen> {
-  late Future<List<BaoCaoPhieuXuat_model>> _phieuXuatFuture;
-  var thongTinTinhTong;
 
+  //Thuộc tính
+  late Future<List<BangBaoCaoPhieuXuat_model>> _bangBaoCaoPhieuXuatFuture;
   final TextEditingController _searchController = TextEditingController();
-  List<BaoCaoPhieuXuat_model> _filterPhieuXuatList = [];
-  List<BaoCaoPhieuXuat_model> _PhieuXuatList = [];
+  List<BangBaoCaoPhieuXuat_model> _filterPhieuXuatList = [];
+  List<BangBaoCaoPhieuXuat_model> _PhieuXuatList = [];
 
-  double tong_CanTong = 0.0,
-      tong_TlHot = 0.0,
-      tong_TLvang = 0.0,
-      tongThanhTien = 0.0,
-      tong_GiaGoc = 0.0,
-      tongLaiLo = 0.0;
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
     _loadBaoCaoPhieuXuat();
     _searchController.addListener(_filterBaoCaoPhieuXuat);
@@ -48,28 +42,17 @@ class _BaoCaoPhieuXuat extends State<BaoCaoPhieuXuatScreen> {
     super.dispose();
   }
 
-  // --- Phương thức
+  //--- Ghi phuương thức --------
     //1.Load dữ liệu
   Future<void> _loadBaoCaoPhieuXuat() async {
-    _phieuXuatFuture =
+    _bangBaoCaoPhieuXuatFuture =
         Provider.of<BaocaophieuxuatManage>(context, listen: false)
-            .fetchBaoCaoPhieuXuat();
-    _phieuXuatFuture.then((BaoCaos) {
+            .LayDuLieuPhieuXuat_test();
+    _bangBaoCaoPhieuXuatFuture.then((BaoCaos) {
       setState(() {
         _PhieuXuatList = BaoCaos;
         _filterPhieuXuatList = BaoCaos;
       });
-
-      //Xu ly tinh toan
-      for (int i = 0; i < _filterPhieuXuatList.length; i++) {
-        final item = _filterPhieuXuatList[i];
-        tong_CanTong += item.CAN_TONG ;
-        tong_TLvang += item.TL_Vang;
-        tong_TlHot += item.TL_HOT ;
-        tong_GiaGoc += item.GiaGoc;
-        tongThanhTien += item.THANH_TIEN;
-        tongLaiLo += (item.THANH_TIEN - item.GiaGoc);
-      }
     });
   }
 
@@ -78,45 +61,11 @@ class _BaoCaoPhieuXuat extends State<BaoCaoPhieuXuatScreen> {
     final query = _searchController.text.toLowerCase();
     setState(() {
       _filterPhieuXuatList = _PhieuXuatList.where((phieuxuat) {
-        return phieuxuat.HANGHOAMA.toLowerCase().contains(query);
+        return phieuxuat.MaPhieuXuat.toLowerCase().contains(query);
       }).toList();
     });
   }
 
-    //3.Chuyển sang phần xuất file PDF Dang bảng
-  Future<void> printDoc(List<BaoCaoPhieuXuat_model> data, Map<String, dynamic> GetThongTinTinhTong) async{
-    final font = await loadFont('assets/fonts/Roboto-Regular.ttf');
-    final doc = pw.Document();
-    doc.addPage(
-        pw.Page(
-            pageFormat: PdfPageFormat.a4,
-            build: (pw.Context context){
-              return buildPrintableData(data,font ,GetThongTinTinhTong);
-            }
-        )
-    );
-    await Printing.layoutPdf(
-        onLayout: (PdfPageFormat format) async => doc.save());
-  }
-
-    //4. Chuyển sang xuất phiếu PDF theo tưng hàng
-  Future<void> printInvoice(BaoCaoPhieuXuat_model item) async{
-    final font = await LoadFont('assets/fonts/Roboto-Regular.ttf');
-    final Doc = pw.Document();
-    Doc.addPage(
-      pw.Page(
-          orientation: pw.PageOrientation.landscape,
-          pageFormat: PdfPageFormat.a4,
-        build: (pw.Context context){
-          return CreateInvoice(item, font);
-        }
-      )
-    );
-    await Printing.layoutPdf(
-        onLayout: (PdfPageFormat format) async => Doc.save());
-  }
-
-  //Giao diện
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -125,66 +74,10 @@ class _BaoCaoPhieuXuat extends State<BaoCaoPhieuXuatScreen> {
           color: Colors.white,
           size: 28,
         ),
-        title: Row(
-          children: [
-            Expanded(
-                flex: 2,
-                child: Text("Báo cáo phiếu xuất", style: TextStyle(fontSize: 17,
+        title: Text("Báo cáo phiếu xuất", style: TextStyle(fontSize: 17,
                     color: Colors.white,
                     fontFamily: 'Align',
-                    fontWeight: FontWeight.bold),)
-            ),
-            Expanded(
-              flex: 1,
-              child: TextButton(
-                onPressed: () {
-                  print('Chuyển sang phần chuyển đổi PDF');
-
-                  //Lưu thông tin tinh tong
-                  thongTinTinhTong = {
-                    "Tong_CanTong": tong_CanTong,
-                    "Tong_TLvang": tong_TLvang,
-                    "Tong_TlHot": tong_TlHot,
-                    "Tong_GiaGoc": tong_GiaGoc,
-                    "TongThanhTien": tongThanhTien,
-                    "TongLaiLo": tongLaiLo,
-                  };
-
-                  printDoc(_filterPhieuXuatList,thongTinTinhTong);
-                },
-                child: Container(
-                  width: double.infinity,
-                  padding: EdgeInsets.fromLTRB(1, 3, 1, 3),
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [Color(0xffededed), Color(0xffdee8e8)],
-                      stops: [0.25, 0.75],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: [
-                      BoxShadow(
-                          color: Colors.black12,
-                          blurRadius: 8,
-                          offset: Offset(4, 8))
-                    ],
-                  ),
-                  child: Center(
-                    child: Text(
-                      'Export PDF',
-                      style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                ),
-              ),
-            )
-          ],
-        ),
+                    fontWeight: FontWeight.bold),),
         flexibleSpace: Container(
           decoration: BoxDecoration(
               gradient: LinearGradient(
@@ -192,8 +85,25 @@ class _BaoCaoPhieuXuat extends State<BaoCaoPhieuXuatScreen> {
                   end: Alignment.bottomRight,
                   colors: [Colors.orange, Colors.amber])),
         ),
+        actions: [
+          PopupMenuButton<String>(
+            icon: Icon(Icons.more_vert_sharp),
+            itemBuilder: (BuildContext context){
+              return<PopupMenuEntry<String>>[
+                PopupMenuItem<String>(
+                    child:TextButton(
+                      onPressed: () {
+                        print('Chuyen sang PDF');
+                      },
+                      child: Text('Export PDF'),
+                    ),
+                ),
+              ];
+            }
+          ),
+        ],
       ),
-      body: SafeArea(
+            body: SafeArea(
         child: Container(
           padding: EdgeInsets.fromLTRB(10, 15, 10, 0),
 
@@ -202,78 +112,11 @@ class _BaoCaoPhieuXuat extends State<BaoCaoPhieuXuatScreen> {
             Search_Bar(searchController: _searchController),
             const SizedBox(height: 12,),
             Expanded(
-
               child: Scrollbar(
-
                 child: ListView(children: [
-                  Container(
-                    margin: EdgeInsets.fromLTRB(0, 0, 0, 20),
-
-                    child: Column(children: [
-                      ShowList(),
-                      const SizedBox(height: 10,),
-                      Container(
-                        padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [Color(0xffbbd2c5), Color(0xff536976)],
-                            stops: [0, 1],
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                          ),
-
-                            borderRadius: BorderRadius.circular(10),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.5),
-                              spreadRadius: 2,
-                              blurRadius: 5,
-                              offset: Offset(0, 3),
-                            ),
-                          ],
-                        ),
-                        width: double.infinity,
-                        child: Column(children: [
-                          Text.rich(
-                            TextSpan(children: [
-                              TextSpan(text: "Tổng cân tổng: ",style: TextStyle(fontWeight: FontWeight.bold)),
-                              TextSpan(text: "${formatCurrencyDouble(tong_CanTong)}"),
-                            ])
-                          ),
-                          Text.rich(
-                              TextSpan(children: [
-                                TextSpan(text: "Tổng TL hột: ",style: TextStyle(fontWeight: FontWeight.bold)),
-                                TextSpan(text: "${formatCurrencyDouble(tong_TlHot)}"),
-                              ])
-                          ),
-                          Text.rich(
-                              TextSpan(children: [
-                                TextSpan(text: "Tổng TL vàng: ",style: TextStyle(fontWeight: FontWeight.bold)),
-                                TextSpan(text: "${formatCurrencyDouble(tong_TLvang)}"),
-                              ])
-                          ),
-                          Text.rich(
-                              TextSpan(children: [
-                                TextSpan(text: "Tổng Thành tiền: ",style: TextStyle(fontWeight: FontWeight.bold)),
-                                TextSpan(text: "${formatCurrencyDouble(tongThanhTien)}"),
-                              ])
-                          ),
-                          Text.rich(
-                              TextSpan(children: [
-                                TextSpan(text: "Tổng giá gốc: ",style: TextStyle(fontWeight: FontWeight.bold)),
-                                TextSpan(text: "${formatCurrencyDouble(tong_GiaGoc)}"),
-                              ])
-                          ),
-                          Text.rich(
-                              TextSpan(children: [
-                                TextSpan(text: "Tổng lãi lỗ: ",style: TextStyle(fontWeight: FontWeight.bold)),
-                                TextSpan(text: "${formatCurrencyDouble(tongLaiLo)}"),
-                              ])
-                          ),
-                        ],),
-                      )
-                    ],),
-                  ),
+                  Column(children: [
+                    ShowList(),
+                  ],)
                 ],),
               ),
             ),
@@ -283,25 +126,24 @@ class _BaoCaoPhieuXuat extends State<BaoCaoPhieuXuatScreen> {
     );
   }
 
-  //Giao diện báo cáo
-  FutureBuilder<List<BaoCaoPhieuXuat_model>> ShowList() {
-    return FutureBuilder<List<BaoCaoPhieuXuat_model>>(
-        future: _phieuXuatFuture,
+  //Thông tin từng phiếu báo cáo
+  FutureBuilder<List<BangBaoCaoPhieuXuat_model>> ShowList() {
+    return FutureBuilder<List<BangBaoCaoPhieuXuat_model>>(
+        future: _bangBaoCaoPhieuXuatFuture,
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text(
-              'Error: ${snapshot.error}', style: TextStyle(fontSize: 10),));
-          } else {
-            return ListView.builder(
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Center(child: Text(
+                'Error: ${snapshot.error}', style: TextStyle(fontSize: 10),));
+            }else{
+              return ListView.builder(
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
-                itemCount: _filterPhieuXuatList.length,
                 reverse: true,
-                itemBuilder: (BuildContext context, int index) {
-                  final baoCao = _filterPhieuXuatList[index];
-
+                itemCount: _filterPhieuXuatList.length,
+                itemBuilder: (_, index){
+                  final BaoCao = _filterPhieuXuatList[index];
                   return Container(
                     margin: EdgeInsets.fromLTRB(5, 15, 5, 10),
                     padding: EdgeInsets.fromLTRB(5, 10, 5, 10),
@@ -322,89 +164,87 @@ class _BaoCaoPhieuXuat extends State<BaoCaoPhieuXuatScreen> {
                         ),
                       ],
                     ),
+                    child: Column(children: [
 
-                    child: Column(
-                      children: [
-                        Row(children: [
-                          Expanded(
-                              flex: 2,
-                              child: Column(children: [
-                                Text('Mã: ${baoCao.PHIEU_XUAT_MA} ',
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                  textAlign: TextAlign.left,),
-                                Text('Mã hàng hóa: ${baoCao.HANGHOAMA} ',
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                  textAlign: TextAlign.left,),
-                                Text('Tên hàng hóa: ${baoCao.HANG_HOA_TEN}',
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                  textAlign: TextAlign.left,),
-                              ],)
+                      //Tieu de
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Row(children: [
+                          FittedBox(
+                            fit: BoxFit.fitWidth,
+                            child: Text("Phiếu xuất mã: ${BaoCao.MaPhieuXuat}", style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),),
                           ),
-                          Expanded(
-                              flex: 1,
-                              child: IconButton(
-                                onPressed: () {
-                                  print('nút chi tiết');
-                                  ThongTinChiTiet(context, baoCao);
-                                },
-                                icon: Icon(Icons.info_outline, size: 30,),
-                              )
-                          )
-                        ],),
+                          const SizedBox(width: 25,),
+                          IconButton(
+                              onPressed: (){
+                                print('${BaoCao.PhieuXuat}');
+                                //ThongTinChiTiet(context, BaoCao.PhieuXuat[index]);
+                              },
+                              icon: Icon(Icons.info_outline, size: 30,)
+                          ),
 
-                        const SizedBox(height: 15,),
-                        SingleChildScrollView(
+                        ],)
+                      ),
+
+                      const SizedBox(height: 15,),
+
+                      //Liêt kê hàng hóa trong từng phiếu xuất
+                      SingleChildScrollView(
                           scrollDirection: Axis.horizontal,
                           child: DataTable(
                               headingRowColor: MaterialStateColor.resolveWith((
-                                  states) => Colors.black87),
-                              //dataRowColor: ,
+                                     states) => Colors.black87),
                               columns: [
-                                DataColumn(label: Text('Đơn giá',
+                                DataColumn(label: Text('Hàng hóa',
                                   style: TextStyle(fontWeight: FontWeight.bold,
                                       color: Colors.white),)),
-                                DataColumn(label: Text('Thành tiền',
-                                  style: TextStyle(fontWeight: FontWeight.bold,
-                                      color: Colors.white),)),
-                                DataColumn(label: Text('Giá gốc',
-                                  style: TextStyle(fontWeight: FontWeight.bold,
-                                      color: Colors.white),)),
-                                DataColumn(label: Text('Lãi lỗi',
-                                  style: TextStyle(fontWeight: FontWeight.bold,
-                                      color: Colors.white),)),
-                              ],
+                                  DataColumn(label: Text('Đơn giá',
+                                    style: TextStyle(fontWeight: FontWeight.bold,
+                                        color: Colors.white),)),
+                                  DataColumn(label: Text('Thành tiền',
+                                    style: TextStyle(fontWeight: FontWeight.bold,
+                                        color: Colors.white),)),
+                                  DataColumn(label: Text('Giá gốc',
+                                    style: TextStyle(fontWeight: FontWeight.bold,
+                                        color: Colors.white),)),
+                                  DataColumn(label: Text('Lãi lỗi',
+                                    style: TextStyle(fontWeight: FontWeight.bold,
+                                        color: Colors.white),)),
+                                ],
                               rows: [
-                                DataRow(
-                                    cells: [
-                                      DataCell(Text('${formatCurrencyDouble(
-                                          baoCao.DON_GIA)}')),
-                                      DataCell(Text('${formatCurrencyDouble(
-                                          baoCao.THANH_TIEN)}')),
-                                      DataCell(Text('${formatCurrencyDouble(
-                                          baoCao.GiaGoc)}')),
-                                      DataCell(Text('${formatCurrencyDouble(
-                                          baoCao.LaiLo)}')),
-                                    ],
-                                    color: MaterialStateColor.resolveWith((
-                                        states) => Colors.white)
-                                )
+                                ...BaoCao.PhieuXuat.map((hanghoa) {
+                                  return  DataRow(
+                                      cells: [
+                                        DataCell(Text('${hanghoa.HANG_HOA_TEN}')),
+                                        DataCell(Text('${formatCurrencyDouble(
+                                            hanghoa.DON_GIA)}')),
+                                        DataCell(Text('${formatCurrencyDouble(
+                                            hanghoa.THANH_TIEN)}')),
+                                        DataCell(Text('${formatCurrencyDouble(
+                                            hanghoa.GiaGoc)}')),
+                                        DataCell(Text('${formatCurrencyDouble(
+                                            hanghoa.LaiLo)}')),
+                                      ],
+                                      color: MaterialStateColor.resolveWith((
+                                          states) => Colors.white)
+                                  );
+                                }),
                               ]
                           ),
-                        ),
-                      ],
-                    ),
+                        )
+                    ],),
                   );
-                }
-            );
-          }
+                },
+              );
+            }
         }
     );
   }
 
-  //Hiển thị thông tin chi tiết
+//   //Hiển thị thông tin chi tiết
   Future<void> ThongTinChiTiet(BuildContext context, BaoCaoPhieuXuat_model item){
     return showDialog(
-        context: context, 
+        context: context,
         builder: (BuildContext context){
           return AlertDialog(
             title: Container(
@@ -510,7 +350,7 @@ class _BaoCaoPhieuXuat extends State<BaoCaoPhieuXuatScreen> {
                       title: Text('In'),
                       onTap: (){
                         print('in phiếu xuất');
-                        printInvoice(item);
+                        //printInvoice(item);
                       },
                     )
                 ),
@@ -527,4 +367,5 @@ class _BaoCaoPhieuXuat extends State<BaoCaoPhieuXuatScreen> {
         },
     );
   }
+
 }
