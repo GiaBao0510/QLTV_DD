@@ -251,6 +251,36 @@ const getBCPhieuMuaVaoById = async (id) => {
   });
 };
 
+const getPhieuDoi = async () => {
+  return new Promise((resolve, reject) => {
+    db.query(`
+      SELECT * FROM phd_phieu_doi`, (error, results) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve(results);
+      }
+    });
+  });
+};
+
+const getTopKhachHang = async () => {
+  return new Promise((resolve, reject) => {
+    db.query(`
+      SELECT kh.KH_TEN, SUM(px.TONG_TIEN) AS KH_TONG_TIEN
+      FROM phx_phieu_xuat px
+      JOIN phx_khach_hang kh ON px.KH_ID = kh.KH_ID
+      GROUP BY kh.KH_TEN
+      ORDER BY KH_TONG_TIEN DESC; `, (error, results) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve(results);
+      }
+    });
+  });
+};
+
 module.exports = {
   getPhieuXuat,
   getPhieuXuatById,
@@ -262,5 +292,7 @@ module.exports = {
   getKhoVangMuaVao,
   getBCPhieuMuaVao,
   getBCPhieuMuaVaoByDate,
-  getBCPhieuMuaVaoById
+  getBCPhieuMuaVaoById,
+  getPhieuDoi,
+  getTopKhachHang
 };
