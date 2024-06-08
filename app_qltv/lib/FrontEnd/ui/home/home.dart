@@ -109,7 +109,7 @@ class _HomeScreenState extends State<HomeScreen> {
       {
         'image': 'assets/images/shopping-bag.png',
         'text': 'Kho Vàng Mua Vào',
-        'routeName': '/loaivang'
+        'routeName': '/KhoVangMuaVao'
       },
       {
         'image': 'assets/images/paper.png',

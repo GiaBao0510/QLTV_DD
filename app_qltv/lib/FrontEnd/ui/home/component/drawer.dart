@@ -1,3 +1,4 @@
+import 'package:app_qltv/FrontEnd/ui/danh_muc/BaoCao/BaoCao_KhoVangMuaVao.dart';
 import 'package:app_qltv/FrontEnd/ui/danh_muc/dvi/dvi.dart';
 import 'package:app_qltv/FrontEnd/ui/danh_muc/BaoCao/BaoCao_TonKhoNhomVang.dart';
 import 'package:app_qltv/FrontEnd/ui/danh_muc/hang_hoa/hang_hoa.dart';
@@ -520,7 +521,12 @@ class drawer extends StatelessWidget {
                         title: const Text('Kho Vàng Mua Vào',
                             style: TextStyle(fontWeight: FontWeight.w800)),
                         onTap: () {
-                          // Handle Báo Cáo Tồn Kho Loại Vàng tap
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const KhoVangMuaVaoScreen()),
+                          );
                         },
                       ),
                     ),
