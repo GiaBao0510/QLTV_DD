@@ -14,4 +14,7 @@ router.route('/khovangmuavao').get( KiemTra.CheckLogin,phieucam.getKhoVangMuaVao
 router.route('/phieumua').get( KiemTra.CheckLogin,phieucam.getBCPhieuMuaVao);
 router.route('/phieumuatheongay').get(KiemTra.CheckLogin,phieucam.getBCPhieuMuaVaoByDate);
 router.route('/phieumua/:id').get( KiemTra.CheckLogin,phieucam.getBCPhieuMuaVaoById);
+router.route('/phieudoi').get( KiemTra.CheckLogin,phieucam.getPhieuDoiController);
+router.route('/topkhachhang').get( KiemTra.CheckLogin,phieucam.getTopKhachHangController);
+
 module.exports = router;

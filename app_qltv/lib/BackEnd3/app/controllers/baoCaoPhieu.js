@@ -113,3 +113,21 @@ exports.getBCPhieuMuaVaoByDate = async (req, res, next) => {
     next(err);
   }
 };
+
+exports.getPhieuDoiController = async (req, res, next) => {
+  try {
+    const phieuList = await bao_caoPhieuServices.getPhieuDoi();
+    res.status(200).json(phieuList);
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.getTopKhachHangController = async (req, res, next) => {
+  try {
+    const phieuList = await bao_caoPhieuServices.getTopKhachHang();
+    res.status(200).json(phieuList);
+  } catch (error) {
+    next(error);
+  }
+};

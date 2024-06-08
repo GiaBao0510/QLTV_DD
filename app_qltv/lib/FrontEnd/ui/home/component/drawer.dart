@@ -1,4 +1,6 @@
 import 'package:app_qltv/FrontEnd/ui/danh_muc/BaoCao/BaoCao_KhoVangMuaVao.dart';
+import 'package:app_qltv/FrontEnd/ui/danh_muc/BaoCao/BaoCao_PhieuDoi.dart';
+import 'package:app_qltv/FrontEnd/ui/danh_muc/BaoCao/BaoCao_TopKhachHang.dart';
 import 'package:app_qltv/FrontEnd/ui/danh_muc/dvi/dvi.dart';
 import 'package:app_qltv/FrontEnd/ui/danh_muc/BaoCao/BaoCao_TonKhoNhomVang.dart';
 import 'package:app_qltv/FrontEnd/ui/danh_muc/hang_hoa/hang_hoa.dart';
@@ -321,7 +323,8 @@ class drawer extends StatelessWidget {
                         onTap: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => const NguoiDungPage()),
+                            MaterialPageRoute(
+                                builder: (context) => const NguoiDungPage()),
                           );
                         },
                       ),
@@ -530,22 +533,22 @@ class drawer extends StatelessWidget {
                         },
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          left: 16.0), // Khoảng cách thụt lề
-                      child: ListTile(
-                        leading: Image.asset(
-                          'assets/images/paper.png',
-                          width: 24.0,
-                          height: 24.0,
-                        ),
-                        title: const Text('In Phiếu Xuất',
-                            style: TextStyle(fontWeight: FontWeight.w800)),
-                        onTap: () {
-                          // Handle Báo Cáo Tồn Kho Loại Vàng tap
-                        },
-                      ),
-                    ),
+                    // Padding(
+                    //   padding: const EdgeInsets.only(
+                    //       left: 16.0), // Khoảng cách thụt lề
+                    //   child: ListTile(
+                    //     leading: Image.asset(
+                    //       'assets/images/paper.png',
+                    //       width: 24.0,
+                    //       height: 24.0,
+                    //     ),
+                    //     title: const Text('In Phiếu Xuất',
+                    //         style: TextStyle(fontWeight: FontWeight.w800)),
+                    //     onTap: () {
+                    //       // Handle Báo Cáo Tồn Kho Loại Vàng tap
+                    //     },
+                    //   ),
+                    // ),
                     Padding(
                       padding: const EdgeInsets.only(
                           left: 16.0), // Khoảng cách thụt lề
@@ -555,10 +558,15 @@ class drawer extends StatelessWidget {
                           width: 24.0,
                           height: 24.0,
                         ),
-                        title: const Text('Khách Hàng Giao Dịch Nhiều',
+                        title: const Text('Khách Hàng Giao Dịch',
                             style: TextStyle(fontWeight: FontWeight.w800)),
                         onTap: () {
-                          // Handle Báo Cáo Tồn Kho Loại Vàng tap
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const BaoCaoTopKhachHangScreen()),
+                          );
                         },
                       ),
                     ),
@@ -590,7 +598,12 @@ class drawer extends StatelessWidget {
                         title: const Text('Báo Cáo Phiếu Đổi',
                             style: TextStyle(fontWeight: FontWeight.w800)),
                         onTap: () {
-                          // Handle Báo Cáo Tồn Kho Loại Vàng tap
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const BaoCaoPhieuDoiScreen()),
+                          );
                         },
                       ),
                     ),

@@ -50,7 +50,7 @@ class _ChinhSuaKetNoiPageState extends State<ChinhSuaKetNoiPage> {
         _isLoading = true;
       });
       try {
-        await Provider.of<KetnoiManager>(context, listen: false).updateketnoi(_currentConfig);
+        await Provider.of<KetnoiManager>(context, listen: false).updateketnoi(context,_currentConfig);
         setState(() {
           _isLoading = false;
         });
@@ -128,12 +128,12 @@ class _ChinhSuaKetNoiPageState extends State<ChinhSuaKetNoiPage> {
                       obscureText: true,
                       decoration: InputDecoration(labelText: 'Password'),
                       onSaved: (value) => _currentConfig = _currentConfig.copyWith(password: value),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Vui lòng nhập password';
-                        }
-                        return null;
-                      },
+                      // validator: (value) {
+                      //   if (value == null || value.isEmpty) {
+                      //     return 'Vui lòng nhập password';
+                      //   }
+                      //   return null;
+                      // },
                     ),
                     SizedBox(height: 20),
                     ElevatedButton(
