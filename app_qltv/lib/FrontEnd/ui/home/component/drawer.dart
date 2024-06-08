@@ -11,6 +11,7 @@ import 'package:app_qltv/FrontEnd/ui/danh_muc/nha_cung_cap/nha_cung_cap_green.da
 import 'package:app_qltv/FrontEnd/ui/danh_muc/nhom_vang/nhom_vang.dart';
 import 'package:app_qltv/FrontEnd/ui/danh_muc/BaoCao/BaoCao_TonKhoVang.dart';
 import 'package:app_qltv/FrontEnd/ui/danh_muc/BaoCao/BaoCao_TonKhoLoaiVang.dart';
+import 'package:app_qltv/FrontEnd/ui/hethonng/ketnoi/ket_noi_page.dart';
 import '../../danh_muc/BaoCao/BaoCao_PhieuXuat.dart';
 import 'package:app_qltv/FrontEnd/ui/camvang/Phieu/PhieuDangCam.dart';
 import 'package:app_qltv/FrontEnd/ui/camvang/Phieu/PhieuDangCamChiTiet.dart';
@@ -340,7 +341,10 @@ class drawer extends StatelessWidget {
                         title: const Text('Kết Nối',
                             style: TextStyle(fontWeight: FontWeight.w800)),
                         onTap: () {
-                          // Handle Kết Nối tap
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => const KetNoiPage()),
+                          );
                         },
                       ),
                     ),

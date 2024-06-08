@@ -10,6 +10,7 @@ import 'package:app_qltv/FrontEnd/ui/danh_muc/kho/kho.dart';
 import 'package:app_qltv/FrontEnd/ui/danh_muc/nha_cung_cap/nha_cung_cap_green.dart';
 import 'package:app_qltv/FrontEnd/ui/danh_muc/nhom_vang/components/them_nhom_vang.dart';
 import 'package:app_qltv/FrontEnd/ui/danh_muc/nhom_vang/nhom_vang.dart';
+import 'package:app_qltv/FrontEnd/ui/hethonng/ketnoi/ket_noi_page.dart';
 import 'package:app_qltv/FrontEnd/ui/hethonng/nguoidung/nguoi_dung_page.dart';
 import 'package:app_qltv/FrontEnd/ui/hethonng/nhom/nhompage.dart';
 import 'package:app_qltv/FrontEnd/ui/hethonng/nhom/them_nhom.dart';
@@ -26,6 +27,7 @@ final Map<String, WidgetBuilder> routes = {
   ThemNhomVangScreen.routeName: (ctx) => ThemNhomVangScreen(),
   NhomPage.routeName: (ctx) => NhomPage(),
   NguoiDungPage.routeName: (ctx) => NguoiDungPage(),
+  KetNoiPage.routeName: (ctx) => KetNoiPage(),
   ThemNhomScreen.routeName: (ctx) => ThemNhomScreen(),
   HangHoaScreen.routeName: (ctx) => HangHoaScreen(),
   KhoScreen.routeName: (ctx) => KhoScreen(),

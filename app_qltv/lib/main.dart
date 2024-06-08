@@ -14,6 +14,7 @@ import 'package:app_qltv/FrontEnd/controller/danhmuc/kho_manage.dart';
 import 'package:app_qltv/FrontEnd/controller/danhmuc/hanghoa_manager.dart';
 import 'package:app_qltv/FrontEnd/controller/danhmuc/loaivang_manager.dart';
 import 'package:app_qltv/FrontEnd/controller/danhmuc/nhacungcap_manager.dart';
+import 'package:app_qltv/FrontEnd/controller/hethong/ketnoi_manager.dart';
 import 'package:app_qltv/FrontEnd/controller/hethong/nguoidung_manager.dart';
 import 'package:app_qltv/FrontEnd/controller/hethong/nhom_manager.dart';
 import 'package:app_qltv/FrontEnd/model/danhmuc/kho.dart';
@@ -84,6 +85,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => NhaCungCapManager()),
         ChangeNotifierProvider(create: (context) => NhomManager()),
         ChangeNotifierProvider(create: (context) => NguoiDungManager()),
+        ChangeNotifierProvider(create: (context) => KetnoiManager()),
         ChangeNotifierProvider(create: (context) => KhoManage()),
         ChangeNotifierProvider(create: (context) => DonviManage()),
         ChangeNotifierProvider(create: (context) => KhachhangManage()),
