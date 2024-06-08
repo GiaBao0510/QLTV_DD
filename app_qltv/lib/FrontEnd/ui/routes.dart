@@ -1,3 +1,4 @@
+import 'package:app_qltv/FrontEnd/ui/danh_muc/BaoCao/BaoCaoPhieuMua.dart';
 import 'package:app_qltv/FrontEnd/ui/danh_muc/BaoCao/BaoCao_TonKhoNhomVang.dart';
 import 'package:app_qltv/FrontEnd/ui/danh_muc/BaoCao/BaoCao_TonKhoVang.dart';
 import 'package:app_qltv/FrontEnd/ui/danh_muc/dvi/components/chi_tiet_dvi.dart';
@@ -41,4 +42,5 @@ final Map<String, WidgetBuilder> routes = {
   PhieuDangCamChiTiet.routeName: (ctx) => PhieuDangCamChiTiet(),
   BaoCaoTonKhoNhomVangScreen.routeName: (ctx) => BaoCaoTonKhoNhomVangScreen(),
   BaoCaoPhieuXuatScreen.routeName: (ctx) => BaoCaoPhieuXuatScreen(),
+  //BaoCaoPhieuMuaScreen.routeName:(ctx) => BaoCaoPhieuMuaScreen(),
 };

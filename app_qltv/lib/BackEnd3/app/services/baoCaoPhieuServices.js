@@ -168,57 +168,217 @@ const getTonKhoGroupProduct = async () => {
 //     });
 //   });
 // };
-///////phm_kho_vang_mua_vao
 
+///////phm_chi_tiet_phieu_mua_vao
+// const getBCPhieuMuaVao = async () => {
+//   return new Promise((resolve, reject) => {
+//     const query = `
+//       SELECT pmv.PHIEU_MUA_VAO_ID, pmv.PHIEU_MA, pmv.KHACH_HANG_ID, pmv.USER_ID, pmv.CAN_TONG, pmv.TL_HOT, pmv.THANH_TOAN,
+//              pmv.NGAY_PHIEU, pmv.NGAY_NHAP, pmv.SU_DUNG, pmv.GHI_CHU, pmv.PHIEU_DOI,
+//              ctpv.CHI_TIET_ID, ctpv.HANG_HOA_MA, ctpv.HANG_HOA_TEN, ctpv.DVT_ID, ctpv.NHOM_ID, 
+//              ctpv.CAN_TONG AS CTPV_CAN_TONG, ctpv.TL_HOT AS CTPV_TL_HOT, ctpv.SO_LUONG, 
+//              ctpv.DON_GIA, ctpv.THANH_TIEN AS CTPV_THANH_TIEN, ctpv.SU_DUNG AS CTPV_SU_DUNG, 
+//              ctpv.GHI_CHU AS CTPV_GHI_CHU, ctpv.TL_LOC,
+//              nh.NHOM_TEN
+//       FROM phm_phieu_mua_vao pmv
+//       JOIN phm_chi_tiet_phieu_mua_vao ctpv ON pmv.PHIEU_MUA_VAO_ID = ctpv.PHIEU_MUA_VAO_ID
+//       LEFT JOIN nhom_hang nh ON ctpv.NHOM_ID = nh.NHOMHANGID
+//     `;
+//     db.query(query, (error, results) => {
+//       if (error) {
+//         reject(error);
+//       } else {
+//         resolve(results);
+//       }
+//     });
+//   });
+// };
+// const getBCPhieuMuaVao = async () => {
+//   return new Promise((resolve, reject) => {
+//     // Query to retrieve list of purchase orders
+//     db.query(`SELECT PHIEU_MA FROM phm_phieu_mua_vao`, async (error, results) => {
+//       if (error) {
+//         reject(error);
+//       } else {
+//         let output = []; // Output array to store results
+        
+//         // Function to search for details of each purchase order
+//         const searchByMaPhieu = (query) => {
+//           return new Promise((resolve, reject) => {
+//             db.query(query, (err, result) => {
+//               if (err) {
+//                 reject(err);
+//               }
+//               resolve(result);
+//             });
+//           });
+//         };
+        
+//         // Loop through each purchase order
+//         for (const item of results) {
+//           let phieuMa = item.PHIEU_MA;
+          
+//           // Retrieve details of the current purchase order
+//           let details = await searchByMaPhieu(`
+//             SELECT pmv.PHIEU_MA, ctpv.HANG_HOA_MA, ctpv.HANG_HOA_TEN, ctpv.DON_GIA, ctpv.SO_LUONG
+//             FROM phm_phieu_mua_vao pmv
+//             JOIN phm_chi_tiet_phieu_mua_vao ctpv ON pmv.PHIEU_MUA_VAO_ID = ctpv.PHIEU_MUA_VAO_ID
+//             WHERE pmv.PHIEU_MA="${phieuMa}"
+//           `);
+
+//           // Check if details is null, if so, initialize it as an empty list
+//           if (!details) {
+//             details = [];
+//           }
+          
+//           // Format the details and push into the output array
+//           let formattedDetails = details.map((detail) => ({
+//             "HANG_HOA_MA": detail.HANG_HOA_MA,
+//             "HANG_HOA_TEN": detail.HANG_HOA_TEN,
+//             "DON_GIA": detail.DON_GIA,
+//             "SO_LUONG": detail.SO_LUONG
+//           }));
+          
+//           let phieu = {
+//             "PHIEU_MA": phieuMa,
+//             "details": formattedDetails
+//           };
+          
+//           output.push(phieu);
+//         }
+        
+//         resolve(output);
+//       }
+//     });
+//   });
+// };
 const getBCPhieuMuaVao = async () => {
   return new Promise((resolve, reject) => {
-    db.query(
-    `
-    SELECT *
-    FROM phm_kho_vang_mua_vao`
-    , (error, results) => {
+    db.query('SELECT PHIEU_MA FROM phm_phieu_mua_vao', async (error, results) => {
       if (error) {
         reject(error);
-      } else {
-        resolve(results);
+        return;
+      }
+
+      let output = [];
+
+      const searchByMaPhieu = (phieuMa) => {
+        return new Promise((resolve, reject) => {
+          const query = `
+            SELECT pmv.PHIEU_MUA_VAO_ID, pmv.PHIEU_MA, pmv.KHACH_HANG_ID, pmv.USER_ID, pmv.CAN_TONG, pmv.TL_HOT, pmv.THANH_TOAN,
+                   pmv.NGAY_PHIEU, pmv.NGAY_NHAP, pmv.SU_DUNG, pmv.GHI_CHU, pmv.PHIEU_DOI,
+                   ctpv.CHI_TIET_ID, ctpv.HANG_HOA_MA, ctpv.HANG_HOA_TEN, ctpv.DVT_ID, ctpv.NHOM_ID, 
+                   ctpv.CAN_TONG AS CTPV_CAN_TONG, ctpv.TL_HOT AS CTPV_TL_HOT, (ctpv.CAN_TONG - IFNULL(ctpv.TL_HOT, 0)) AS CTPV_TL_THUC, ctpv.SO_LUONG, 
+                   ctpv.DON_GIA, ctpv.THANH_TIEN AS CTPV_THANH_TIEN, ctpv.SU_DUNG AS CTPV_SU_DUNG, 
+                   ctpv.GHI_CHU AS CTPV_GHI_CHU, ctpv.TL_LOC,
+                   nh.NHOM_TEN
+            FROM phm_phieu_mua_vao pmv
+            JOIN phm_chi_tiet_phieu_mua_vao ctpv ON pmv.PHIEU_MUA_VAO_ID = ctpv.PHIEU_MUA_VAO_ID
+            LEFT JOIN nhom_hang nh ON ctpv.NHOM_ID = nh.NHOMHANGID
+            WHERE pmv.PHIEU_MA = ?
+          `;
+          db.query(query, [phieuMa], (err, result) => {
+            if (err) {
+              reject(err);
+              return;
+            }
+            resolve(result);
+          });
+        });
+      };
+
+      try {
+        for (const item of results) {
+          const phieuMa = item.PHIEU_MA;
+
+          if (!phieuMa) {
+            continue;
+          }
+
+          const details = await searchByMaPhieu(phieuMa);
+
+          if (!details || details.length === 0) {
+            continue;
+          }
+
+          const formattedDetails = details.map((detail) => ({
+            "PHIEU_MUA_VAO_ID": detail.PHIEU_MUA_VAO_ID,
+            "PHIEU_MA": detail.PHIEU_MA,
+            "KHACH_HANG_ID": detail.KHACH_HANG_ID,
+            "CAN_TONG": detail.CAN_TONG,
+            "TL_HOT": detail.TL_HOT,
+            "THANH_TOAN": detail.THANH_TOAN,
+            "NGAY_PHIEU": detail.NGAY_PHIEU,
+            "NGAY_NHAP": detail.NGAY_NHAP,
+            "SU_DUNG": detail.SU_DUNG,
+            "GHI_CHU": detail.GHI_CHU,
+            "PHIEU_DOI": detail.PHIEU_DOI,
+            "HANG_HOA_TEN": detail.HANG_HOA_TEN,
+            "NHOM_ID": detail.NHOM_ID,
+            "DON_GIA": detail.DON_GIA,
+            "CTPV_THANH_TIEN": detail.CTPV_THANH_TIEN,
+            "TL_LOC": detail.TL_LOC,
+            "TL_THUC": detail.CTPV_TL_THUC,
+            "NHOM_TEN": detail.NHOM_TEN,
+          }));
+
+          const phieu = {
+            "PHIEU_MA": phieuMa,
+            "details": formattedDetails
+          };
+
+          output.push(phieu);
+        }
+
+        resolve(output);
+      } catch (err) {
+        reject(err);
       }
     });
   });
 };
+
 const getBCPhieuMuaVaoByDate = async (ngayBD, ngayKT) => {
   return new Promise((resolve, reject) => {
     const query = `
-      SELECT km.PHIEU_MA, km.MA_HANG_HOA, km.TEN_HANG_HOA, km.NGAY_NHAP, km.NGAY_PHIEU,
-             km.CAN_TONG, km.TL_HOT, (km.CAN_TONG - km.TL_HOT) AS TL_VANG, 
-             km.DON_GIA, km.THANH_TIEN
-      FROM phm_kho_vang_mua_vao km
-      WHERE DATE(km.NGAY_NHAP) BETWEEN ? AND ?
+      SELECT pmv.PHIEU_MA, ctpv.HANG_HOA_MA, ctpv.HANG_HOA_TEN, pmv.NGAY_NHAP, pmv.NGAY_PHIEU,
+             ctpv.CAN_TONG AS CTPV_CAN_TONG, ctpv.TL_HOT AS CTPV_TL_HOT, 
+             (ctpv.CAN_TONG - ctpv.TL_HOT) AS TL_VANG, 
+             ctpv.DON_GIA, ctpv.THANH_TIEN AS CTPV_THANH_TIEN,
+             nh.NHOM_TEN
+      FROM phm_phieu_mua_vao pmv
+      JOIN phm_chi_tiet_phieu_mua_vao ctpv ON pmv.PHIEU_MUA_VAO_ID = ctpv.PHIEU_MUA_VAO_ID
+      LEFT JOIN nhom_hang nh ON ctpv.NHOM_ID = nh.NHOMHANGID
+      WHERE DATE(pmv.NGAY_NHAP) BETWEEN ? AND ?
     `;
-    // console.log('Query:', query); // In ra query
-    // console.log('Parameters:', [ngayBD, ngayKT]); // In ra tham số
-
     db.query(query, [ngayBD, ngayKT], (error, results) => {
       if (error) {
         reject(error);
       } else {
-        console.log('Results:', results); // In ra kết quả
+        resolve(results);
+      }
+    });
+  });
+};
+const getBCPhieuMuaVaoById = async (id) => {
+  return new Promise((resolve, reject) => {
+    const query = `
+      SELECT pmv.*, ctpv.*, nh.NHOM_TEN
+      FROM phm_phieu_mua_vao pmv
+      JOIN phm_chi_tiet_phieu_mua_vao ctpv ON pmv.PHIEU_MUA_VAO_ID = ctpv.PHIEU_MUA_VAO_ID
+      LEFT JOIN nhom_hang nh ON ctpv.NHOM_ID = nh.NHOMHANGID
+      WHERE pmv.PHIEU_MUA_VAO_ID = ?
+    `;
+    db.query(query, [id], (error, results) => {
+      if (error) {
+        reject(error);
+      } else {
         resolve(results);
       }
     });
   });
 };
 
-const getBCPhieuMuaVaoById = async (id) => {
-  return new Promise((resolve, reject) => {
-    db.query('SELECT * FROM phm_kho_vang_mua_vao WHERE KHO_ID = ?', [id], (error, results) => {
-      if (error) {
-        reject(error);
-      } else {
-        resolve(results[0]);
-      }
-    });
-  });
-};
 module.exports = {
   getPhieuXuat,
   getPhieuXuatById,
