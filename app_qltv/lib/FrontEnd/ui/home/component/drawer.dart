@@ -596,6 +596,122 @@ class drawer extends StatelessWidget {
                     ),
                   ],
                 ),
+
+                ExpansionTile(
+                  leading: Image.asset(
+                    'assets/images/billofsale.png',
+                    width: 24.0,
+                    height: 24.0,
+                  ),
+                  title: const Text('Hóa đơn bán ra',
+                      style: TextStyle(fontWeight: FontWeight.w800)),
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          left: 16.0), // Khoảng cách thụt lề
+                      child: ListTile(
+                        leading: Image.asset(
+                          'assets/images/MortgageDocument.png',
+                          width: 24.0,
+                          height: 24.0,
+                        ),
+                        title: const Text('Danh sách hóa đơn',
+                            style: TextStyle(fontWeight: FontWeight.w800)),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const PhieuDangCam()),
+                          );
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          left: 16.0), // Khoảng cách thụt lề
+                      child: ListTile(
+                        leading: Image.asset(
+                          'assets/images/DetailOfMortgageDocument.png',
+                          width: 24.0,
+                          height: 24.0,
+                        ),
+                        title: const Text('Thêm hóa đơn ',
+                            style: TextStyle(fontWeight: FontWeight.w800)),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                const PhieuDangCamChiTiet()),
+                          );
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          left: 16.0), // Khoảng cách thụt lề
+                      child: ListTile(
+                        leading: Image.asset(
+                          'assets/images/DetailOfMortgageDocument.png',
+                          width: 24.0,
+                          height: 24.0,
+                        ),
+                        title: const Text('Xóa hóa đơn ',
+                            style: TextStyle(fontWeight: FontWeight.w800)),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                const PhieuDangCamChiTiet()),
+                          );
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          left: 16.0), // Khoảng cách thụt lề
+                      child: ListTile(
+                        leading: Image.asset(
+                          'assets/images/DetailOfMortgageDocument.png',
+                          width: 24.0,
+                          height: 24.0,
+                        ),
+                        title: const Text('Điều chỉnh hóa đơn ',
+                            style: TextStyle(fontWeight: FontWeight.w800)),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                const PhieuDangCamChiTiet()),
+                          );
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          left: 16.0), // Khoảng cách thụt lề
+                      child: ListTile(
+                        leading: Image.asset(
+                          'assets/images/DetailOfMortgageDocument.png',
+                          width: 24.0,
+                          height: 24.0,
+                        ),
+                        title: const Text('Thay thế hóa đơn ',
+                            style: TextStyle(fontWeight: FontWeight.w800)),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                const PhieuDangCamChiTiet()),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
               ],
             ),
           ),

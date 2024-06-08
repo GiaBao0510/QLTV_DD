@@ -1,5 +1,5 @@
 var db = require('../config/index_2');
-var updateConnection = require('../config/updateConnection');
+//var updateConnection = require('../config/updateConnection');
 const fs = require('fs')
 
 exports.getDatabaseInfo = function(req, res) {
