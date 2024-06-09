@@ -1,10 +1,14 @@
 const db = require('../config/index_2');
 //  table phx_phieu_xuat
-const getPhieuXuat = async () => {
+const getPhieuXuat = async (ngayBD, ngayKT) => {
   return new Promise((resolve, reject) => {
     
     //Liệt kê từng phiếu mã trên phiếu xuất
-    db.query( `SELECT PHIEU_XUAT_MA FROM phx_phieu_xuat `  
+    db.query( `
+      SELECT PHIEU_XUAT_MA 
+      FROM phx_phieu_xuat
+      WHERE NGAY_XUAT BETWEEN "${ngayBD}" AND "${ngayKT}"
+    `  
     , async (error, results) => {
       if (error) {
         reject(error);

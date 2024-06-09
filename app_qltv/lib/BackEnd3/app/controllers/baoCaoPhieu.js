@@ -6,7 +6,12 @@ const bao_caoPhieuServices = require('../services/baoCaoPhieuServices');
 
 exports.getPhieuXuat = async (req, res, next) => {
   try {
-    const phieuList = await bao_caoPhieuServices.getPhieuXuat();
+    const {ngayBD, ngayKT} = req.query;
+    if(!ngayBD || !ngayKT){
+      return res.status(404).json({message: "Vui lòng nhập ngày bắt đầu và ngày kết thúc"});
+    }
+
+    const phieuList = await bao_caoPhieuServices.getPhieuXuat(ngayBD, ngayKT);
     res.status(200).json(phieuList);
   } catch (error) {
     next(error);
