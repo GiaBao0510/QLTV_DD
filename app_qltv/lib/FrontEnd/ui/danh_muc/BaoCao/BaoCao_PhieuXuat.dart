@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:pdf/pdf.dart';
 import 'package:printing/printing.dart';
+import 'package:intl/intl.dart';
 
 import '../../../model/danhmuc/BaoCaoPhieuXuat.dart';
 import '../../../controller/danhmuc/BaoCaoPhieuXuat_manage.dart';
@@ -31,9 +32,17 @@ class _BaoCaoPhieuXuat extends State<BaoCaoPhieuXuatScreen> {
         _tongThanhTien =0.0, _tongGiaGoc =0.0, _tongLaiLo =0.0;
   var ThongTinTinhTong;
 
+  //Tim kiem theo ngay
+  final TextEditingController _StartDayController = TextEditingController(),
+                              _EndDayController = TextEditingController();
+  late DateTime ngayBT, ngayKT;
+  final DateFormat _dateFormat = DateFormat('yyyy-MM-dd');
+
   @override
   void initState() {
     super.initState();
+    ngayBT = DateTime.now();
+    ngayKT = DateTime.now();
     _loadBaoCaoPhieuXuat();
     _searchController.addListener(_filterBaoCaoPhieuXuat);
   }
@@ -49,7 +58,7 @@ class _BaoCaoPhieuXuat extends State<BaoCaoPhieuXuatScreen> {
   Future<void> _loadBaoCaoPhieuXuat() async {
     _bangBaoCaoPhieuXuatFuture =
         Provider.of<BaocaophieuxuatManage>(context, listen: false)
-            .LayDuLieuPhieuXuat_test();
+            .LayDuLieuPhieuXuat_test(ngayBT, ngayKT);
     _bangBaoCaoPhieuXuatFuture.then((BaoCaos) {
       setState(() {
         _PhieuXuatList = BaoCaos;
@@ -125,6 +134,40 @@ class _BaoCaoPhieuXuat extends State<BaoCaoPhieuXuatScreen> {
         onLayout: (PdfPageFormat format) async => doc.save());
   }
 
+  //5. Choọn ngay bat dau
+  void _SelectStartDate() async{
+    final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: ngayBT,
+        firstDate: DateTime(1999),
+        lastDate: DateTime(2200)
+    );
+    if(picked != null && picked != ngayBT){
+      setState(() {
+        ngayBT = picked;
+        _StartDayController.text = _dateFormat.format(ngayBT);
+      });
+    }
+    //print('Ngày bắt đầu đã chọn: $ngayBT');
+  }
+
+  void _SelectEndDate() async{
+    final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: ngayKT,
+        firstDate: DateTime(1999),
+        lastDate: DateTime(2200)
+    );
+    if(picked != null && picked != ngayKT){
+      setState(() {
+        ngayKT = picked;
+        _EndDayController.text = _dateFormat.format(ngayKT);
+      });
+    }
+    //print('Ngày kết thúc đã chọn: $ngayKT');
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -171,6 +214,8 @@ class _BaoCaoPhieuXuat extends State<BaoCaoPhieuXuatScreen> {
 
             child: Column(children: [
               Search_Bar(searchController: _searchController),
+              const SizedBox(height: 12,),
+              SearchByDay(context),
               const SizedBox(height: 12,),
               Expanded(
                 child: Scrollbar(
@@ -561,6 +606,77 @@ class _BaoCaoPhieuXuat extends State<BaoCaoPhieuXuatScreen> {
             ],
           );
         },
+    );
+  }
+
+  //Tao widget tim kiem theo ngày
+  Widget SearchByDay(BuildContext context){
+    return Container(
+      child: Row(children: [
+        Flexible(
+            flex: 1,
+            child: TextFormField(
+              controller: _StartDayController,
+              readOnly: true,
+              decoration: InputDecoration(
+                labelText: 'Ngày bắt đầu',
+                labelStyle: TextStyle(fontSize: 12),
+                filled: true,
+                fillColor: Colors.white,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10))
+                ),
+              ),
+              style: TextStyle(fontSize: 15),
+              onTap: () => _SelectStartDate(),
+            )
+        ),
+
+        const SizedBox(width: 5,),
+
+        Flexible(
+            flex:1,
+            child: TextFormField(
+              controller: _EndDayController,
+              readOnly: true,
+              decoration: InputDecoration(
+                labelText: 'Ngày kết thúc',
+                labelStyle: TextStyle(fontSize: 12),
+                filled: true,
+                fillColor: Colors.white,
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10))
+                ),
+              ),
+              style: TextStyle(fontSize: 15),
+              onTap: () => _SelectEndDate(),
+            )
+        ),
+        Flexible(
+          flex: 1,
+            child: TextButton(
+              onPressed: (){
+                _loadBaoCaoPhieuXuat();
+              },
+              child: FittedBox(
+                fit: BoxFit.fitWidth,
+                child: Container(
+                  padding: EdgeInsets.fromLTRB(25, 20, 25, 20),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [Color(0xff536976), Color(0xff292e49)],
+                      stops: [0, 1],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    borderRadius: BorderRadius.circular(10)
+                  ),
+                  child: Text('Tìm kiếm', style: TextStyle(color: Colors.white,fontSize: 30),),
+                ),
+              )
+            )
+        ),
+      ],),
     );
   }
 }

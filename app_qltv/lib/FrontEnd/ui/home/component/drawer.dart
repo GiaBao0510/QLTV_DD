@@ -18,6 +18,7 @@ import 'package:app_qltv/FrontEnd/ui/camvang/Phieu/PhieuDangCamChiTiet.dart';
 import 'package:app_qltv/FrontEnd/constants/config.dart';
 import 'package:app_qltv/FrontEnd/ui/hethonng/nguoidung/nguoi_dung_page.dart';
 import 'package:app_qltv/FrontEnd/ui/hethonng/nhom/nhompage.dart';
+import 'package:app_qltv/FrontEnd/temp.dart';
 import 'package:app_qltv/main.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -624,7 +625,7 @@ class drawer extends StatelessWidget {
                           left: 16.0), // Khoảng cách thụt lề
                       child: ListTile(
                         leading: Image.asset(
-                          'assets/images/MortgageDocument.png',
+                          'assets/images/invoiceList.png',
                           width: 24.0,
                           height: 24.0,
                         ),
@@ -644,7 +645,7 @@ class drawer extends StatelessWidget {
                           left: 16.0), // Khoảng cách thụt lề
                       child: ListTile(
                         leading: Image.asset(
-                          'assets/images/DetailOfMortgageDocument.png',
+                          'assets/images/addInvoice.png',
                           width: 24.0,
                           height: 24.0,
                         ),
@@ -665,7 +666,7 @@ class drawer extends StatelessWidget {
                           left: 16.0), // Khoảng cách thụt lề
                       child: ListTile(
                         leading: Image.asset(
-                          'assets/images/DetailOfMortgageDocument.png',
+                          'assets/images/deleteInvoice.png',
                           width: 24.0,
                           height: 24.0,
                         ),
@@ -686,7 +687,7 @@ class drawer extends StatelessWidget {
                           left: 16.0), // Khoảng cách thụt lề
                       child: ListTile(
                         leading: Image.asset(
-                          'assets/images/DetailOfMortgageDocument.png',
+                          'assets/images/InvoiceAdjustment.png',
                           width: 24.0,
                           height: 24.0,
                         ),
@@ -707,7 +708,7 @@ class drawer extends StatelessWidget {
                           left: 16.0), // Khoảng cách thụt lề
                       child: ListTile(
                         leading: Image.asset(
-                          'assets/images/DetailOfMortgageDocument.png',
+                          'assets/images/ChangeBill.png',
                           width: 24.0,
                           height: 24.0,
                         ),
@@ -726,6 +727,22 @@ class drawer extends StatelessWidget {
                   ],
                 ),
               ],
+            ),
+          ),
+
+          //Phần kiêm tra chuc nang
+          Container(
+            child: ListTile(
+              leading: Image.asset('assets/images/test.png'),
+              title: Text('Test chức năng'),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                      const TestPage()),
+                );
+              },
             ),
           ),
 
