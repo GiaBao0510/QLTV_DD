@@ -7,6 +7,10 @@ const CheckLoggedIn = "$url/checkloggedin"; //Kiểm tra tính hợp lệ
 // ------------------- Mat Bao
 const urlMatBao = "https://api-demo.matbao.in";
 
+//Tai khoan - mat khau
+const ApiUserName = 'admin';
+const ApiPassword = 'Gtybf@12sd';
+
 //0. Đăng nhập
 const loginMatBao = '/api/v2/invoice/login_api';
 //1.Them hoa don - nhap <<

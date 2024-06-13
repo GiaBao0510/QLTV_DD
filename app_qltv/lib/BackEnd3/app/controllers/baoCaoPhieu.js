@@ -6,7 +6,12 @@ const bao_caoPhieuServices = require('../services/baoCaoPhieuServices');
 
 exports.getPhieuXuat = async (req, res, next) => {
   try {
-    const phieuList = await bao_caoPhieuServices.getPhieuXuat();
+    const {ngayBD, ngayKT, pages} = req.query;
+    if(!ngayBD || !ngayKT || !pages){
+      return res.status(404).json({message: "Vui lòng nhập ngày bắt đầu, ngày kết thúc và số trang hiển thị"});
+    }
+
+    const phieuList = await bao_caoPhieuServices.getPhieuXuat(ngayBD, ngayKT, pages);
     res.status(200).json(phieuList);
   } catch (error) {
     next(error);
@@ -21,15 +26,42 @@ exports.getPhieuXuatById = async (req, res, next) => {
   }
 };
 
+exports.laySoLuongPhieuXuatTheoThoiDiem = async (req, res, next) =>{
+  try{
+    const {ngayBD, ngayKT} = req.query;
+    if(!ngayBD || !ngayKT){
+      return res.status(404).json({message: "Vui lòng nhập ngày bắt đầu và ngày kết thúc"});
+    }
+    const soluong = await bao_caoPhieuServices.laySoLuongPhieuXuatTheoThoiDiem(ngayBD, ngayKT);
+    res.status(200).json(soluong);
+
+  }catch(err){
+    next(err);
+  }
+}
+
+exports.TinhTongPhieuXuatTheoThoiDiem = async (req, res, next) =>{
+  try{
+    const {ngayBD, ngayKT} = req.query;
+    if(!ngayBD || !ngayKT){
+      return res.status(404).json({message: "Vui lòng nhập ngày bắt đầu và ngày kết thúc"});
+    }
+    const soluong = await bao_caoPhieuServices.TinhTongPhieuXuatTheoThoiDiem(ngayBD, ngayKT);
+    res.status(200).json(soluong);
+
+  }catch(err){
+    next(err);
+  }
+}
 
 exports.getPhieuXuatByDate = async (req, res, next) => {
   try {
-    const { ngayBD, ngayKT } = req.query;
+    const { ngayBD, ngayKT  } = req.query;
     if (!ngayBD || !ngayKT) {
       return res.status(400).json({ error: "Ngày bắt đầu và ngày kết thúc là bắt buộc." });
     }
 
-    const phieu = await bao_caoPhieuServices.getPhieuXuatByDate(ngayBD, ngayKT);
+    const phieu = await bao_caoPhieuServices.getPhieuXuatByDate(ngayBD, ngayKT, pages);
 
     res.status(200).json(phieu);
   } catch(err) {
