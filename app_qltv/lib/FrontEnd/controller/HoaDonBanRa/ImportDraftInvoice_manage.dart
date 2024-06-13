@@ -12,6 +12,9 @@ class ImportDraftInvoiceManage with ChangeNotifier{
 
   //Them hoa don nhap
   Future<void> addDraftInvoice(ImportDraftInvoice_Model DraftInvoice) async{
+
+    print('Đầu vào: ${DraftInvoice}');
+
     final reponse = await http.post(
       Uri.parse('${urlMatBao + ImportHoaDonNhap}'),
       headers: <String, String>{

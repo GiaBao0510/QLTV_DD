@@ -1,6 +1,10 @@
+
+import 'package:app_qltv/FrontEnd/ui/danh_muc/BaoCao/BaoCaoPhieuMua.dart';
+
 import 'package:app_qltv/FrontEnd/ui/danh_muc/BaoCao/BaoCao_KhoVangMuaVao.dart';
 import 'package:app_qltv/FrontEnd/ui/danh_muc/BaoCao/BaoCao_PhieuDoi.dart';
 import 'package:app_qltv/FrontEnd/ui/danh_muc/BaoCao/BaoCao_TopKhachHang.dart';
+
 import 'package:app_qltv/FrontEnd/ui/danh_muc/dvi/dvi.dart';
 import 'package:app_qltv/FrontEnd/ui/danh_muc/BaoCao/BaoCao_TonKhoNhomVang.dart';
 import 'package:app_qltv/FrontEnd/ui/danh_muc/hang_hoa/hang_hoa.dart';
@@ -18,6 +22,7 @@ import 'package:app_qltv/FrontEnd/ui/camvang/Phieu/PhieuDangCamChiTiet.dart';
 import 'package:app_qltv/FrontEnd/constants/config.dart';
 import 'package:app_qltv/FrontEnd/ui/hethonng/nguoidung/nguoi_dung_page.dart';
 import 'package:app_qltv/FrontEnd/ui/hethonng/nhom/nhompage.dart';
+import 'package:app_qltv/FrontEnd/ui/HoaDonBanRa/TaoHoaDonNhap.dart';
 import 'package:app_qltv/FrontEnd/temp.dart';
 import 'package:app_qltv/main.dart';
 import 'package:flutter/cupertino.dart';
@@ -583,7 +588,12 @@ class drawer extends StatelessWidget {
                         title: const Text('Báo Cáo Phiếu Mua Vào',
                             style: TextStyle(fontWeight: FontWeight.w800)),
                         onTap: () {
-                          // Handle Báo Cáo Tồn Kho Loại Vàng tap
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const BaoCaoPhieuMuaScreen()),
+                          );
                         },
                       ),
                     ),
@@ -656,7 +666,7 @@ class drawer extends StatelessWidget {
                             context,
                             MaterialPageRoute(
                                 builder: (context) =>
-                                const PhieuDangCamChiTiet()),
+                                const ThemHoaDon_nhap()),
                           );
                         },
                       ),

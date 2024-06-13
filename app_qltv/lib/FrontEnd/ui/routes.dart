@@ -1,4 +1,7 @@
+import 'package:app_qltv/FrontEnd/ui/danh_muc/BaoCao/BaoCaoPhieuMua.dart';
+
 import 'package:app_qltv/FrontEnd/ui/danh_muc/BaoCao/BaoCao_KhoVangMuaVao.dart';
+
 import 'package:app_qltv/FrontEnd/ui/danh_muc/BaoCao/BaoCao_TonKhoNhomVang.dart';
 import 'package:app_qltv/FrontEnd/ui/danh_muc/BaoCao/BaoCao_TonKhoVang.dart';
 import 'package:app_qltv/FrontEnd/ui/danh_muc/dvi/components/them_dvi.dart';
@@ -19,13 +22,14 @@ import 'package:app_qltv/FrontEnd/ui/danh_muc/BaoCao/BaoCao_TonKhoLoaiVang.dart'
 import 'package:app_qltv/FrontEnd/ui/danh_muc/BaoCao/BaoCao_PhieuXuat.dart';
 import 'package:app_qltv/FrontEnd/ui/camvang/Phieu/PhieuDangCam.dart';
 import 'package:app_qltv/FrontEnd/ui/camvang/Phieu/PhieuDangCamChiTiet.dart';
+import 'package:app_qltv/FrontEnd/ui/HoaDonBanRa/TaoHoaDonNhap.dart';
 import 'package:flutter/material.dart';
-
 //--
 import 'package:app_qltv/FrontEnd/temp.dart';
 
 final Map<String, WidgetBuilder> routes = {
   LoaiVangScreen.routeName: (ctx) => LoaiVangScreen(),
+  KhachhangScreen.routeName: (ctx) => KhachhangScreen(),
   NhomVangScreen.routeName: (ctx) => NhomVangScreen(),
   ThemNhomVangScreen.routeName: (ctx) => ThemNhomVangScreen(),
   NhomPage.routeName: (ctx) => NhomPage(),
@@ -45,6 +49,11 @@ final Map<String, WidgetBuilder> routes = {
   PhieuDangCamChiTiet.routeName: (ctx) => PhieuDangCamChiTiet(),
   BaoCaoTonKhoNhomVangScreen.routeName: (ctx) => BaoCaoTonKhoNhomVangScreen(),
   BaoCaoPhieuXuatScreen.routeName: (ctx) => BaoCaoPhieuXuatScreen(),
+
+  BaoCaoPhieuMuaScreen.routeName:(ctx) => BaoCaoPhieuMuaScreen(),
+
   KhoVangMuaVaoScreen.routeName: (ctx) => KhoVangMuaVaoScreen(),
+
   TestPage.routeName: (ctx) => TestPage(),
+  ThemHoaDon_nhap.routerName: (ctx) => ThemHoaDon_nhap(),
 };

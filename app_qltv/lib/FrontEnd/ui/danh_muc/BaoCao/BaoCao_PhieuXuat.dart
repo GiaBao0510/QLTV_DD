@@ -1,4 +1,3 @@
-import 'package:app_qltv/FrontEnd/Service/export/Excel/BaoCaoPhieuXuat_Excel.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -162,12 +161,6 @@ class _BaoCaoPhieuXuat extends State<BaoCaoPhieuXuatScreen> {
     });
   }
 
-  //8. Chuyển sang phần xuất file Excel
-  void printExcel(List<BangBaoCaoPhieuXuat_model> data,
-      Map<String, dynamic> GetThongTinTinhTong) {
-    exportExcelPhieuXuat(data, GetThongTinTinhTong);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -203,15 +196,6 @@ class _BaoCaoPhieuXuat extends State<BaoCaoPhieuXuatScreen> {
                         //printDoc(_filterPhieuXuatList, ThongTinTinhTong);
                       },
                       child: Text('Export PDF'),
-                    ),
-                  ),
-                  PopupMenuItem<String>(
-                    child: TextButton(
-                      onPressed: () {
-                        print('Chuyen sang Excel');
-                        // printExcel(_filterPhieuXuatList, ThongTinTinhTong);
-                      },
-                      child: Text('Export Excel'),
                     ),
                   ),
                 ];
