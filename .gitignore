@@ -1,7 +1,9 @@
 #bỏ qua thư mục module
 app_qltv/lib/BackEnd/node_modules
 app_qltv/lib/BackEndV2/node_modules
+app_qltv/lib/BackEnd3/node_modules
 
 #bỏ qua thụ mục ghi chí
 ghiChu/
 app_qltv/lib/FrontEnd/constants/config.dart
+app_qltv/lib/BackEnd3/app/config/test.json

@@ -1,4 +1,10 @@
+
+import 'package:app_qltv/FrontEnd/ui/danh_muc/BaoCao/BaoCaoPhieuMua.dart';
+
 import 'package:app_qltv/FrontEnd/ui/danh_muc/BaoCao/BaoCao_KhoVangMuaVao.dart';
+import 'package:app_qltv/FrontEnd/ui/danh_muc/BaoCao/BaoCao_PhieuDoi.dart';
+import 'package:app_qltv/FrontEnd/ui/danh_muc/BaoCao/BaoCao_TopKhachHang.dart';
+
 import 'package:app_qltv/FrontEnd/ui/danh_muc/dvi/dvi.dart';
 import 'package:app_qltv/FrontEnd/ui/danh_muc/BaoCao/BaoCao_TonKhoNhomVang.dart';
 import 'package:app_qltv/FrontEnd/ui/danh_muc/hang_hoa/hang_hoa.dart';
@@ -16,6 +22,8 @@ import 'package:app_qltv/FrontEnd/ui/camvang/Phieu/PhieuDangCamChiTiet.dart';
 import 'package:app_qltv/FrontEnd/constants/config.dart';
 import 'package:app_qltv/FrontEnd/ui/hethonng/nguoidung/nguoi_dung_page.dart';
 import 'package:app_qltv/FrontEnd/ui/hethonng/nhom/nhompage.dart';
+import 'package:app_qltv/FrontEnd/ui/HoaDonBanRa/TaoHoaDonNhap.dart';
+import 'package:app_qltv/FrontEnd/temp.dart';
 import 'package:app_qltv/main.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -321,7 +329,8 @@ class drawer extends StatelessWidget {
                         onTap: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => const NguoiDungPage()),
+                            MaterialPageRoute(
+                                builder: (context) => const NguoiDungPage()),
                           );
                         },
                       ),
@@ -530,22 +539,22 @@ class drawer extends StatelessWidget {
                         },
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          left: 16.0), // Khoảng cách thụt lề
-                      child: ListTile(
-                        leading: Image.asset(
-                          'assets/images/paper.png',
-                          width: 24.0,
-                          height: 24.0,
-                        ),
-                        title: const Text('In Phiếu Xuất',
-                            style: TextStyle(fontWeight: FontWeight.w800)),
-                        onTap: () {
-                          // Handle Báo Cáo Tồn Kho Loại Vàng tap
-                        },
-                      ),
-                    ),
+                    // Padding(
+                    //   padding: const EdgeInsets.only(
+                    //       left: 16.0), // Khoảng cách thụt lề
+                    //   child: ListTile(
+                    //     leading: Image.asset(
+                    //       'assets/images/paper.png',
+                    //       width: 24.0,
+                    //       height: 24.0,
+                    //     ),
+                    //     title: const Text('In Phiếu Xuất',
+                    //         style: TextStyle(fontWeight: FontWeight.w800)),
+                    //     onTap: () {
+                    //       // Handle Báo Cáo Tồn Kho Loại Vàng tap
+                    //     },
+                    //   ),
+                    // ),
                     Padding(
                       padding: const EdgeInsets.only(
                           left: 16.0), // Khoảng cách thụt lề
@@ -555,10 +564,15 @@ class drawer extends StatelessWidget {
                           width: 24.0,
                           height: 24.0,
                         ),
-                        title: const Text('Khách Hàng Giao Dịch Nhiều',
+                        title: const Text('Khách Hàng Giao Dịch',
                             style: TextStyle(fontWeight: FontWeight.w800)),
                         onTap: () {
-                          // Handle Báo Cáo Tồn Kho Loại Vàng tap
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const BaoCaoTopKhachHangScreen()),
+                          );
                         },
                       ),
                     ),
@@ -574,7 +588,12 @@ class drawer extends StatelessWidget {
                         title: const Text('Báo Cáo Phiếu Mua Vào',
                             style: TextStyle(fontWeight: FontWeight.w800)),
                         onTap: () {
-                          // Handle Báo Cáo Tồn Kho Loại Vàng tap
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const BaoCaoPhieuMuaScreen()),
+                          );
                         },
                       ),
                     ),
@@ -590,13 +609,150 @@ class drawer extends StatelessWidget {
                         title: const Text('Báo Cáo Phiếu Đổi',
                             style: TextStyle(fontWeight: FontWeight.w800)),
                         onTap: () {
-                          // Handle Báo Cáo Tồn Kho Loại Vàng tap
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const BaoCaoPhieuDoiScreen()),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+
+                ExpansionTile(
+                  leading: Image.asset(
+                    'assets/images/billofsale.png',
+                    width: 24.0,
+                    height: 24.0,
+                  ),
+                  title: const Text('Hóa đơn bán ra',
+                      style: TextStyle(fontWeight: FontWeight.w800)),
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          left: 16.0), // Khoảng cách thụt lề
+                      child: ListTile(
+                        leading: Image.asset(
+                          'assets/images/invoiceList.png',
+                          width: 24.0,
+                          height: 24.0,
+                        ),
+                        title: const Text('Danh sách hóa đơn',
+                            style: TextStyle(fontWeight: FontWeight.w800)),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const PhieuDangCam()),
+                          );
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          left: 16.0), // Khoảng cách thụt lề
+                      child: ListTile(
+                        leading: Image.asset(
+                          'assets/images/addInvoice.png',
+                          width: 24.0,
+                          height: 24.0,
+                        ),
+                        title: const Text('Thêm hóa đơn ',
+                            style: TextStyle(fontWeight: FontWeight.w800)),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                const ThemHoaDon_nhap()),
+                          );
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          left: 16.0), // Khoảng cách thụt lề
+                      child: ListTile(
+                        leading: Image.asset(
+                          'assets/images/deleteInvoice.png',
+                          width: 24.0,
+                          height: 24.0,
+                        ),
+                        title: const Text('Xóa hóa đơn ',
+                            style: TextStyle(fontWeight: FontWeight.w800)),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                const PhieuDangCamChiTiet()),
+                          );
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          left: 16.0), // Khoảng cách thụt lề
+                      child: ListTile(
+                        leading: Image.asset(
+                          'assets/images/InvoiceAdjustment.png',
+                          width: 24.0,
+                          height: 24.0,
+                        ),
+                        title: const Text('Điều chỉnh hóa đơn ',
+                            style: TextStyle(fontWeight: FontWeight.w800)),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                const PhieuDangCamChiTiet()),
+                          );
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          left: 16.0), // Khoảng cách thụt lề
+                      child: ListTile(
+                        leading: Image.asset(
+                          'assets/images/ChangeBill.png',
+                          width: 24.0,
+                          height: 24.0,
+                        ),
+                        title: const Text('Thay thế hóa đơn ',
+                            style: TextStyle(fontWeight: FontWeight.w800)),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                const PhieuDangCamChiTiet()),
+                          );
                         },
                       ),
                     ),
                   ],
                 ),
               ],
+            ),
+          ),
+
+          //Phần kiêm tra chuc nang
+          Container(
+            child: ListTile(
+              leading: Image.asset('assets/images/test.png'),
+              title: Text('Test chức năng'),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                      const TestPage()),
+                );
+              },
             ),
           ),
 

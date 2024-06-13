@@ -1,4 +1,5 @@
 var db = require('../config/index_2');
+//var updateConnection = require('../config/updateConnection');
 const fs = require('fs')
 const mysql = require('mysql');
 

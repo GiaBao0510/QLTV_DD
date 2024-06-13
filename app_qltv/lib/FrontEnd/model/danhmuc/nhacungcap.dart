@@ -1,5 +1,3 @@
-
-
 class NhaCungCap {
   final int? ncc_id;
   final String? ncc_ma;
