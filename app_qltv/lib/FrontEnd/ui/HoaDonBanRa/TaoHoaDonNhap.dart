@@ -17,7 +17,7 @@ class _ThemHoaDon_nhapState extends State<ThemHoaDon_nhap> {
   String paymentMethob = "Chọn hình thức thanh tóan";
   int DaChonHinhThucThanhToan = 0;        //Dung de kiem tra xem hinh thuc thanh toán da chon hay chua
   String DonViTienTe = "VND - Việt Nam Đồng";
-  final _formkey = GlobalKey<FormState>();
+  final _formkey = GlobalKey<FormState>();    //Bieu mau tao hoa don nhap
   late Products_model SanPham;
   late List<Products_model> DanhSachSanPham = [];
   late ImportDraftInvoice_Model _newHoaDon ;
@@ -685,15 +685,77 @@ class _ThemHoaDon_nhapState extends State<ThemHoaDon_nhap> {
                     },
                   ),
 
+                  // ----------- Phan nay chi doc khong cho phép sưa
 
+                    //1. Tổng tiền quy đổi
+                  const SizedBox(height: 20,),
+                  Text('Tổng tiền quy đổi:',),
+                  TextFormField(
+                    expands: false,
+                    obscureText: false,                     //Khong an ky tu
+                    initialValue: 0.5.toString(),
+                    readOnly: true,
+                    keyboardType: TextInputType.text,
+                    textInputAction: TextInputAction.next,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.attach_money),
+                      border: OutlineInputBorder(),
+                      focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey, width: 2)
+                      ),
+                      filled: true,
+                      fillColor: Colors.white54,
+                    ),
+                  ),
 
+                  //Giảm giá
 
+                  //Tền hàng truowcsc thuế
+
+                  //Tiền thuế GTGT 5%
+
+                  //Tiền thuế GTGT 10%
+
+                  //Tiền thuế GTGT (Khác):
+
+                  //Tổng tiền thuế GTGT:
+
+                  //Tổng tiền sau thuế:
+
+                  //Số tiền viết bằng chữ:
+
+                  //Nut luu
+                  const SizedBox(height: 25,),
+                  Container(
+                    padding: EdgeInsets.fromLTRB(15, 5, 15, 5),
+                    decoration: BoxDecoration(
+                      color: Colors.blue,
+                      borderRadius: BorderRadius.all(Radius.circular(10))
+                    ),
+                    child: TextButton(
+                      onPressed: (){},
+                      child: Text('Lưu dữ liệu', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),)
+                    ),
+                  ),
+                  const SizedBox(height: 20,),
                 ],
               ),
             ),
           )
         ],),
       ),
+    );
+  }
+
+  //Bảng thêm sản phẩm trong hóa đơn
+  Widget ProductTableInTheInvoice(BuildContext context){
+    return DataTable(
+        columns: [
+
+        ],
+        rows: [
+
+        ]
     );
   }
 }
