@@ -89,7 +89,7 @@ class _HomeScreenState extends State<HomeScreen> {
       {
         'image': 'assets/images/budget.png',
         'text': 'Báo Cáo Phiếu Xuất',
-        'routeName': '/loaivang'
+        'routeName': '/baocaophieuxuat'
       },
       {
         'image': 'assets/images/report.png',
@@ -124,7 +124,7 @@ class _HomeScreenState extends State<HomeScreen> {
       {
         'image': 'assets/images/shopping-list.png',
         'text': 'Báo Cáo Phiếu Mua Vào',
-        'routeName': '/loaivang'
+        'routeName': '/baocaophieumua'
       },
       {
         'image': 'assets/images/document.png',

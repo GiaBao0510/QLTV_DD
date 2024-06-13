@@ -1,6 +1,10 @@
+
+import 'package:app_qltv/FrontEnd/controller/danhmuc/BaoCaoPhieuMua_maneger.dart';
+
 import 'package:app_qltv/FrontEnd/controller/baocao/BaoCaoPhieuDoi.dart';
 import 'package:app_qltv/FrontEnd/controller/baocao/BaoCaoTopKhachHang.dart';
 import 'package:app_qltv/FrontEnd/controller/baocao/KhoVangMuaVao_manager.dart';
+
 import 'package:app_qltv/FrontEnd/controller/danhmuc/BaoCaoPhieuXuat_manage.dart';
 import 'package:app_qltv/FrontEnd/controller/danhmuc/BaoCaoTonKhoVang_manager.dart';
 import 'package:app_qltv/FrontEnd/controller/danhmuc/BaoCaoTonKhoLoaiVang_manager.dart';
@@ -96,6 +100,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
             create: (context) => BaoCaoTonKhoLoaiVangManager()),
         ChangeNotifierProvider(create: (context) => BaocaophieuxuatManage()),
+        ChangeNotifierProvider(create: (context) => BaocaophieumuaManeger()),
         ChangeNotifierProvider(create: (context) => BaocaotonkhovangManager()),
         ChangeNotifierProvider(create: (context) => KhoVangMuaVaoManager()),
         ChangeNotifierProvider(create: (context) => BaoCaoPhieuDoiManager()),
