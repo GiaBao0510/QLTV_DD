@@ -3,23 +3,64 @@ class Products_model{
   final String ProdName;
   final String ProdUnit;
   final double ProdQuantity;
+  final double DiscountAmount;
+  final double Discount;
   final double ProdPrice;
   final double VATRate;
   final double VATAmount;
   final double Total;
   final double Amount;
+  final int ProdAttr;
+  final String Remark;
 
   Products_model({
     required this.code,
     required this.ProdName,
     required this.ProdUnit,
     required this.ProdQuantity,
+    required this.DiscountAmount,
+    required this.Discount,
     required this.ProdPrice,
     required this.VATRate,
     required this.VATAmount,
     required this.Total,
     required this.Amount,
+    required this.ProdAttr,
+    required this.Remark,
   });
+
+  //ham sao chep
+  Products_model copyWith({
+    String? code,
+    String? ProdName,
+    String? ProdUnit,
+    double? ProdQuantity,
+    double? DiscountAmount,
+    double? Discount,
+    double? ProdPrice,
+    double? VATRate,
+    double? VATAmount,
+    double? Total,
+    double? Amount,
+    int? ProdAttr,
+    String? Remark,
+  }){
+   return Products_model(
+     code: code ?? this.code,
+     ProdName: ProdName ?? this.ProdName,
+     ProdUnit: ProdUnit ?? this.ProdUnit,
+     ProdQuantity: ProdQuantity ?? this.ProdQuantity,
+     DiscountAmount: DiscountAmount ?? this.DiscountAmount,
+     Discount: Discount ?? this.Discount,
+     ProdPrice: ProdPrice ?? this.ProdPrice,
+     VATRate: VATRate ?? this.VATRate,
+     VATAmount: VATAmount ?? this.VATAmount,
+     Total: Total ?? this.Total,
+     Amount: Amount ?? this.Amount,
+     ProdAttr: ProdAttr ?? this.ProdAttr,
+     Remark: Remark ?? this.Remark,
+   );
+  }
 
   //Chuyen doi Map sang Object
   factory Products_model.fromMap(Map<String, dynamic> json){
@@ -29,6 +70,10 @@ class Products_model{
       ProdUnit: json['ProdUnit'] ?? '',
       ProdQuantity: (json['ProdQuantity'] is int) ? (json['ProdQuantity'] as int).toDouble():
         (json['ProdQuantity'] is double)? json['ProdQuantity'] : 0.0,
+      DiscountAmount: (json['DiscountAmount'] is int) ? (json['DiscountAmount'] as int).toDouble():
+        (json['DiscountAmount'] is double)? json['DiscountAmount'] : 0.0,
+      Discount:  (json['Discount'] is int) ? (json['Discount'] as int).toDouble():
+        (json['Discount'] is double)? json['Discount'] : 0.0,
       ProdPrice: (json['ProdPrice'] is int) ? (json['ProdPrice'] as int).toDouble():
         (json['ProdPrice'] is double)? json['ProdPrice'] : 0.0,
       VATRate: (json['VATRate'] is int) ? (json['VATRate'] as int).toDouble():
@@ -39,6 +84,8 @@ class Products_model{
         (json['Total'] is double)? json['Total'] : 0.0,
       Amount: (json['Amount'] is int) ? (json['Amount'] as int).toDouble():
         (json['Amount'] is double)? json['Amount'] : 0.0,
+      ProdAttr: (json['ProdQuantity'] is int) ? json['ProdQuantity'] : 0,
+      Remark: json['Remark'] ?? '',
     );
   }
 
@@ -49,11 +96,15 @@ class Products_model{
       'ProdName': ProdName,
       'ProdUnit': ProdUnit,
       'ProdQuantity': ProdQuantity,
+      'DiscountAmount':DiscountAmount,
+      'Discount': Discount,
       'ProdPrice': ProdPrice,
       'VATRate': VATRate,
       'VATAmount': VATAmount,
       'Total': Total,
       'Amount': Amount,
+      'ProdAttr':ProdAttr,
+      'Remark':Remark,
     };
   }
 }
