@@ -1,7 +1,5 @@
 
 const url = "http://192.168.1.21:3000";
-
-
 const login = "$url/login"; //Đăng nhập
 const logout = "$url/exit"; //Đăng xuất
 const CheckValidity = "$url/refresh-token"; //Kiểm tra tính hợp lệ
@@ -10,11 +8,11 @@ const CheckLoggedIn = "$url/checkloggedin"; //Kiểm tra tính hợp lệ
 // ------------------- Mat Bao
 const urlMatBao = "https://api-demo.matbao.in";
 
-  //Tai khoan - mat khau
+//Tai khoan - mat khau
 const ApiUserName = 'admin';
 const ApiPassword = 'Gtybf@12sd';
 
-  //0. Đăng nhập
+//0. Đăng nhập
 const loginMatBao = '/api/v2/invoice/login_api';
 //1.Them hoa don - nhap <<
 const ImportHoaDonNhap = "/api/v3/invoice/importInvTemp";
