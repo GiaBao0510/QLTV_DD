@@ -1,5 +1,5 @@
 
-const url = "http://192.168.1.57:3000";
+const url = "http://192.168.1.21:3000";
 
 
 const login = "$url/login"; //Đăng nhập

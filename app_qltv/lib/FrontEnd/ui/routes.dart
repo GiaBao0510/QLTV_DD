@@ -19,8 +19,8 @@ import 'package:app_qltv/FrontEnd/ui/danh_muc/BaoCao/BaoCao_TonKhoLoaiVang.dart'
 import 'package:app_qltv/FrontEnd/ui/danh_muc/BaoCao/BaoCao_PhieuXuat.dart';
 import 'package:app_qltv/FrontEnd/ui/camvang/Phieu/PhieuDangCam.dart';
 import 'package:app_qltv/FrontEnd/ui/camvang/Phieu/PhieuDangCamChiTiet.dart';
+import 'package:app_qltv/FrontEnd/ui/HoaDonBanRa/TaoHoaDonNhap.dart';
 import 'package:flutter/material.dart';
-
 //--
 import 'package:app_qltv/FrontEnd/temp.dart';
 
@@ -47,4 +47,5 @@ final Map<String, WidgetBuilder> routes = {
   BaoCaoPhieuXuatScreen.routeName: (ctx) => BaoCaoPhieuXuatScreen(),
   KhoVangMuaVaoScreen.routeName: (ctx) => KhoVangMuaVaoScreen(),
   TestPage.routeName: (ctx) => TestPage(),
+  ThemHoaDon_nhap.routerName: (ctx) => ThemHoaDon_nhap(),
 };

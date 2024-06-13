@@ -131,6 +131,7 @@ class BaoCaoPhieuXuat_model {
   }
 }
 
+//Bang bao cao phieu xuat
 class BangBaoCaoPhieuXuat_model{
   final List<BaoCaoPhieuXuat_model> PhieuXuat;
   final String MaPhieuXuat;
@@ -148,5 +149,58 @@ class BangBaoCaoPhieuXuat_model{
       MaPhieuXuat: json['PhieuXuatMa'] ?? "",
       PhieuXuat: dataList,
     );
+  }
+}
+
+//Lop lay thong tin tinh tong
+class ThongTinTinhTong_model{
+  final int SoLuongHang;
+  final double TongCanTong;
+  final double TongTLhot;
+  final double TongTLvang;
+  final double TongThanhTien;
+  final double TongGiaGoc;
+  final double TongLaiLo;
+
+  ThongTinTinhTong_model({
+    required this.SoLuongHang,
+    required this.TongCanTong,
+    required this.TongTLhot,
+    required this.TongTLvang,
+    required this.TongThanhTien,
+    required this.TongGiaGoc,
+    required this.TongLaiLo,
+  });
+
+  //Chuyen Map sang object
+  factory ThongTinTinhTong_model.fromMap(Map<String, dynamic> map){
+    return ThongTinTinhTong_model(
+      SoLuongHang: (map['SoLuongHang'] is int) ? map['SoLuongHang'] : 0 ,
+      TongCanTong: (map['TongCanTong'] is int) ? (map['TongCanTong'] as int).toDouble() :
+        (map['TongCanTong'] is double) ? (map['TongCanTong'] as double): 0.0,
+      TongTLhot: (map['TongTLhot'] is int) ? (map['TongTLhot'] as int).toDouble() :
+        (map['TongTLhot'] is double) ? (map['TongTLhot'] as double): 0.0,
+      TongTLvang: (map['TongTLvang'] is int) ? (map['TongTLvang'] as int).toDouble() :
+        (map['TongTLvang'] is double) ? (map['TongTLvang'] as double): 0.0,
+      TongThanhTien: (map['TongThanhTien'] is int) ? (map['TongThanhTien'] as int).toDouble() :
+        (map['TongThanhTien'] is double) ? (map['TongThanhTien'] as double): 0.0,
+      TongGiaGoc: (map['TongGiaGoc'] is int) ? (map['TongGiaGoc'] as int).toDouble() :
+        (map['TongGiaGoc'] is double) ? (map['TongGiaGoc'] as double): 0.0,
+      TongLaiLo: (map['TongLaiLo'] is int) ? (map['TongLaiLo'] as int).toDouble() :
+        (map['TongLaiLo'] is double) ? (map['TongLaiLo'] as double): 0.0,
+    );
+  }
+
+  //Chuyen Object sang Map
+  Map<String, dynamic> toMap(Map<String, dynamic> map){
+    return{
+      'SoLuongHang': SoLuongHang,
+      'TongCanTong':TongCanTong,
+      'TongTLhot':TongTLhot,
+      'TongTLvang':TongTLvang,
+      'TongThanhTien':TongThanhTien,
+      'TongGiaGoc':TongGiaGoc,
+      'TongLaiLo': TongLaiLo
+    };
   }
 }
