@@ -1,13 +1,14 @@
 const db = require('../config/index_2');
 //  table phx_phieu_xuat
-const getPhieuXuat = async (ngayBD, ngayKT) => {
+const getPhieuXuat = async (ngayBD, ngayKT, pages) => {
   return new Promise((resolve, reject) => {
     
     //Liệt kê từng phiếu mã trên phiếu xuất
     db.query( `
       SELECT PHIEU_XUAT_MA 
       FROM phx_phieu_xuat
-      WHERE NGAY_XUAT BETWEEN "${ngayBD}" AND "${ngayKT}"
+      WHERE Date(NGAY_XUAT) BETWEEN "${ngayBD}" AND "${ngayKT}"
+      LIMIT ${pages}
     `  
     , async (error, results) => {
       if (error) {
@@ -83,6 +84,66 @@ const getPhieuXuat = async (ngayBD, ngayKT) => {
   });
 };
 
+//2.Lấy tổng số lượng phiếu xuất theo thời điểm cụ thể
+const laySoLuongPhieuXuatTheoThoiDiem = async (ngayBD, ngayKT) =>{
+  return new Promise( (resolve, reject)=>{
+    db.query(
+      `
+      SELECT count(px.PHIEU_XUAT_MA) SoLuongPhieuXuat
+      FROM phx_phieu_xuat px 
+        INNER JOIN phx_chi_tiet_phieu_xuat ctpx ON px.PHIEU_XUAT_ID = ctpx.PHIEU_XUAT_ID
+      WHERE Date(NGAY_XUAT) BETWEEN '${ngayBD}' AND '${ngayKT}' 
+      `, (error, results) => {
+        if (error) {
+          reject(error);
+        } else{
+          
+          //Chuyển đổi
+          let kq = results.map((e) =>({
+            "SoLuongPhieuXuat": Number(e.SoLuongPhieuXuat)
+          }));
+
+          resolve(kq);
+        }
+      });
+  });
+}
+
+//3. Tính tổng của phiếu xuất theo thời điểm
+const TinhTongPhieuXuatTheoThoiDiem = async (ngayBD, ngayKT) =>{
+  return new Promise( (resolve, reject)=>{
+    db.query(
+      `
+      SELECT count(*) SoLuongHang, SUM(dmhh.CAN_TONG) TongCanTong,
+        SUM(dmhh.TL_HOT) TongTLhot, SUM( (dmhh.CAN_TONG - dmhh.TL_HOT)) TongTLvang,
+        SUM(ctpx.THANH_TIEN) TongThanhTien, SUM(( (dmhh.DON_GIA_GOC * (dmhh.CAN_TONG - dmhh.TL_HOT)) + dmhh.CONG_GOC) ) TongGiaGoc,
+        SUM( (ctpx.THANH_TIEN - dmhh.CONG_GOC)) TongLaiLo
+      FROM phx_phieu_xuat px 
+        INNER JOIN phx_chi_tiet_phieu_xuat ctpx ON px.PHIEU_XUAT_ID = ctpx.PHIEU_XUAT_ID
+        JOIN danh_muc_hang_hoa dmhh ON dmhh.HANGHOAID = ctpx.HANGHOAID
+      WHERE Date(NGAY_XUAT) BETWEEN '${ngayBD}' AND '${ngayKT}'  
+      `, (error, results) => {
+        if (error) {
+          reject(error);
+        } else{
+          
+          //Chuyển đổi
+          let kq = results.map((e) =>({
+            "SoLuongHang": Number(e.SoLuongHang),
+            "TongCanTong": Number(e.TongCanTong),
+            "TongTLhot": Number(e.TongTLhot),
+            "TongTLvang": Number(e.TongTLvang),
+            "TongThanhTien": Number(e.TongThanhTien),
+            "TongGiaGoc": Number(e.TongGiaGoc),
+            "TongLaiLo": Number(e.TongLaiLo)
+          }));
+
+          resolve(kq);
+        }
+      });
+  });
+}
+
 const getPhieuXuatByDate = async (ngayBD, ngayKT) => {
   return new Promise((resolve, reject) => {
 const query = `
@@ -93,7 +154,7 @@ const query = `
       (ctpx.THANH_TIEN - ctpx.GIA_GOC) AS LAI_LO
     FROM phx_phieu_xuat px
     JOIN phx_chi_tiet_phieu_xuat ctpx ON px.PHIEU_XUAT_ID = ctpx.PHIEU_XUAT_ID
-    WHERE px.NGAY_XUAT BETWEEN ? AND ?
+    WHERE Date(px.NGAY_XUAT) BETWEEN ? AND ?
 
     `;
     db.query(query, [ngayBD, ngayKT], (error, results) => {
@@ -298,5 +359,7 @@ module.exports = {
   getBCPhieuMuaVaoByDate,
   getBCPhieuMuaVaoById,
   getPhieuDoi,
-  getTopKhachHang
+  getTopKhachHang,
+  laySoLuongPhieuXuatTheoThoiDiem,
+  TinhTongPhieuXuatTheoThoiDiem,
 };
