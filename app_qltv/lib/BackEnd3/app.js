@@ -17,7 +17,7 @@ const phieu = require ('./app/routers/phieuRoute');
 const kiemtra =require('./app/services/KiemTra.services');
 const { decode } = require('punycode');
 const app = express();
-// const dbRoutes = require('./app/config/dbRoutes');
+const dbRoutes = require('./app/config/dbRoutes');
 
 require('dotenv').config();
 
@@ -35,7 +35,7 @@ app.use('/api/groups', groupRoutes);
 app.use('/api/productType', productype);
 app.use('/api/cam', cam);
 app.use('/api/phieu',phieu);
-// app.use('/api/db', dbRoutes);
+app.use('/api/db', dbRoutes);
 
 //Áp dụng cấu hình phiên
 app.use(
