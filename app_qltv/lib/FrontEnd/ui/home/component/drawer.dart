@@ -22,6 +22,7 @@ import 'package:app_qltv/FrontEnd/ui/camvang/Phieu/PhieuDangCamChiTiet.dart';
 import 'package:app_qltv/FrontEnd/constants/config.dart';
 import 'package:app_qltv/FrontEnd/ui/hethonng/nguoidung/nguoi_dung_page.dart';
 import 'package:app_qltv/FrontEnd/ui/hethonng/nhom/nhompage.dart';
+import 'package:app_qltv/FrontEnd/ui/HoaDonBanRa/TaoHoaDonNhap.dart';
 import 'package:app_qltv/FrontEnd/temp.dart';
 import 'package:app_qltv/main.dart';
 import 'package:flutter/cupertino.dart';
@@ -665,7 +666,7 @@ class drawer extends StatelessWidget {
                             context,
                             MaterialPageRoute(
                                 builder: (context) =>
-                                const PhieuDangCamChiTiet()),
+                                const ThemHoaDon_nhap()),
                           );
                         },
                       ),

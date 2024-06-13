@@ -77,7 +77,10 @@ class ImportDraftInvoice_Model{
   final String CusBankName;
   final String CusBankNo;
   final String PaymentMethod;
-  final Products_model Product;
+  final String Extra;
+  final int DonViTienTe;
+  final List<Products_model> Product;
+  final double TyGia;
   final double Total;
   final double DiscountAmount;
   final double VATAmount;
@@ -107,12 +110,75 @@ class ImportDraftInvoice_Model{
     required this.DiscountAmount,
     required this.VATAmount,
     required this.Amount,
+    required this.Extra,
+    required this.DonViTienTe,
+    required this.TyGia,
   });
+
+  //Ham sao chep
+  ImportDraftInvoice_Model copyWith({
+    String? ApiUserName,
+    String? ApiPassword,
+    String? ApiInvPattern,
+    String? ApiInvSerial,
+    String? Fkey,
+    String? ArisingDate,
+    String? SO,
+    String? MaKH,
+    String? CusName,
+    String? Buyer,
+    String? CusAddress,
+    String? CusPhone,
+    String? CusTaxCode,
+    String? CusEmail,
+    String? CusEmailCC,
+    String? CusBankName,
+    String? CusBankNo,
+    String? PaymentMethod,
+    String? Extra,
+    int? DonViTienTe,
+    List<Products_model>? Product,
+    double? TyGia,
+    double? Total,
+    double? DiscountAmount,
+    double? VATAmount,
+    double? Amount,
+  }){
+    return ImportDraftInvoice_Model(
+      ApiUserName: ApiUserName ?? this.ApiUserName,
+      ApiPassword: ApiPassword ?? this.ApiPassword,
+      ApiInvPattern: ApiInvPattern ?? this.ApiInvPattern,
+      ApiInvSerial: ApiInvSerial ?? this.ApiInvSerial,
+      Fkey: Fkey ?? this.Fkey,
+      ArisingDate: ArisingDate ?? this.ArisingDate,
+      SO: SO ?? this.SO,
+      MaKH: MaKH ?? this.MaKH,
+      CusName: CusName ?? this.CusName,
+      Buyer: Buyer ?? this.Buyer,
+      CusAddress: CusAddress ?? this.CusAddress,
+      CusPhone: CusPhone ?? this.CusPhone,
+      CusTaxCode: CusTaxCode ?? this.CusTaxCode,
+      CusEmail: CusEmail ?? this.CusEmail,
+      CusEmailCC: CusEmailCC ?? this.CusEmailCC,
+      CusBankName: CusBankName ?? this.CusBankName,
+      CusBankNo: CusBankNo ?? this.CusBankNo,
+      PaymentMethod: PaymentMethod ?? this.PaymentMethod,
+      DonViTienTe: DonViTienTe ?? this.DonViTienTe,
+      TyGia: TyGia ?? this.TyGia,
+      Product: Product ?? this.Product,
+      Extra: Extra ?? this.Extra,
+      Total: Total ?? this.Total,
+      DiscountAmount: DiscountAmount ?? this.DiscountAmount,
+      VATAmount: VATAmount ?? this.VATAmount,
+      Amount: Amount ?? this.Amount,
+    );
+  }
 
   //Chuyen Map sang object
   factory ImportDraftInvoice_Model.fromMap(Map<String, dynamic> json){
-    var product = json['Products'];
-    Products_model InfoProduct = Products_model.fromMap(product);
+    var ListProduct = json['Products'] as List;
+    List<Products_model> InfoProduct = ListProduct.map((i) => Products_model.fromMap(i)).toList();
+
     return ImportDraftInvoice_Model(
       ApiUserName : json['ApiUserName'] ?? '',
       ApiPassword : json['ApiPassword'] ?? '',
@@ -132,7 +198,11 @@ class ImportDraftInvoice_Model{
       CusBankName : json['CusBankName'] ?? '',
       CusBankNo : json['CusBankNo'] ?? '',
       PaymentMethod : json['PaymentMethod'] ?? '',
+      Extra : json['Extra'] ?? '',
+      DonViTienTe: (json['DonViTienTe'] is int)  ? json['DonViTienTe']:0,
       Product : InfoProduct,
+      TyGia: (json['TyGia'] is int) ? (json['TyGia'] as int).toDouble():
+        (json['TyGia'] is double)? json['TyGia'] : 0.0,
       Total: (json['Total'] is int) ? (json['Total'] as int).toDouble():
         (json['Total'] is double)? json['Total'] : 0.0,
       DiscountAmount: (json['DiscountAmount'] is int) ? (json['DiscountAmount'] as int).toDouble():
@@ -164,7 +234,10 @@ class ImportDraftInvoice_Model{
       'CusBankName': CusBankName,
       'CusBankNo': CusBankNo,
       'PaymentMethod': PaymentMethod,
+      'Extra': Extra,
+      'DonViTienTe':DonViTienTe,
       'Product': Product,
+      'TyGia':TyGia,
       'Total': Total,
       'DiscountAmount': DiscountAmount,
       'VATAmount': VATAmount,

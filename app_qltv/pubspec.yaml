@@ -54,6 +54,7 @@ dependencies:
   shared_preferences: ^2.2.3
   number_to_vietnamese_words: ^1.0.1+1
   qr_flutter: ^4.1.0
+  number_paginator: ^0.4.1
   excel: ^2.0.6
 
 # Logo ưng dụng
