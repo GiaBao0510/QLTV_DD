@@ -24,6 +24,9 @@ import 'package:app_qltv/FrontEnd/ui/camvang/Phieu/PhieuDangCam.dart';
 import 'package:app_qltv/FrontEnd/ui/camvang/Phieu/PhieuDangCamChiTiet.dart';
 import 'package:flutter/material.dart';
 
+//--
+import 'package:app_qltv/FrontEnd/temp.dart';
+
 final Map<String, WidgetBuilder> routes = {
   LoaiVangScreen.routeName: (ctx) => LoaiVangScreen(),
   KhachhangScreen.routeName: (ctx) => KhachhangScreen(),
@@ -51,4 +54,5 @@ final Map<String, WidgetBuilder> routes = {
 
   KhoVangMuaVaoScreen.routeName: (ctx) => KhoVangMuaVaoScreen(),
 
+  TestPage.routeName: (ctx) => TestPage(),
 };

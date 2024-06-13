@@ -120,9 +120,9 @@ class _BaoCaoTopKhachHangScreenState extends State<BaoCaoTopKhachHangScreen> {
               final topKhachHang = _filteredTopKhachHangList[index];
               return Container(
                   margin: const EdgeInsets.only(bottom: 15),
-                  decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 228, 200, 126),
-                    borderRadius: BorderRadius.circular(15),
+                  decoration: const BoxDecoration(
+                    color: Color.fromARGB(255, 228, 200, 126),
+                    borderRadius: BorderRadius.all(Radius.circular(15)),
                   ),
                   child: tableItem(topKhachHang));
             },
@@ -132,48 +132,51 @@ class _BaoCaoTopKhachHangScreenState extends State<BaoCaoTopKhachHangScreen> {
     );
   }
 
-  Table tableItem(TopKhachHang topKhachHang) {
-    return Table(
-      border: TableBorder.all(color: Colors.grey),
-      children: [
-        const TableRow(
-          decoration: BoxDecoration(
-            color: Color.fromARGB(150, 218, 218, 218),
+  Padding tableItem(TopKhachHang topKhachHang) {
+    return Padding(
+      padding: const EdgeInsets.all(18.0),
+      child: Table(
+        border: TableBorder.all(color: Colors.grey),
+        children: [
+          const TableRow(
+            decoration: BoxDecoration(
+              color: Color.fromARGB(150, 218, 218, 218),
+            ),
+            children: [
+              Center(
+                child: Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Text('Tên Khách Hàng',
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                ),
+              ),
+              Center(
+                child: Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Text('Tổng Tiền Mua',
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                ),
+              ),
+            ],
           ),
-          children: [
-            Center(
-              child: Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Text('Tên Khách Hàng',
-                    style: TextStyle(fontWeight: FontWeight.bold)),
+          TableRow(
+            children: [
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(topKhachHang.tenKH!),
+                ),
               ),
-            ),
-            Center(
-              child: Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Text('Tổng Tiền Mua',
-                    style: TextStyle(fontWeight: FontWeight.bold)),
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(formatCurrencyDouble(topKhachHang.tongTien ?? 0)),
+                ),
               ),
-            ),
-          ],
-        ),
-        TableRow(
-          children: [
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(topKhachHang.tenKH!),
-              ),
-            ),
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(formatCurrencyDouble(topKhachHang.tongTien ?? 0)),
-              ),
-            ),
-          ],
-        ),
-      ],
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

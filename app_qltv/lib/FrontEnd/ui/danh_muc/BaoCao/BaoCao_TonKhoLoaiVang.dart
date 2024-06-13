@@ -1,3 +1,4 @@
+import 'package:app_qltv/FrontEnd/Service/export/Excel/BaoCaoTonKhoLoaiVang_Excel.dart';
 import 'package:app_qltv/FrontEnd/Service/export/PDF/BaoCaoTonKhoLoaiVang_PDF.dart';
 import 'package:app_qltv/FrontEnd/controller/danhmuc/BaoCaoTonKhoLoaiVang_manager.dart';
 import 'package:app_qltv/FrontEnd/model/danhmuc/BaoCaoTonKhoLoaiVang.dart';
@@ -113,8 +114,8 @@ class _BaoCaoTonKhoLoaiVangScreenState
       case 'Export':
         _handleExport(_baoCaoTonKhoLoaiVangList);
         break;
-      case 'QuyDoi':
-        _handleQuyDoi();
+      case 'Excel':
+        _handleExportExcel(_baoCaoTonKhoLoaiVangList);
         break;
       case 'ThongKe':
         _handleThongKe();
@@ -168,9 +169,9 @@ class _BaoCaoTonKhoLoaiVangScreenState
         onLayout: (PdfPageFormat format) async => doc.save());
   }
 
-  void _handleQuyDoi() {
+  void _handleExportExcel(List<BaoCaoTonKhoLoaiVang> baoCaoTonKhoLoaiVangList) {
     print('Option 2 selected');
-    // Thực hiện các hành động khác cho Option 2 ở đây
+    exportExcelLoaiVang(baoCaoTonKhoLoaiVangList, _summary);
   }
 
   void _handleThongKe() {
@@ -198,11 +199,11 @@ class _BaoCaoTonKhoLoaiVangScreenState
             Navigator.of(context).pop();
           },
         ),
-        title:  const FittedBox(
+        title: const FittedBox(
           fit: BoxFit.fitWidth,
-          child: Text("Báo Cáo Tồn Kho Nhóm Vàng",
-              style: TextStyle(
-                  color: Colors.black, fontWeight: FontWeight.w900)),
+          child: Text("Báo Cáo Tồn Kho Loại Vàng",
+              style:
+                  TextStyle(color: Colors.black, fontWeight: FontWeight.w900)),
         ),
         actions: [
           PopupMenuButton<String>(
@@ -212,11 +213,11 @@ class _BaoCaoTonKhoLoaiVangScreenState
               return <PopupMenuEntry<String>>[
                 const PopupMenuItem<String>(
                   value: 'Export',
-                  child: Center(child: Text('Export')),
+                  child: Center(child: Text('Export PDF')),
                 ),
                 const PopupMenuItem<String>(
-                  value: 'QuyDoi',
-                  child: Center(child: Text('Quy Đổi')),
+                  value: 'Excel',
+                  child: Center(child: Text('Export Excel')),
                 ),
                 const PopupMenuItem<String>(
                   value: 'ThongKe',

@@ -1,10 +1,15 @@
 const db = require('../config/index_2');
 //  table phx_phieu_xuat
-const getPhieuXuat = async () => {
+const getPhieuXuat = async (ngayBD, ngayKT, pages) => {
   return new Promise((resolve, reject) => {
     
     //Liệt kê từng phiếu mã trên phiếu xuất
-    db.query( `SELECT PHIEU_XUAT_MA FROM phx_phieu_xuat `  
+    db.query( `
+      SELECT PHIEU_XUAT_MA 
+      FROM phx_phieu_xuat
+      WHERE Date(NGAY_XUAT) BETWEEN "${ngayBD}" AND "${ngayKT}"
+      LIMIT ${pages}
+    `  
     , async (error, results) => {
       if (error) {
         reject(error);
@@ -74,6 +79,89 @@ const getPhieuXuat = async () => {
         }
 
         resolve(output);
+      }
+    });
+  });
+};
+
+
+const laySoLuongPhieuXuatTheoThoiDiem = async (ngayBD, ngayKT) =>{
+  return new Promise( (resolve, reject)=>{
+    db.query(
+      `
+      SELECT count(px.PHIEU_XUAT_MA) SoLuongPhieuXuat
+      FROM phx_phieu_xuat px 
+        INNER JOIN phx_chi_tiet_phieu_xuat ctpx ON px.PHIEU_XUAT_ID = ctpx.PHIEU_XUAT_ID
+      WHERE Date(NGAY_XUAT) BETWEEN '${ngayBD}' AND '${ngayKT}' 
+      `, (error, results) => {
+        if (error) {
+          reject(error);
+        } else{
+          
+          //Chuyển đổi
+          let kq = results.map((e) =>({
+            "SoLuongPhieuXuat": Number(e.SoLuongPhieuXuat)
+          }));
+
+          resolve(kq);
+        }
+      });
+  });
+}
+
+//3. Tính tổng của phiếu xuất theo thời điểm
+const TinhTongPhieuXuatTheoThoiDiem = async (ngayBD, ngayKT) =>{
+  return new Promise( (resolve, reject)=>{
+    db.query(
+      `
+      SELECT count(*) SoLuongHang, SUM(dmhh.CAN_TONG) TongCanTong,
+        SUM(dmhh.TL_HOT) TongTLhot, SUM( (dmhh.CAN_TONG - dmhh.TL_HOT)) TongTLvang,
+        SUM(ctpx.THANH_TIEN) TongThanhTien, SUM(( (dmhh.DON_GIA_GOC * (dmhh.CAN_TONG - dmhh.TL_HOT)) + dmhh.CONG_GOC) ) TongGiaGoc,
+        SUM( (ctpx.THANH_TIEN - dmhh.CONG_GOC)) TongLaiLo
+      FROM phx_phieu_xuat px 
+        INNER JOIN phx_chi_tiet_phieu_xuat ctpx ON px.PHIEU_XUAT_ID = ctpx.PHIEU_XUAT_ID
+        JOIN danh_muc_hang_hoa dmhh ON dmhh.HANGHOAID = ctpx.HANGHOAID
+      WHERE Date(NGAY_XUAT) BETWEEN '${ngayBD}' AND '${ngayKT}'  
+      `, (error, results) => {
+        if (error) {
+          reject(error);
+        } else{
+          
+          //Chuyển đổi
+          let kq = results.map((e) =>({
+            "SoLuongHang": Number(e.SoLuongHang),
+            "TongCanTong": Number(e.TongCanTong),
+            "TongTLhot": Number(e.TongTLhot),
+            "TongTLvang": Number(e.TongTLvang),
+            "TongThanhTien": Number(e.TongThanhTien),
+            "TongGiaGoc": Number(e.TongGiaGoc),
+            "TongLaiLo": Number(e.TongLaiLo)
+          }));
+
+          resolve(kq);
+        }
+      });
+  });
+}
+
+const getPhieuXuatByDate = async (ngayBD, ngayKT) => {
+  return new Promise((resolve, reject) => {
+const query = `
+    SELECT px.PHIEU_XUAT_ID, px.PHIEU_XUAT_MA, px.NGAY_XUAT,
+      ctpx.HANGHOAMA, ctpx.HANG_HOA_TEN, ctpx.LOAIVANG, 
+      ctpx.CAN_TONG, ctpx.TL_HOT, (ctpx.CAN_TONG - ctpx.TL_HOT) AS TL_VANG, 
+      ctpx.DON_GIA, ctpx.THANH_TIEN, ctpx.GIA_GOC,
+      (ctpx.THANH_TIEN - ctpx.GIA_GOC) AS LAI_LO
+    FROM phx_phieu_xuat px
+    JOIN phx_chi_tiet_phieu_xuat ctpx ON px.PHIEU_XUAT_ID = ctpx.PHIEU_XUAT_ID
+    WHERE px.NGAY_XUAT BETWEEN ? AND ?
+
+    `;
+    db.query(query, [ngayBD, ngayKT], (error, results) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve(results);
       }
     });
   });
@@ -204,17 +292,49 @@ const getBCPhieuMuaVaoById = async (id) => {
     });
   });
 };
+const getPhieuDoi = async () => {
+  return new Promise((resolve, reject) => {
+    db.query(`
+      SELECT * FROM phd_phieu_doi`, (error, results) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve(results);
+      }
+    });
+  });
+};
 
+const getTopKhachHang = async () => {
+  return new Promise((resolve, reject) => {
+    db.query(`
+      SELECT kh.KH_TEN, SUM(px.TONG_TIEN) AS KH_TONG_TIEN
+      FROM phx_phieu_xuat px
+      JOIN phx_khach_hang kh ON px.KH_ID = kh.KH_ID
+      GROUP BY kh.KH_TEN
+      ORDER BY KH_TONG_TIEN DESC; `, (error, results) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve(results);
+      }
+    });
+  });
+};
 module.exports = {
   getPhieuXuat,
   getPhieuXuatById,
   getTonKho,
   getTonKhoById,
   getTonKhoGroupProduct,
-
+  getPhieuXuatByDate,
   // getTonKhoGPById,
   getKhoVangMuaVao,
   getBCPhieuMuaVao,
-
-  getBCPhieuMuaVaoById
+ 
+  getBCPhieuMuaVaoById,
+  getPhieuDoi,
+  getTopKhachHang,
+  laySoLuongPhieuXuatTheoThoiDiem,
+  TinhTongPhieuXuatTheoThoiDiem,
 };

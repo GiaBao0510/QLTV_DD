@@ -22,6 +22,7 @@ import 'package:app_qltv/FrontEnd/ui/camvang/Phieu/PhieuDangCamChiTiet.dart';
 import 'package:app_qltv/FrontEnd/constants/config.dart';
 import 'package:app_qltv/FrontEnd/ui/hethonng/nguoidung/nguoi_dung_page.dart';
 import 'package:app_qltv/FrontEnd/ui/hethonng/nhom/nhompage.dart';
+import 'package:app_qltv/FrontEnd/temp.dart';
 import 'package:app_qltv/main.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -618,7 +619,139 @@ class drawer extends StatelessWidget {
                     ),
                   ],
                 ),
+
+                ExpansionTile(
+                  leading: Image.asset(
+                    'assets/images/billofsale.png',
+                    width: 24.0,
+                    height: 24.0,
+                  ),
+                  title: const Text('Hóa đơn bán ra',
+                      style: TextStyle(fontWeight: FontWeight.w800)),
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          left: 16.0), // Khoảng cách thụt lề
+                      child: ListTile(
+                        leading: Image.asset(
+                          'assets/images/invoiceList.png',
+                          width: 24.0,
+                          height: 24.0,
+                        ),
+                        title: const Text('Danh sách hóa đơn',
+                            style: TextStyle(fontWeight: FontWeight.w800)),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const PhieuDangCam()),
+                          );
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          left: 16.0), // Khoảng cách thụt lề
+                      child: ListTile(
+                        leading: Image.asset(
+                          'assets/images/addInvoice.png',
+                          width: 24.0,
+                          height: 24.0,
+                        ),
+                        title: const Text('Thêm hóa đơn ',
+                            style: TextStyle(fontWeight: FontWeight.w800)),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                const PhieuDangCamChiTiet()),
+                          );
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          left: 16.0), // Khoảng cách thụt lề
+                      child: ListTile(
+                        leading: Image.asset(
+                          'assets/images/deleteInvoice.png',
+                          width: 24.0,
+                          height: 24.0,
+                        ),
+                        title: const Text('Xóa hóa đơn ',
+                            style: TextStyle(fontWeight: FontWeight.w800)),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                const PhieuDangCamChiTiet()),
+                          );
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          left: 16.0), // Khoảng cách thụt lề
+                      child: ListTile(
+                        leading: Image.asset(
+                          'assets/images/InvoiceAdjustment.png',
+                          width: 24.0,
+                          height: 24.0,
+                        ),
+                        title: const Text('Điều chỉnh hóa đơn ',
+                            style: TextStyle(fontWeight: FontWeight.w800)),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                const PhieuDangCamChiTiet()),
+                          );
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          left: 16.0), // Khoảng cách thụt lề
+                      child: ListTile(
+                        leading: Image.asset(
+                          'assets/images/ChangeBill.png',
+                          width: 24.0,
+                          height: 24.0,
+                        ),
+                        title: const Text('Thay thế hóa đơn ',
+                            style: TextStyle(fontWeight: FontWeight.w800)),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                const PhieuDangCamChiTiet()),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
               ],
+            ),
+          ),
+
+          //Phần kiêm tra chuc nang
+          Container(
+            child: ListTile(
+              leading: Image.asset('assets/images/test.png'),
+              title: Text('Test chức năng'),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                      const TestPage()),
+                );
+              },
             ),
           ),
 
