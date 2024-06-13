@@ -92,23 +92,38 @@ class BaoCaoPhieuXuat_model {
               ? map['LaiLo']
               : 0.0,
       KH_TEN: map['KH_TEN'] ?? '',
-      TIEN_BOT: (map['TIEN_BOT'] is int) ? (map['TIEN_BOT'] as int).toDouble() :
-        (map['TIEN_BOT'] is double) ? map['TIEN_BOT']: 0.0,
-      SO_LUONG: (map['SO_LUONG'] is int) ? map['SO_LUONG']:0,
-      GIA_CONG: (map['GIA_CONG'] is int)? (map['GIA_CONG'] as int).toDouble() :
-        (map['GIA_CONG'] is double) ? map['GIA_CONG'] : 0.0,
-      TONG_TIEN: (map['TONG_TIEN'] is int)? (map['TONG_TIEN'] as int).toDouble() :
-      (map['TONG_TIEN'] is double) ? map['TONG_TIEN'] : 0.0,
-      THANH_TOAN: (map['THANH_TOAN'] is int)? (map['THANH_TOAN'] as int).toDouble() :
-        (map['THANH_TOAN'] is double) ? map['THANH_TOAN'] : 0.0,
-      TRI_GIA_MUA: (map['TRI_GIA_MUA'] is int)? (map['TRI_GIA_MUA'] as int).toDouble() :
-        (map['TRI_GIA_MUA'] is double) ? map['TRI_GIA_MUA'] : 0.0,
+      TIEN_BOT: (map['TIEN_BOT'] is int)
+          ? (map['TIEN_BOT'] as int).toDouble()
+          : (map['TIEN_BOT'] is double)
+              ? map['TIEN_BOT']
+              : 0.0,
+      SO_LUONG: (map['SO_LUONG'] is int) ? map['SO_LUONG'] : 0,
+      GIA_CONG: (map['GIA_CONG'] is int)
+          ? (map['GIA_CONG'] as int).toDouble()
+          : (map['GIA_CONG'] is double)
+              ? map['GIA_CONG']
+              : 0.0,
+      TONG_TIEN: (map['TONG_TIEN'] is int)
+          ? (map['TONG_TIEN'] as int).toDouble()
+          : (map['TONG_TIEN'] is double)
+              ? map['TONG_TIEN']
+              : 0.0,
+      THANH_TOAN: (map['THANH_TOAN'] is int)
+          ? (map['THANH_TOAN'] as int).toDouble()
+          : (map['THANH_TOAN'] is double)
+              ? map['THANH_TOAN']
+              : 0.0,
+      TRI_GIA_MUA: (map['TRI_GIA_MUA'] is int)
+          ? (map['TRI_GIA_MUA'] as int).toDouble()
+          : (map['TRI_GIA_MUA'] is double)
+              ? map['TRI_GIA_MUA']
+              : 0.0,
     );
   }
 
   //Chuyển Object sang Map
-  Map<String, dynamic> toMap(Map<String, dynamic> map){
-    return{
+  Map<String, dynamic> toMap(Map<String, dynamic> map) {
+    return {
       'PHIEU_XUAT_MA': PHIEU_XUAT_MA,
       'HANGHOAMA': HANGHOAMA,
       'HANG_HOA_TEN': HANG_HOA_TEN,
@@ -120,18 +135,19 @@ class BaoCaoPhieuXuat_model {
       'DON_GIA': DON_GIA,
       'THANH_TIEN': THANH_TIEN,
       'GiaGoc': GiaGoc,
-      'LaiLo':LaiLo,
-      'KH_TEN':KH_TEN,
-      'TIEN_BOT':TIEN_BOT,
-      'SO_LUONG':SO_LUONG,
-      'GIA_CONG':GIA_CONG,
-      'TONG_TIEN':TONG_TIEN,
-      'THANH_TOAN':THANH_TOAN,
+      'LaiLo': LaiLo,
+      'KH_TEN': KH_TEN,
+      'TIEN_BOT': TIEN_BOT,
+      'SO_LUONG': SO_LUONG,
+      'GIA_CONG': GIA_CONG,
+      'TONG_TIEN': TONG_TIEN,
+      'THANH_TOAN': THANH_TOAN,
     };
   }
 }
 
-class BangBaoCaoPhieuXuat_model{
+//Bang bao cao phieu xuat
+class BangBaoCaoPhieuXuat_model {
   final List<BaoCaoPhieuXuat_model> PhieuXuat;
   final String MaPhieuXuat;
 
@@ -141,12 +157,84 @@ class BangBaoCaoPhieuXuat_model{
   });
 
   //Chuyen tu Map sang object
-  factory BangBaoCaoPhieuXuat_model.fromMap(Map<String, dynamic> json){
+  factory BangBaoCaoPhieuXuat_model.fromMap(Map<String, dynamic> json) {
     var list = json['data'] as List;
-    List<BaoCaoPhieuXuat_model> dataList = list.map((e) => BaoCaoPhieuXuat_model.fromMap(e)).toList();
+    List<BaoCaoPhieuXuat_model> dataList =
+        list.map((e) => BaoCaoPhieuXuat_model.fromMap(e)).toList();
     return BangBaoCaoPhieuXuat_model(
       MaPhieuXuat: json['PhieuXuatMa'] ?? "",
       PhieuXuat: dataList,
     );
+  }
+}
+
+//Lop lay thong tin tinh tong
+class ThongTinTinhTong_model {
+  final int SoLuongHang;
+  final double TongCanTong;
+  final double TongTLhot;
+  final double TongTLvang;
+  final double TongThanhTien;
+  final double TongGiaGoc;
+  final double TongLaiLo;
+
+  ThongTinTinhTong_model({
+    required this.SoLuongHang,
+    required this.TongCanTong,
+    required this.TongTLhot,
+    required this.TongTLvang,
+    required this.TongThanhTien,
+    required this.TongGiaGoc,
+    required this.TongLaiLo,
+  });
+
+  //Chuyen Map sang object
+  factory ThongTinTinhTong_model.fromMap(Map<String, dynamic> map) {
+    return ThongTinTinhTong_model(
+      SoLuongHang: (map['SoLuongHang'] is int) ? map['SoLuongHang'] : 0,
+      TongCanTong: (map['TongCanTong'] is int)
+          ? (map['TongCanTong'] as int).toDouble()
+          : (map['TongCanTong'] is double)
+              ? (map['TongCanTong'] as double)
+              : 0.0,
+      TongTLhot: (map['TongTLhot'] is int)
+          ? (map['TongTLhot'] as int).toDouble()
+          : (map['TongTLhot'] is double)
+              ? (map['TongTLhot'] as double)
+              : 0.0,
+      TongTLvang: (map['TongTLvang'] is int)
+          ? (map['TongTLvang'] as int).toDouble()
+          : (map['TongTLvang'] is double)
+              ? (map['TongTLvang'] as double)
+              : 0.0,
+      TongThanhTien: (map['TongThanhTien'] is int)
+          ? (map['TongThanhTien'] as int).toDouble()
+          : (map['TongThanhTien'] is double)
+              ? (map['TongThanhTien'] as double)
+              : 0.0,
+      TongGiaGoc: (map['TongGiaGoc'] is int)
+          ? (map['TongGiaGoc'] as int).toDouble()
+          : (map['TongGiaGoc'] is double)
+              ? (map['TongGiaGoc'] as double)
+              : 0.0,
+      TongLaiLo: (map['TongLaiLo'] is int)
+          ? (map['TongLaiLo'] as int).toDouble()
+          : (map['TongLaiLo'] is double)
+              ? (map['TongLaiLo'] as double)
+              : 0.0,
+    );
+  }
+
+  //Chuyen Object sang Map
+  Map<String, dynamic> toMap(Map<String, dynamic> map) {
+    return {
+      'SoLuongHang': SoLuongHang,
+      'TongCanTong': TongCanTong,
+      'TongTLhot': TongTLhot,
+      'TongTLvang': TongTLvang,
+      'TongThanhTien': TongThanhTien,
+      'TongGiaGoc': TongGiaGoc,
+      'TongLaiLo': TongLaiLo
+    };
   }
 }

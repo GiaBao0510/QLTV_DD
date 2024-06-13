@@ -23,31 +23,40 @@ class BaoCaoPhieuXuatScreen extends StatefulWidget {
 }
 
 class _BaoCaoPhieuXuat extends State<BaoCaoPhieuXuatScreen> {
-  //Thuộc tính
+  // --- Thuộc tính ---
   late Future<List<BangBaoCaoPhieuXuat_model>> _bangBaoCaoPhieuXuatFuture;
   final TextEditingController _searchController = TextEditingController();
   List<BangBaoCaoPhieuXuat_model> _filterPhieuXuatList = [];
   List<BangBaoCaoPhieuXuat_model> _PhieuXuatList = [];
-  double _tongCanTong = 0.0,
-      _tongTLhot = 0.0,
-      _tongTLVang = 0.0,
-      _tongThanhTien = 0.0,
-      _tongGiaGoc = 0.0,
-      _tongLaiLo = 0.0;
-  var ThongTinTinhTong;
+
+  late Future<ThongTinTinhTong_model> _ThongTinTinhTongFuture;
+  ThongTinTinhTong_model _ThongTinTinhTong = ThongTinTinhTong_model(
+      SoLuongHang: 0,
+      TongCanTong: 0.0,
+      TongTLhot: 0.0,
+      TongTLvang: 0.0,
+      TongThanhTien: 0.0,
+      TongGiaGoc: 0.0,
+      TongLaiLo: 0.0);
 
   //Tim kiem theo ngay
   final TextEditingController _StartDayController = TextEditingController(),
-                              _EndDayController = TextEditingController();
-  late DateTime ngayBT, ngayKT;
+      _EndDayController = TextEditingController();
+  late DateTime ngayBD, ngayKT;
   final DateFormat _dateFormat = DateFormat('yyyy-MM-dd');
 
+  int pages = 5; //So dong toi da duoc tai len
+  int loadElements = 5; //Moi lan load chi lây 5 phân tử
+  int SoLuong = 0;
+
+  //Phuong thuc khoi tao truoc build
   @override
   void initState() {
     super.initState();
-    ngayBT = DateTime.now();
+    ngayBD = DateTime.now();
     ngayKT = DateTime.now();
     _loadBaoCaoPhieuXuat();
+    _LoadSummary();
     _searchController.addListener(_filterBaoCaoPhieuXuat);
   }
 
@@ -57,41 +66,17 @@ class _BaoCaoPhieuXuat extends State<BaoCaoPhieuXuatScreen> {
     super.dispose();
   }
 
-  //--- Ghi phuương thức --------
-  //1.Load dữ liệu
   Future<void> _loadBaoCaoPhieuXuat() async {
+    //--- Ghi phuương thức --------
+    //1.Load bang dữ liệu
     _bangBaoCaoPhieuXuatFuture =
         Provider.of<BaocaophieuxuatManage>(context, listen: false)
-            .LayDuLieuPhieuXuat_test(ngayBT, ngayKT);
+            .LayDuLieuPhieuXuat_test(ngayBD, ngayKT, pages);
     _bangBaoCaoPhieuXuatFuture.then((BaoCaos) {
       setState(() {
         _PhieuXuatList = BaoCaos;
         _filterPhieuXuatList = BaoCaos;
       });
-
-      //Xu ly tinh toan
-      for (int i = 0; i < _filterPhieuXuatList.length; i++) {
-        final baocao = _filterPhieuXuatList[i];
-        for (int j = 0; j < baocao.PhieuXuat.length; j++) {
-          final hanghoa = baocao.PhieuXuat[j];
-          _tongCanTong += hanghoa.CAN_TONG;
-          _tongGiaGoc += hanghoa.GiaGoc;
-          _tongLaiLo += hanghoa.LaiLo;
-          _tongThanhTien += hanghoa.THANH_TIEN;
-          _tongTLhot += hanghoa.TL_HOT;
-          _tongTLVang += hanghoa.TL_Vang;
-        }
-      }
-
-      //Luu thong tin tinh tong
-      ThongTinTinhTong = {
-        "_tongCanTong": _tongCanTong,
-        "_tongGiaGoc": _tongGiaGoc,
-        "_tongLaiLo": _tongLaiLo,
-        "_tongThanhTien": _tongThanhTien,
-        "_tongTLhot": _tongTLhot,
-        "_tongTLVang": _tongTLVang,
-      };
     });
   }
 
@@ -134,30 +119,28 @@ class _BaoCaoPhieuXuat extends State<BaoCaoPhieuXuatScreen> {
   }
 
   //5. Choọn ngay bat dau
-  void _SelectStartDate() async{
+  void _SelectStartDate() async {
     final DateTime? picked = await showDatePicker(
         context: context,
-        initialDate: ngayBT,
+        initialDate: ngayBD,
         firstDate: DateTime(1999),
-        lastDate: DateTime(2200)
-    );
-    if(picked != null && picked != ngayBT){
+        lastDate: DateTime(2200));
+    if (picked != null && picked != ngayBD) {
       setState(() {
-        ngayBT = picked;
-        _StartDayController.text = _dateFormat.format(ngayBT);
+        ngayBD = picked;
+        _StartDayController.text = _dateFormat.format(ngayBD);
       });
     }
-    //print('Ngày bắt đầu đã chọn: $ngayBT');
   }
 
-  void _SelectEndDate() async{
+  //6. Choọn ngay ket thuc
+  void _SelectEndDate() async {
     final DateTime? picked = await showDatePicker(
         context: context,
         initialDate: ngayKT,
         firstDate: DateTime(1999),
-        lastDate: DateTime(2200)
-    );
-    if(picked != null && picked != ngayKT){
+        lastDate: DateTime(2200));
+    if (picked != null && picked != ngayKT) {
       setState(() {
         ngayKT = picked;
         _EndDayController.text = _dateFormat.format(ngayKT);
@@ -166,7 +149,20 @@ class _BaoCaoPhieuXuat extends State<BaoCaoPhieuXuatScreen> {
     //print('Ngày kết thúc đã chọn: $ngayKT');
   }
 
+  //7. Load tinh tong
+  Future<void> _LoadSummary() async {
+    _ThongTinTinhTongFuture =
+        Provider.of<BaocaophieuxuatManage>(context, listen: false)
+            .TinhTongPhieuXuat(ngayBD, ngayKT);
+    _ThongTinTinhTongFuture.then((tinhtong) {
+      print('thong tin tinh tong: ${tinhtong}');
+      setState(() {
+        _ThongTinTinhTong = tinhtong;
+      });
+    });
+  }
 
+  //8. Chuyển sang phần xuất file Excel
   void printExcel(List<BangBaoCaoPhieuXuat_model> data,
       Map<String, dynamic> GetThongTinTinhTong) {
     exportExcelPhieuXuat(data, GetThongTinTinhTong);
@@ -204,7 +200,7 @@ class _BaoCaoPhieuXuat extends State<BaoCaoPhieuXuatScreen> {
                     child: TextButton(
                       onPressed: () {
                         print('Chuyen sang PDF');
-                        printDoc(_filterPhieuXuatList, ThongTinTinhTong);
+                        //printDoc(_filterPhieuXuatList, ThongTinTinhTong);
                       },
                       child: Text('Export PDF'),
                     ),
@@ -213,7 +209,7 @@ class _BaoCaoPhieuXuat extends State<BaoCaoPhieuXuatScreen> {
                     child: TextButton(
                       onPressed: () {
                         print('Chuyen sang Excel');
-                        printExcel(_filterPhieuXuatList, ThongTinTinhTong);
+                        // printExcel(_filterPhieuXuatList, ThongTinTinhTong);
                       },
                       child: Text('Export Excel'),
                     ),
@@ -227,20 +223,13 @@ class _BaoCaoPhieuXuat extends State<BaoCaoPhieuXuatScreen> {
         child: SafeArea(
           child: Container(
             padding: EdgeInsets.fromLTRB(10, 15, 10, 0),
-
-            child: Column(children: [
-              Search_Bar(searchController: _searchController),
-              const SizedBox(height: 12,),
-              SearchByDay(context),
-              const SizedBox(height: 12,),
-              Expanded(
-                child: Scrollbar(
-                  child: ListView(children: [
-                    Column(children: [
-                      ShowList(),
             child: Column(
               children: [
                 Search_Bar(searchController: _searchController),
+                const SizedBox(
+                  height: 12,
+                ),
+                SearchByDay(context),
                 const SizedBox(
                   height: 12,
                 ),
@@ -251,109 +240,6 @@ class _BaoCaoPhieuXuat extends State<BaoCaoPhieuXuatScreen> {
                         Column(
                           children: [
                             ShowList(),
-
-                            //hiên thị thng tin tinh tong
-                            Container(
-                              width: double.infinity,
-                              padding: EdgeInsets.fromLTRB(0, 15, 0, 15),
-                              margin: EdgeInsets.fromLTRB(0, 25, 0, 20),
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  colors: [
-                                    Color(0xffc7c7c7),
-                                    Color(0xff8a8a8a)
-                                  ],
-                                  stops: [0, 1],
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                ),
-                                borderRadius: BorderRadius.circular(10),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.withOpacity(0.5),
-                                    spreadRadius: 2,
-                                    blurRadius: 5,
-                                    offset: Offset(0, 3),
-                                  ),
-                                ],
-                              ),
-                              child: Column(
-                                children: [
-                                  Text.rich(
-                                    TextSpan(children: [
-                                      TextSpan(
-                                        text: 'Tổng cân tổng: ',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      TextSpan(
-                                          text:
-                                              ' ${formatCurrencyDouble(_tongCanTong)}'),
-                                    ]),
-                                  ),
-                                  Text.rich(
-                                    TextSpan(children: [
-                                      TextSpan(
-                                        text: 'Tổng TL hôt: ',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      TextSpan(
-                                          text:
-                                              ' ${formatCurrencyDouble(_tongTLhot)}'),
-                                    ]),
-                                  ),
-                                  Text.rich(
-                                    TextSpan(children: [
-                                      TextSpan(
-                                        text: 'Tổng TL vàng: ',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      TextSpan(
-                                          text:
-                                              ' ${formatCurrencyDouble(_tongTLVang)}'),
-                                    ]),
-                                  ),
-                                  Text.rich(
-                                    TextSpan(children: [
-                                      TextSpan(
-                                        text: 'Tổng thành tiền: ',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      TextSpan(
-                                          text:
-                                              ' ${formatCurrencyDouble(_tongThanhTien)}'),
-                                    ]),
-                                  ),
-                                  Text.rich(
-                                    TextSpan(children: [
-                                      TextSpan(
-                                        text: 'Tổng giá gốc: ',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      TextSpan(
-                                          text:
-                                              ' ${formatCurrencyDouble(_tongGiaGoc)}'),
-                                    ]),
-                                  ),
-                                  Text.rich(
-                                    TextSpan(children: [
-                                      TextSpan(
-                                        text: 'Tổng lãi lỗ: ',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      TextSpan(
-                                          text:
-                                              ' ${formatCurrencyDouble(_tongLaiLo)}'),
-                                    ]),
-                                  ),
-                                ],
-                              ),
-                            ),
                           ],
                         )
                       ],
@@ -363,6 +249,33 @@ class _BaoCaoPhieuXuat extends State<BaoCaoPhieuXuatScreen> {
               ],
             ),
           ),
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          print('${_ThongTinTinhTong}');
+          showModalBottomSheet(
+              context: context,
+              builder: (BuildContext context) {
+                return Container(
+                  decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(15),
+                      topLeft: Radius.circular(15),
+                    ),
+                    color: Colors.red,
+                  ),
+                  width: 50,
+                  height: 50,
+                  child: Text('${_ThongTinTinhTong}'),
+                );
+              });
+        },
+        backgroundColor: Colors.white,
+        tooltip: 'Show Bottom Sheet',
+        child: Padding(
+          padding: const EdgeInsets.all(10),
+          child: Image.asset('assets/images/list.png'),
         ),
       ),
     );
@@ -837,73 +750,71 @@ class _BaoCaoPhieuXuat extends State<BaoCaoPhieuXuatScreen> {
   }
 
   //Tao widget tim kiem theo ngày
-  Widget SearchByDay(BuildContext context){
+  Widget SearchByDay(BuildContext context) {
     return Container(
-      child: Row(children: [
-        Flexible(
-            flex: 1,
-            child: TextFormField(
-              controller: _StartDayController,
-              readOnly: true,
-              decoration: InputDecoration(
-                labelText: 'Ngày bắt đầu',
-                labelStyle: TextStyle(fontSize: 12),
-                filled: true,
-                fillColor: Colors.white,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(10))
+      child: Row(
+        children: [
+          Flexible(
+              flex: 1,
+              child: TextFormField(
+                controller: _StartDayController,
+                readOnly: true,
+                decoration: InputDecoration(
+                  labelText: 'Ngày bắt đầu',
+                  labelStyle: TextStyle(fontSize: 12),
+                  filled: true,
+                  fillColor: Colors.white,
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(10))),
                 ),
-              ),
-              style: TextStyle(fontSize: 15),
-              onTap: () => _SelectStartDate(),
-            )
-        ),
-
-        const SizedBox(width: 5,),
-
-        Flexible(
-            flex:1,
-            child: TextFormField(
-              controller: _EndDayController,
-              readOnly: true,
-              decoration: InputDecoration(
-                labelText: 'Ngày kết thúc',
-                labelStyle: TextStyle(fontSize: 12),
-                filled: true,
-                fillColor: Colors.white,
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10))
+                style: TextStyle(fontSize: 15),
+                onTap: () => _SelectStartDate(),
+              )),
+          const SizedBox(
+            width: 5,
+          ),
+          Flexible(
+              flex: 1,
+              child: TextFormField(
+                controller: _EndDayController,
+                readOnly: true,
+                decoration: InputDecoration(
+                  labelText: 'Ngày kết thúc',
+                  labelStyle: TextStyle(fontSize: 12),
+                  filled: true,
+                  fillColor: Colors.white,
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(10))),
                 ),
-              ),
-              style: TextStyle(fontSize: 15),
-              onTap: () => _SelectEndDate(),
-            )
-        ),
-        Flexible(
-          flex: 1,
-            child: TextButton(
-              onPressed: (){
-                _loadBaoCaoPhieuXuat();
-              },
-              child: FittedBox(
-                fit: BoxFit.fitWidth,
-                child: Container(
-                  padding: EdgeInsets.fromLTRB(25, 20, 25, 20),
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [Color(0xff536976), Color(0xff292e49)],
-                      stops: [0, 1],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
+                style: TextStyle(fontSize: 15),
+                onTap: () => _SelectEndDate(),
+              )),
+          Flexible(
+              flex: 1,
+              child: TextButton(
+                  onPressed: () {
+                    _loadBaoCaoPhieuXuat();
+                  },
+                  child: FittedBox(
+                    fit: BoxFit.fitWidth,
+                    child: Container(
+                      padding: EdgeInsets.fromLTRB(25, 20, 25, 20),
+                      decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [Color(0xff536976), Color(0xff292e49)],
+                            stops: [0, 1],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                          borderRadius: BorderRadius.circular(10)),
+                      child: Text(
+                        'Tìm kiếm',
+                        style: TextStyle(color: Colors.white, fontSize: 30),
+                      ),
                     ),
-                    borderRadius: BorderRadius.circular(10)
-                  ),
-                  child: Text('Tìm kiếm', style: TextStyle(color: Colors.white,fontSize: 30),),
-                ),
-              )
-            )
-        ),
-      ],),
+                  ))),
+        ],
+      ),
     );
   }
 }
