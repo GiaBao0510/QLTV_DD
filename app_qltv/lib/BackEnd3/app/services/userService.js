@@ -2,15 +2,15 @@ const db = require('../config/index_2');
 const bcrypt = require('bcrypt');
 
 const createUser = async (userData) => {
-  let { USER_TEN, MAT_KHAU, USER_MA, BIKHOA, NGAY_TAO, SU_DUNG, REALM, EMAIL, EMAILVERIFIED, VERIFICATIONTOKEN, MAC, LY_DO_KHOA } = userData;
+  let { GROUP_ID, USER_TEN, MAT_KHAU, USER_MA, BIKHOA, NGAY_TAO, SU_DUNG, REALM, EMAIL, EMAILVERIFIED, VERIFICATIONTOKEN, MAC, LY_DO_KHOA } = userData;
 
   let saltRounds = 10;
   let salt = await bcrypt.genSalt(saltRounds);
   MAT_KHAU = await bcrypt.hash(MAT_KHAU, salt);
 
   return new Promise((resolve, reject) => {
-    db.query('INSERT INTO pq_user(USER_MA,USER_TEN, MAT_KHAU, BIKHOA, LY_DO_KHOA, NGAY_TAO, SU_DUNG, REALM, EMAIL, EMAILVERIFIED, VERIFICATIONTOKEN, MAC) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)', 
-    [USER_MA, USER_TEN, MAT_KHAU, BIKHOA, LY_DO_KHOA, NGAY_TAO, SU_DUNG, REALM, EMAIL, EMAILVERIFIED, VERIFICATIONTOKEN, MAC], 
+    db.query('INSERT INTO pq_user(GROUP_ID,USER_MA,USER_TEN, MAT_KHAU, BIKHOA, LY_DO_KHOA, NGAY_TAO, SU_DUNG, REALM, EMAIL, EMAILVERIFIED, VERIFICATIONTOKEN, MAC) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)', 
+    [GROUP_ID,USER_MA, USER_TEN, MAT_KHAU, BIKHOA, LY_DO_KHOA, NGAY_TAO, SU_DUNG, REALM, EMAIL, EMAILVERIFIED, VERIFICATIONTOKEN, MAC], 
     (error, results) => {
       if (error) {
         reject(error);

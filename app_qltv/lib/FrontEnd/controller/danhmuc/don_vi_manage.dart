@@ -19,26 +19,25 @@ class DonviManage with ChangeNotifier {
   //   return data.map((item) => Donvi.fromMap(item)).toList();
   Future<List<Donvi>> fetchDonvi() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final response = await http.get(
-      Uri.parse('$url/api/admin/danhsachNSdonvi/'),
-      headers:{
-        "accesstoken": "${prefs.getString('accesstoken')}",
-      }
-    );
+    final response =
+        await http.get(Uri.parse('$url/api/phieu/khovangmuavao'), headers: {
+      "accesstoken": "${prefs.getString('accesstoken')}",
+    });
     if (response.statusCode == 200) {
       // Parse JSON array and convert to list of Donvi objects
       // List<dynamic> jsonList = jsonDecode(response.body);
-      // List<Donvi> donviList = jsonList.map((e) => Donvi.fromMap(e)).toList(); 
+      // List<Donvi> donviList = jsonList.map((e) => Donvi.fromMap(e)).toList();
       // _donvi = jsonList.map((e) => Donvi.fromMap(e)).toList();
       // notifyListeners();
       // return donviList;
       final List<dynamic> data = json.decode(response.body);
 
-    return data.map((item) => Donvi.fromMap(item)).toList();
+      return data.map((item) => Donvi.fromMap(item)).toList();
     } else {
       throw Exception('Failed to load data');
     }
   }
+
   Future<void> addDonvi(Donvi donvi) async {
     // Thêm Donvi vào backend
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -57,7 +56,7 @@ class DonviManage with ChangeNotifier {
         'TEN_GIAO_DICH': donvi.dvi_ten_gd,
         'TAO_LUU_Y': donvi.dvi_luu_y,
         'SU_DUNG': 1,
-        }),
+      }),
     );
 
     if (response.statusCode == 200) {
@@ -69,7 +68,7 @@ class DonviManage with ChangeNotifier {
     }
   }
 
-  Future<Donvi> updateDonvi(int dvi_id,Donvi donvi) async {
+  Future<Donvi> updateDonvi(int dvi_id, Donvi donvi) async {
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       final response = await http.put(
@@ -113,8 +112,7 @@ class DonviManage with ChangeNotifier {
           'Content-Type': 'application/json; charset=UTF-8',
           "accesstoken": "${prefs.getString('accesstoken')}",
         },
-        body: jsonEncode(<String, dynamic>{
-        }),
+        body: jsonEncode(<String, dynamic>{}),
       );
 
       if (response.statusCode == 200) {
@@ -130,5 +128,4 @@ class DonviManage with ChangeNotifier {
       throw Exception('Failed to update Donvi: $error');
     }
   }
-
 }
