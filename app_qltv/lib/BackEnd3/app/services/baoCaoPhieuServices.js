@@ -295,7 +295,7 @@ const getBCPhieuMuaVaoById = async (id) => {
 const getPhieuDoi = async () => {
   return new Promise((resolve, reject) => {
     db.query(`
-      SELECT * FROM phd_phieu_doi`, (error, results) => {
+      SELECT * FROM phd_phieu_doi ORDER BY PHIEU_DOI_ID DESC;`, (error, results) => {
       if (error) {
         reject(error);
       } else {

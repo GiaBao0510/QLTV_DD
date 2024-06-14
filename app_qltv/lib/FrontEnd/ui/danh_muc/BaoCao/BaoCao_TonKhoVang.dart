@@ -104,27 +104,24 @@ class _BaoCaoTonKhoVangScreen extends State<BaoCaoTonKhoVangScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        iconTheme: IconThemeData(
-          color: Colors.white,
-          size: 28,
-        ),
-        title: FittedBox(
-          fit: BoxFit.fitWidth,
-          child: Text(
-            "Báo cáo tồn kho",
-            style: TextStyle(
-                fontSize: 20,
-                color: Colors.white,
-                fontFamily: 'Align',
-                fontWeight: FontWeight.bold),
+        backgroundColor: const Color.fromARGB(255, 228, 200, 126),
+        leading: IconButton(
+          icon: const Icon(
+            CupertinoIcons.left_chevron,
+            color: Colors.black,
           ),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
         ),
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-              gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [Colors.orange, Colors.amber])),
+        title: Row(
+          children: [
+            Expanded(child: Container()), // Spacer
+            const Text("Báo Cáo Tồn Kho",
+                style: TextStyle(
+                    color: Colors.black, fontWeight: FontWeight.w900)),
+            Expanded(child: Container()), // Spacer
+          ],
         ),
         actions: [
           PopupMenuButton<String>(

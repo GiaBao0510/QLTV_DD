@@ -58,18 +58,18 @@ class _HomeScreenState extends State<HomeScreen> {
       {
         'image': 'assets/images/person.png',
         'text': 'Người Dùng',
-        'routeName': '/loaivang'
+        'routeName': '/nguoidung'
       },
       {
         'image': 'assets/images/remote-access.png',
         'text': 'Kết Nối',
-        'routeName': '/loaivang'
+        'routeName': '/ketnoi'
       },
-      {
-        'image': 'assets/images/access-control.png',
-        'text': 'Quản Lý Quyền',
-        'routeName': '/loaivang'
-      },
+      // {
+      //   'image': 'assets/images/access-control.png',
+      //   'text': 'Quản Lý Quyền',
+      //   'routeName': '/loaivang'
+      // },
     ];
 
     final camvang_items = [
@@ -111,15 +111,15 @@ class _HomeScreenState extends State<HomeScreen> {
         'text': 'Kho Vàng Mua Vào',
         'routeName': '/KhoVangMuaVao'
       },
-      {
-        'image': 'assets/images/paper.png',
-        'text': 'In Phiếu Xuất',
-        'routeName': '/loaivang'
-      },
+      // {
+      //   'image': 'assets/images/paper.png',
+      //   'text': 'In Phiếu Xuất',
+      //   'routeName': '/loaivang'
+      // },
       {
         'image': 'assets/images/presentation.png',
         'text': 'Khách Hàng Giao Dịch Nhiều',
-        'routeName': '/loaivang'
+        'routeName': '/topkhachhang'
       },
       {
         'image': 'assets/images/shopping-list.png',
@@ -129,7 +129,7 @@ class _HomeScreenState extends State<HomeScreen> {
       {
         'image': 'assets/images/document.png',
         'text': 'Báo Cáo Phiếu Đổi',
-        'routeName': '/loaivang'
+        'routeName': '/baocaophieudoi'
       },
     ];
 

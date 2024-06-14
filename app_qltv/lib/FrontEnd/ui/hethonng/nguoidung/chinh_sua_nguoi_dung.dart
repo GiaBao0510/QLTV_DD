@@ -15,24 +15,26 @@ class ChinhSuaNguoiDungScreen extends StatefulWidget {
   const ChinhSuaNguoiDungScreen(this.nguoiDung, {super.key});
 
   @override
-  State<ChinhSuaNguoiDungScreen> createState() => _ChinhSuaNguoiDungScreenState();
+  State<ChinhSuaNguoiDungScreen> createState() =>
+      _ChinhSuaNguoiDungScreenState();
 }
 
 class _ChinhSuaNguoiDungScreenState extends State<ChinhSuaNguoiDungScreen> {
   final _editForm = GlobalKey<FormState>();
   late NguoiDung _editedNguoiDung;
-  
+
   late Future<List<Nhom>> _nhomFuture;
   List<Nhom> _nhomList = [];
 
   @override
   void initState() {
     super.initState();
-    _editedNguoiDung = widget.nguoiDung; // Initialize _editedNguoiDung with widget's nguoiDung
+    _editedNguoiDung =
+        widget.nguoiDung; // Initialize _editedNguoiDung with widget's nguoiDung
     _loadNhom();
   }
 
-    Future<void> _loadNhom() async {
+  Future<void> _loadNhom() async {
     _nhomFuture = Provider.of<NhomManager>(context, listen: false).fetchNhoms();
     _nhomFuture.then((nhom) {
       setState(() {
@@ -40,10 +42,12 @@ class _ChinhSuaNguoiDungScreenState extends State<ChinhSuaNguoiDungScreen> {
       });
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: const Color.fromARGB(255, 228, 200, 126),
         leading: IconButton(
           icon: const Icon(
             CupertinoIcons.left_chevron,
@@ -58,7 +62,8 @@ class _ChinhSuaNguoiDungScreenState extends State<ChinhSuaNguoiDungScreen> {
             padding: EdgeInsets.only(right: 50.0),
             child: Text(
               "Chỉnh Sửa Người Dùng",
-              style: TextStyle(color: Colors.black, fontWeight: FontWeight.w900),
+              style:
+                  TextStyle(color: Colors.black, fontWeight: FontWeight.w900),
               textAlign: TextAlign.center,
             ),
           ),
@@ -98,13 +103,21 @@ class _ChinhSuaNguoiDungScreenState extends State<ChinhSuaNguoiDungScreen> {
                   ],
                 ),
               ),
-              const SizedBox(height: 10,),
+              const SizedBox(
+                height: 10,
+              ),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.grey[50],
+                  backgroundColor: const Color.fromARGB(255, 228, 200, 126),
                 ),
                 onPressed: () => _saveForm(context),
-                child: const Text('Cập nhật', style: TextStyle(fontWeight: FontWeight.w900, color: Colors.green),),
+                child: const Text(
+                  'Cập nhật',
+                  style: TextStyle(
+                      fontWeight: FontWeight.w900,
+                      color: Colors.green,
+                      fontSize: 20),
+                ),
               ),
             ],
           ),
@@ -171,7 +184,6 @@ class _ChinhSuaNguoiDungScreenState extends State<ChinhSuaNguoiDungScreen> {
   }
 
   DropdownButtonFormField<int> buildNhomDropdown() {
-    
     return DropdownButtonFormField<int>(
       dropdownColor: Colors.white,
       borderRadius: const BorderRadius.all(Radius.circular(15)),
@@ -185,20 +197,21 @@ class _ChinhSuaNguoiDungScreenState extends State<ChinhSuaNguoiDungScreen> {
           borderRadius: BorderRadius.all(Radius.circular(15.0)),
         ),
       ),
-    value: _editedNguoiDung.groupId,
-    items: _nhomList
-        .where((nhom) => nhom.groupId != null) // Loại bỏ các mục có giá trị null
-        .map((Nhom nhom) {
-      return DropdownMenuItem<int>(
-        value: int.tryParse(nhom.groupId!),
-        child: Text(nhom.groupTen ?? nhom.groupId!),
-      );
-    }).toList(),
-    onChanged: (newValue) {
-      setState(() {
-        _editedNguoiDung = _editedNguoiDung.copyWith(groupId: newValue);
-      });
-    },
+      value: _editedNguoiDung.groupId,
+      items: _nhomList
+          .where(
+              (nhom) => nhom.groupId != null) // Loại bỏ các mục có giá trị null
+          .map((Nhom nhom) {
+        return DropdownMenuItem<int>(
+          value: int.tryParse(nhom.groupId!),
+          child: Text(nhom.groupTen ?? nhom.groupId!),
+        );
+      }).toList(),
+      onChanged: (newValue) {
+        setState(() {
+          _editedNguoiDung = _editedNguoiDung.copyWith(groupId: newValue);
+        });
+      },
       // validator: (value) {
       //   if (value == null || value == 0) {
       //     return 'Please select a value';
@@ -207,7 +220,6 @@ class _ChinhSuaNguoiDungScreenState extends State<ChinhSuaNguoiDungScreen> {
       // },
     );
   }
-
 
   TextFormField buildLyDoKhoaField() {
     return TextFormField(
@@ -260,7 +272,8 @@ class _ChinhSuaNguoiDungScreenState extends State<ChinhSuaNguoiDungScreen> {
     _editForm.currentState!.save();
 
     try {
-      final nguoiDungManager = Provider.of<NguoiDungManager>(context, listen: false);
+      final nguoiDungManager =
+          Provider.of<NguoiDungManager>(context, listen: false);
       await nguoiDungManager.updateNguoiDung(
         _editedNguoiDung.userId!,
         _editedNguoiDung.groupId!,
@@ -283,28 +296,39 @@ class _ChinhSuaNguoiDungScreenState extends State<ChinhSuaNguoiDungScreen> {
           backgroundColor: Colors.grey,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15.0),
-            side: const BorderSide(color: Colors.grey, width: 2.0), // bo viền 15px
+            side: const BorderSide(
+                color: Colors.grey, width: 2.0), // bo viền 15px
           ),
           behavior: SnackBarBehavior.floating, // hiển thị ở cách đáy màn hình
-          margin: const EdgeInsets.only(left: 15.0, right: 15.0, bottom: 15.0), // cách 2 cạnh và đáy màn hình 15px
+          margin: const EdgeInsets.only(
+              left: 15.0,
+              right: 15.0,
+              bottom: 15.0), // cách 2 cạnh và đáy màn hình 15px
         ),
       );
       Navigator.of(context).pop(true); // Quay lại màn hình trước
-    }
-    catch (error, stackTrace) {
+    } catch (error, stackTrace) {
       print('Failed to add group: $error');
       print('Stack trace: $stackTrace');
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content:  Text('Không thể cập nhóm: $error', style: TextStyle(fontWeight: FontWeight.w900, color: Colors.red), textAlign: TextAlign.center,),
+          content: Text(
+            'Không thể cập nhóm: $error',
+            style: TextStyle(fontWeight: FontWeight.w900, color: Colors.red),
+            textAlign: TextAlign.center,
+          ),
           backgroundColor: Colors.grey,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15.0),
-            side: const BorderSide(color: Colors.grey, width: 2.0), // bo viền 15px
+            side: const BorderSide(
+                color: Colors.grey, width: 2.0), // bo viền 15px
           ),
           behavior: SnackBarBehavior.floating, // hiển thị ở cách đáy màn hình
-          margin: const EdgeInsets.only(left: 15.0, right: 15.0, bottom: 15.0), // cách 2 cạnh và đáy màn hình 15px
+          margin: const EdgeInsets.only(
+              left: 15.0,
+              right: 15.0,
+              bottom: 15.0), // cách 2 cạnh và đáy màn hình 15px
         ),
       );
     }

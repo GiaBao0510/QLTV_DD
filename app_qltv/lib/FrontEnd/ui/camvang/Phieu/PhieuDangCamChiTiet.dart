@@ -1,4 +1,4 @@
-import 'dart:ffi';
+// import 'dart:ffi';
 
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -41,24 +41,27 @@ class _PhieuDangCamChiTiet extends State<PhieuDangCamChiTiet> {
     String path = url + '/api/cam/chitietphieucam';
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     var res = await http.get(
-        Uri.parse(path),
-        headers: {
-          "Content-Type": "application/json",
-          "accesstoken": "${prefs.getString('accesstoken')}",
-        },
+      Uri.parse(path),
+      headers: {
+        "Content-Type": "application/json",
+        "accesstoken": "${prefs.getString('accesstoken')}",
+      },
     );
     List<dynamic> result = jsonDecode(res.body);
     int soHang = 0;
-    double tong_CanTong =0.0, tong_TLhot =0.0, tong_TLthuc =0.0,
-        tong_DinhGia =0.0, tong_TienKhachNhan =0.0, tong_TienNhanThem =0.0,
-        tong_TienCamMoi =0.0;
+    double tong_CanTong = 0.0,
+        tong_TLhot = 0.0,
+        tong_TLthuc = 0.0,
+        tong_DinhGia = 0.0,
+        tong_TienKhachNhan = 0.0,
+        tong_TienNhanThem = 0.0,
+        tong_TienCamMoi = 0.0;
 
     // //Xử lý tính tổng
-    for(var i =0; i< result.length; i++){
-
+    for (var i = 0; i < result.length; i++) {
       final item = result[i]['data'];
 
-      for(var j =0; j< item.length; j++){
+      for (var j = 0; j < item.length; j++) {
         final child_item = item[j];
         print(' ------- ${soHang} -----------');
         print('Cân tổng: ${child_item['CAN_TONG']}');
@@ -73,7 +76,6 @@ class _PhieuDangCamChiTiet extends State<PhieuDangCamChiTiet> {
         tong_TienCamMoi += child_item['TIEN_CAM_MOI'];
         soHang++;
       }
-
     }
     thongTinTinhTong = {
       "Tong_CANTONG": tong_CanTong,
@@ -139,10 +141,10 @@ class _PhieuDangCamChiTiet extends State<PhieuDangCamChiTiet> {
                           ),
                           child: Center(
                               child: Text(
-                                'Export PDF',
-                                style: TextStyle(fontSize: 12),
-                                textAlign: TextAlign.center,
-                              )),
+                            'Export PDF',
+                            style: TextStyle(fontSize: 12),
+                            textAlign: TextAlign.center,
+                          )),
                         )),
                   ),
                 ],
@@ -193,7 +195,7 @@ class _PhieuDangCamChiTiet extends State<PhieuDangCamChiTiet> {
                                 Container(
                                   width: double.infinity,
                                   padding:
-                                  const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                                      const EdgeInsets.fromLTRB(0, 10, 0, 10),
                                   decoration: BoxDecoration(
                                     gradient: const LinearGradient(
                                       colors: [
@@ -221,7 +223,8 @@ class _PhieuDangCamChiTiet extends State<PhieuDangCamChiTiet> {
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold),
                                         ),
-                                        TextSpan(text: ' ${loaivang ?? 'null'}'),
+                                        TextSpan(
+                                            text: ' ${loaivang ?? 'null'}'),
                                       ],
                                     ),
                                   ),
@@ -251,7 +254,7 @@ class _PhieuDangCamChiTiet extends State<PhieuDangCamChiTiet> {
                                               end: Alignment.bottomRight,
                                             ),
                                             borderRadius:
-                                            BorderRadius.circular(8),
+                                                BorderRadius.circular(8),
                                           ),
                                           child: SingleChildScrollView(
                                             child: Align(
@@ -269,15 +272,14 @@ class _PhieuDangCamChiTiet extends State<PhieuDangCamChiTiet> {
                                                                 children: [
                                                                   const TextSpan(
                                                                     text:
-                                                                    ' \t Mã phiếu: ',
+                                                                        ' \t Mã phiếu: ',
                                                                     style: TextStyle(
                                                                         fontWeight:
-                                                                        FontWeight
-                                                                            .bold),
+                                                                            FontWeight.bold),
                                                                   ),
                                                                   TextSpan(
                                                                     text:
-                                                                    ' ${subItem['PHIEU_MA'] ?? 'null'}',
+                                                                        ' ${subItem['PHIEU_MA'] ?? 'null'}',
                                                                   ),
                                                                 ],
                                                               ),
@@ -287,15 +289,14 @@ class _PhieuDangCamChiTiet extends State<PhieuDangCamChiTiet> {
                                                                 children: [
                                                                   const TextSpan(
                                                                     text:
-                                                                    ' \t Tên khách: ',
+                                                                        ' \t Tên khách: ',
                                                                     style: TextStyle(
                                                                         fontWeight:
-                                                                        FontWeight
-                                                                            .bold),
+                                                                            FontWeight.bold),
                                                                   ),
                                                                   TextSpan(
                                                                     text:
-                                                                    ' ${subItem['KH_TEN'] ?? 'null'}',
+                                                                        ' ${subItem['KH_TEN'] ?? 'null'}',
                                                                   ),
                                                                 ],
                                                               ),
@@ -308,10 +309,11 @@ class _PhieuDangCamChiTiet extends State<PhieuDangCamChiTiet> {
                                                         child: IconButton(
                                                           onPressed: () {
                                                             ThongTinChiTiet(
-                                                                context, subItem);
+                                                                context,
+                                                                subItem);
                                                           },
-                                                          icon: const Icon(
-                                                              Icons.info_outline),
+                                                          icon: const Icon(Icons
+                                                              .info_outline),
                                                         ),
                                                       ),
                                                     ],
@@ -375,18 +377,15 @@ class _PhieuDangCamChiTiet extends State<PhieuDangCamChiTiet> {
   }
 
   //Chuyển sang PDF
-  Future<void> printDoc(List<dynamic> data) async{
+  Future<void> printDoc(List<dynamic> data) async {
     final doc = pw.Document();
     final font = await loadFont("assets/fonts/Roboto-Regular.ttf");
     doc.addPage(pw.Page(
-      pageFormat: PdfPageFormat.a4,
-      build: (pw.Context context){
-        return buildPrintableData(data,font,thongTinTinhTong);
-      }
-    ));
+        pageFormat: PdfPageFormat.a4,
+        build: (pw.Context context) {
+          return buildPrintableData(data, font, thongTinTinhTong);
+        }));
     await Printing.layoutPdf(
-        onLayout: (PdfPageFormat format) async => doc.save()
-    );
+        onLayout: (PdfPageFormat format) async => doc.save());
   }
-
 }

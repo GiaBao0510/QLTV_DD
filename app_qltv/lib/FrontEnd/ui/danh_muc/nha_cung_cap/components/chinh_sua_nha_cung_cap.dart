@@ -11,10 +11,12 @@ class ChinhSuaNhaCungCapScreen extends StatefulWidget {
 
   final NhaCungCap nhacungcap;
 
-  const ChinhSuaNhaCungCapScreen({Key? key, required this.nhacungcap}) : super(key: key);
+  const ChinhSuaNhaCungCapScreen({Key? key, required this.nhacungcap})
+      : super(key: key);
 
   @override
-  State<ChinhSuaNhaCungCapScreen> createState() => _ChinhSuaNhaCungCapScreenState();
+  State<ChinhSuaNhaCungCapScreen> createState() =>
+      _ChinhSuaNhaCungCapScreenState();
 }
 
 class _ChinhSuaNhaCungCapScreenState extends State<ChinhSuaNhaCungCapScreen> {
@@ -51,16 +53,17 @@ class _ChinhSuaNhaCungCapScreenState extends State<ChinhSuaNhaCungCapScreen> {
       setState(() {
         _selectedDate = picked;
         _dateController.text = _dateFormat.format(_selectedDate);
-        _editedNhaCungCap = _editedNhaCungCap.copyWith(ngay_bd: _selectedDate.toIso8601String());
+        _editedNhaCungCap = _editedNhaCungCap.copyWith(
+            ngay_bd: _selectedDate.toIso8601String());
       });
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: const Color.fromARGB(255, 228, 200, 126),
         leading: IconButton(
           icon: const Icon(
             CupertinoIcons.left_chevron,
@@ -75,7 +78,8 @@ class _ChinhSuaNhaCungCapScreenState extends State<ChinhSuaNhaCungCapScreen> {
             padding: EdgeInsets.only(right: 50.0),
             child: Text(
               "Chỉnh Sửa Nhà Cung Cấp",
-              style: TextStyle(color: Colors.black, fontWeight: FontWeight.w900),
+              style:
+                  TextStyle(color: Colors.black, fontWeight: FontWeight.w900),
               textAlign: TextAlign.center,
             ),
           ),
@@ -110,13 +114,19 @@ class _ChinhSuaNhaCungCapScreenState extends State<ChinhSuaNhaCungCapScreen> {
                   ],
                 ),
               ),
-              const SizedBox(height: 10,),
+              const SizedBox(
+                height: 10,
+              ),
               ElevatedButton(
-                style: ElevatedButton.styleFrom(backgroundColor: Colors.grey[50]),
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(255, 228, 200, 126)),
                 onPressed: () => _saveForm(context),
                 child: const Text(
                   'Cập Nhật',
-                  style: TextStyle(fontWeight: FontWeight.w900, color: Colors.green),
+                  style: TextStyle(
+                      fontWeight: FontWeight.w900,
+                      color: Colors.green,
+                      fontSize: 20),
                 ),
               ),
             ],
@@ -136,6 +146,11 @@ class _ChinhSuaNhaCungCapScreenState extends State<ChinhSuaNhaCungCapScreen> {
         fillColor: Colors.white,
         border: OutlineInputBorder(
           borderSide: BorderSide(color: Colors.white, width: 15.0),
+          borderRadius: BorderRadius.all(Radius.circular(15.0)),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide:
+              BorderSide(color: Color.fromARGB(255, 228, 200, 126), width: 2.0),
           borderRadius: BorderRadius.all(Radius.circular(15.0)),
         ),
       ),
@@ -166,6 +181,11 @@ class _ChinhSuaNhaCungCapScreenState extends State<ChinhSuaNhaCungCapScreen> {
           borderSide: BorderSide(color: Colors.white, width: 15.0),
           borderRadius: BorderRadius.all(Radius.circular(15.0)),
         ),
+        focusedBorder: OutlineInputBorder(
+          borderSide:
+              BorderSide(color: Color.fromARGB(255, 228, 200, 126), width: 2.0),
+          borderRadius: BorderRadius.all(Radius.circular(15.0)),
+        ),
       ),
       textInputAction: TextInputAction.next,
       keyboardType: TextInputType.text,
@@ -194,6 +214,11 @@ class _ChinhSuaNhaCungCapScreenState extends State<ChinhSuaNhaCungCapScreen> {
           borderSide: BorderSide(color: Colors.white, width: 15.0),
           borderRadius: BorderRadius.all(Radius.circular(15.0)),
         ),
+        focusedBorder: OutlineInputBorder(
+          borderSide:
+              BorderSide(color: Color.fromARGB(255, 228, 200, 126), width: 2.0),
+          borderRadius: BorderRadius.all(Radius.circular(15.0)),
+        ),
       ),
       readOnly: true,
       onTap: () => _selectDate(context),
@@ -214,7 +239,8 @@ class _ChinhSuaNhaCungCapScreenState extends State<ChinhSuaNhaCungCapScreen> {
     _editForm.currentState!.save();
 
     try {
-      final nhaCungCapManager = Provider.of<NhaCungCapManager>(context, listen: false);
+      final nhaCungCapManager =
+          Provider.of<NhaCungCapManager>(context, listen: false);
 
       await nhaCungCapManager.updateNhaCungCap(
         _editedNhaCungCap.ncc_ma!,
@@ -244,10 +270,10 @@ class _ChinhSuaNhaCungCapScreenState extends State<ChinhSuaNhaCungCapScreen> {
         SnackBar(
           content: Text(
             "Failed to update data $error",
-            style: const TextStyle(fontWeight: FontWeight.w900, color: Colors.red),
+            style:
+                const TextStyle(fontWeight: FontWeight.w900, color: Colors.red),
             textAlign: TextAlign.center,
           ),
-
           backgroundColor: Colors.grey,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15.0),

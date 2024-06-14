@@ -10,7 +10,8 @@ class ChinhSuaNhomVangScreen extends StatefulWidget {
 
   final NhomVang nhomVang;
 
-  const ChinhSuaNhomVangScreen({Key? key, required this.nhomVang}) : super(key: key);
+  const ChinhSuaNhomVangScreen({Key? key, required this.nhomVang})
+      : super(key: key);
 
   @override
   State<ChinhSuaNhomVangScreen> createState() => _ChinhSuaNhomVangScreenState();
@@ -23,13 +24,15 @@ class _ChinhSuaNhomVangScreenState extends State<ChinhSuaNhomVangScreen> {
   @override
   void initState() {
     super.initState();
-    _editedNhomVang = widget.nhomVang; // Initialize _editedNhomVang with widget's nhomVang
+    _editedNhomVang =
+        widget.nhomVang; // Initialize _editedNhomVang with widget's nhomVang
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: const Color.fromARGB(255, 228, 200, 126),
         leading: IconButton(
           icon: const Icon(
             CupertinoIcons.left_chevron,
@@ -40,24 +43,29 @@ class _ChinhSuaNhomVangScreenState extends State<ChinhSuaNhomVangScreen> {
           },
         ),
         title: const Center(
-            child: Padding(
-              padding: EdgeInsets.only(right: 50.0),
-              child: Text("Chỉnh Sửa Nhóm Vàng", style: TextStyle(color: Colors.black ,fontWeight: FontWeight.w900), textAlign: TextAlign.center,),
+          child: Padding(
+            padding: EdgeInsets.only(right: 50.0),
+            child: Text(
+              "Chỉnh Sửa Nhóm Vàng",
+              style:
+                  TextStyle(color: Colors.black, fontWeight: FontWeight.w900),
+              textAlign: TextAlign.center,
             ),
+          ),
         ),
       ),
       body: Container(
-        padding: const EdgeInsets.all(16.0), 
+        padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _editForm,
           child: ListView(
             children: <Widget>[
               Container(
                 decoration: BoxDecoration(
-                  color: const Color.fromARGB(50, 169, 169, 169), 
-                  borderRadius: BorderRadius.circular(15.0), 
+                  color: const Color.fromARGB(50, 169, 169, 169),
+                  borderRadius: BorderRadius.circular(15.0),
                 ),
-                padding: const EdgeInsets.all(16.0), 
+                padding: const EdgeInsets.all(16.0),
                 child: Column(
                   children: [
                     Padding(
@@ -71,13 +79,20 @@ class _ChinhSuaNhomVangScreenState extends State<ChinhSuaNhomVangScreen> {
                   ],
                 ),
               ),
-              const SizedBox(height: 10,),
+              const SizedBox(
+                height: 10,
+              ),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.grey[50]
-                ),
+                    backgroundColor: const Color.fromARGB(255, 228, 200, 126)),
                 onPressed: () => _saveForm(context),
-                child: const Text('Cập Nhật', style: TextStyle(fontWeight: FontWeight.w900, color: Colors.green),),
+                child: const Text(
+                  'Cập Nhật',
+                  style: TextStyle(
+                      fontWeight: FontWeight.w900,
+                      color: Colors.green,
+                      fontSize: 20),
+                ),
               ),
             ],
           ),
@@ -98,8 +113,12 @@ class _ChinhSuaNhomVangScreenState extends State<ChinhSuaNhomVangScreen> {
           borderSide: BorderSide(color: Colors.white, width: 15.0),
           borderRadius: BorderRadius.all(Radius.circular(15.0)),
         ),
+        focusedBorder: OutlineInputBorder(
+          borderSide:
+              BorderSide(color: Color.fromARGB(255, 228, 200, 126), width: 2.0),
+          borderRadius: BorderRadius.all(Radius.circular(15.0)),
+        ),
       ),
-
       textInputAction: TextInputAction.next,
       keyboardType: TextInputType.text,
       autofocus: true,
@@ -114,6 +133,7 @@ class _ChinhSuaNhomVangScreenState extends State<ChinhSuaNhomVangScreen> {
       },
     );
   }
+
   TextFormField buildKyHieuField() {
     return TextFormField(
       initialValue: _editedNhomVang.ghiChu.toString(),
@@ -126,8 +146,12 @@ class _ChinhSuaNhomVangScreenState extends State<ChinhSuaNhomVangScreen> {
           borderSide: BorderSide(color: Colors.white, width: 15.0),
           borderRadius: BorderRadius.all(Radius.circular(15.0)),
         ),
+        focusedBorder: OutlineInputBorder(
+          borderSide:
+              BorderSide(color: Color.fromARGB(255, 228, 200, 126), width: 2.0),
+          borderRadius: BorderRadius.all(Radius.circular(15.0)),
+        ),
       ),
-
       textInputAction: TextInputAction.next,
       keyboardType: TextInputType.text,
       autofocus: true,
@@ -151,32 +175,54 @@ class _ChinhSuaNhomVangScreenState extends State<ChinhSuaNhomVangScreen> {
     _editForm.currentState!.save();
 
     try {
-      final nhomVangManager = Provider.of<NhomVangManager>(context, listen: false); 
-      await nhomVangManager.updateLoaiHang(_editedNhomVang.loaiId as int, _editedNhomVang.loaiMa as String, _editedNhomVang.loaiTen as String, _editedNhomVang.ghiChu as String, _editedNhomVang.suDung as int); // Call updateLoaiHang method
+      final nhomVangManager =
+          Provider.of<NhomVangManager>(context, listen: false);
+      await nhomVangManager.updateLoaiHang(
+          _editedNhomVang.loaiId as int,
+          _editedNhomVang.loaiMa as String,
+          _editedNhomVang.loaiTen as String,
+          _editedNhomVang.ghiChu as String,
+          _editedNhomVang.suDung as int); // Call updateLoaiHang method
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('Cập nhật thành công!', style: TextStyle(fontWeight: FontWeight.w900), textAlign: TextAlign.center,),
+          content: const Text(
+            'Cập nhật thành công!',
+            style: TextStyle(fontWeight: FontWeight.w900),
+            textAlign: TextAlign.center,
+          ),
           backgroundColor: Colors.grey,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15.0),
-            side: const BorderSide(color: Colors.grey, width: 2.0), // bo viền 15px
+            side: const BorderSide(
+                color: Colors.grey, width: 2.0), // bo viền 15px
           ),
           behavior: SnackBarBehavior.floating, // hiển thị ở cách đáy màn hình
-          margin: const EdgeInsets.only(left: 15.0, right: 15.0, bottom: 15.0), // cách 2 cạnh và đáy màn hình 15px
+          margin: const EdgeInsets.only(
+              left: 15.0,
+              right: 15.0,
+              bottom: 15.0), // cách 2 cạnh và đáy màn hình 15px
         ),
       );
       Navigator.of(context).pop(true); // Go back to the previous screen
     } catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('Failed to update data' , style: TextStyle(fontWeight: FontWeight.w900, color: Colors.red), textAlign: TextAlign.center,),
+          content: const Text(
+            'Failed to update data',
+            style: TextStyle(fontWeight: FontWeight.w900, color: Colors.red),
+            textAlign: TextAlign.center,
+          ),
           backgroundColor: Colors.grey,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15.0),
-            side: const BorderSide(color: Colors.grey, width: 2.0), // bo viền 15px
+            side: const BorderSide(
+                color: Colors.grey, width: 2.0), // bo viền 15px
           ),
           behavior: SnackBarBehavior.floating, // hiển thị ở cách đáy màn hình
-          margin: const EdgeInsets.only(left: 15.0, right: 15.0, bottom: 15.0), // cách 2 cạnh và đáy màn hình 15px
+          margin: const EdgeInsets.only(
+              left: 15.0,
+              right: 15.0,
+              bottom: 15.0), // cách 2 cạnh và đáy màn hình 15px
         ),
       );
     }

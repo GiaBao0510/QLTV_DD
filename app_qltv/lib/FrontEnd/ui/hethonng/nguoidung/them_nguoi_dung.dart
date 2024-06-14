@@ -1,4 +1,3 @@
-
 import 'package:app_qltv/FrontEnd/controller/hethong/nhom_manager.dart';
 import 'package:app_qltv/FrontEnd/model/hethong/nhom.dart';
 import 'package:flutter/cupertino.dart';
@@ -18,7 +17,6 @@ class ThemNguoiDungScreen extends StatefulWidget {
 }
 
 class _ThemNguoiDungScreenState extends State<ThemNguoiDungScreen> {
-
   final _addForm = GlobalKey<FormState>();
   var _newNguoiDung = NguoiDung(
     userId: null,
@@ -55,7 +53,7 @@ class _ThemNguoiDungScreenState extends State<ThemNguoiDungScreen> {
       });
     });
   }
-  
+
   // Future<void> _loadNhom() async {
   //   try {
   //     await Provider.of<NhomManager>(context, listen: false).fetchNhoms();
@@ -69,11 +67,11 @@ class _ThemNguoiDungScreenState extends State<ThemNguoiDungScreen> {
   //   }
   // }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: const Color.fromARGB(255, 228, 200, 126),
         leading: IconButton(
           icon: const Icon(
             CupertinoIcons.left_chevron,
@@ -88,7 +86,8 @@ class _ThemNguoiDungScreenState extends State<ThemNguoiDungScreen> {
             padding: EdgeInsets.only(right: 50.0),
             child: Text(
               "Thêm Người Dùng",
-              style: TextStyle(color: Colors.black, fontWeight: FontWeight.w900),
+              style:
+                  TextStyle(color: Colors.black, fontWeight: FontWeight.w900),
               textAlign: TextAlign.center,
             ),
           ),
@@ -128,15 +127,19 @@ class _ThemNguoiDungScreenState extends State<ThemNguoiDungScreen> {
                   ],
                 ),
               ),
-              const SizedBox(height: 10,),
+              const SizedBox(
+                height: 10,
+              ),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.grey[50]
-                ),
+                    backgroundColor: const Color.fromARGB(255, 228, 200, 126)),
                 onPressed: () => _saveForm(context),
                 child: const Text(
                   'Thêm',
-                  style: TextStyle(fontWeight: FontWeight.w900, color: Colors.green),
+                  style: TextStyle(
+                      fontWeight: FontWeight.w900,
+                      color: Colors.green,
+                      fontSize: 20),
                 ),
               ),
             ],
@@ -198,7 +201,6 @@ class _ThemNguoiDungScreenState extends State<ThemNguoiDungScreen> {
     );
   }
 
-  
   DropdownButtonFormField<int> buildNhomDropdown() {
     return DropdownButtonFormField<int>(
       dropdownColor: Colors.white,
@@ -213,20 +215,21 @@ class _ThemNguoiDungScreenState extends State<ThemNguoiDungScreen> {
           borderRadius: BorderRadius.all(Radius.circular(15.0)),
         ),
       ),
-    value: _newNguoiDung.groupId,
-    items: _nhomList
-        .where((nhom) => nhom.groupId != null) // Loại bỏ các mục có giá trị null
-        .map((Nhom nhom) {
-      return DropdownMenuItem<int>(
-        value: int.tryParse(nhom.groupId!),
-        child: Text(nhom.groupTen ?? nhom.groupId!),
-      );
-    }).toList(),
-    onChanged: (newValue) {
-      setState(() {
-        _newNguoiDung = _newNguoiDung.copyWith(groupId: newValue);
-      });
-    },
+      value: _newNguoiDung.groupId,
+      items: _nhomList
+          .where(
+              (nhom) => nhom.groupId != null) // Loại bỏ các mục có giá trị null
+          .map((Nhom nhom) {
+        return DropdownMenuItem<int>(
+          value: int.tryParse(nhom.groupId!),
+          child: Text(nhom.groupTen ?? nhom.groupId!),
+        );
+      }).toList(),
+      onChanged: (newValue) {
+        setState(() {
+          _newNguoiDung = _newNguoiDung.copyWith(groupId: newValue);
+        });
+      },
       // validator: (value) {
       //   if (value == null || value == 0) {
       //     return 'Please select a value';
@@ -235,7 +238,6 @@ class _ThemNguoiDungScreenState extends State<ThemNguoiDungScreen> {
       // },
     );
   }
-
 
   TextFormField buildLyDoKhoaField() {
     return TextFormField(
@@ -287,12 +289,16 @@ class _ThemNguoiDungScreenState extends State<ThemNguoiDungScreen> {
     _addForm.currentState!.save();
 
     try {
-      final nguoiDungManager = Provider.of<NguoiDungManager>(context, listen: false);
-      print(_newNguoiDung.userTen);
+      final nguoiDungManager =
+          Provider.of<NguoiDungManager>(context, listen: false);
       await nguoiDungManager.addNguoiDung(_newNguoiDung);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('Thêm thành công!', style: TextStyle(fontWeight: FontWeight.w900), textAlign: TextAlign.center,),
+          content: const Text(
+            'Thêm thành công!',
+            style: TextStyle(fontWeight: FontWeight.w900),
+            textAlign: TextAlign.center,
+          ),
           backgroundColor: Colors.grey,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15.0),
@@ -302,15 +308,18 @@ class _ThemNguoiDungScreenState extends State<ThemNguoiDungScreen> {
           margin: const EdgeInsets.only(left: 15.0, right: 15.0, bottom: 15.0),
         ),
       );
-      Navigator.of(context).pop(true); 
-    } 
-    catch (error, stackTrace) {
+      Navigator.of(context).pop(true);
+    } catch (error, stackTrace) {
       print('Failed to add user: $error');
       print('Stack trace: $stackTrace');
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content:  Text('Không thể thêm người dùng: $error', style: TextStyle(fontWeight: FontWeight.w900, color: Colors.red), textAlign: TextAlign.center,),
+          content: Text(
+            'Không thể thêm người dùng: $error',
+            style: TextStyle(fontWeight: FontWeight.w900, color: Colors.red),
+            textAlign: TextAlign.center,
+          ),
           backgroundColor: Colors.grey,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15.0),
