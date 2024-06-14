@@ -61,7 +61,7 @@ class ChiTietNhom extends StatelessWidget {
           } else if (snapshot.hasError) {
             return Center(child: Text('Lỗi: ${snapshot.error}'));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('Không có người dùng nào trong nhóm n'));
+            return Center(child: Text('Không có người dùng nào trong nhóm này'));
           } else {
             List<NguoiDung> nguoiDungs = snapshot.data!;
             return ListView.builder(
@@ -69,7 +69,7 @@ class ChiTietNhom extends StatelessWidget {
               itemBuilder: (context, index) {
                 NguoiDung nguoiDung = nguoiDungs[index];
                 return ListTile(
-                  title: Text(nguoiDung.userTen.toString()), // Assuming 'name' is a property of NguoiDung
+                  title: Text('Tên người dùng: ${nguoiDung.userTen.toString()}'), // Assuming 'name' is a property of NguoiDung
                   subtitle: Text('ID: ${nguoiDung.groupId}'),
                 );
               },

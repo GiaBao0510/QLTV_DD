@@ -24,12 +24,6 @@ class NguoiDungManager with ChangeNotifier {
     return filterNguoiDungsByGroupId(groupId); // Return filtered list
   }
 
-  // List<NguoiDung> filterNguoiDung (String groupId){
-  //   return _nguoiDungs.where((nguoidung) => nguoidung.groupId.toString() == groupId).toList();
-  // }
-
-  // bool get isDataLoaded => _nguoiDungs.isNotEmpty;
-
   Future<List<NguoiDung>> fetchNguoiDungs() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final response = await http.get(
@@ -55,20 +49,23 @@ class NguoiDungManager with ChangeNotifier {
 
   Future<void> addNguoiDung(NguoiDung nguoidung) async {
     // Thêm nhom vào backend
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
     final response = await http.post(
       Uri.parse('$url/api/users/'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
+      headers:  <String, String>{
+        "Content-Type": "application/json",
+        "accesstoken": "${prefs.getString('accesstoken')}",
       },
       body: jsonEncode(nguoidung.toMap()),
     );
+    
 
     if (response.statusCode == 200) {
       // Nếu thành công, thêm vào danh sách nội bộ và thông báo thay đổi
       _nguoiDungs.add(nguoidung);
       notifyListeners();
     } else {
-      throw Exception('Failed to add nhom');
+      throw Exception('Failed to add nguoi dung');
     }
   }
 
@@ -84,10 +81,12 @@ class NguoiDungManager with ChangeNotifier {
       bool suDung,
     ) async {
     try {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
       final response = await http.put(
         Uri.parse('$url/api/users/$userId'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
+          "accesstoken": "${prefs.getString('accesstoken')}",
         },
         body: jsonEncode(<String, dynamic>{
           'USER_ID': userId,
@@ -120,10 +119,12 @@ class NguoiDungManager with ChangeNotifier {
 
     Future<void> deleteNguoiDung(int userId) async {
     try {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
       final response = await http.delete(
         Uri.parse('$url/api/users/$userId'),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
+        headers: {
+          "Content-Type": "application/json",
+          "accesstoken": "${prefs.getString('accesstoken')}",
         },
       );
 
@@ -137,7 +138,7 @@ class NguoiDungManager with ChangeNotifier {
       }
     } catch (error) {
       // Nếu có bất kỳ lỗi nào xảy ra trong quá trình gửi request hoặc xử lý response, ném một Exception để thông báo rằng việc xóa thất bại
-      throw Exception('Failed to delete NguoiDung: $error');
+      throw Exception('Failed to deleteeee NguoiDung: $error');
     }
   }
 }

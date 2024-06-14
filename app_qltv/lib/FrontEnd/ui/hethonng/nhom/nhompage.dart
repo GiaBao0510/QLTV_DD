@@ -110,6 +110,7 @@ class _NhomPageState extends State<NhomPage> {
                     trailing: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
+                        if (nhom.biKhoa == true) Icon(Icons.lock),
                         IconButton(
                           icon: Icon(Icons.edit),
                           onPressed: () async {
@@ -166,7 +167,7 @@ class _NhomPageState extends State<NhomPage> {
                             );
                           },
                         ),
-                        if (nhom.biKhoa == true) Icon(Icons.lock),
+                        //if (nhom.biKhoa == true) Icon(Icons.lock),
                       ],
                     ),
                   ),

@@ -288,6 +288,7 @@ class _ThemNguoiDungScreenState extends State<ThemNguoiDungScreen> {
 
     try {
       final nguoiDungManager = Provider.of<NguoiDungManager>(context, listen: false);
+      print(_newNguoiDung.userTen);
       await nguoiDungManager.addNguoiDung(_newNguoiDung);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
