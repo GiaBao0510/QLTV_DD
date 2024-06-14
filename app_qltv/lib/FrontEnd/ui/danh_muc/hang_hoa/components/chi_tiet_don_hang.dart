@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:app_qltv/FrontEnd/model/danhmuc/hanghoa.dart';
@@ -25,9 +26,32 @@ class ChiTietHangHoaScreen extends StatelessWidget {
     final double truHot = (hangHoa.canTong ?? 0) - (hangHoa.tlHot ?? 0);
 
     return Scaffold(
+      // appBar: AppBar(
+      //   leading: const BackButton(color: Colors.black),
+      //   title: Text(hangHoa.hangHoaTen ?? ''),
+      // ),
       appBar: AppBar(
-        leading: const BackButton(color: Colors.black),
-        title: Text(hangHoa.hangHoaTen ?? ''),
+        backgroundColor: const Color.fromARGB(255, 228, 200, 126),
+        leading: IconButton(
+          icon: const Icon(
+            CupertinoIcons.left_chevron,
+            color: Colors.black,
+          ),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+        title: Center(
+          child: Padding(
+            padding: const EdgeInsets.only(right: 50.0),
+            child: Text(
+              hangHoa.hangHoaTen ?? '',
+              style: const TextStyle(
+                  color: Colors.black, fontWeight: FontWeight.w900),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ),
       ),
       body: SafeArea(
         child: Padding(
@@ -41,12 +65,15 @@ class ChiTietHangHoaScreen extends StatelessWidget {
                 future: _getLoaiVangById(hangHoa.nhomHangId),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return buildDetailRow('Loại Vàng:', 'Loading...'); // Hiển thị tiến trình đang tải
+                    return buildDetailRow('Loại Vàng:',
+                        'Loading...'); // Hiển thị tiến trình đang tải
                   } else if (snapshot.hasError) {
-                    return buildDetailRow('Loại Vàng:', 'Unknown'); // Hiển thị thông báo lỗi nếu có lỗi xảy ra
+                    return buildDetailRow('Loại Vàng:',
+                        'Unknown'); // Hiển thị thông báo lỗi nếu có lỗi xảy ra
                   } else {
                     LoaiVang? loaiVang = snapshot.data;
-                    return buildDetailRow('Loại Vàng:', '${loaiVang?.nhomTen ?? "Unknown"}');
+                    return buildDetailRow(
+                        'Loại Vàng:', '${loaiVang?.nhomTen ?? "Unknown"}');
                   }
                 },
               ),
@@ -54,22 +81,27 @@ class ChiTietHangHoaScreen extends StatelessWidget {
                 future: _getNhomVangById(hangHoa.loaiId),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return buildDetailRow('Nhóm:', 'Loading...'); // Hiển thị tiến trình đang tải
+                    return buildDetailRow(
+                        'Nhóm:', 'Loading...'); // Hiển thị tiến trình đang tải
                   } else if (snapshot.hasError) {
-                    return buildDetailRow('Nhóm:', 'Unknownnnnn'); // Hiển thị thông báo lỗi nếu có lỗi xảy ra
+                    return buildDetailRow('Nhóm:',
+                        'Unknownnnnn'); // Hiển thị thông báo lỗi nếu có lỗi xảy ra
                   } else {
                     NhomVang? nhomVang = snapshot.data;
-                    return buildDetailRow('Nhóm:', '${nhomVang?.loaiTen ?? "Unknown"}');
+                    return buildDetailRow(
+                        'Nhóm:', '${nhomVang?.loaiTen ?? "Unknown"}');
                   }
                 },
               ),
               buildDetailRow('Cân Tổng:', '${hangHoa.canTong}'),
               buildDetailRow('TL Hột:', '${hangHoa.tlHot}'),
               buildDetailRow('Trừ Hột:', '$truHot'),
-
-              buildDetailRow('Công Gốc:', formatCurrency(hangHoa.congGoc ?? 0.0)),
-              buildDetailRow('Giá Công:', formatCurrency(hangHoa.giaCong ?? 0.0)),
-              buildDetailRow('Đơn Giá Gốc:', formatCurrency(hangHoa.donGiaGoc ?? 0.0)),
+              buildDetailRow(
+                  'Công Gốc:', formatCurrency(hangHoa.congGoc ?? 0.0)),
+              buildDetailRow(
+                  'Giá Công:', formatCurrency(hangHoa.giaCong ?? 0.0)),
+              buildDetailRow(
+                  'Đơn Giá Gốc:', formatCurrency(hangHoa.donGiaGoc ?? 0.0)),
               buildDetailRow('Ghi Chú:', '${hangHoa.ghiChu}'),
               buildDetailRow('Xuất Xứ:', '${hangHoa.xuatXu}'),
               buildDetailRow('Ký Hiệu:', '${hangHoa.kyHieu}'),
@@ -84,7 +116,7 @@ class ChiTietHangHoaScreen extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           Text(
             '$label ',
@@ -96,6 +128,7 @@ class ChiTietHangHoaScreen extends StatelessWidget {
               style: const TextStyle(fontSize: 16),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.right,
             ),
           ),
         ],
@@ -106,7 +139,8 @@ class ChiTietHangHoaScreen extends StatelessWidget {
   Future<LoaiVang> _getLoaiVangById(String? loaiId) async {
     try {
       final loaiVangManager = LoaiVangManager();
-      return await loaiVangManager.getLoaiVangById(int.parse(loaiId!)) ?? LoaiVang(nhomTen: "Unknown");
+      return await loaiVangManager.getLoaiVangById(int.parse(loaiId!)) ??
+          LoaiVang(nhomTen: "Unknown");
     } catch (error) {
       print('Error fetching LoaiVang by id: $error');
       throw Exception('Failed to fetch LoaiVang by id');

@@ -27,16 +27,17 @@ class _ThemDonviScreenState extends State<ThemDonviScreen> {
       dvi_ten: '',
       dvi_ghichu: '',
       dvi_ten_hd: '',
-      dvi_dia_chi_hd : '',
+      dvi_dia_chi_hd: '',
       dvi_sdt: '',
-      dvi_ten_gd : '',
+      dvi_ten_gd: '',
       dvi_luu_y: '',
     );
     _loadDonvis();
   }
 
   Future<void> _loadDonvis() async {
-    _donviFuture = Provider.of<DonviManage>(context, listen: false).fetchDonvi();
+    _donviFuture =
+        Provider.of<DonviManage>(context, listen: false).fetchDonvi();
     _donviFuture.then((Donvis) {
       setState(() {
         _donviList = Donvis;
@@ -48,6 +49,7 @@ class _ThemDonviScreenState extends State<ThemDonviScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: const Color.fromARGB(255, 228, 200, 126),
         leading: IconButton(
           icon: const Icon(
             CupertinoIcons.left_chevron,
@@ -62,7 +64,8 @@ class _ThemDonviScreenState extends State<ThemDonviScreen> {
             padding: EdgeInsets.only(right: 50.0),
             child: Text(
               "Thêm Đơn vị",
-              style: TextStyle(color: Colors.black, fontWeight: FontWeight.w900),
+              style:
+                  TextStyle(color: Colors.black, fontWeight: FontWeight.w900),
               textAlign: TextAlign.center,
             ),
           ),
@@ -82,7 +85,7 @@ class _ThemDonviScreenState extends State<ThemDonviScreen> {
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
                   children: [
-                     Padding(
+                    Padding(
                       padding: const EdgeInsets.only(bottom: 14.0),
                       child: buildTenDonviField(),
                     ),
@@ -113,13 +116,20 @@ class _ThemDonviScreenState extends State<ThemDonviScreen> {
                   ],
                 ),
               ),
-              const SizedBox(height: 10,),
+              const SizedBox(
+                height: 10,
+              ),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.grey[50]
-                ),
+                    backgroundColor: const Color.fromARGB(255, 228, 200, 126)),
                 onPressed: () => _saveForm(context),
-                child: const Text('Thêm Mới', style: TextStyle(fontWeight: FontWeight.w900, color: Colors.green),),
+                child: const Text(
+                  'Thêm Mới',
+                  style: TextStyle(
+                      fontWeight: FontWeight.w900,
+                      color: Colors.green,
+                      fontSize: 20),
+                ),
               ),
             ],
           ),
@@ -127,7 +137,6 @@ class _ThemDonviScreenState extends State<ThemDonviScreen> {
       ),
     );
   }
-
 
   TextFormField buildTenDonviField() {
     return TextFormField(
@@ -139,6 +148,11 @@ class _ThemDonviScreenState extends State<ThemDonviScreen> {
         fillColor: Colors.white,
         border: OutlineInputBorder(
           borderSide: BorderSide(color: Colors.white, width: 15.0),
+          borderRadius: BorderRadius.all(Radius.circular(15.0)),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide:
+              BorderSide(color: Color.fromARGB(255, 228, 200, 126), width: 2.0),
           borderRadius: BorderRadius.all(Radius.circular(15.0)),
         ),
       ),
@@ -157,7 +171,7 @@ class _ThemDonviScreenState extends State<ThemDonviScreen> {
     );
   }
 
-TextFormField buildTenGdField() {
+  TextFormField buildTenGdField() {
     return TextFormField(
       decoration: const InputDecoration(
         labelText: 'Tên giao dịch',
@@ -166,6 +180,11 @@ TextFormField buildTenGdField() {
         fillColor: Colors.white,
         border: OutlineInputBorder(
           borderSide: BorderSide(color: Colors.white, width: 15.0),
+          borderRadius: BorderRadius.all(Radius.circular(15.0)),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide:
+              BorderSide(color: Color.fromARGB(255, 228, 200, 126), width: 2.0),
           borderRadius: BorderRadius.all(Radius.circular(15.0)),
         ),
       ),
@@ -177,6 +196,7 @@ TextFormField buildTenGdField() {
       },
     );
   }
+
   TextFormField buildDiachiField() {
     return TextFormField(
       decoration: const InputDecoration(
@@ -188,6 +208,11 @@ TextFormField buildTenGdField() {
           borderSide: BorderSide(color: Colors.white, width: 15.0),
           borderRadius: BorderRadius.all(Radius.circular(15.0)),
         ),
+        focusedBorder: OutlineInputBorder(
+          borderSide:
+              BorderSide(color: Color.fromARGB(255, 228, 200, 126), width: 2.0),
+          borderRadius: BorderRadius.all(Radius.circular(15.0)),
+        ),
       ),
       textInputAction: TextInputAction.next,
       keyboardType: TextInputType.text,
@@ -197,6 +222,7 @@ TextFormField buildTenGdField() {
       },
     );
   }
+
   TextFormField buildTenDviHDField() {
     return TextFormField(
       decoration: const InputDecoration(
@@ -206,6 +232,11 @@ TextFormField buildTenGdField() {
         fillColor: Colors.white,
         border: OutlineInputBorder(
           borderSide: BorderSide(color: Colors.white, width: 15.0),
+          borderRadius: BorderRadius.all(Radius.circular(15.0)),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide:
+              BorderSide(color: Color.fromARGB(255, 228, 200, 126), width: 2.0),
           borderRadius: BorderRadius.all(Radius.circular(15.0)),
         ),
       ),
@@ -228,6 +259,11 @@ TextFormField buildTenGdField() {
         fillColor: Colors.white,
         border: OutlineInputBorder(
           borderSide: BorderSide(color: Colors.white, width: 15.0),
+          borderRadius: BorderRadius.all(Radius.circular(15.0)),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide:
+              BorderSide(color: Color.fromARGB(255, 228, 200, 126), width: 2.0),
           borderRadius: BorderRadius.all(Radius.circular(15.0)),
         ),
       ),
@@ -257,6 +293,11 @@ TextFormField buildTenGdField() {
           borderSide: BorderSide(color: Colors.white, width: 15.0),
           borderRadius: BorderRadius.all(Radius.circular(15.0)),
         ),
+        focusedBorder: OutlineInputBorder(
+          borderSide:
+              BorderSide(color: Color.fromARGB(255, 228, 200, 126), width: 2.0),
+          borderRadius: BorderRadius.all(Radius.circular(15.0)),
+        ),
       ),
       textInputAction: TextInputAction.next,
       keyboardType: TextInputType.text,
@@ -266,6 +307,7 @@ TextFormField buildTenGdField() {
       },
     );
   }
+
   TextFormField buildLuuYField() {
     return TextFormField(
       decoration: const InputDecoration(
@@ -275,6 +317,11 @@ TextFormField buildTenGdField() {
         fillColor: Colors.white,
         border: OutlineInputBorder(
           borderSide: BorderSide(color: Colors.white, width: 15.0),
+          borderRadius: BorderRadius.all(Radius.circular(15.0)),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide:
+              BorderSide(color: Color.fromARGB(255, 228, 200, 126), width: 2.0),
           borderRadius: BorderRadius.all(Radius.circular(15.0)),
         ),
       ),
@@ -299,28 +346,44 @@ TextFormField buildTenGdField() {
       await donviManager.addDonvi(_newDonvi);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('Thêm mới thành công!', style: TextStyle(fontWeight: FontWeight.w900), textAlign: TextAlign.center,),
+          content: const Text(
+            'Thêm mới thành công!',
+            style: TextStyle(fontWeight: FontWeight.w900),
+            textAlign: TextAlign.center,
+          ),
           backgroundColor: Colors.grey,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15.0),
-            side: const BorderSide(color: Colors.grey, width: 2.0), // bo viền 15px
+            side: const BorderSide(
+                color: Colors.grey, width: 2.0), // bo viền 15px
           ),
           behavior: SnackBarBehavior.floating, // hiển thị ở cách đáy màn hình
-          margin: const EdgeInsets.only(left: 15.0, right: 15.0, bottom: 15.0), // cách 2 cạnh và đáy màn hình 15px
+          margin: const EdgeInsets.only(
+              left: 15.0,
+              right: 15.0,
+              bottom: 15.0), // cách 2 cạnh và đáy màn hình 15px
         ),
       );
       Navigator.of(context).pop(true); // Go back to the previous screen
     } catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('Failed to add data', style: TextStyle(fontWeight: FontWeight.w900, color: Colors.red), textAlign: TextAlign.center,),
+          content: const Text(
+            'Failed to add data',
+            style: TextStyle(fontWeight: FontWeight.w900, color: Colors.red),
+            textAlign: TextAlign.center,
+          ),
           backgroundColor: Colors.grey,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15.0),
-            side: const BorderSide(color: Colors.grey, width: 2.0), // bo viền 15px
+            side: const BorderSide(
+                color: Colors.grey, width: 2.0), // bo viền 15px
           ),
           behavior: SnackBarBehavior.floating, // hiển thị ở cách đáy màn hình
-          margin: const EdgeInsets.only(left: 15.0, right: 15.0, bottom: 15.0), // cách 2 cạnh và đáy màn hình 15px
+          margin: const EdgeInsets.only(
+              left: 15.0,
+              right: 15.0,
+              bottom: 15.0), // cách 2 cạnh và đáy màn hình 15px
         ),
       );
     }

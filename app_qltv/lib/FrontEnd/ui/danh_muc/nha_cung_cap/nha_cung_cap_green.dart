@@ -60,6 +60,7 @@ class _NhaCungCapScreenState extends State<NhaCungCapScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: const Color.fromARGB(255, 228, 200, 126),
         leading: IconButton(
           icon: const Icon(
             CupertinoIcons.left_chevron,
@@ -134,7 +135,7 @@ class _NhaCungCapScreenState extends State<NhaCungCapScreen> {
                 margin:
                     const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
                 decoration: BoxDecoration(
-                  color: const Color.fromARGB(50, 169, 169, 169),
+                  color: const Color.fromARGB(255, 228, 200, 126),
                   borderRadius: BorderRadius.circular(15.0),
                 ),
                 child: ListTile(
@@ -151,12 +152,11 @@ class _NhaCungCapScreenState extends State<NhaCungCapScreen> {
                                 child: Row(
                                   children: [
                                     Text(
-                                      _filteredNhaCungCapList[index].ncc_ten ??
-                                          '',
+                                      "Mã: ${_filteredNhaCungCapList[index].ncc_ma}",
                                       style: const TextStyle(
                                           color: Colors.black,
-                                          fontWeight: FontWeight.w800,
-                                          fontSize: 20),
+                                          fontWeight: FontWeight.w900,
+                                          fontSize: 14),
                                     ),
                                   ],
                                 ),
@@ -178,11 +178,11 @@ class _NhaCungCapScreenState extends State<NhaCungCapScreen> {
                       Row(
                         children: [
                           Text(
-                            "Mã: ${_filteredNhaCungCapList[index].ncc_ma}",
+                            _filteredNhaCungCapList[index].ncc_ten ?? '',
                             style: const TextStyle(
                                 color: Colors.black,
                                 fontWeight: FontWeight.w700,
-                                fontSize: 14),
+                                fontSize: 20),
                           ),
                         ],
                       ),

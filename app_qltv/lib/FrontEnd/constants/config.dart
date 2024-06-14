@@ -1,4 +1,3 @@
-
 const url = "http://192.168.1.15:3000";
 const login = "$url/login"; //Đăng nhập
 const logout = "$url/exit"; //Đăng xuất

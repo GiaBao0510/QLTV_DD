@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:app_qltv/FrontEnd/model/hethong/ketnoi.dart';
 import 'package:provider/provider.dart';
@@ -24,7 +25,8 @@ class _ChinhSuaKetNoiPageState extends State<ChinhSuaKetNoiPage> {
       _isLoading = true;
     });
     try {
-      final ketNoi = await Provider.of<KetnoiManager>(context, listen: false).fetchketnoi();
+      final ketNoi = await Provider.of<KetnoiManager>(context, listen: false)
+          .fetchketnoi();
       setState(() {
         _currentConfig = ketNoi;
         _isLoading = false;
@@ -50,7 +52,8 @@ class _ChinhSuaKetNoiPageState extends State<ChinhSuaKetNoiPage> {
         _isLoading = true;
       });
       try {
-        await Provider.of<KetnoiManager>(context, listen: false).updateketnoi(context,_currentConfig);
+        await Provider.of<KetnoiManager>(context, listen: false)
+            .updateketnoi(context, _currentConfig);
         setState(() {
           _isLoading = false;
         });
@@ -68,7 +71,27 @@ class _ChinhSuaKetNoiPageState extends State<ChinhSuaKetNoiPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Chỉnh sửa kết nối'),
+        backgroundColor: const Color.fromARGB(255, 228, 200, 126),
+        leading: IconButton(
+          icon: const Icon(
+            CupertinoIcons.left_chevron,
+            color: Colors.black,
+          ),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+        title: const Center(
+          child: Padding(
+            padding: EdgeInsets.only(right: 50.0),
+            child: Text(
+              "Chỉnh Sửa Kết Nối",
+              style:
+                  TextStyle(color: Colors.black, fontWeight: FontWeight.w900),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ),
       ),
       body: _isLoading
           ? Center(child: CircularProgressIndicator())
@@ -82,7 +105,8 @@ class _ChinhSuaKetNoiPageState extends State<ChinhSuaKetNoiPage> {
                     TextFormField(
                       initialValue: _currentConfig.host,
                       decoration: InputDecoration(labelText: 'Host'),
-                      onSaved: (value) => _currentConfig = _currentConfig.copyWith(host: value),
+                      onSaved: (value) =>
+                          _currentConfig = _currentConfig.copyWith(host: value),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Vui lòng nhập host';
@@ -93,7 +117,8 @@ class _ChinhSuaKetNoiPageState extends State<ChinhSuaKetNoiPage> {
                     TextFormField(
                       initialValue: _currentConfig.database,
                       decoration: InputDecoration(labelText: 'Database'),
-                      onSaved: (value) => _currentConfig = _currentConfig.copyWith(database: value),
+                      onSaved: (value) => _currentConfig =
+                          _currentConfig.copyWith(database: value),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Vui lòng nhập database';
@@ -104,7 +129,8 @@ class _ChinhSuaKetNoiPageState extends State<ChinhSuaKetNoiPage> {
                     TextFormField(
                       initialValue: _currentConfig.port,
                       decoration: InputDecoration(labelText: 'Port'),
-                      onSaved: (value) => _currentConfig = _currentConfig.copyWith(port: value),
+                      onSaved: (value) =>
+                          _currentConfig = _currentConfig.copyWith(port: value),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Vui lòng nhập port';
@@ -115,7 +141,8 @@ class _ChinhSuaKetNoiPageState extends State<ChinhSuaKetNoiPage> {
                     TextFormField(
                       initialValue: _currentConfig.user,
                       decoration: InputDecoration(labelText: 'User'),
-                      onSaved: (value) => _currentConfig = _currentConfig.copyWith(user: value),
+                      onSaved: (value) =>
+                          _currentConfig = _currentConfig.copyWith(user: value),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Vui lòng nhập user';
@@ -127,7 +154,8 @@ class _ChinhSuaKetNoiPageState extends State<ChinhSuaKetNoiPage> {
                       initialValue: _currentConfig.password,
                       obscureText: true,
                       decoration: InputDecoration(labelText: 'Password'),
-                      onSaved: (value) => _currentConfig = _currentConfig.copyWith(password: value),
+                      onSaved: (value) => _currentConfig =
+                          _currentConfig.copyWith(password: value),
                       // validator: (value) {
                       //   if (value == null || value.isEmpty) {
                       //     return 'Vui lòng nhập password';
@@ -135,10 +163,20 @@ class _ChinhSuaKetNoiPageState extends State<ChinhSuaKetNoiPage> {
                       //   return null;
                       // },
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor:
+                            const Color.fromARGB(255, 228, 200, 126),
+                      ),
                       onPressed: _updateKetNoi,
-                      child: Text('Cập nhật'),
+                      child: const Text(
+                        'Cập nhật',
+                        style: TextStyle(
+                            fontWeight: FontWeight.w900,
+                            color: Colors.green,
+                            fontSize: 20),
+                      ),
                     ),
                   ],
                 ),

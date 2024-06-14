@@ -26,14 +26,15 @@ class _ThemKhachhangScreenState extends State<ThemKhachhangScreen> {
       kh_ten: '',
       kh_cmnd: '',
       kh_sdt: '',
-      kh_dia_chi : '',
+      kh_dia_chi: '',
       kh_ghi_chu: '',
     );
     _loadKhachhangs();
   }
 
   Future<void> _loadKhachhangs() async {
-    _khachhangFuture = Provider.of<KhachhangManage>(context, listen: false).fetchKhachhang();
+    _khachhangFuture =
+        Provider.of<KhachhangManage>(context, listen: false).fetchKhachhang();
     _khachhangFuture.then((Khachhangs) {
       setState(() {
         _khachhangList = Khachhangs;
@@ -45,6 +46,7 @@ class _ThemKhachhangScreenState extends State<ThemKhachhangScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: const Color.fromARGB(255, 228, 200, 126),
         leading: IconButton(
           icon: const Icon(
             CupertinoIcons.left_chevron,
@@ -59,7 +61,10 @@ class _ThemKhachhangScreenState extends State<ThemKhachhangScreen> {
             padding: EdgeInsets.only(right: 50.0),
             child: Text(
               "Thêm Khách hàng",
-              style: TextStyle(color: Colors.black, fontWeight: FontWeight.w900),
+              style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.w900,
+              ),
               textAlign: TextAlign.center,
             ),
           ),
@@ -79,7 +84,7 @@ class _ThemKhachhangScreenState extends State<ThemKhachhangScreen> {
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
                   children: [
-                     Padding(
+                    Padding(
                       padding: const EdgeInsets.only(bottom: 14.0),
                       child: buildTenKhachhhangField(),
                     ),
@@ -102,13 +107,20 @@ class _ThemKhachhangScreenState extends State<ThemKhachhangScreen> {
                   ],
                 ),
               ),
-              const SizedBox(height: 10,),
+              const SizedBox(
+                height: 10,
+              ),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.grey[50]
-                ),
+                    backgroundColor: const Color.fromARGB(255, 228, 200, 126)),
                 onPressed: () => _saveForm(context),
-                child: const Text('Thêm Mới', style: TextStyle(fontWeight: FontWeight.w900, color: Colors.green),),
+                child: const Text(
+                  'Thêm Mới',
+                  style: TextStyle(
+                      fontWeight: FontWeight.w900,
+                      color: Colors.green,
+                      fontSize: 20),
+                ),
               ),
             ],
           ),
@@ -116,7 +128,6 @@ class _ThemKhachhangScreenState extends State<ThemKhachhangScreen> {
       ),
     );
   }
-
 
   TextFormField buildTenKhachhhangField() {
     return TextFormField(
@@ -128,6 +139,11 @@ class _ThemKhachhangScreenState extends State<ThemKhachhangScreen> {
         fillColor: Colors.white,
         border: OutlineInputBorder(
           borderSide: BorderSide(color: Colors.white, width: 15.0),
+          borderRadius: BorderRadius.all(Radius.circular(15.0)),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide:
+              BorderSide(color: Color.fromARGB(255, 228, 200, 126), width: 2.0),
           borderRadius: BorderRadius.all(Radius.circular(15.0)),
         ),
       ),
@@ -146,7 +162,7 @@ class _ThemKhachhangScreenState extends State<ThemKhachhangScreen> {
     );
   }
 
-TextFormField buildCMNDField() {
+  TextFormField buildCMNDField() {
     return TextFormField(
       decoration: const InputDecoration(
         labelText: 'CMND',
@@ -155,6 +171,11 @@ TextFormField buildCMNDField() {
         fillColor: Colors.white,
         border: OutlineInputBorder(
           borderSide: BorderSide(color: Colors.white, width: 15.0),
+          borderRadius: BorderRadius.all(Radius.circular(15.0)),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide:
+              BorderSide(color: Color.fromARGB(255, 228, 200, 126), width: 2.0),
           borderRadius: BorderRadius.all(Radius.circular(15.0)),
         ),
       ),
@@ -166,6 +187,7 @@ TextFormField buildCMNDField() {
       },
     );
   }
+
   TextFormField buildDiachiField() {
     return TextFormField(
       decoration: const InputDecoration(
@@ -177,6 +199,11 @@ TextFormField buildCMNDField() {
           borderSide: BorderSide(color: Colors.white, width: 15.0),
           borderRadius: BorderRadius.all(Radius.circular(15.0)),
         ),
+        focusedBorder: OutlineInputBorder(
+          borderSide:
+              BorderSide(color: Color.fromARGB(255, 228, 200, 126), width: 2.0),
+          borderRadius: BorderRadius.all(Radius.circular(15.0)),
+        ),
       ),
       textInputAction: TextInputAction.next,
       keyboardType: TextInputType.text,
@@ -186,6 +213,7 @@ TextFormField buildCMNDField() {
       },
     );
   }
+
   TextFormField buildGhichuField() {
     return TextFormField(
       decoration: const InputDecoration(
@@ -195,6 +223,11 @@ TextFormField buildCMNDField() {
         fillColor: Colors.white,
         border: OutlineInputBorder(
           borderSide: BorderSide(color: Colors.white, width: 15.0),
+          borderRadius: BorderRadius.all(Radius.circular(15.0)),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide:
+              BorderSide(color: Color.fromARGB(255, 228, 200, 126), width: 2.0),
           borderRadius: BorderRadius.all(Radius.circular(15.0)),
         ),
       ),
@@ -219,6 +252,11 @@ TextFormField buildCMNDField() {
           borderSide: BorderSide(color: Colors.white, width: 15.0),
           borderRadius: BorderRadius.all(Radius.circular(15.0)),
         ),
+        focusedBorder: OutlineInputBorder(
+          borderSide:
+              BorderSide(color: Color.fromARGB(255, 228, 200, 126), width: 2.0),
+          borderRadius: BorderRadius.all(Radius.circular(15.0)),
+        ),
       ),
       textInputAction: TextInputAction.next,
       keyboardType: TextInputType.number,
@@ -235,7 +273,6 @@ TextFormField buildCMNDField() {
     );
   }
 
-
   Future<void> _saveForm(BuildContext context) async {
     final isValid = _formKey.currentState!.validate();
     if (!isValid) {
@@ -244,32 +281,49 @@ TextFormField buildCMNDField() {
     _formKey.currentState!.save();
 
     try {
-      final khachhangManage = Provider.of<KhachhangManage>(context, listen: false);
+      final khachhangManage =
+          Provider.of<KhachhangManage>(context, listen: false);
       await khachhangManage.addKhachhang(_newKhachhang);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('Thêm mới thành công!', style: TextStyle(fontWeight: FontWeight.w900), textAlign: TextAlign.center,),
+          content: const Text(
+            'Thêm mới thành công!',
+            style: TextStyle(fontWeight: FontWeight.w900),
+            textAlign: TextAlign.center,
+          ),
           backgroundColor: Colors.grey,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15.0),
-            side: const BorderSide(color: Colors.grey, width: 2.0), // bo viền 15px
+            side: const BorderSide(
+                color: Colors.grey, width: 2.0), // bo viền 15px
           ),
           behavior: SnackBarBehavior.floating, // hiển thị ở cách đáy màn hình
-          margin: const EdgeInsets.only(left: 15.0, right: 15.0, bottom: 15.0), // cách 2 cạnh và đáy màn hình 15px
+          margin: const EdgeInsets.only(
+              left: 15.0,
+              right: 15.0,
+              bottom: 15.0), // cách 2 cạnh và đáy màn hình 15px
         ),
       );
       Navigator.of(context).pop(true); // Go back to the previous screen
     } catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('Failed to add data', style: TextStyle(fontWeight: FontWeight.w900, color: Colors.red), textAlign: TextAlign.center,),
+          content: const Text(
+            'Failed to add data',
+            style: TextStyle(fontWeight: FontWeight.w900, color: Colors.red),
+            textAlign: TextAlign.center,
+          ),
           backgroundColor: Colors.grey,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15.0),
-            side: const BorderSide(color: Colors.grey, width: 2.0), // bo viền 15px
+            side: const BorderSide(
+                color: Colors.grey, width: 2.0), // bo viền 15px
           ),
           behavior: SnackBarBehavior.floating, // hiển thị ở cách đáy màn hình
-          margin: const EdgeInsets.only(left: 15.0, right: 15.0, bottom: 15.0), // cách 2 cạnh và đáy màn hình 15px
+          margin: const EdgeInsets.only(
+              left: 15.0,
+              right: 15.0,
+              bottom: 15.0), // cách 2 cạnh và đáy màn hình 15px
         ),
       );
     }

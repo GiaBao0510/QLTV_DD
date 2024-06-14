@@ -60,6 +60,7 @@ class _KhoScreenState extends State<KhoScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: const Color.fromARGB(255, 228, 200, 126),
         leading: IconButton(
           icon: const Icon(
             CupertinoIcons.left_chevron,
@@ -120,7 +121,7 @@ class _KhoScreenState extends State<KhoScreen> {
                 margin:
                     const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
                 decoration: BoxDecoration(
-                  color: const Color.fromARGB(50, 169, 169, 169),
+                  color: const Color.fromARGB(255, 228, 200, 126),
                   borderRadius: BorderRadius.circular(15.0),
                 ),
                 child: ListTile(

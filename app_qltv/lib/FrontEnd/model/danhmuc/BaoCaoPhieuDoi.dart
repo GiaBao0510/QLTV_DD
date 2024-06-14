@@ -1,9 +1,11 @@
 class BaoCaoPhieuDoi {
+  final String? maPhieu;
   final double? triGiaBan;
   final double? triGiaMua;
   final double? thanhToan;
 
   BaoCaoPhieuDoi({
+    this.maPhieu,
     this.triGiaBan,
     this.triGiaMua,
     this.thanhToan,
@@ -19,6 +21,7 @@ class BaoCaoPhieuDoi {
 
   factory BaoCaoPhieuDoi.fromMap(Map<String, dynamic> map) {
     return BaoCaoPhieuDoi(
+      maPhieu: map['PHIEU_DOI_MA'].toString(),
       triGiaBan: (map['TRI_GIA_BAN'] is int
               ? map['TRI_GIA_BAN'].toDouble()
               : map['TRI_GIA_BAN']) ??

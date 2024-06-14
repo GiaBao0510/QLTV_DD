@@ -1,11 +1,17 @@
+import 'package:app_qltv/FrontEnd/Service/export/Excel/BaoCaoPhieuXuat_Excel.dart';
 import 'package:app_qltv/FrontEnd/controller/danhmuc/BaoCaoPhieuMua_maneger.dart';
 import 'package:app_qltv/FrontEnd/model/danhmuc/BaoCaoPhieuMua.dart';
 import 'package:app_qltv/FrontEnd/ui/components/FormatCurrency.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:pdf/widgets.dart' as pw;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:pdf/pdf.dart';
+import 'package:printing/printing.dart';
 import 'package:app_qltv/FrontEnd/ui/components/search_bar.dart';
 import 'package:intl/intl.dart'; // Để định dạng ngày
+import 'package:app_qltv/FrontEnd/Service/export/Excel/BaoCaoPhieuMua_Excel.dart';
+import 'package:app_qltv/FrontEnd/Service/export/PDF/BangBaoCaoPhieuMua_PDF..dart';
 
 class BaoCaoPhieuMuaScreen extends StatefulWidget {
   static const routeName = "/baocaophieumua";
@@ -24,6 +30,13 @@ class _BaoCaoPhieuMuaScreenState extends State<BaoCaoPhieuMuaScreen> {
 
   DateTime? _startDate;
   DateTime? _endDate;
+
+  var thongTinTinhTong2;
+
+  double tong_Cantong = 0.0,
+      tong_TLhot = 0.0,
+      tong_TLthuc = 0.0,
+      tong_ThanhTien = 0.0;
 
   @override
   void initState() {
@@ -47,6 +60,13 @@ class _BaoCaoPhieuMuaScreenState extends State<BaoCaoPhieuMuaScreen> {
         _BaoCaoPhieuMuaList = baoCaoPhieuMua;
         _filteredBaoCaoPhieuMuaList = baoCaoPhieuMua;
       });
+      for (int i = 0; i < _filteredBaoCaoPhieuMuaList.length; i++) {
+        final item = _filteredBaoCaoPhieuMuaList[i];
+        tong_Cantong += item.canTong ?? 0.0;
+        tong_TLhot += item.tlHot ?? 0.0;
+        tong_TLthuc += item.tlThuc ?? 0.0;
+        tong_ThanhTien += item.thanhTien ?? 0.0;
+      }
     });
   }
 
@@ -56,13 +76,33 @@ class _BaoCaoPhieuMuaScreenState extends State<BaoCaoPhieuMuaScreen> {
       _filteredBaoCaoPhieuMuaList = _BaoCaoPhieuMuaList.where((phieumua) {
         final inDateRange = (_startDate == null || _endDate == null) ||
             (phieumua.ngayPhieu != null &&
-                DateTime.parse(phieumua.ngayPhieu!).isAfter(_startDate!.subtract(Duration(days: 1))) &&
-                DateTime.parse(phieumua.ngayPhieu!).isBefore(_endDate!.add(Duration(days: 1))));
+                DateTime.parse(phieumua.ngayPhieu!)
+                    .isAfter(_startDate!.subtract(Duration(days: 1))) &&
+                DateTime.parse(phieumua.ngayPhieu!)
+                    .isBefore(_endDate!.add(Duration(days: 1))));
         final matchesQuery = phieumua.hangHoaTen!.toLowerCase().contains(query);
 
         return inDateRange && matchesQuery;
       }).toList();
     });
+  }
+
+  Future<void> printDoc(List<BaoCaoPhieuMua> data,
+      Map<String, dynamic> GetThongTinTinhTong) async {
+    final font = await loadFont('assets/fonts/Roboto-Regular.ttf');
+    final doc = pw.Document();
+    doc.addPage(pw.Page(
+        pageFormat: PdfPageFormat.a4,
+        build: (pw.Context context) {
+          return buildPrintableData(data, font, GetThongTinTinhTong);
+        }));
+    await Printing.layoutPdf(
+        onLayout: (PdfPageFormat fomat) async => doc.save());
+  }
+
+  void printExcel(
+      List<BaoCaoPhieuMua> data, Map<String, dynamic> GetThongTinTinhTong) {
+    exportExcelPhieuMua(data, GetThongTinTinhTong);
   }
 
   Future<void> _selectDateRange(BuildContext context) async {
@@ -85,22 +125,65 @@ class _BaoCaoPhieuMuaScreenState extends State<BaoCaoPhieuMuaScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          backgroundColor: const Color.fromARGB(255, 228, 200, 126),
-          leading: IconButton(
-            icon: const Icon(
-              CupertinoIcons.left_chevron,
-              color: Colors.black,
-            ),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
+        backgroundColor: const Color.fromARGB(255, 228, 200, 126),
+        leading: IconButton(
+          icon: const Icon(
+            CupertinoIcons.left_chevron,
+            color: Colors.black,
           ),
-          title: const FittedBox(
-            fit: BoxFit.fitWidth,
-            child: Text("Báo Cáo Phiếu Mua",
-                style: TextStyle(
-                    color: Colors.black, fontWeight: FontWeight.w900)),
-          )),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+        title: const Center(
+          child: Padding(
+            padding: EdgeInsets.only(right: 50.0),
+            child: Text(
+              "Báo Cáo Phiếu Mua Vào",
+              style:
+                  TextStyle(color: Colors.black, fontWeight: FontWeight.w900),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ),
+        actions: [
+          PopupMenuButton<String>(
+              icon: Icon(Icons.more_horiz),
+              itemBuilder: (BuildContext context) {
+                return <PopupMenuEntry<String>>[
+                  PopupMenuItem(
+                      child: TextButton(
+                    onPressed: () {
+                      thongTinTinhTong2 = {
+                        'tong_Cantong': tong_Cantong,
+                        'tong_TLthuc': tong_TLthuc,
+                        'tong_TLhot': tong_TLhot,
+                        'tong_ThanhTien': tong_ThanhTien
+                      };
+
+                      printDoc(_filteredBaoCaoPhieuMuaList, thongTinTinhTong2);
+                    },
+                    child: Text('Export PDF'),
+                  )),
+                  PopupMenuItem(
+                      child: TextButton(
+                    onPressed: () {
+                      thongTinTinhTong2 = {
+                        'tong_Cantong': tong_Cantong,
+                        'tong_TLthuc': tong_TLthuc,
+                        'tong_TLhot': tong_TLhot,
+                        'tong_ThanhTien': tong_ThanhTien
+                      };
+
+                      printExcel(
+                          _filteredBaoCaoPhieuMuaList, thongTinTinhTong2);
+                    },
+                    child: Text('Export Excel'),
+                  )),
+                ];
+              }),
+        ],
+      ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(12.0),
@@ -301,8 +384,8 @@ class _BaoCaoPhieuMuaScreenState extends State<BaoCaoPhieuMuaScreen> {
             Center(
               child: Padding(
                 padding: EdgeInsets.all(8.0),
-                child: Text('Ngày',
-                    style: TextStyle(fontWeight: FontWeight.bold)),
+                child:
+                    Text('Ngày', style: TextStyle(fontWeight: FontWeight.bold)),
               ),
             ),
             Center(

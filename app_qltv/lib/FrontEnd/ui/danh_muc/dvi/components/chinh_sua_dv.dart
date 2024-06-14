@@ -42,6 +42,7 @@ class _ChinhSuaDonViScreenState extends State<ChinhSuaDonViScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: const Color.fromARGB(255, 228, 200, 126),
         leading: IconButton(
           icon: const Icon(
             CupertinoIcons.left_chevron,
@@ -116,13 +117,15 @@ class _ChinhSuaDonViScreenState extends State<ChinhSuaDonViScreen> {
                 height: 10,
               ),
               ElevatedButton(
-                style:
-                    ElevatedButton.styleFrom(backgroundColor: Colors.grey[50]),
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(255, 228, 200, 126)),
                 onPressed: () => _saveForm(context),
                 child: const Text(
                   'Cập Nhật',
                   style: TextStyle(
-                      fontWeight: FontWeight.w900, color: Colors.green),
+                      fontWeight: FontWeight.w900,
+                      color: Colors.green,
+                      fontSize: 20),
                 ),
               ),
             ],
@@ -142,6 +145,11 @@ class _ChinhSuaDonViScreenState extends State<ChinhSuaDonViScreen> {
         fillColor: Colors.white,
         border: OutlineInputBorder(
           borderSide: BorderSide(color: Colors.white, width: 15.0),
+          borderRadius: BorderRadius.all(Radius.circular(15.0)),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide:
+              BorderSide(color: Color.fromARGB(255, 228, 200, 126), width: 2.0),
           borderRadius: BorderRadius.all(Radius.circular(15.0)),
         ),
       ),
@@ -172,6 +180,11 @@ class _ChinhSuaDonViScreenState extends State<ChinhSuaDonViScreen> {
           borderSide: BorderSide(color: Colors.white, width: 15.0),
           borderRadius: BorderRadius.all(Radius.circular(15.0)),
         ),
+        focusedBorder: OutlineInputBorder(
+          borderSide:
+              BorderSide(color: Color.fromARGB(255, 228, 200, 126), width: 2.0),
+          borderRadius: BorderRadius.all(Radius.circular(15.0)),
+        ),
       ),
       textInputAction: TextInputAction.next,
       keyboardType: TextInputType.text,
@@ -198,6 +211,11 @@ class _ChinhSuaDonViScreenState extends State<ChinhSuaDonViScreen> {
         fillColor: Colors.white,
         border: OutlineInputBorder(
           borderSide: BorderSide(color: Colors.white, width: 15.0),
+          borderRadius: BorderRadius.all(Radius.circular(15.0)),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide:
+              BorderSide(color: Color.fromARGB(255, 228, 200, 126), width: 2.0),
           borderRadius: BorderRadius.all(Radius.circular(15.0)),
         ),
       ),
@@ -228,6 +246,11 @@ class _ChinhSuaDonViScreenState extends State<ChinhSuaDonViScreen> {
           borderSide: BorderSide(color: Colors.white, width: 15.0),
           borderRadius: BorderRadius.all(Radius.circular(15.0)),
         ),
+        focusedBorder: OutlineInputBorder(
+          borderSide:
+              BorderSide(color: Color.fromARGB(255, 228, 200, 126), width: 2.0),
+          borderRadius: BorderRadius.all(Radius.circular(15.0)),
+        ),
       ),
       textInputAction: TextInputAction.next,
       keyboardType: TextInputType.text,
@@ -254,6 +277,11 @@ class _ChinhSuaDonViScreenState extends State<ChinhSuaDonViScreen> {
         fillColor: Colors.white,
         border: OutlineInputBorder(
           borderSide: BorderSide(color: Colors.white, width: 15.0),
+          borderRadius: BorderRadius.all(Radius.circular(15.0)),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide:
+              BorderSide(color: Color.fromARGB(255, 228, 200, 126), width: 2.0),
           borderRadius: BorderRadius.all(Radius.circular(15.0)),
         ),
       ),
@@ -284,6 +312,11 @@ class _ChinhSuaDonViScreenState extends State<ChinhSuaDonViScreen> {
           borderSide: BorderSide(color: Colors.white, width: 15.0),
           borderRadius: BorderRadius.all(Radius.circular(15.0)),
         ),
+        focusedBorder: OutlineInputBorder(
+          borderSide:
+              BorderSide(color: Color.fromARGB(255, 228, 200, 126), width: 2.0),
+          borderRadius: BorderRadius.all(Radius.circular(15.0)),
+        ),
       ),
       textInputAction: TextInputAction.next,
       keyboardType: TextInputType.text,
@@ -312,6 +345,11 @@ class _ChinhSuaDonViScreenState extends State<ChinhSuaDonViScreen> {
           borderSide: BorderSide(color: Colors.white, width: 15.0),
           borderRadius: BorderRadius.all(Radius.circular(15.0)),
         ),
+        focusedBorder: OutlineInputBorder(
+          borderSide:
+              BorderSide(color: Color.fromARGB(255, 228, 200, 126), width: 2.0),
+          borderRadius: BorderRadius.all(Radius.circular(15.0)),
+        ),
       ),
       textInputAction: TextInputAction.next,
       keyboardType: TextInputType.text,
@@ -338,6 +376,11 @@ class _ChinhSuaDonViScreenState extends State<ChinhSuaDonViScreen> {
         fillColor: Colors.white,
         border: OutlineInputBorder(
           borderSide: BorderSide(color: Colors.white, width: 15.0),
+          borderRadius: BorderRadius.all(Radius.circular(15.0)),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide:
+              BorderSide(color: Color.fromARGB(255, 228, 200, 126), width: 2.0),
           borderRadius: BorderRadius.all(Radius.circular(15.0)),
         ),
       ),
