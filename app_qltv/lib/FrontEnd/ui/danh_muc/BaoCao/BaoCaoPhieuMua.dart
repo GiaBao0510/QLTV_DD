@@ -56,8 +56,10 @@ class _BaoCaoPhieuMuaScreenState extends State<BaoCaoPhieuMuaScreen> {
       _filteredBaoCaoPhieuMuaList = _BaoCaoPhieuMuaList.where((phieumua) {
         final inDateRange = (_startDate == null || _endDate == null) ||
             (phieumua.ngayPhieu != null &&
-                DateTime.parse(phieumua.ngayPhieu!).isAfter(_startDate!.subtract(Duration(days: 1))) &&
-                DateTime.parse(phieumua.ngayPhieu!).isBefore(_endDate!.add(Duration(days: 1))));
+                DateTime.parse(phieumua.ngayPhieu!)
+                    .isAfter(_startDate!.subtract(Duration(days: 1))) &&
+                DateTime.parse(phieumua.ngayPhieu!)
+                    .isBefore(_endDate!.add(Duration(days: 1))));
         final matchesQuery = phieumua.hangHoaTen!.toLowerCase().contains(query);
 
         return inDateRange && matchesQuery;
@@ -85,22 +87,28 @@ class _BaoCaoPhieuMuaScreenState extends State<BaoCaoPhieuMuaScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          backgroundColor: const Color.fromARGB(255, 228, 200, 126),
-          leading: IconButton(
-            icon: const Icon(
-              CupertinoIcons.left_chevron,
-              color: Colors.black,
-            ),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
+        backgroundColor: const Color.fromARGB(255, 228, 200, 126),
+        leading: IconButton(
+          icon: const Icon(
+            CupertinoIcons.left_chevron,
+            color: Colors.black,
           ),
-          title: const FittedBox(
-            fit: BoxFit.fitWidth,
-            child: Text("Báo Cáo Phiếu Mua",
-                style: TextStyle(
-                    color: Colors.black, fontWeight: FontWeight.w900)),
-          )),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+        title: const Center(
+          child: Padding(
+            padding: EdgeInsets.only(right: 50.0),
+            child: Text(
+              "Báo Cáo Phiếu Mua Vào",
+              style:
+                  TextStyle(color: Colors.black, fontWeight: FontWeight.w900),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ),
+      ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(12.0),
@@ -301,8 +309,8 @@ class _BaoCaoPhieuMuaScreenState extends State<BaoCaoPhieuMuaScreen> {
             Center(
               child: Padding(
                 padding: EdgeInsets.all(8.0),
-                child: Text('Ngày',
-                    style: TextStyle(fontWeight: FontWeight.bold)),
+                child:
+                    Text('Ngày', style: TextStyle(fontWeight: FontWeight.bold)),
               ),
             ),
             Center(

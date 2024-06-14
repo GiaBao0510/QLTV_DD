@@ -93,23 +93,17 @@ class _BaocaoPhieuDoiScreenState extends State<BaoCaoPhieuDoiScreen> {
             Navigator.of(context).pop();
           },
         ),
-        title: const FittedBox(
-          fit: BoxFit.fitWidth,
-          child: Text("Báo Cáo Phiếu Đổi",
+        title: const Center(
+          child: Padding(
+            padding: EdgeInsets.only(right: 50.0),
+            child: Text(
+              "Báo Cáo Phiếu Đổi",
               style:
-                  TextStyle(color: Colors.black, fontWeight: FontWeight.w900)),
+                  TextStyle(color: Colors.black, fontWeight: FontWeight.w900),
+              textAlign: TextAlign.center,
+            ),
+          ),
         ),
-        // actions: [
-        //   Padding(
-        //     padding: const EdgeInsets.only(right: 12.0),
-        //     child: IconButton(
-        //       onPressed: () async {
-        //         _handleExport(_filteredBaoCaoPhieuDoiList);
-        //       },
-        //       icon: Image.asset("assets/images/export.png"),
-        //     ),
-        //   ),
-        // ],
       ),
       body: SafeArea(
         child: Padding(
@@ -142,12 +136,29 @@ class _BaocaoPhieuDoiScreenState extends State<BaoCaoPhieuDoiScreen> {
             itemBuilder: (context, index) {
               final phieudoi = _filteredBaoCaoPhieuDoiList[index];
               return Container(
-                  margin: const EdgeInsets.only(bottom: 15),
-                  decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 228, 200, 126),
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  child: tableItem(phieudoi));
+                margin: const EdgeInsets.only(bottom: 15),
+                decoration: BoxDecoration(
+                  color: const Color.fromARGB(255, 228, 200, 126),
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: Column(
+                  children: [
+                    const SizedBox(height: 5.0),
+                    Text(phieudoi.maPhieu ?? 'unknow',
+                        style: const TextStyle(fontWeight: FontWeight.w900)),
+                    const SizedBox(height: 5.0),
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Container(
+                          decoration: BoxDecoration(
+                            color: const Color.fromARGB(255, 228, 200, 126),
+                            borderRadius: BorderRadius.circular(0),
+                          ),
+                          child: tableItem(phieudoi)),
+                    ),
+                  ],
+                ),
+              );
             },
           );
         }

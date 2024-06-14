@@ -18,7 +18,8 @@ class ChinhSuaHangHoaScreen extends StatefulWidget {
   static const routeName = "/chinhSuaHangHoa";
   final HangHoa hangHoa;
 
-  const ChinhSuaHangHoaScreen({Key? key, required this.hangHoa}) : super(key: key);
+  const ChinhSuaHangHoaScreen({Key? key, required this.hangHoa})
+      : super(key: key);
 
   @override
   State<ChinhSuaHangHoaScreen> createState() => _ChinhSuaHangHoaScreenState();
@@ -49,28 +50,40 @@ class _ChinhSuaHangHoaScreenState extends State<ChinhSuaHangHoaScreen> {
   }
 
   Future<void> _loadNhomVangs() async {
-    _nhomVangFuture = Provider.of<NhomVangManager>(context, listen: false).fetchLoaiHang();
+    _nhomVangFuture =
+        Provider.of<NhomVangManager>(context, listen: false).fetchLoaiHang();
     _nhomVangFuture.then((nhomVangs) {
       setState(() {
-        _nhomVangList = nhomVangs.where((nhomVang) => (nhomVang.loaiId != 0 && nhomVang.loaiId != null) ).toList();
+        _nhomVangList = nhomVangs
+            .where(
+                (nhomVang) => (nhomVang.loaiId != 0 && nhomVang.loaiId != null))
+            .toList();
       });
     });
   }
 
   Future<void> _loadLoaiVangs() async {
-    _loaiVangFuture = Provider.of<LoaiVangManager>(context, listen: false).fetchLoaiHang();
+    _loaiVangFuture =
+        Provider.of<LoaiVangManager>(context, listen: false).fetchLoaiHang();
     _loaiVangFuture.then((loaiVangs) {
       setState(() {
-         _loaiVangList = loaiVangs.where((loaiVang) => ( loaiVang.nhomHangMa != '' && loaiVang.nhomHangMa != null) ).toList();
+        _loaiVangList = loaiVangs
+            .where((loaiVang) =>
+                (loaiVang.nhomHangMa != '' && loaiVang.nhomHangMa != null))
+            .toList();
       });
     });
   }
 
   Future<void> _loadNhaCungCaps() async {
-    _nhaCungCapFuture = Provider.of<NhaCungCapManager>(context, listen: false).fetchNhaCungCap();
+    _nhaCungCapFuture = Provider.of<NhaCungCapManager>(context, listen: false)
+        .fetchNhaCungCap();
     _nhaCungCapFuture.then((nhaCungCaps) {
       setState(() {
-        _nhaCungCapList = nhaCungCaps.where((nhaCungCap) => (nhaCungCap.ncc_id != 0 && nhaCungCap.ncc_id != null) ).toList();
+        _nhaCungCapList = nhaCungCaps
+            .where((nhaCungCap) =>
+                (nhaCungCap.ncc_id != 0 && nhaCungCap.ncc_id != null))
+            .toList();
       });
     });
   }
@@ -79,6 +92,7 @@ class _ChinhSuaHangHoaScreenState extends State<ChinhSuaHangHoaScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: const Color.fromARGB(255, 228, 200, 126),
         leading: IconButton(
           icon: const Icon(
             CupertinoIcons.left_chevron,
@@ -93,7 +107,8 @@ class _ChinhSuaHangHoaScreenState extends State<ChinhSuaHangHoaScreen> {
             padding: EdgeInsets.only(right: 50.0),
             child: Text(
               "Chỉnh Sửa Hàng Hóa",
-              style: TextStyle(color: Colors.black, fontWeight: FontWeight.w900),
+              style:
+                  TextStyle(color: Colors.black, fontWeight: FontWeight.w900),
               textAlign: TextAlign.center,
             ),
           ),
@@ -121,9 +136,11 @@ class _ChinhSuaHangHoaScreenState extends State<ChinhSuaHangHoaScreen> {
                             flex: 8, // Tỉ lệ 7/10 cho DropdownButton
                             child: buildNhomVangDropdown(),
                           ),
-                          const SizedBox(width: 12.0), // khoảng cách giữa hai widget
+                          const SizedBox(
+                              width: 12.0), // khoảng cách giữa hai widget
                           Expanded(
-                            flex: 2, // Tỉ lệ 3/10 cho Container bao bọc IconButton
+                            flex:
+                                2, // Tỉ lệ 3/10 cho Container bao bọc IconButton
                             child: Container(
                               decoration: BoxDecoration(
                                 color: Colors.white,
@@ -135,8 +152,10 @@ class _ChinhSuaHangHoaScreenState extends State<ChinhSuaHangHoaScreen> {
                               ),
                               child: IconButton(
                                 onPressed: () async {
-                                  final result = await Navigator.of(context).push(
-                                    createRoute((context) => const ThemNhomVangScreen()),
+                                  final result =
+                                      await Navigator.of(context).push(
+                                    createRoute((context) =>
+                                        const ThemNhomVangScreen()),
                                   );
                                   if (result == true) {
                                     _loadNhomVangs(); // Refresh the list when receiving the result
@@ -157,9 +176,11 @@ class _ChinhSuaHangHoaScreenState extends State<ChinhSuaHangHoaScreen> {
                             flex: 8, // Tỉ lệ 7/10 cho DropdownButton
                             child: buildLoaiVangDropdown(),
                           ),
-                          const SizedBox(width: 12.0), // khoảng cách giữa hai widget
+                          const SizedBox(
+                              width: 12.0), // khoảng cách giữa hai widget
                           Expanded(
-                            flex: 2, // Tỉ lệ 3/10 cho Container bao bọc IconButton
+                            flex:
+                                2, // Tỉ lệ 3/10 cho Container bao bọc IconButton
                             child: Container(
                               decoration: BoxDecoration(
                                 color: Colors.white,
@@ -171,8 +192,10 @@ class _ChinhSuaHangHoaScreenState extends State<ChinhSuaHangHoaScreen> {
                               ),
                               child: IconButton(
                                 onPressed: () async {
-                                  final result = await Navigator.of(context).push(
-                                    createRoute((context) => const ThemLoaiVangScreen()),
+                                  final result =
+                                      await Navigator.of(context).push(
+                                    createRoute((context) =>
+                                        const ThemLoaiVangScreen()),
                                   );
                                   if (result == true) {
                                     _loadLoaiVangs(); // Refresh the list when receiving the result
@@ -196,7 +219,8 @@ class _ChinhSuaHangHoaScreenState extends State<ChinhSuaHangHoaScreen> {
                           Expanded(
                             child: buildCanTongField(),
                           ),
-                          const SizedBox(width: 12.0), // khoảng cách giữa hai widget
+                          const SizedBox(
+                              width: 12.0), // khoảng cách giữa hai widget
                           Expanded(
                             child: buildTLHotField(),
                           ),
@@ -223,9 +247,11 @@ class _ChinhSuaHangHoaScreenState extends State<ChinhSuaHangHoaScreen> {
                             flex: 8, // Tỉ lệ 7/10 cho DropdownButton
                             child: buildNNCDropdown(),
                           ),
-                          const SizedBox(width: 12.0), // khoảng cách giữa hai widget
+                          const SizedBox(
+                              width: 12.0), // khoảng cách giữa hai widget
                           Expanded(
-                            flex: 2, // Tỉ lệ 3/10 cho Container bao bọc IconButton
+                            flex:
+                                2, // Tỉ lệ 3/10 cho Container bao bọc IconButton
                             child: Container(
                               decoration: BoxDecoration(
                                 color: Colors.white,
@@ -237,8 +263,10 @@ class _ChinhSuaHangHoaScreenState extends State<ChinhSuaHangHoaScreen> {
                               ),
                               child: IconButton(
                                 onPressed: () async {
-                                  final result = await Navigator.of(context).push(
-                                    createRoute((context) => const ThemNhaCungCapScreen()),
+                                  final result =
+                                      await Navigator.of(context).push(
+                                    createRoute((context) =>
+                                        const ThemNhaCungCapScreen()),
                                   );
                                   if (result == true) {
                                     _loadNhaCungCaps(); // Refresh the list when receiving the result
@@ -268,13 +296,20 @@ class _ChinhSuaHangHoaScreenState extends State<ChinhSuaHangHoaScreen> {
                   ],
                 ),
               ),
-              const SizedBox(height: 10,),
+              const SizedBox(
+                height: 10,
+              ),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.grey[50]
-                ),
+                    backgroundColor: const Color.fromARGB(255, 228, 200, 126)),
                 onPressed: () => _saveForm(context),
-                child: const Text('Lưu', style: TextStyle(fontWeight: FontWeight.w900, color: Colors.green),),
+                child: const Text(
+                  'Lưu',
+                  style: TextStyle(
+                      fontWeight: FontWeight.w900,
+                      color: Colors.green,
+                      fontSize: 20),
+                ),
               ),
             ],
           ),
@@ -287,9 +322,12 @@ class _ChinhSuaHangHoaScreenState extends State<ChinhSuaHangHoaScreen> {
     int? dropdownValue;
     if (_editedHangHoa.loaiId != '') {
       int? parsedValue = int.tryParse(_editedHangHoa.loaiId!);
-      if (parsedValue != null && _nhomVangList.any((nhomHang) => nhomHang.loaiId == parsedValue)) {
+      if (parsedValue != null &&
+          _nhomVangList.any((nhomHang) => nhomHang.loaiId == parsedValue)) {
         dropdownValue = parsedValue;
-      } else { dropdownValue = null; }
+      } else {
+        dropdownValue = null;
+      }
     }
     return DropdownButtonFormField<int>(
       dropdownColor: Colors.white,
@@ -303,15 +341,19 @@ class _ChinhSuaHangHoaScreenState extends State<ChinhSuaHangHoaScreen> {
           borderSide: BorderSide(color: Colors.white, width: 15.0),
           borderRadius: BorderRadius.all(Radius.circular(15.0)),
         ),
+        focusedBorder: OutlineInputBorder(
+          borderSide:
+              BorderSide(color: Color.fromARGB(255, 228, 200, 126), width: 2.0),
+          borderRadius: BorderRadius.all(Radius.circular(15.0)),
+        ),
       ),
       value: dropdownValue ?? 0,
-      items: 
-        _nhomVangList.map((NhomVang nhomHang) {
-          return DropdownMenuItem<int>(
-            value: (nhomHang.loaiId ?? 0),
-            child: Text(nhomHang.loaiTen!),
-          );
-        }).toList(),
+      items: _nhomVangList.map((NhomVang nhomHang) {
+        return DropdownMenuItem<int>(
+          value: (nhomHang.loaiId ?? 0),
+          child: Text(nhomHang.loaiTen!),
+        );
+      }).toList(),
       onChanged: (newValue) {
         setState(() {
           _editedHangHoa = _editedHangHoa.copyWith(loaiId: newValue.toString());
@@ -330,9 +372,13 @@ class _ChinhSuaHangHoaScreenState extends State<ChinhSuaHangHoaScreen> {
     String? dropdownValue;
     if (_editedHangHoa.nhomHangId != '') {
       int? parsedValue = int.tryParse(_editedHangHoa.nhomHangId!);
-      if (parsedValue != null && _loaiVangList.any((loaiHang) => int.parse(loaiHang.nhomHangMa!) == parsedValue)) {
+      if (parsedValue != null &&
+          _loaiVangList.any(
+              (loaiHang) => int.parse(loaiHang.nhomHangMa!) == parsedValue)) {
         dropdownValue = parsedValue.toString();
-      } else { dropdownValue = ''; }
+      } else {
+        dropdownValue = '';
+      }
     }
     return DropdownButtonFormField<String>(
       dropdownColor: Colors.white,
@@ -346,15 +392,19 @@ class _ChinhSuaHangHoaScreenState extends State<ChinhSuaHangHoaScreen> {
           borderSide: BorderSide(color: Colors.white, width: 15.0),
           borderRadius: BorderRadius.all(Radius.circular(15.0)),
         ),
+        focusedBorder: OutlineInputBorder(
+          borderSide:
+              BorderSide(color: Color.fromARGB(255, 228, 200, 126), width: 2.0),
+          borderRadius: BorderRadius.all(Radius.circular(15.0)),
+        ),
       ),
       value: dropdownValue == '' ? null : dropdownValue,
-      items: 
-        _loaiVangList.map((LoaiVang loaiHang) {
-          return DropdownMenuItem<String>(
-            value: loaiHang.nhomHangMa,
-            child: Text(loaiHang.nhomTen!),
-          );
-        }).toList(),
+      items: _loaiVangList.map((LoaiVang loaiHang) {
+        return DropdownMenuItem<String>(
+          value: loaiHang.nhomHangMa,
+          child: Text(loaiHang.nhomTen!),
+        );
+      }).toList(),
       onChanged: (newValue) {
         setState(() {
           _editedHangHoa = _editedHangHoa.copyWith(nhomHangId: newValue ?? '');
@@ -379,6 +429,11 @@ class _ChinhSuaHangHoaScreenState extends State<ChinhSuaHangHoaScreen> {
         fillColor: Colors.white,
         border: OutlineInputBorder(
           borderSide: BorderSide(color: Colors.white, width: 15.0),
+          borderRadius: BorderRadius.all(Radius.circular(15.0)),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide:
+              BorderSide(color: Color.fromARGB(255, 228, 200, 126), width: 2.0),
           borderRadius: BorderRadius.all(Radius.circular(15.0)),
         ),
       ),
@@ -409,6 +464,11 @@ class _ChinhSuaHangHoaScreenState extends State<ChinhSuaHangHoaScreen> {
           borderSide: BorderSide(color: Colors.white, width: 15.0),
           borderRadius: BorderRadius.all(Radius.circular(15.0)),
         ),
+        focusedBorder: OutlineInputBorder(
+          borderSide:
+              BorderSide(color: Color.fromARGB(255, 228, 200, 126), width: 2.0),
+          borderRadius: BorderRadius.all(Radius.circular(15.0)),
+        ),
       ),
       textInputAction: TextInputAction.next,
       keyboardType: TextInputType.number,
@@ -435,6 +495,11 @@ class _ChinhSuaHangHoaScreenState extends State<ChinhSuaHangHoaScreen> {
         fillColor: Colors.white,
         border: OutlineInputBorder(
           borderSide: BorderSide(color: Colors.white, width: 15.0),
+          borderRadius: BorderRadius.all(Radius.circular(15.0)),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide:
+              BorderSide(color: Color.fromARGB(255, 228, 200, 126), width: 2.0),
           borderRadius: BorderRadius.all(Radius.circular(15.0)),
         ),
       ),
@@ -465,6 +530,11 @@ class _ChinhSuaHangHoaScreenState extends State<ChinhSuaHangHoaScreen> {
           borderSide: BorderSide(color: Colors.white, width: 15.0),
           borderRadius: BorderRadius.all(Radius.circular(15.0)),
         ),
+        focusedBorder: OutlineInputBorder(
+          borderSide:
+              BorderSide(color: Color.fromARGB(255, 228, 200, 126), width: 2.0),
+          borderRadius: BorderRadius.all(Radius.circular(15.0)),
+        ),
       ),
       textInputAction: TextInputAction.next,
       keyboardType: TextInputType.number,
@@ -493,6 +563,11 @@ class _ChinhSuaHangHoaScreenState extends State<ChinhSuaHangHoaScreen> {
           borderSide: BorderSide(color: Colors.white, width: 15.0),
           borderRadius: BorderRadius.all(Radius.circular(15.0)),
         ),
+        focusedBorder: OutlineInputBorder(
+          borderSide:
+              BorderSide(color: Color.fromARGB(255, 228, 200, 126), width: 2.0),
+          borderRadius: BorderRadius.all(Radius.circular(15.0)),
+        ),
       ),
       textInputAction: TextInputAction.next,
       keyboardType: TextInputType.number,
@@ -504,7 +579,8 @@ class _ChinhSuaHangHoaScreenState extends State<ChinhSuaHangHoaScreen> {
         return null;
       },
       onSaved: (value) {
-        _editedHangHoa = _editedHangHoa.copyWith(giaBanSi: double.parse(value!));
+        _editedHangHoa =
+            _editedHangHoa.copyWith(giaBanSi: double.parse(value!));
       },
     );
   }
@@ -521,6 +597,11 @@ class _ChinhSuaHangHoaScreenState extends State<ChinhSuaHangHoaScreen> {
           borderSide: BorderSide(color: Colors.white, width: 15.0),
           borderRadius: BorderRadius.all(Radius.circular(15.0)),
         ),
+        focusedBorder: OutlineInputBorder(
+          borderSide:
+              BorderSide(color: Color.fromARGB(255, 228, 200, 126), width: 2.0),
+          borderRadius: BorderRadius.all(Radius.circular(15.0)),
+        ),
       ),
       textInputAction: TextInputAction.next,
       keyboardType: TextInputType.number,
@@ -532,7 +613,8 @@ class _ChinhSuaHangHoaScreenState extends State<ChinhSuaHangHoaScreen> {
         return null;
       },
       onSaved: (value) {
-        _editedHangHoa = _editedHangHoa.copyWith(donGiaGoc: double.parse(value!));
+        _editedHangHoa =
+            _editedHangHoa.copyWith(donGiaGoc: double.parse(value!));
       },
     );
   }
@@ -541,9 +623,12 @@ class _ChinhSuaHangHoaScreenState extends State<ChinhSuaHangHoaScreen> {
     int? dropdownValue;
     if (_editedHangHoa.nccId != '') {
       int? parsedValue = int.tryParse(_editedHangHoa.nccId!);
-      if (parsedValue != null && _nhaCungCapList.any((ncc) => ncc.ncc_id == parsedValue)) {
+      if (parsedValue != null &&
+          _nhaCungCapList.any((ncc) => ncc.ncc_id == parsedValue)) {
         dropdownValue = parsedValue;
-      } else { dropdownValue = null; }
+      } else {
+        dropdownValue = null;
+      }
     }
     return DropdownButtonFormField<int>(
       dropdownColor: Colors.white,
@@ -557,15 +642,19 @@ class _ChinhSuaHangHoaScreenState extends State<ChinhSuaHangHoaScreen> {
           borderSide: BorderSide(color: Colors.white, width: 15.0),
           borderRadius: BorderRadius.all(Radius.circular(15.0)),
         ),
+        focusedBorder: OutlineInputBorder(
+          borderSide:
+              BorderSide(color: Color.fromARGB(255, 228, 200, 126), width: 2.0),
+          borderRadius: BorderRadius.all(Radius.circular(15.0)),
+        ),
       ),
       value: dropdownValue ?? 0,
-      items: 
-        _nhaCungCapList.map((NhaCungCap ncc) {
-          return DropdownMenuItem<int>(
-            value: (ncc.ncc_id ?? 0),
-            child: Text(ncc.ncc_ten!),
-          );
-        }).toList(),
+      items: _nhaCungCapList.map((NhaCungCap ncc) {
+        return DropdownMenuItem<int>(
+          value: (ncc.ncc_id ?? 0),
+          child: Text(ncc.ncc_ten!),
+        );
+      }).toList(),
       onChanged: (newValue) {
         setState(() {
           _editedHangHoa = _editedHangHoa.copyWith(nccId: newValue.toString());
@@ -589,6 +678,11 @@ class _ChinhSuaHangHoaScreenState extends State<ChinhSuaHangHoaScreen> {
         fillColor: Colors.white,
         border: OutlineInputBorder(
           borderSide: BorderSide(color: Colors.white, width: 15.0),
+          borderRadius: BorderRadius.all(Radius.circular(15.0)),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide:
+              BorderSide(color: Color.fromARGB(255, 228, 200, 126), width: 2.0),
           borderRadius: BorderRadius.all(Radius.circular(15.0)),
         ),
       ),
@@ -619,6 +713,11 @@ class _ChinhSuaHangHoaScreenState extends State<ChinhSuaHangHoaScreen> {
           borderSide: BorderSide(color: Colors.white, width: 15.0),
           borderRadius: BorderRadius.all(Radius.circular(15.0)),
         ),
+        focusedBorder: OutlineInputBorder(
+          borderSide:
+              BorderSide(color: Color.fromARGB(255, 228, 200, 126), width: 2.0),
+          borderRadius: BorderRadius.all(Radius.circular(15.0)),
+        ),
       ),
       textInputAction: TextInputAction.next,
       keyboardType: TextInputType.text,
@@ -647,6 +746,11 @@ class _ChinhSuaHangHoaScreenState extends State<ChinhSuaHangHoaScreen> {
           borderSide: BorderSide(color: Colors.white, width: 15.0),
           borderRadius: BorderRadius.all(Radius.circular(15.0)),
         ),
+        focusedBorder: OutlineInputBorder(
+          borderSide:
+              BorderSide(color: Color.fromARGB(255, 228, 200, 126), width: 2.0),
+          borderRadius: BorderRadius.all(Radius.circular(15.0)),
+        ),
       ),
       textInputAction: TextInputAction.next,
       keyboardType: TextInputType.number,
@@ -662,6 +766,7 @@ class _ChinhSuaHangHoaScreenState extends State<ChinhSuaHangHoaScreen> {
       },
     );
   }
+
   Future<void> _saveForm(BuildContext context) async {
     final isValid = _editForm.currentState!.validate();
     if (!isValid) {
@@ -670,8 +775,10 @@ class _ChinhSuaHangHoaScreenState extends State<ChinhSuaHangHoaScreen> {
     _editForm.currentState!.save();
     // You can add further validation or processing logic here
     try {
-      final hangHoaManager = Provider.of<HangHoaManager>(context, listen: false);
-      await hangHoaManager.updateHangHoa(widget.hangHoa.hangHoaMa as String, _editedHangHoa); 
+      final hangHoaManager =
+          Provider.of<HangHoaManager>(context, listen: false);
+      await hangHoaManager.updateHangHoa(
+          widget.hangHoa.hangHoaMa as String, _editedHangHoa);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: const Text(
@@ -682,10 +789,14 @@ class _ChinhSuaHangHoaScreenState extends State<ChinhSuaHangHoaScreen> {
           backgroundColor: Colors.grey,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15.0),
-            side: const BorderSide(color: Colors.grey, width: 2.0), // bo viền 15px
+            side: const BorderSide(
+                color: Colors.grey, width: 2.0), // bo viền 15px
           ),
           behavior: SnackBarBehavior.floating, // hiển thị ở cách đáy màn hình
-          margin: const EdgeInsets.only(left: 15.0, right: 15.0, bottom: 15.0), // cách 2 cạnh và đáy màn hình 15px
+          margin: const EdgeInsets.only(
+              left: 15.0,
+              right: 15.0,
+              bottom: 15.0), // cách 2 cạnh và đáy màn hình 15px
         ),
       );
       Navigator.of(context).pop(true); // Go back to the previous screen
@@ -694,16 +805,21 @@ class _ChinhSuaHangHoaScreenState extends State<ChinhSuaHangHoaScreen> {
         SnackBar(
           content: Text(
             'Failed to edit data: $error',
-            style: const TextStyle(fontWeight: FontWeight.w900, color: Colors.red),
+            style:
+                const TextStyle(fontWeight: FontWeight.w900, color: Colors.red),
             textAlign: TextAlign.center,
           ),
           backgroundColor: Colors.grey,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15.0),
-            side: const BorderSide(color: Colors.grey, width: 2.0), // bo viền 15px
+            side: const BorderSide(
+                color: Colors.grey, width: 2.0), // bo viền 15px
           ),
           behavior: SnackBarBehavior.floating, // hiển thị ở cách đáy màn hình
-          margin: const EdgeInsets.only(left: 15.0, right: 15.0, bottom: 15.0), // cách 2 cạnh và đáy màn hình 15px
+          margin: const EdgeInsets.only(
+              left: 15.0,
+              right: 15.0,
+              bottom: 15.0), // cách 2 cạnh và đáy màn hình 15px
         ),
       );
     }

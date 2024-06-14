@@ -70,23 +70,17 @@ class _BaoCaoTopKhachHangScreenState extends State<BaoCaoTopKhachHangScreen> {
             Navigator.of(context).pop();
           },
         ),
-        title: const FittedBox(
-          fit: BoxFit.fitWidth,
-          child: Text("Khách Hàng Giao Dịch",
+        title: const Center(
+          child: Padding(
+            padding: EdgeInsets.only(right: 50.0),
+            child: Text(
+              "Khách Hàng Giao Dịch",
               style:
-                  TextStyle(color: Colors.black, fontWeight: FontWeight.w900)),
+                  TextStyle(color: Colors.black, fontWeight: FontWeight.w900),
+              textAlign: TextAlign.center,
+            ),
+          ),
         ),
-        // actions: [
-        //   Padding(
-        //     padding: const EdgeInsets.only(right: 12.0),
-        //     child: IconButton(
-        //       onPressed: () async {
-        //         _handleExport(_filteredTopKhachHangList);
-        //       },
-        //       icon: Image.asset("assets/images/export.png"),
-        //     ),
-        //   ),
-        // ],
       ),
       body: SafeArea(
         child: Padding(

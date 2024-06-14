@@ -8,8 +8,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-
-
 class NhomVangScreen extends StatefulWidget {
   static const routeName = "/nhomvang";
 
@@ -39,7 +37,8 @@ class _NhomVangScreenState extends State<NhomVangScreen> {
   }
 
   Future<void> _loadNhomVangs() async {
-    _nhomVangFuture = Provider.of<NhomVangManager>(context, listen: false).fetchLoaiHang();
+    _nhomVangFuture =
+        Provider.of<NhomVangManager>(context, listen: false).fetchLoaiHang();
     _nhomVangFuture.then((nhomVangs) {
       setState(() {
         _nhomVangList = nhomVangs;
@@ -61,6 +60,7 @@ class _NhomVangScreenState extends State<NhomVangScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: const Color.fromARGB(255, 228, 200, 126),
         leading: IconButton(
           icon: const Icon(
             CupertinoIcons.left_chevron,
@@ -73,7 +73,9 @@ class _NhomVangScreenState extends State<NhomVangScreen> {
         title: Row(
           children: [
             Expanded(child: Container()), // Spacer
-            const Text("Nhóm Vàng", style: TextStyle(color: Colors.black, fontWeight: FontWeight.w900)),
+            const Text("Nhóm Vàng",
+                style: TextStyle(
+                    color: Colors.black, fontWeight: FontWeight.w900)),
             Expanded(child: Container()), // Spacer
           ],
         ),
@@ -97,7 +99,8 @@ class _NhomVangScreenState extends State<NhomVangScreen> {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(12.0),
-          child: SingleChildScrollView( // SingleChildScrollView for scrolling
+          child: SingleChildScrollView(
+            // SingleChildScrollView for scrolling
             child: Column(
               children: [
                 Search_Bar(searchController: _searchController),
@@ -123,14 +126,16 @@ class _NhomVangScreenState extends State<NhomVangScreen> {
         } else {
           return ListView.builder(
             shrinkWrap: true, // shrinkWrap to make ListView fit within Column
-            physics: const NeverScrollableScrollPhysics(), // Disable ListView's own scrolling
+            physics:
+                const NeverScrollableScrollPhysics(), // Disable ListView's own scrolling
             itemCount: _filteredNhomVangList.length,
             reverse: true,
             itemBuilder: (BuildContext context, int index) {
               return Container(
-                margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                margin:
+                    const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
                 decoration: BoxDecoration(
-                  color: const Color.fromARGB(50, 169, 169, 169),
+                  color: const Color.fromARGB(255, 228, 200, 126),
                   borderRadius: BorderRadius.circular(15.0),
                 ),
                 child: ListTile(
@@ -138,31 +143,39 @@ class _NhomVangScreenState extends State<NhomVangScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Column(
-                        crossAxisAlignment: CrossAxisAlignment.start, // Align children to the start (left) of the column
+                        crossAxisAlignment: CrossAxisAlignment
+                            .start, // Align children to the start (left) of the column
                         children: [
                           Align(
                             alignment: Alignment.centerLeft,
                             child: Text(
                               _filteredNhomVangList[index].loaiTen ?? '',
-                              style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w800, fontSize: 20),
+                              style: const TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w800,
+                                  fontSize: 20),
                             ),
                           ),
                           Row(
                             children: [
                               Text(
                                 "Mã: ${_filteredNhomVangList[index].loaiMa}",
-                                style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w700, fontSize: 14),
+                                style: const TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 14),
                               ),
                               const SizedBox(width: 20),
-                             
                             ],
                           ),
                           Row(
                             children: [
-                              
                               Text(
                                 "Ký hiệu: ${_filteredNhomVangList[index].ghiChu}",
-                                style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w700, fontSize: 14),
+                                style: const TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 14),
                               ),
                             ],
                           ),
@@ -174,7 +187,8 @@ class _NhomVangScreenState extends State<NhomVangScreen> {
                             onTap: () async {
                               final result = await Navigator.of(context).push(
                                 createRoute(
-                                  (context) => ChinhSuaNhomVangScreen(nhomVang: _filteredNhomVangList[index]),
+                                  (context) => ChinhSuaNhomVangScreen(
+                                      nhomVang: _filteredNhomVangList[index]),
                                 ),
                               );
                               if (result == true) {
@@ -194,30 +208,53 @@ class _NhomVangScreenState extends State<NhomVangScreen> {
                                 builder: (BuildContext context) {
                                   return AlertDialog(
                                     title: const Text("Xác nhận"),
-                                    content: Text("Bạn có chắc chắn muốn xóa nhóm vàng ${_filteredNhomVangList[index].loaiTen?.toUpperCase()}?"),
+                                    content: Text(
+                                        "Bạn có chắc chắn muốn xóa nhóm vàng ${_filteredNhomVangList[index].loaiTen?.toUpperCase()}?"),
                                     actions: <Widget>[
                                       TextButton(
                                         onPressed: () {
-                                          Navigator.of(context).pop(); // Close the dialog
+                                          Navigator.of(context)
+                                              .pop(); // Close the dialog
                                         },
                                         child: const Text("Hủy"),
                                       ),
                                       TextButton(
                                         onPressed: () async {
-                                          final nhomVangManager = Provider.of<NhomVangManager>(context, listen: false);
-                                          await nhomVangManager.deleteNhomVang(_filteredNhomVangList[index].loaiId!); // Use `loaiId` directly
-                                          Navigator.of(context).pop(); // Close the dialog
+                                          final nhomVangManager =
+                                              Provider.of<NhomVangManager>(
+                                                  context,
+                                                  listen: false);
+                                          await nhomVangManager.deleteNhomVang(
+                                              _filteredNhomVangList[index]
+                                                  .loaiId!); // Use `loaiId` directly
+                                          Navigator.of(context)
+                                              .pop(); // Close the dialog
                                           _loadNhomVangs(); // Refresh the list
-                                          ScaffoldMessenger.of(context).showSnackBar(
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
                                             SnackBar(
-                                              content: const Text('Xóa thành công!', style: TextStyle(fontWeight: FontWeight.w900, color: Colors.red), textAlign: TextAlign.center,),
+                                              content: const Text(
+                                                'Xóa thành công!',
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.w900,
+                                                    color: Colors.red),
+                                                textAlign: TextAlign.center,
+                                              ),
                                               backgroundColor: Colors.grey,
                                               shape: RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.circular(15.0),
-                                                side: const BorderSide(color: Colors.grey, width: 2.0), // bo viền 15px
+                                                borderRadius:
+                                                    BorderRadius.circular(15.0),
+                                                side: const BorderSide(
+                                                    color: Colors.grey,
+                                                    width: 2.0), // bo viền 15px
                                               ),
-                                              behavior: SnackBarBehavior.floating, // hiển thị ở cách đáy màn hình
-                                              margin: const EdgeInsets.only(left: 15.0, right: 15.0, bottom: 15.0), // cách 2 cạnh và đáy màn hình 15px
+                                              behavior: SnackBarBehavior
+                                                  .floating, // hiển thị ở cách đáy màn hình
+                                              margin: const EdgeInsets.only(
+                                                  left: 15.0,
+                                                  right: 15.0,
+                                                  bottom:
+                                                      15.0), // cách 2 cạnh và đáy màn hình 15px
                                             ),
                                           );
                                         },

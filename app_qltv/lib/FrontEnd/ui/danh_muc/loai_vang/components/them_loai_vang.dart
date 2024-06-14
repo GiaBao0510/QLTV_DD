@@ -23,20 +23,20 @@ class _ThemLoaiVangScreenState extends State<ThemLoaiVangScreen> {
   void initState() {
     super.initState();
     _newLoaiVang = LoaiVang(
-      nhomHangId: '',
-      nhomTen: '',
-      donGiaVon: 0,
-      donGiaMua: 0,
-      donGiaBan: 0,
-      donGiaCam: 0,
-      nhomChaId: 0,
-      ghiChu: ''
-    );
+        nhomHangId: '',
+        nhomTen: '',
+        donGiaVon: 0,
+        donGiaMua: 0,
+        donGiaBan: 0,
+        donGiaCam: 0,
+        nhomChaId: 0,
+        ghiChu: '');
     _loadLoaiVangs();
   }
 
   Future<void> _loadLoaiVangs() async {
-    _loaiVangFuture = Provider.of<LoaiVangManager>(context, listen: false).fetchLoaiHang();
+    _loaiVangFuture =
+        Provider.of<LoaiVangManager>(context, listen: false).fetchLoaiHang();
     _loaiVangFuture.then((loaiVangs) {
       setState(() {
         _loaiVangList = loaiVangs;
@@ -48,6 +48,7 @@ class _ThemLoaiVangScreenState extends State<ThemLoaiVangScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: const Color.fromARGB(255, 228, 200, 126),
         leading: IconButton(
           icon: const Icon(
             CupertinoIcons.left_chevron,
@@ -62,7 +63,8 @@ class _ThemLoaiVangScreenState extends State<ThemLoaiVangScreen> {
             padding: EdgeInsets.only(right: 50.0),
             child: Text(
               "Thêm Loại Vàng",
-              style: TextStyle(color: Colors.black, fontWeight: FontWeight.w900),
+              style:
+                  TextStyle(color: Colors.black, fontWeight: FontWeight.w900),
               textAlign: TextAlign.center,
             ),
           ),
@@ -110,13 +112,21 @@ class _ThemLoaiVangScreenState extends State<ThemLoaiVangScreen> {
                   ],
                 ),
               ),
-              const SizedBox(height: 10,),
+              const SizedBox(
+                height: 10,
+              ),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.grey[50]
+                  backgroundColor: const Color.fromARGB(200, 228, 200, 126),
                 ),
                 onPressed: () => _saveForm(context),
-                child: const Text('Thêm Mới', style: TextStyle(fontWeight: FontWeight.w900, color: Colors.green),),
+                child: const Text(
+                  'Thêm Mới',
+                  style: TextStyle(
+                      fontWeight: FontWeight.w900,
+                      color: Colors.green,
+                      fontSize: 20),
+                ),
               ),
             ],
           ),
@@ -124,7 +134,6 @@ class _ThemLoaiVangScreenState extends State<ThemLoaiVangScreen> {
       ),
     );
   }
-
 
   TextFormField buildLoaiVangField() {
     return TextFormField(
@@ -136,6 +145,11 @@ class _ThemLoaiVangScreenState extends State<ThemLoaiVangScreen> {
         fillColor: Colors.white,
         border: OutlineInputBorder(
           borderSide: BorderSide(color: Colors.white, width: 15.0),
+          borderRadius: BorderRadius.all(Radius.circular(15.0)),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide:
+              BorderSide(color: Color.fromARGB(255, 228, 200, 126), width: 2.0),
           borderRadius: BorderRadius.all(Radius.circular(15.0)),
         ),
       ),
@@ -166,6 +180,11 @@ class _ThemLoaiVangScreenState extends State<ThemLoaiVangScreen> {
           borderSide: BorderSide(color: Colors.white, width: 15.0),
           borderRadius: BorderRadius.all(Radius.circular(15.0)),
         ),
+        focusedBorder: OutlineInputBorder(
+          borderSide:
+              BorderSide(color: Color.fromARGB(255, 228, 200, 126), width: 2.0),
+          borderRadius: BorderRadius.all(Radius.circular(15.0)),
+        ),
       ),
       textInputAction: TextInputAction.next,
       keyboardType: TextInputType.number,
@@ -192,6 +211,11 @@ class _ThemLoaiVangScreenState extends State<ThemLoaiVangScreen> {
         fillColor: Colors.white,
         border: OutlineInputBorder(
           borderSide: BorderSide(color: Colors.white, width: 15.0),
+          borderRadius: BorderRadius.all(Radius.circular(15.0)),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide:
+              BorderSide(color: Color.fromARGB(255, 228, 200, 126), width: 2.0),
           borderRadius: BorderRadius.all(Radius.circular(15.0)),
         ),
       ),
@@ -222,6 +246,11 @@ class _ThemLoaiVangScreenState extends State<ThemLoaiVangScreen> {
           borderSide: BorderSide(color: Colors.white, width: 15.0),
           borderRadius: BorderRadius.all(Radius.circular(15.0)),
         ),
+        focusedBorder: OutlineInputBorder(
+          borderSide:
+              BorderSide(color: Color.fromARGB(255, 228, 200, 126), width: 2.0),
+          borderRadius: BorderRadius.all(Radius.circular(15.0)),
+        ),
       ),
       textInputAction: TextInputAction.next,
       keyboardType: TextInputType.number,
@@ -248,6 +277,11 @@ class _ThemLoaiVangScreenState extends State<ThemLoaiVangScreen> {
         fillColor: Colors.white,
         border: OutlineInputBorder(
           borderSide: BorderSide(color: Colors.white, width: 15.0),
+          borderRadius: BorderRadius.all(Radius.circular(15.0)),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide:
+              BorderSide(color: Color.fromARGB(255, 228, 200, 126), width: 2.0),
           borderRadius: BorderRadius.all(Radius.circular(15.0)),
         ),
       ),
@@ -277,6 +311,11 @@ class _ThemLoaiVangScreenState extends State<ThemLoaiVangScreen> {
           borderSide: BorderSide(color: Colors.white, width: 15.0),
           borderRadius: BorderRadius.all(Radius.circular(15.0)),
         ),
+        focusedBorder: OutlineInputBorder(
+          borderSide:
+              BorderSide(color: Color.fromARGB(255, 228, 200, 126), width: 2.0),
+          borderRadius: BorderRadius.all(Radius.circular(15.0)),
+        ),
       ),
       textInputAction: TextInputAction.next,
       keyboardType: TextInputType.text,
@@ -300,15 +339,19 @@ class _ThemLoaiVangScreenState extends State<ThemLoaiVangScreen> {
           borderSide: BorderSide(color: Colors.white, width: 15.0),
           borderRadius: BorderRadius.all(Radius.circular(15.0)),
         ),
+        focusedBorder: OutlineInputBorder(
+          borderSide:
+              BorderSide(color: Color.fromARGB(255, 228, 200, 126), width: 2.0),
+          borderRadius: BorderRadius.all(Radius.circular(15.0)),
+        ),
       ),
       value: _newLoaiVang.nhomChaId == 0 ? null : _newLoaiVang.nhomChaId,
-      items: 
-        _loaiVangList.map((LoaiVang loaiHang) {
-          return DropdownMenuItem<int>(
-            value: int.parse(loaiHang.nhomHangMa!),
-            child: Text(loaiHang.nhomTen!),
-          );
-        }).toList(),
+      items: _loaiVangList.map((LoaiVang loaiHang) {
+        return DropdownMenuItem<int>(
+          value: int.parse(loaiHang.nhomHangMa!),
+          child: Text(loaiHang.nhomTen!),
+        );
+      }).toList(),
       onChanged: (newValue) {
         setState(() {
           _newLoaiVang = _newLoaiVang.copyWith(nhomChaId: newValue ?? 0);
@@ -323,7 +366,6 @@ class _ThemLoaiVangScreenState extends State<ThemLoaiVangScreen> {
     );
   }
 
-
   Future<void> _saveForm(BuildContext context) async {
     final isValid = _formKey.currentState!.validate();
     if (!isValid) {
@@ -332,32 +374,49 @@ class _ThemLoaiVangScreenState extends State<ThemLoaiVangScreen> {
     _formKey.currentState!.save();
 
     try {
-      final nhomVangManager = Provider.of<LoaiVangManager>(context, listen: false);
+      final nhomVangManager =
+          Provider.of<LoaiVangManager>(context, listen: false);
       await nhomVangManager.addLoaiVang(_newLoaiVang);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('Thêm mới thành công!', style: TextStyle(fontWeight: FontWeight.w900), textAlign: TextAlign.center,),
+          content: const Text(
+            'Thêm mới thành công!',
+            style: TextStyle(fontWeight: FontWeight.w900),
+            textAlign: TextAlign.center,
+          ),
           backgroundColor: Colors.grey,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15.0),
-            side: const BorderSide(color: Colors.grey, width: 2.0), // bo viền 15px
+            side: const BorderSide(
+                color: Colors.grey, width: 2.0), // bo viền 15px
           ),
           behavior: SnackBarBehavior.floating, // hiển thị ở cách đáy màn hình
-          margin: const EdgeInsets.only(left: 15.0, right: 15.0, bottom: 15.0), // cách 2 cạnh và đáy màn hình 15px
+          margin: const EdgeInsets.only(
+              left: 15.0,
+              right: 15.0,
+              bottom: 15.0), // cách 2 cạnh và đáy màn hình 15px
         ),
       );
       Navigator.of(context).pop(true); // Go back to the previous screen
     } catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('Failed to add data', style: TextStyle(fontWeight: FontWeight.w900, color: Colors.red), textAlign: TextAlign.center,),
+          content: const Text(
+            'Failed to add data',
+            style: TextStyle(fontWeight: FontWeight.w900, color: Colors.red),
+            textAlign: TextAlign.center,
+          ),
           backgroundColor: Colors.grey,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15.0),
-            side: const BorderSide(color: Colors.grey, width: 2.0), // bo viền 15px
+            side: const BorderSide(
+                color: Colors.grey, width: 2.0), // bo viền 15px
           ),
           behavior: SnackBarBehavior.floating, // hiển thị ở cách đáy màn hình
-          margin: const EdgeInsets.only(left: 15.0, right: 15.0, bottom: 15.0), // cách 2 cạnh và đáy màn hình 15px
+          margin: const EdgeInsets.only(
+              left: 15.0,
+              right: 15.0,
+              bottom: 15.0), // cách 2 cạnh và đáy màn hình 15px
         ),
       );
     }

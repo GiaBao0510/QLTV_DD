@@ -61,22 +61,28 @@ class _KhoVangMuaVaoScreenState extends State<KhoVangMuaVaoScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          backgroundColor: const Color.fromARGB(255, 228, 200, 126),
-          leading: IconButton(
-            icon: const Icon(
-              CupertinoIcons.left_chevron,
-              color: Colors.black,
-            ),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
+        backgroundColor: const Color.fromARGB(255, 228, 200, 126),
+        leading: IconButton(
+          icon: const Icon(
+            CupertinoIcons.left_chevron,
+            color: Colors.black,
           ),
-          title: const FittedBox(
-            fit: BoxFit.fitWidth,
-            child: Text("Kho Vàng Mua Vào",
-                style: TextStyle(
-                    color: Colors.black, fontWeight: FontWeight.w900)),
-          )),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+        title: const Center(
+          child: Padding(
+            padding: EdgeInsets.only(right: 50.0),
+            child: Text(
+              "Kho Vàng Mua Vào",
+              style:
+                  TextStyle(color: Colors.black, fontWeight: FontWeight.w900),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ),
+      ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(12.0),

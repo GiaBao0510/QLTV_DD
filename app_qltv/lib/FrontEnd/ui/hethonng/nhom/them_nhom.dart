@@ -36,6 +36,7 @@ class _ThemNhomScreenState extends State<ThemNhomScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: const Color.fromARGB(255, 228, 200, 126),
         leading: IconButton(
           icon: const Icon(
             CupertinoIcons.left_chevron,
@@ -46,10 +47,15 @@ class _ThemNhomScreenState extends State<ThemNhomScreen> {
           },
         ),
         title: const Center(
-            child: Padding(
-              padding: EdgeInsets.only(right: 50.0),
-              child: Text("Thêm Nhóm", style: TextStyle(color: Colors.black, fontWeight: FontWeight.w900), textAlign: TextAlign.center,),
+          child: Padding(
+            padding: EdgeInsets.only(right: 50.0),
+            child: Text(
+              "Thêm Nhóm",
+              style:
+                  TextStyle(color: Colors.black, fontWeight: FontWeight.w900),
+              textAlign: TextAlign.center,
             ),
+          ),
         ),
       ),
       body: Padding(
@@ -78,13 +84,20 @@ class _ThemNhomScreenState extends State<ThemNhomScreen> {
                   ],
                 ),
               ),
-              const SizedBox(height: 10,),
+              const SizedBox(
+                height: 10,
+              ),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.grey[50]
-                ),
+                    backgroundColor: const Color.fromARGB(255, 228, 200, 126)),
                 onPressed: () => _saveForm(context),
-                child: const Text('Thêm', style: TextStyle(fontWeight: FontWeight.w900, color: Colors.green),),
+                child: const Text(
+                  'Thêm',
+                  style: TextStyle(
+                      fontWeight: FontWeight.w900,
+                      color: Colors.green,
+                      fontSize: 20),
+                ),
               ),
             ],
           ),
@@ -180,32 +193,47 @@ class _ThemNhomScreenState extends State<ThemNhomScreen> {
       await nhomManager.addNhom(_newNhom);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('Thêm thành công!', style: TextStyle(fontWeight: FontWeight.w900), textAlign: TextAlign.center,),
+          content: const Text(
+            'Thêm thành công!',
+            style: TextStyle(fontWeight: FontWeight.w900),
+            textAlign: TextAlign.center,
+          ),
           backgroundColor: Colors.grey,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15.0),
-            side: const BorderSide(color: Colors.grey, width: 2.0), // bo viền 15px
+            side: const BorderSide(
+                color: Colors.grey, width: 2.0), // bo viền 15px
           ),
           behavior: SnackBarBehavior.floating, // hiển thị ở cách đáy màn hình
-          margin: const EdgeInsets.only(left: 15.0, right: 15.0, bottom: 15.0), // cách 2 cạnh và đáy màn hình 15px
+          margin: const EdgeInsets.only(
+              left: 15.0,
+              right: 15.0,
+              bottom: 15.0), // cách 2 cạnh và đáy màn hình 15px
         ),
       );
       Navigator.of(context).pop(true); // Quay lại màn hình trước
-    } 
-    catch (error, stackTrace) {
+    } catch (error, stackTrace) {
       print('Failed to add group: $error');
       print('Stack trace: $stackTrace');
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content:  Text('Không thể thêm nhóm: $error', style: TextStyle(fontWeight: FontWeight.w900, color: Colors.red), textAlign: TextAlign.center,),
+          content: Text(
+            'Không thể thêm nhóm: $error',
+            style: TextStyle(fontWeight: FontWeight.w900, color: Colors.red),
+            textAlign: TextAlign.center,
+          ),
           backgroundColor: Colors.grey,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15.0),
-            side: const BorderSide(color: Colors.grey, width: 2.0), // bo viền 15px
+            side: const BorderSide(
+                color: Colors.grey, width: 2.0), // bo viền 15px
           ),
           behavior: SnackBarBehavior.floating, // hiển thị ở cách đáy màn hình
-          margin: const EdgeInsets.only(left: 15.0, right: 15.0, bottom: 15.0), // cách 2 cạnh và đáy màn hình 15px
+          margin: const EdgeInsets.only(
+              left: 15.0,
+              right: 15.0,
+              bottom: 15.0), // cách 2 cạnh và đáy màn hình 15px
         ),
       );
     }

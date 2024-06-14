@@ -46,10 +46,12 @@ class _ThemNhaCungCapScreenState extends State<ThemNhaCungCapScreen> {
       setState(() {
         _selectedDate = picked;
         _dateController.text = _dateFormat.format(_selectedDate);
-        _newNhaCungCap = _newNhaCungCap.copyWith(ngay_bd: _selectedDate.toIso8601String());
+        _newNhaCungCap =
+            _newNhaCungCap.copyWith(ngay_bd: _selectedDate.toIso8601String());
       });
     } else {
-      _newNhaCungCap = _newNhaCungCap.copyWith(ngay_bd: _selectedDate.toIso8601String());
+      _newNhaCungCap =
+          _newNhaCungCap.copyWith(ngay_bd: _selectedDate.toIso8601String());
     }
   }
 
@@ -57,6 +59,7 @@ class _ThemNhaCungCapScreenState extends State<ThemNhaCungCapScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: const Color.fromARGB(255, 228, 200, 126),
         leading: IconButton(
           icon: const Icon(
             CupertinoIcons.left_chevron,
@@ -71,7 +74,8 @@ class _ThemNhaCungCapScreenState extends State<ThemNhaCungCapScreen> {
             padding: EdgeInsets.only(right: 50.0),
             child: Text(
               "Thêm Nhà Cung Cấp",
-              style: TextStyle(color: Colors.black, fontWeight: FontWeight.w900),
+              style:
+                  TextStyle(color: Colors.black, fontWeight: FontWeight.w900),
               textAlign: TextAlign.center,
             ),
           ),
@@ -106,13 +110,20 @@ class _ThemNhaCungCapScreenState extends State<ThemNhaCungCapScreen> {
                   ],
                 ),
               ),
-              const SizedBox(height: 10,),
+              const SizedBox(
+                height: 10,
+              ),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.grey[50]
-                ),
+                    backgroundColor: const Color.fromARGB(255, 228, 200, 126)),
                 onPressed: () => _saveForm(context),
-                child: const Text('Thêm', style: TextStyle(fontWeight: FontWeight.w900, color: Colors.green),),
+                child: const Text(
+                  'Thêm Mới',
+                  style: TextStyle(
+                      fontWeight: FontWeight.w900,
+                      color: Colors.green,
+                      fontSize: 20),
+                ),
               ),
             ],
           ),
@@ -130,6 +141,11 @@ class _ThemNhaCungCapScreenState extends State<ThemNhaCungCapScreen> {
         fillColor: Colors.white,
         border: OutlineInputBorder(
           borderSide: BorderSide(color: Colors.white, width: 15.0),
+          borderRadius: BorderRadius.all(Radius.circular(15.0)),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide:
+              BorderSide(color: Color.fromARGB(255, 228, 200, 126), width: 2.0),
           borderRadius: BorderRadius.all(Radius.circular(15.0)),
         ),
       ),
@@ -157,6 +173,11 @@ class _ThemNhaCungCapScreenState extends State<ThemNhaCungCapScreen> {
         fillColor: Colors.white,
         border: OutlineInputBorder(
           borderSide: BorderSide(color: Colors.white, width: 15.0),
+          borderRadius: BorderRadius.all(Radius.circular(15.0)),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide:
+              BorderSide(color: Color.fromARGB(255, 228, 200, 126), width: 2.0),
           borderRadius: BorderRadius.all(Radius.circular(15.0)),
         ),
       ),
@@ -187,6 +208,11 @@ class _ThemNhaCungCapScreenState extends State<ThemNhaCungCapScreen> {
           borderSide: BorderSide(color: Colors.white, width: 15.0),
           borderRadius: BorderRadius.all(Radius.circular(15.0)),
         ),
+        focusedBorder: OutlineInputBorder(
+          borderSide:
+              BorderSide(color: Color.fromARGB(255, 228, 200, 126), width: 2.0),
+          borderRadius: BorderRadius.all(Radius.circular(15.0)),
+        ),
       ),
       readOnly: true,
       onTap: () => _selectDate(context),
@@ -205,22 +231,33 @@ class _ThemNhaCungCapScreenState extends State<ThemNhaCungCapScreen> {
       return;
     }
     _addForm.currentState!.save();
-     if (_newNhaCungCap.ngay_bd == null) {
-      _newNhaCungCap = _newNhaCungCap.copyWith(ngay_bd: _selectedDate.toIso8601String());
+    if (_newNhaCungCap.ngay_bd == null) {
+      _newNhaCungCap =
+          _newNhaCungCap.copyWith(ngay_bd: _selectedDate.toIso8601String());
     }
     try {
-      final nhaCungCapManager = Provider.of<NhaCungCapManager>(context, listen: false); 
-      await nhaCungCapManager.addNhaCungCap(_newNhaCungCap); // Call addNhaCungCap method
+      final nhaCungCapManager =
+          Provider.of<NhaCungCapManager>(context, listen: false);
+      await nhaCungCapManager
+          .addNhaCungCap(_newNhaCungCap); // Call addNhaCungCap method
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('Thêm thành công!', style: TextStyle(fontWeight: FontWeight.w900), textAlign: TextAlign.center,),
+          content: const Text(
+            'Thêm thành công!',
+            style: TextStyle(fontWeight: FontWeight.w900),
+            textAlign: TextAlign.center,
+          ),
           backgroundColor: Colors.grey,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15.0),
-            side: const BorderSide(color: Colors.grey, width: 2.0), // bo viền 15px
+            side: const BorderSide(
+                color: Colors.grey, width: 2.0), // bo viền 15px
           ),
           behavior: SnackBarBehavior.floating, // hiển thị ở cách đáy màn hình
-          margin: const EdgeInsets.only(left: 15.0, right: 15.0, bottom: 15.0), // cách 2 cạnh và đáy màn hình 15px
+          margin: const EdgeInsets.only(
+              left: 15.0,
+              right: 15.0,
+              bottom: 15.0), // cách 2 cạnh và đáy màn hình 15px
         ),
       );
       Navigator.of(context).pop(true); // Go back to the previous screen
@@ -229,16 +266,21 @@ class _ThemNhaCungCapScreenState extends State<ThemNhaCungCapScreen> {
         SnackBar(
           content: Text(
             'Failed to add data: $error',
-            style: const TextStyle(fontWeight: FontWeight.w900, color: Colors.red),
+            style:
+                const TextStyle(fontWeight: FontWeight.w900, color: Colors.red),
             textAlign: TextAlign.center,
           ),
           backgroundColor: Colors.grey,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15.0),
-            side: const BorderSide(color: Colors.grey, width: 2.0), // bo viền 15px
+            side: const BorderSide(
+                color: Colors.grey, width: 2.0), // bo viền 15px
           ),
           behavior: SnackBarBehavior.floating, // hiển thị ở cách đáy màn hình
-          margin: const EdgeInsets.only(left: 15.0, right: 15.0, bottom: 15.0), // cách 2 cạnh và đáy màn hình 15px
+          margin: const EdgeInsets.only(
+              left: 15.0,
+              right: 15.0,
+              bottom: 15.0), // cách 2 cạnh và đáy màn hình 15px
         ),
       );
     }
