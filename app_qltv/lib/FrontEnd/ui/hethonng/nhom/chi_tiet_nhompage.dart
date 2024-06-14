@@ -33,6 +33,7 @@
 // }
 
 import 'package:app_qltv/FrontEnd/controller/hethong/nguoidung_manager.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:app_qltv/FrontEnd/model/hethong/nguoidung.dart';
@@ -46,15 +47,35 @@ class ChiTietNhom extends StatelessWidget {
 
   late NguoiDungManager nguoiDungManager = NguoiDungManager();
 
-  
   @override
-  Widget build(BuildContext context) {  
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Chi Tiết Nhóm $groupId'),
+        backgroundColor: const Color.fromARGB(255, 228, 200, 126),
+        leading: IconButton(
+          icon: const Icon(
+            CupertinoIcons.left_chevron,
+            color: Colors.black,
+          ),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+        title: Center(
+          child: Padding(
+            padding: const EdgeInsets.only(right: 50.0),
+            child: Text(
+              "Chi Tiết Nhóm $groupId",
+              style: const TextStyle(
+                  color: Colors.black, fontWeight: FontWeight.w900),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ),
       ),
       body: FutureBuilder<List<NguoiDung>>(
-        future: Provider.of<NguoiDungManager>(context, listen: false).fetchAndFilterNguoiDungsByGroupId(groupId),
+        future: Provider.of<NguoiDungManager>(context, listen: false)
+            .fetchAndFilterNguoiDungsByGroupId(groupId),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
@@ -69,7 +90,8 @@ class ChiTietNhom extends StatelessWidget {
               itemBuilder: (context, index) {
                 NguoiDung nguoiDung = nguoiDungs[index];
                 return ListTile(
-                  title: Text(nguoiDung.userTen.toString()), // Assuming 'name' is a property of NguoiDung
+                  title: Text(nguoiDung.userTen
+                      .toString()), // Assuming 'name' is a property of NguoiDung
                   subtitle: Text('ID: ${nguoiDung.groupId}'),
                 );
               },

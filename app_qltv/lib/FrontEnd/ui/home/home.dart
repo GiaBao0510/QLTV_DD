@@ -111,15 +111,15 @@ class _HomeScreenState extends State<HomeScreen> {
         'text': 'Kho Vàng Mua Vào',
         'routeName': '/KhoVangMuaVao'
       },
-      {
-        'image': 'assets/images/paper.png',
-        'text': 'In Phiếu Xuất',
-        'routeName': '/loaivang'
-      },
+      // {
+      //   'image': 'assets/images/paper.png',
+      //   'text': 'In Phiếu Xuất',
+      //   'routeName': '/loaivang'
+      // },
       {
         'image': 'assets/images/presentation.png',
         'text': 'Khách Hàng Giao Dịch Nhiều',
-        'routeName': '/loaivang'
+        'routeName': '/topkhachhang'
       },
       {
         'image': 'assets/images/shopping-list.png',

@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:app_qltv/FrontEnd/ui/components/search_bar.dart';
 
 class BaoCaoTopKhachHangScreen extends StatefulWidget {
-  static const routeName = "/baocaophieudoi";
+  static const routeName = "/topkhachhang";
 
   const BaoCaoTopKhachHangScreen({Key? key}) : super(key: key);
 

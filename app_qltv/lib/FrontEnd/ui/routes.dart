@@ -5,6 +5,7 @@ import 'package:app_qltv/FrontEnd/ui/danh_muc/BaoCao/BaoCao_PhieuDoi.dart';
 
 import 'package:app_qltv/FrontEnd/ui/danh_muc/BaoCao/BaoCao_TonKhoNhomVang.dart';
 import 'package:app_qltv/FrontEnd/ui/danh_muc/BaoCao/BaoCao_TonKhoVang.dart';
+import 'package:app_qltv/FrontEnd/ui/danh_muc/BaoCao/BaoCao_TopKhachHang.dart';
 import 'package:app_qltv/FrontEnd/ui/danh_muc/dvi/components/them_dvi.dart';
 import 'package:app_qltv/FrontEnd/ui/danh_muc/dvi/dvi.dart';
 import 'package:app_qltv/FrontEnd/ui/danh_muc/hang_hoa/hang_hoa.dart';
@@ -55,4 +56,5 @@ final Map<String, WidgetBuilder> routes = {
   KhoVangMuaVaoScreen.routeName: (ctx) => KhoVangMuaVaoScreen(),
   TestPage.routeName: (ctx) => TestPage(),
   ThemHoaDon_nhap.routerName: (ctx) => ThemHoaDon_nhap(),
+  BaoCaoTopKhachHangScreen.routeName: (ctx) => BaoCaoTopKhachHangScreen(),
 };
