@@ -84,18 +84,18 @@ class BaoCaoPhieuMua {
       //thanhTien: map['THANH_TIEN'] ?? '',
     );
   }
-  // Map<String, dynamic> toMap() {
-  //   return {
-  //     'HANG_HOA_TEN': hangHoaTen,
-  //     'NHOM_TEN': nhomTen,
-  //     'TL_HOT': tlHot ?? 0.0,
-  //     'CAN_TONG': canTong ?? 0.0,
-  //     'TL_THUC': tlThuc ?? 0.0,
-  //     'DON_GIA': donGia ?? 0.0,
-  //     'PHIEU_MA': phieuMa,
-  //     'NGAY_NHAP': ngayNhap,
-  //     'NGAY_PHIEU': ngayPhieu,
-  //     'THANH_TIEN': thanhTien ?? 0.0,
-  //   };
-  // }
+  Map<String, dynamic> toMap() {
+    return {
+      'HANG_HOA_TEN': hangHoaTen,
+      'NHOM_TEN': nhomTen,
+      'TL_HOT': tlHot ,
+      'CAN_TONG': canTong,
+      'TL_THUC': tlThuc,
+      'DON_GIA': donGia,
+      'PHIEU_MA': phieuMa,
+      'NGAY_NHAP': ngayNhap,
+      'NGAY_PHIEU': ngayPhieu,
+      'THANH_TIEN': thanhTien,
+    };
+  }
 }
