@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:app_qltv/FrontEnd/model/HoaDonBanRa/ImportDraftInvoice_model.dart';
 import 'package:app_qltv/FrontEnd/controller/HoaDonBanRa/ImportDraftInvoice_manage.dart';
 import '../../constants/config.dart';
+import 'package:app_qltv/FrontEnd/ui/HoaDonBanRa/BangSanPham/BangSanPhamTaoHoaDonTemp.dart';
 
 class ThemHoaDon_nhap extends StatefulWidget {
   static const routerName = "/themhoadonnhap";
@@ -24,14 +25,6 @@ class _ThemHoaDon_nhapState extends State<ThemHoaDon_nhap> {
   int SoThuTuHangSP = 0;
     //San pham dau vao
   List<Products_model> DanhSachSanPham = [];
-  Products_model SanPham = Products_model(
-    code: '', ProdName: '',
-    ProdUnit: '', ProdQuantity: 0.0,
-    ProdPrice: 0.0, VATRate: 0.0,
-    VATAmount: 0.0, Total: 0.0, Amount: 0.0,
-    DiscountAmount: 0.0, Discount: 0.0,
-    ProdAttr: 1, Remark: '',
-  );
 
   //Ham khoi tao
   @override
@@ -60,231 +53,6 @@ class _ThemHoaDon_nhapState extends State<ThemHoaDon_nhap> {
     super.dispose();
   }
 
-  //PP Thêm dòng
-  void addRow(){
-    SoThuTuHangSP++;
-    setState(() {
-      TheNumberOfProducts.add(DataRow(cells: [
-        //STT
-        DataCell(Text('${SoThuTuHangSP}')),
-
-        //Mã sản phẩm
-        DataCell(
-          TextFormField(
-            expands: false,
-            obscureText: false,                     //Khong an ky tu
-            initialValue: SanPham.code,
-            keyboardType: TextInputType.text,
-            textInputAction: TextInputAction.next,
-            decoration: const InputDecoration(
-                prefixIcon: Icon(Icons.perm_identity_outlined),
-                border: OutlineInputBorder(),
-                focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.grey, width: 2)
-                ),
-                filled: true,
-                fillColor: Colors.white
-            ),
-            validator: (value) {                    //Dieu kien dau vao
-              if (value == null || value.isEmpty) {
-                return 'Vui lòng nhập mã sản phẩm';
-              }
-              return null;
-            },
-            onSaved: (value) {
-              SanPham = SanPham.copyWith(code: value); // Update the MaKH value
-            },
-          ),
-        ),
-
-        //Tên sản phẩm
-        DataCell(
-          TextFormField(
-            expands: false,
-            obscureText: false,                     //Khong an ky tu
-            initialValue: SanPham.ProdName,
-            keyboardType: TextInputType.text,
-            textInputAction: TextInputAction.next,
-            decoration: const InputDecoration(
-                prefixIcon: Icon(Icons.perm_identity_outlined),
-                border: OutlineInputBorder(),
-                focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.grey, width: 2)
-                ),
-                filled: true,
-                fillColor: Colors.white
-            ),
-            validator: (value) {                    //Dieu kien dau vao
-              if (value == null || value.isEmpty) {
-                return 'Vui lòng nhập tên sản phẩm';
-              }
-              return null;
-            },
-            onSaved: (value) {
-              SanPham = SanPham.copyWith(ProdName: value); // Update the MaKH value
-            },
-          ),
-        ),
-
-        //ĐVT
-        DataCell(
-          TextFormField(
-            expands: false,
-            obscureText: false,                     //Khong an ky tu
-            initialValue: SanPham.ProdUnit,
-            keyboardType: TextInputType.text,
-            textInputAction: TextInputAction.next,
-            decoration: const InputDecoration(
-                prefixIcon: Icon(Icons.perm_identity_outlined),
-                border: OutlineInputBorder(),
-                focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.grey, width: 2)
-                ),
-                filled: true,
-                fillColor: Colors.white
-            ),
-            validator: (value) {                    //Dieu kien dau vao
-              if (value == null || value.isEmpty) {
-                return 'Vui lòng nhập đơn vị tính';
-              }
-              return null;
-            },
-            onSaved: (value) {
-              SanPham = SanPham.copyWith(ProdUnit: value); // Update the MaKH value
-            },
-          ),
-        ),
-
-        //Số lượng
-        DataCell(
-          TextFormField(
-            expands: false,
-            obscureText: false,                     //Khong an ky tu
-            initialValue: SanPham.ProdQuantity.toString(),
-            keyboardType: TextInputType.number,
-            textInputAction: TextInputAction.next,
-            decoration: const InputDecoration(
-                prefixIcon: Icon(Icons.perm_identity_outlined),
-                border: OutlineInputBorder(),
-                focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.grey, width: 2)
-                ),
-                filled: true,
-                fillColor: Colors.white
-            ),
-            validator: (value) {                    //Dieu kien dau vao
-              if (value == null || value.isEmpty) {
-                return 'Vui lòng nhập số lượng';
-              }
-              return null;
-            },
-            onSaved: (value) {
-              SanPham = SanPham.copyWith(ProdQuantity: value as double); // Update the MaKH value
-            },
-          ),
-        ),
-
-        //Đơn giá sản phẩm
-        DataCell(
-          TextFormField(
-            expands: false,
-            obscureText: false,                     //Khong an ky tu
-            initialValue: SanPham.ProdPrice.toString(),
-            keyboardType: TextInputType.number,
-            textInputAction: TextInputAction.next,
-            decoration: const InputDecoration(
-                prefixIcon: Icon(Icons.perm_identity_outlined),
-                border: OutlineInputBorder(),
-                focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.grey, width: 2)
-                ),
-                filled: true,
-                fillColor: Colors.white
-            ),
-            validator: (value) {                    //Dieu kien dau vao
-              if (value == null || value.isEmpty) {
-                return 'Vui lòng nhập đơn giá sản phẩm';
-              }
-              return null;
-            },
-            onSaved: (value) {
-              SanPham = SanPham.copyWith(ProdPrice: value as double); // Update the MaKH value
-            },
-          ),
-        ),
-
-        //Thành tiền chưa trừ CK
-        DataCell(
-          TextFormField(
-            expands: false,
-            obscureText: false,                     //Khong an ky tu
-            initialValue: SanPham.ProdPrice.toString(),
-            readOnly: true,
-            textInputAction: TextInputAction.next,
-            decoration: const InputDecoration(
-                prefixIcon: Icon(Icons.perm_identity_outlined),
-                border: OutlineInputBorder(),
-                focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.grey, width: 2)
-                ),
-                filled: true,
-                fillColor: Colors.white
-            ),
-          ),
-        ),
-
-        //Chiết khấu %
-        DataCell(
-          TextFormField(
-            expands: false,
-            obscureText: false,                     //Khong an ky tu
-            initialValue: SanPham.Discount.toString(),
-            keyboardType: TextInputType.number,
-            textInputAction: TextInputAction.next,
-            decoration: const InputDecoration(
-                prefixIcon: Icon(Icons.perm_identity_outlined),
-                border: OutlineInputBorder(),
-                focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.grey, width: 2)
-                ),
-                filled: true,
-                fillColor: Colors.white
-            ),
-            onSaved: (value) {
-              SanPham = SanPham.copyWith(Discount: value as double); // Update the MaKH value
-            },
-          ),
-        ),
-
-        //Tiền chiết khấu
-        DataCell(
-          TextFormField(
-            expands: false,
-            obscureText: false,                     //Khong an ky tu
-            //Error
-            //initialValue: (SanPham.ProdUnit * SanPham.Discount / 100.0).toString(),
-            keyboardType: TextInputType.number,
-            textInputAction: TextInputAction.next,
-            decoration: const InputDecoration(
-                prefixIcon: Icon(Icons.perm_identity_outlined),
-                border: OutlineInputBorder(),
-                focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.grey, width: 2)
-                ),
-                filled: true,
-                fillColor: Colors.white
-            ),
-            onSaved: (value) {
-              SanPham = SanPham.copyWith(DiscountAmount: value as double); // Update the MaKH value
-            },
-          ),
-        ),
-      ]));
-    });
-  }
-
-  //PP xóa dòng
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -301,7 +69,7 @@ class _ThemHoaDon_nhapState extends State<ThemHoaDon_nhap> {
               fontWeight: FontWeight.bold),),
         ),
         flexibleSpace: Container(
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
               gradient: LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
@@ -566,6 +334,7 @@ class _ThemHoaDon_nhapState extends State<ThemHoaDon_nhap> {
 
                   // Bang san pham
                   const SizedBox(height: 20,),
+
                   ProductTableInTheInvoice(context),
                   const SizedBox(height: 5,),
                   AddOrDeleteRows(context),
@@ -1125,138 +894,5 @@ class _ThemHoaDon_nhapState extends State<ThemHoaDon_nhap> {
         ],),
       ),
     );
-  }
-
-  //Bảng thêm sản phẩm trong hóa đơn
-  Widget ProductTableInTheInvoice(BuildContext context){
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: DataTable(
-        headingRowColor: MaterialStateColor.resolveWith(
-                (states) => Colors.black87),
-        columns: const <DataColumn>[
-          DataColumn(
-              label: Text(
-                'STT', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-              )
-          ),
-          DataColumn(
-              label: Text(
-                'Mã sản phẩm', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-              )
-          ),
-          DataColumn(
-              label: Text(
-                'Tên hàng hóa, dịch vụ', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-              )
-          ),
-          DataColumn(
-              label: Text(
-                'ĐVT', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-              )
-          ),
-          DataColumn(
-              label: Text(
-                'Số lượng', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-              )
-          ),
-          DataColumn(
-              label: Text(
-                'Đơn giá', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-              )
-          ),
-          DataColumn(
-              label: Text(
-                'Thành tiền chưa trừ CK', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-              )
-          ),
-          DataColumn(
-              label: Text(
-                'Chiết khấu (%)', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-              )
-          ),
-          DataColumn(
-              label: Text(
-                'Tiền chiết khấu', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-              )
-          ),
-          DataColumn(
-              label: Text(
-                'Thành tiền trước thuế', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-              )
-          ),
-          DataColumn(
-              label: Text(
-                'Thuế suất GTGT(%)', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-              )
-          ),
-          DataColumn(
-              label: Text(
-                'Thuế GTGT', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-              )
-          ),
-          DataColumn(
-              label: Text(
-                'Thành tiền sau thuế', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-              )
-          ),
-          DataColumn(
-              label: Text(
-                'Tính chất', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-              )
-          ),
-        ],
-        rows: TheNumberOfProducts
-      ),
-    );
-  }
-
-  //Them hang hoac xoa hàng
-  Widget AddOrDeleteRows(BuildContext context){
-    return Row(children: [
-      Expanded(
-        flex: 1,
-          child: Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: [Color(0xffffa8a8), Color(0xfffd8686)],
-                stops: [0, 1],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              borderRadius: BorderRadius.all(Radius.circular(10)),
-            ),
-            child: TextButton(
-              onPressed: (){},
-              child: const ListTile(
-                leading: Icon(Icons.delete, color: Colors.red,),
-                title: Text('Xóa dòng chọn', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red),),
-              ),
-            ),
-          )
-      ),
-      const SizedBox(width: 5,),
-      Expanded(
-          flex: 1,
-          child: Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: [Color(0xffa8aeff), Color(0xffa3a9ff)],
-                stops: [0, 1],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              borderRadius: BorderRadius.all(Radius.circular(10)),
-            ),
-            child: TextButton(
-              onPressed: (){},
-              child: const ListTile(
-                leading: Icon(Icons.add, color: Colors.blue,),
-                title: Text('Thêm dòng mới', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.blue),),
-              ),
-            ),
-          )
-      ),
-    ],);
   }
 }

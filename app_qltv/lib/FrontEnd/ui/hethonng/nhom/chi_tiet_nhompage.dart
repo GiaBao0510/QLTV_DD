@@ -82,7 +82,7 @@ class ChiTietNhom extends StatelessWidget {
           } else if (snapshot.hasError) {
             return Center(child: Text('Lỗi: ${snapshot.error}'));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('Không có người dùng nào trong nhóm n'));
+            return Center(child: Text('Không có người dùng nào trong nhóm này'));
           } else {
             List<NguoiDung> nguoiDungs = snapshot.data!;
             return ListView.builder(
