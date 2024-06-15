@@ -134,8 +134,13 @@ class _HomeScreenState extends State<HomeScreen> {
     ];
 
     const crossAxisCount = 3;
-    const itemHeight = 135.0;
-
+    final int divisor = MediaQuery.of(context).size.height < 750
+        ? 3
+        : (MediaQuery.of(context).size.height > 900 ? 3 : 5);
+    final itemHeight =
+        (MediaQuery.of(context).size.height - kToolbarHeight - 150) / divisor;
+    print('SIZE item:');
+    print(itemHeight);
     final rowCount_DanhMuc = (danhmuc_items.length / crossAxisCount).ceil();
     final gridHeight_DanhMuc =
         itemHeight * rowCount_DanhMuc + (10.0 * (rowCount_DanhMuc - 1));
