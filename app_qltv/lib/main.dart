@@ -30,6 +30,7 @@ import 'dart:io';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:app_qltv/FrontEnd/ui/components/NotConnectInternet.dart';
+import 'package:app_qltv/FrontEnd/ui/components/InterfaceError500.dart';
 import 'package:app_qltv/FrontEnd/ui/home/home.dart';
 import 'package:app_qltv/FrontEnd/ui/routes.dart';
 import 'package:app_qltv/FrontEnd/controller/danhmuc/nhomvang_manager.dart'; // Import NhomVangManager của bạn
@@ -75,7 +76,6 @@ class MyApp extends StatelessWidget {
       } else {
         return LoginPage();
       }
-      return const HomeScreen();
     } else {
       return InterfaceConnectionError();
     }
@@ -129,7 +129,10 @@ class MyApp extends StatelessWidget {
                 onRefresh: () => KiemTraDangNhap(context),
               );
             } else if (snapshot.hasError) {
-              return Text("Error: ${snapshot.error}");
+              print('Lỗi server');
+              String Loi = snapshot.error.toString();
+              return Interfaceerror500(EroRecordedinText: Loi);
+              //snapshot.error
             } else {
               return CircularProgressIndicator();
             }

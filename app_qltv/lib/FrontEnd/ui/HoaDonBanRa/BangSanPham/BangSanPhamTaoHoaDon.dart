@@ -28,11 +28,6 @@ class _BangSanPhamTaoHoaDonState extends State<BangSanPhamTaoHoaDon> {
 //1. Danh sách cột
   List<DataColumn> productTableHeader(){
     return const <DataColumn>[
-      // DataColumn(
-      //   label: Text(
-      //     'Xóa', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-      //   ),
-      // ),
       DataColumn(
         label: Text(
           'STT', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
@@ -134,7 +129,14 @@ class _BangSanPhamTaoHoaDonState extends State<BangSanPhamTaoHoaDon> {
     ],);
   }
 
-//6. Phương thức tạo hàng
+//6.Đánh dấu hàng được chọn
+void _HighlightTheSelectedRow(bool? value){
+    setState(() {
+      selectRow = value ?? false;
+    });
+}
+
+//7. Phương thức tạo hàng
   //PP Thêm dòng
   void addRow(){
     //Tao san pham
@@ -151,6 +153,8 @@ class _BangSanPhamTaoHoaDonState extends State<BangSanPhamTaoHoaDon> {
     setState(() {
       DanhSachSanPham_Row.add(DataRow(
         color:  MaterialStateColor.resolveWith((states) => Colors.white),
+        selected: selectRow,
+        onSelectChanged: _HighlightTheSelectedRow,
         cells: [
           //STT
           DataCell(Text('${SoThuTu}')),
@@ -563,6 +567,7 @@ class _BangSanPhamTaoHoaDonState extends State<BangSanPhamTaoHoaDon> {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: DataTable(
+        showCheckboxColumn: true,
         border: TableBorder.all(
           width: 1,
           color: Colors.black26
@@ -591,7 +596,11 @@ class _BangSanPhamTaoHoaDonState extends State<BangSanPhamTaoHoaDon> {
               borderRadius: BorderRadius.all(Radius.circular(10)),
             ),
             child: TextButton(
-              onPressed: (){},
+              onPressed: (){
+                setState(() {
+                  DanhSachSanPham_Row.removeWhere((e) => e.selected);
+                });
+              },
               child: const ListTile(
                 leading: Icon(Icons.delete, color: Colors.red,),
                 title: Text('Xóa dòng chọn', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red),),
