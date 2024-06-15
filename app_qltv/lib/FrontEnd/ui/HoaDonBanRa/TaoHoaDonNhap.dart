@@ -5,6 +5,7 @@ import 'package:app_qltv/FrontEnd/model/HoaDonBanRa/ImportDraftInvoice_model.dar
 import 'package:app_qltv/FrontEnd/controller/HoaDonBanRa/ImportDraftInvoice_manage.dart';
 import '../../constants/config.dart';
 import 'package:app_qltv/FrontEnd/ui/HoaDonBanRa/BangSanPham/BangSanPhamTaoHoaDonTemp.dart';
+import './BangSanPham/BangSanPhamTaoHoaDon.dart';
 
 class ThemHoaDon_nhap extends StatefulWidget {
   static const routerName = "/themhoadonnhap";
@@ -334,10 +335,7 @@ class _ThemHoaDon_nhapState extends State<ThemHoaDon_nhap> {
 
                   // Bang san pham
                   const SizedBox(height: 20,),
-
-                  ProductTableInTheInvoice(context),
-                  const SizedBox(height: 5,),
-                  AddOrDeleteRows(context),
+                  BangSanPhamTaoHoaDon(DanhSachSanPham: DanhSachSanPham,),
 
                   //HInnh thưc thanh toan
                   const SizedBox(height: 20,),
