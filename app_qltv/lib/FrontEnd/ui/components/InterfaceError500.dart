@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'package:quickalert/quickalert.dart';
 import 'package:app_qltv/main.dart';
 
 class Interfaceerror500 extends StatefulWidget {

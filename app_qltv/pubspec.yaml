@@ -56,6 +56,7 @@ dependencies:
   qr_flutter: ^4.1.0
   number_paginator: ^0.4.1
   excel: ^2.0.6
+  loading_animation_widget: ^1.2.1
 
 # Logo ưng dụng
 flutter_icons:

@@ -31,6 +31,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:app_qltv/FrontEnd/ui/components/NotConnectInternet.dart';
 import 'package:app_qltv/FrontEnd/ui/components/InterfaceError500.dart';
+import 'package:app_qltv/FrontEnd/ui/components/LoadingInterface.dart';
 import 'package:app_qltv/FrontEnd/ui/home/home.dart';
 import 'package:app_qltv/FrontEnd/ui/routes.dart';
 import 'package:app_qltv/FrontEnd/controller/danhmuc/nhomvang_manager.dart'; // Import NhomVangManager của bạn
@@ -134,7 +135,7 @@ class MyApp extends StatelessWidget {
               return Interfaceerror500(EroRecordedinText: Loi);
               //snapshot.error
             } else {
-              return CircularProgressIndicator();
+              return Loadinginterface();
             }
           },
         ),

@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import 'package:app_qltv/FrontEnd/model/HoaDonBanRa/ImportDraftInvoice_model.dart';
 import 'package:app_qltv/FrontEnd/controller/HoaDonBanRa/ImportDraftInvoice_manage.dart';
 import '../../constants/config.dart';
-import 'package:app_qltv/FrontEnd/ui/HoaDonBanRa/BangSanPham/BangSanPhamTaoHoaDonTemp.dart';
 import './BangSanPham/BangSanPhamTaoHoaDon.dart';
 
 class ThemHoaDon_nhap extends StatefulWidget {
@@ -54,6 +53,9 @@ class _ThemHoaDon_nhapState extends State<ThemHoaDon_nhap> {
     super.dispose();
   }
 
+  //Ham luu
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -79,9 +81,9 @@ class _ThemHoaDon_nhapState extends State<ThemHoaDon_nhap> {
       ),
       body: Scrollbar(
         child: ListView(children: [
-          Container(
-            padding: EdgeInsets.fromLTRB(15, 10, 15, 20),
-            decoration: BoxDecoration(
+           Container(
+            padding:const EdgeInsets.fromLTRB(15, 10, 15, 20),
+            decoration: const BoxDecoration(
               gradient: LinearGradient(
                 colors: [Color(0xffd6d1d2), Color(0xffb7bac8)],
                 stops: [0.25, 0.75],

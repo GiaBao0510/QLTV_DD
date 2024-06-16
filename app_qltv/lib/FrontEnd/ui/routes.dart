@@ -21,6 +21,7 @@ import 'package:app_qltv/FrontEnd/ui/hethonng/nhom/nhompage.dart';
 import 'package:app_qltv/FrontEnd/ui/hethonng/nhom/them_nhom.dart';
 import 'package:app_qltv/FrontEnd/ui/components/NotConnectInternet.dart';
 import 'package:app_qltv/FrontEnd/ui/components/InterfaceError500.dart';
+import 'package:app_qltv/FrontEnd/ui/components/LoadingInterface.dart';
 import 'package:app_qltv/FrontEnd/ui/danh_muc/BaoCao/BaoCao_TonKhoLoaiVang.dart';
 import 'package:app_qltv/FrontEnd/ui/danh_muc/BaoCao/BaoCao_PhieuXuat.dart';
 import 'package:app_qltv/FrontEnd/ui/camvang/Phieu/PhieuDangCam.dart';
@@ -59,4 +60,5 @@ final Map<String, WidgetBuilder> routes = {
   ThemHoaDon_nhap.routerName: (ctx) => ThemHoaDon_nhap(),
   BaoCaoTopKhachHangScreen.routeName: (ctx) => BaoCaoTopKhachHangScreen(),
   Interfaceerror500.routerName: (ctx) => Interfaceerror500(EroRecordedinText: "",),
+  Loadinginterface.routeName: (ctx) => Loadinginterface(),
 };

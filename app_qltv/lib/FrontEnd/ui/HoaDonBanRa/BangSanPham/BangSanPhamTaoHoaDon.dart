@@ -20,7 +20,13 @@ class _BangSanPhamTaoHoaDonState extends State<BangSanPhamTaoHoaDon> {
   String tinhChat = "Hàng hóa/dịch vụ -product/service";
   String ThueSuatGTGT = "0%";
   int SoThuTu = 0;
+  int SoThuTuHang = 0;
   bool selectRow = false;
+  double _donGia = 0.0, _thanhTienChuaTruCK = 0.0,
+      _chietKhau =0.0, _tienChietKhau =0.0,
+      _ThanhTienTruocThue =0.0, _ThueSuatGTGT = 0.0,
+      _ThueGTGT =0.0, _thanhTienSauThue = 0.0;
+  FocusNode _focusnode = FocusNode();
 
   _BangSanPhamTaoHoaDonState({required this.DanhSachSanPham});
 
@@ -110,7 +116,10 @@ class _BangSanPhamTaoHoaDonState extends State<BangSanPhamTaoHoaDon> {
   @override
   void initState() {
     super.initState();
-    addRow();
+    DanhSachSanPham.add(addRow());
+    _focusnode.addListener((){
+      print(_focusnode.hasFocus);
+    });
   }
 
 //4.Hàm hủy
@@ -136,17 +145,47 @@ void _HighlightTheSelectedRow(bool? value){
     });
 }
 
+//8. Cập nhật giá trị tính toán cho một vài cột trong baảng
+void CapNhatGiaTri(Products_model SanPham){
+  setState((){
+    _donGia = SanPham.ProdPrice;
+    _thanhTienChuaTruCK = _donGia  * SanPham.ProdQuantity;
+    _chietKhau = SanPham.Discount;
+    _tienChietKhau = _thanhTienChuaTruCK * _chietKhau/100.0;
+    _ThanhTienTruocThue = _thanhTienChuaTruCK - _tienChietKhau;
+    _ThueSuatGTGT = SanPham.VATRate;
+    _ThueGTGT = _ThanhTienTruocThue * _ThueSuatGTGT;
+    _thanhTienSauThue = _ThanhTienTruocThue + _ThueGTGT;
+
+    //Cập nhật lại giá trị sản phẩm
+    SanPham = SanPham.copyWith(
+      ProdPrice:  _donGia,
+      DiscountAmount: _tienChietKhau,
+      Total: _thanhTienChuaTruCK,
+      Amount: _thanhTienSauThue,
+      VATAmount: _ThueGTGT
+    );
+  });
+}
+
 //7. Phương thức tạo hàng
   //PP Thêm dòng
-  void addRow(){
+  Products_model addRow(){
     //Tao san pham
     Products_model SanPham = Products_model(
-      code: '', ProdName: '',
-      ProdUnit: '', ProdQuantity: 0.0,
-      ProdPrice: 0.0, VATRate: 0.0,
-      VATAmount: 0.0, Total: 0.0, Amount: 0.0,
-      DiscountAmount: 0.0, Discount: 0.0,
-      ProdAttr: 1, Remark: '',
+      code: '',
+      ProdName: '',
+      ProdUnit: '',
+      ProdQuantity: 0.0,
+      ProdPrice: 0.0,
+      VATRate: 0.0,
+      VATAmount: 0.0,
+      Total: 0.0,
+      Amount: 0.0,
+      DiscountAmount: 0.0,
+      Discount: 0.0,
+      ProdAttr: 1,
+      Remark: '',
     );
     SoThuTu++;
 
@@ -160,160 +199,129 @@ void _HighlightTheSelectedRow(bool? value){
           DataCell(Text('${SoThuTu}')),
           //Mã sản phẩm
           DataCell(
-            TextFormField(
-              expands: false,
-              obscureText: false,                     //Khong an ky tu
-              initialValue: SanPham.code,
+            TextField(
               keyboardType: TextInputType.text,
-              textInputAction: TextInputAction.next,
-              validator: (value) {                    //Dieu kien dau vao
-                if (value == null || value.isEmpty) {
-                  return 'Vui lòng nhập mã sản phẩm';
-                }
-                return null;
+              obscureText: false,
+              expands: false,
+              controller: TextEditingController(),
+              onChanged: (value){
+                SanPham = SanPham.copyWith(code: value);
+                print('Ma SP: ${SanPham.code}');
+                setState(() {
+                  SanPham = SanPham.copyWith(code: value);
+                });
               },
-              onSaved: (value) {
-                SanPham = SanPham.copyWith(code: value); // Update the MaKH value
-              },
-            ),
+              focusNode: _focusnode,
+            )
           ),
 
           //Tên sản phẩm
           DataCell(
-            TextFormField(
+            TextField(
               expands: false,
-              obscureText: false,                     //Khong an ky tu
-              initialValue: SanPham.ProdName,
+              obscureText: false,
               keyboardType: TextInputType.text,
               textInputAction: TextInputAction.next,
-              validator: (value) {                    //Dieu kien dau vao
-                if (value == null || value.isEmpty) {
-                  return 'Vui lòng nhập tên sản phẩm';
-                }
-                return null;
-              },
-              onSaved: (value) {
-                SanPham = SanPham.copyWith(ProdName: value); // Update the MaKH value
+              onChanged: (String value){
+                SanPham = SanPham.copyWith(ProdName: value);
               },
             ),
           ),
 
           //ĐVT
           DataCell(
-            TextFormField(
+            TextField(
               expands: false,
-              obscureText: false,                     //Khong an ky tu
-              initialValue: SanPham.ProdUnit,
+              obscureText: false,
               keyboardType: TextInputType.text,
               textInputAction: TextInputAction.next,
-              validator: (value) {                    //Dieu kien dau vao
-                if (value == null || value.isEmpty) {
-                  return 'Vui lòng nhập đơn vị tính';
-                }
-                return null;
-              },
-              onSaved: (value) {
-                SanPham = SanPham.copyWith(ProdUnit: value); // Update the MaKH value
+              onChanged: (String value){
+                SanPham = SanPham.copyWith(ProdUnit: value);
               },
             ),
           ),
 
           //Số lượng
           DataCell(
-            TextFormField(
+            TextField(
               expands: false,
-              obscureText: false,                     //Khong an ky tu
-              initialValue: SanPham.ProdQuantity.toString(),
+              obscureText: false,
               keyboardType: TextInputType.number,
               textInputAction: TextInputAction.next,
-              validator: (value) {                    //Dieu kien dau vao
-                if (value == null || value.isEmpty) {
-                  return 'Vui lòng nhập số lượng';
-                }
-                return null;
-              },
-              onSaved: (value) {
-                SanPham = SanPham.copyWith(ProdQuantity: value as double); // Update the MaKH value
+              onChanged: (value){
+                SanPham = SanPham.copyWith(ProdQuantity: value as double);
               },
             ),
           ),
 
           //Đơn giá sản phẩm
           DataCell(
-            TextFormField(
+            TextField(
               expands: false,
-              obscureText: false,                     //Khong an ky tu
-              initialValue: SanPham.ProdPrice.toString(),
+              obscureText: false,
               keyboardType: TextInputType.number,
               textInputAction: TextInputAction.next,
-              validator: (value) {                    //Dieu kien dau vao
-                if (value == null || value.isEmpty) {
-                  return 'Vui lòng nhập đơn giá sản phẩm';
-                }
-                return null;
-              },
-              onSaved: (value) {
-                SanPham = SanPham.copyWith(ProdPrice: value as double); // Update the MaKH value
+              onChanged: (value){
+                SanPham = SanPham.copyWith(ProdPrice: value as double);
               },
             ),
           ),
 
           //Thành tiền chưa trừ CK
           DataCell(
-            TextFormField(
+            TextField(
               expands: false,
               obscureText: false,                     //Khong an ky tu
-              initialValue: SanPham.ProdPrice.toString(),
+              onChanged: (value){
+                CapNhatGiaTri(SanPham);
+              },
               readOnly: true,
+              controller: TextEditingController(text: "${_thanhTienChuaTruCK}"),
               textInputAction: TextInputAction.next,
             ),
           ),
 
           //Chiết khấu %
           DataCell(
-            TextFormField(
+            TextField(
               expands: false,
               obscureText: false,                     //Khong an ky tu
-              initialValue: SanPham.Discount.toString(),
               keyboardType: TextInputType.number,
               textInputAction: TextInputAction.next,
-              onSaved: (value) {
-                SanPham = SanPham.copyWith(Discount: value as double); // Update the MaKH value
+              controller: TextEditingController(text: "${SanPham.Discount}"),
+              onChanged: (value){
+                CapNhatGiaTri(SanPham);
+                SanPham = SanPham.copyWith(Discount: _chietKhau);
               },
             ),
           ),
 
           //Tiền chiết khấu
           DataCell(
-            TextFormField(
+            TextField(
               expands: false,
               obscureText: false,
-              initialValue: (
-                  (double.tryParse(SanPham.ProdUnit.toString()) ?? 0.0) *
-                      (double.tryParse(SanPham.Discount.toString()) ?? 0.0 ) / 100.0
-              ).toString(),
+              controller: TextEditingController(text: "${SanPham.DiscountAmount}"),
+              onChanged: (value){
+                CapNhatGiaTri(SanPham);
+                SanPham = SanPham.copyWith(DiscountAmount: _tienChietKhau);
+              },
               readOnly: true,
               textInputAction: TextInputAction.next,
-              onSaved: (value) {
-                SanPham = SanPham.copyWith(DiscountAmount: value as double); // Update the MaKH value
-              },
             ),
           ),
 
           //Thành tiền trước thuế  -- chưa tìm thấy thuộc tính để lưu
           DataCell(
-            TextFormField(
+            TextField(
               expands: false,
               obscureText: false,
-              initialValue: (
-                  (double.tryParse(SanPham.ProdPrice.toString()) ?? 0.0) -
-                      (double.tryParse(SanPham.DiscountAmount.toString()) ?? 0.0)
-              ).toString(),
+              onChanged: (value){
+                CapNhatGiaTri(SanPham);
+                SanPham = SanPham.copyWith(Total: _ThanhTienTruocThue);
+              },
               readOnly: true,
               textInputAction: TextInputAction.next,
-              onSaved: (value) {
-                SanPham = SanPham.copyWith(Total: value as double); // Update the MaKH value
-              },
             ),
           ),
 
@@ -442,46 +450,29 @@ void _HighlightTheSelectedRow(bool? value){
 
           //Thuế GTGT
           DataCell(
-            TextFormField(
+            TextField(
               expands: false,
               obscureText: false,
-              initialValue: (
-                  (
-                      (double.tryParse(SanPham.ProdUnit.toString()) ?? 0.0) -
-                          ((double.tryParse(SanPham.ProdUnit.toString()) ?? 0.0) *
-                              (double.tryParse(SanPham.Discount.toString()) ?? 0.0 ) / 100.0 )
-                  ) * (double.tryParse(SanPham.Discount.toString()) ?? 0.0 ) / 100.0
-              ).toString(),
+              onChanged: (value){
+                CapNhatGiaTri(SanPham);
+                SanPham = SanPham.copyWith(DiscountAmount: _ThueGTGT);
+              },
               readOnly: true,
               textInputAction: TextInputAction.next,
-              onSaved: (value) {
-                SanPham = SanPham.copyWith(DiscountAmount: value as double); // Update the MaKH value
-              },
             ),
           ),
 
           //Thành tiền sau thuế
           DataCell(
-            TextFormField(
+            TextField(
               expands: false,
               obscureText: false,
-              initialValue: (
-                  (
-                      (double.tryParse(SanPham.ProdUnit.toString()) ?? 0.0) -
-                          (
-                              (double.tryParse(SanPham.ProdUnit.toString()) ?? 0.0) -
-                                  (
-                                      (double.tryParse(SanPham.ProdUnit.toString()) ?? 0.0) *
-                                          (double.tryParse(SanPham.Discount.toString()) ?? 0.0 ) / 100.0
-                                  )
-                          ) * (double.tryParse(SanPham.Discount.toString()) ?? 0.0 ) / 100.0
-                  )
-              ).toString(),
+              onChanged: (value){
+                CapNhatGiaTri(SanPham);
+                SanPham = SanPham.copyWith(Amount: _thanhTienSauThue);
+              },
               readOnly: true,
               textInputAction: TextInputAction.next,
-              onSaved: (value) {
-                SanPham = SanPham.copyWith(Amount: value as double); // Update the MaKH value
-              },
             ),
           ),
 
@@ -559,6 +550,8 @@ void _HighlightTheSelectedRow(bool? value){
       ]
       ));
     });
+    //Tra ve SP sau khi dien thong tin
+    return SanPham;
   }
 
   // --- Tiện ích ----
@@ -584,53 +577,72 @@ void _HighlightTheSelectedRow(bool? value){
   Widget AddOrDeleteRows(BuildContext context){
     return Row(children: [
       Expanded(
-          flex: 1,
-          child: Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: [Color(0xffffa8a8), Color(0xfffd8686)],
-                stops: [0, 1],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              borderRadius: BorderRadius.all(Radius.circular(10)),
+        flex: 1,
+        child:Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Color(0xffffa8a8), Color(0xfffd8686)],
+              stops: [0, 1],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
             ),
-            child: TextButton(
-              onPressed: (){
-                setState(() {
-                  DanhSachSanPham_Row.removeWhere((e) => e.selected);
-                });
-              },
-              child: const ListTile(
-                leading: Icon(Icons.delete, color: Colors.red,),
-                title: Text('Xóa dòng chọn', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red),),
-              ),
+            borderRadius: BorderRadius.all(Radius.circular(10)),
+          ),
+          child: TextButton(
+            onPressed: (){
+              setState(() {
+                DanhSachSanPham_Row.removeWhere((e) => e.selected);
+              });
+            },
+            child: const ListTile(
+              leading: Icon(Icons.delete, color: Colors.red,),
+              title: Text('Xóa dòng chọn', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red),),
             ),
-          )
+          ),
+        )
       ),
       const SizedBox(width: 5,),
       Expanded(
-          flex: 1,
-          child: Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: [Color(0xffa8aeff), Color(0xffa3a9ff)],
-                stops: [0, 1],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              borderRadius: BorderRadius.all(Radius.circular(10)),
+        flex: 1,
+        child: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Color(0xffa8aeff), Color(0xffa3a9ff)],
+              stops: [0, 1],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
             ),
-            child: TextButton(
-              onPressed: (){
-                addRow();
-              },
-              child: const ListTile(
-                leading: Icon(Icons.add, color: Colors.blue,),
-                title: Text('Thêm dòng mới', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.blue),),
-              ),
+            borderRadius: BorderRadius.all(Radius.circular(10)),
+          ),
+          child: TextButton(
+            onPressed: (){
+              Products_model row = DanhSachSanPham[SoThuTuHang];
+              print('\t--- So luong: ${DanhSachSanPham.length} ---\t');
+              print("Ma sản phẩm: ${row.code}");
+              print("ten sản phẩm: ${row.ProdName}");
+              print("DVT: ${row.ProdUnit}");
+              print("Đơn giá: ${row.ProdPrice}");
+              print("Số lượng: ${row.ProdQuantity}");
+              print("Thành tiền chưa trừ CK: ${_thanhTienChuaTruCK}");
+              print("Chiết khấu (%): ${row.Discount}");
+              print("Tiền chiết khấu: ${row.DiscountAmount}");
+              print("Thành tiền trước thuế: ${row.Total}");
+              print("Thuế suất GTGT(%): ${row.VATRate}");
+              print("Thuế GTGT: ${row.DiscountAmount}");
+              print("Thành tiền sau thuế: ${row.Amount}");
+              print("Tính chất: ${row.ProdAttr}");
+
+
+              //Them sau khi kiem tra hang trước có điền thông tin
+              DanhSachSanPham.add(addRow());
+              SoThuTuHang++;
+            },
+            child: const ListTile(
+              leading: Icon(Icons.add, color: Colors.blue,),
+              title: Text('Thêm dòng mới', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.blue),),
             ),
-          )
+          ),
+        )
       ),
     ],);
   }
