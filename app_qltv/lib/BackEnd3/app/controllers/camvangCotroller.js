@@ -4,12 +4,30 @@ const camvangServices = require('../services/camvangServices');
 
 exports.getPhieuDangCam = async (req, res, next) => {
   try {
-    const phieuList = await camvangServices.getPhieuDangCam();
+    const {ngayBD, ngayKT, limit, offset} =  req.query;
+    if(!ngayBD || !ngayKT || !limit || !offset){
+      return res.status(404).json({message: "Vui lòng thêm tham số ngày bắt đầu, ngày kết thúc, limit và offset để lấy thông tin hiển thị."});
+    }
+    const phieuList = await camvangServices.getPhieuDangCam(ngayBD,ngayKT,limit,offset);
     res.status(200).json(phieuList);
   } catch (error) {
     next(error);
   }
 };
+
+exports.getThongTinTinhTongPhieuDangCam = async (req, res, next) => {
+  try {
+    const {ngayBD, ngayKT} =  req.query;
+    if(!ngayBD || !ngayKT ){
+      return res.status(404).json({message: "Vui lòng thêm tham số ngày bắt đầu và ngày kết thúc để lấy thông tin hiển thị."});
+    }
+    const phieuList = await camvangServices.getThongTinTinhTongPhieuDangCam(ngayBD,ngayKT);
+    res.status(200).json(phieuList);
+  } catch (error) {
+    next(error);
+  }
+};
+
 exports.getPhieuDangCamById = async (req, res, next) => {
   try {
     const phieu = await camvangServices.getPhieuDangCamById(req.params.id);
