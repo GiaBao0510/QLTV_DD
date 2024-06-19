@@ -746,12 +746,7 @@ class drawer extends StatelessWidget {
               leading: Image.asset('assets/images/test.png'),
               title: Text('Test chức năng'),
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                      const TestPage()),
-                );
+
               },
             ),
           ),

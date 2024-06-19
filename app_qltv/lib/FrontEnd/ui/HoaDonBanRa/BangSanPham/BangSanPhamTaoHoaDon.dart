@@ -18,17 +18,18 @@ class _BangSanPhamTaoHoaDonState extends State<BangSanPhamTaoHoaDon> {
   List<DataRow> DanhSachSanPham_Row = [];
   final List<Products_model> DanhSachSanPham;
   String tinhChat = "Hàng hóa/dịch vụ -product/service";
-  String ThueSuatGTGT = "0%";
+  String ThueSuatGTGT_Text = "0%";
   int SoThuTu = 0;
   int SoThuTuHang = 0;
+
   bool selectRow = false;
-  double _donGia = 0.0, _thanhTienChuaTruCK = 0.0,
-      _chietKhau =0.0, _tienChietKhau =0.0,
-      _ThanhTienTruocThue =0.0, _ThueSuatGTGT = 0.0,
-      _ThueGTGT =0.0, _thanhTienSauThue = 0.0;
-  FocusNode _focusnode = FocusNode();
 
   _BangSanPhamTaoHoaDonState({required this.DanhSachSanPham});
+
+  //Danh sach luu trữ các thông tin sản phẩm tạm thời
+  List<EditControllerProduct> ctrlProduct = [];
+  //Luu tru thong tin san pham tam
+  EditControllerProduct TempInfotmation = EditControllerProduct();
 
   // -------- Hàm -------
 //1. Danh sách cột
@@ -117,14 +118,12 @@ class _BangSanPhamTaoHoaDonState extends State<BangSanPhamTaoHoaDon> {
   void initState() {
     super.initState();
     DanhSachSanPham.add(addRow());
-    _focusnode.addListener((){
-      print(_focusnode.hasFocus);
-    });
   }
 
 //4.Hàm hủy
   @override
   void dispose() {
+    ctrlProduct.map((e) => e.DiscardTheTemporarySave());
     super.dispose();
   }
 
@@ -139,55 +138,58 @@ class _BangSanPhamTaoHoaDonState extends State<BangSanPhamTaoHoaDon> {
   }
 
 //6.Đánh dấu hàng được chọn
-void _HighlightTheSelectedRow(bool? value){
+  void _HighlightTheSelectedRow(bool? value){
     setState(() {
       selectRow = value ?? false;
     });
-}
+  }
 
-//8. Cập nhật giá trị tính toán cho một vài cột trong baảng
-void CapNhatGiaTri(Products_model SanPham){
-  setState((){
-    _donGia = SanPham.ProdPrice;
-    _thanhTienChuaTruCK = _donGia  * SanPham.ProdQuantity;
-    _chietKhau = SanPham.Discount;
-    _tienChietKhau = _thanhTienChuaTruCK * _chietKhau/100.0;
-    _ThanhTienTruocThue = _thanhTienChuaTruCK - _tienChietKhau;
-    _ThueSuatGTGT = SanPham.VATRate;
-    _ThueGTGT = _ThanhTienTruocThue * _ThueSuatGTGT;
-    _thanhTienSauThue = _ThanhTienTruocThue + _ThueGTGT;
+//7.1 Tính thành tiền chưa trừ CK
+  TextEditingController _TinhThanhTienChuTruCK(double DonGia, double SoLuongSP ){
+    TextEditingController kq = TextEditingController();
+    kq.text = (DonGia * SoLuongSP).toString();
+    return kq;
+  }
 
-    //Cập nhật lại giá trị sản phẩm
-    SanPham = SanPham.copyWith(
-      ProdPrice:  _donGia,
-      DiscountAmount: _tienChietKhau,
-      Total: _thanhTienChuaTruCK,
-      Amount: _thanhTienSauThue,
-      VATAmount: _ThueGTGT
-    );
-  });
-}
+//7.2 Tính Tiền chiết khấu
+  double _TinhTienChietKhau(double ThanhTienChuaTruCK, double ChietKhau ){
+    return ThanhTienChuaTruCK * ChietKhau/100.0;
+  }
 
-//7. Phương thức tạo hàng
-  //PP Thêm dòng
+//7.3 Tính Thành tiền trước thuế
+  double _TinhThanhTienTruocThue(double ThanhTienChuaTruCK, double TienChietKhau ){
+    return ThanhTienChuaTruCK - TienChietKhau;
+  }
+
+//7.4 Tính Thuế GTGT
+  double _TinhThueGTGT(double ThanhTienTruocThue, double ThueSuatGTGT ){
+    return ThanhTienTruocThue * ThueSuatGTGT;
+  }
+
+//7.5 Thành tiền sau thuế
+  double _TinhThanhTienSauThue(double ThanhTienTruocThue, double ThueGTGT ){
+    return ThanhTienTruocThue + ThueGTGT;
+  }
+
+//8. Phương thức tạo hàng
   Products_model addRow(){
+
     //Tao san pham
     Products_model SanPham = Products_model(
-      code: '',
-      ProdName: '',
-      ProdUnit: '',
-      ProdQuantity: 0.0,
-      ProdPrice: 0.0,
-      VATRate: 0.0,
-      VATAmount: 0.0,
-      Total: 0.0,
-      Amount: 0.0,
-      DiscountAmount: 0.0,
-      Discount: 0.0,
-      ProdAttr: 1,
-      Remark: '',
+      code: '', ProdName: '', ProdUnit: '',
+      ProdQuantity: 0.0, ProdPrice: 0.0,
+      VATRate: 0.0, VATAmount: 0.0,
+      Total: 0.0, Amount: 0.0,
+      DiscountAmount: 0.0, Discount: 0.0,
+      ProdAttr: 1, Remark: '',
     );
-    SoThuTu++;
+    SoThuTu++;      //So thu tu hang
+
+    //Phan nay luu gia tri tinh toan
+    double _donGia = 0.0, _thanhTienChuaTruCK = 0.0,
+        _chietKhau =0.0, _tienChietKhau =0.0, _soLuongSP = 0.0,
+        _ThanhTienTruocThue =0.0, _ThueSuatGTGT = 0.0,
+        _ThueGTGT =0.0, _thanhTienSauThue = 0.0;
 
     setState(() {
       DanhSachSanPham_Row.add(DataRow(
@@ -203,15 +205,12 @@ void CapNhatGiaTri(Products_model SanPham){
               keyboardType: TextInputType.text,
               obscureText: false,
               expands: false,
-              controller: TextEditingController(),
+              controller: TempInfotmation.MaSP,
               onChanged: (value){
-                SanPham = SanPham.copyWith(code: value);
-                print('Ma SP: ${SanPham.code}');
                 setState(() {
                   SanPham = SanPham.copyWith(code: value);
                 });
               },
-              focusNode: _focusnode,
             )
           ),
 
@@ -222,8 +221,11 @@ void CapNhatGiaTri(Products_model SanPham){
               obscureText: false,
               keyboardType: TextInputType.text,
               textInputAction: TextInputAction.next,
+              controller: TempInfotmation.TenSP,
               onChanged: (String value){
-                SanPham = SanPham.copyWith(ProdName: value);
+                setState(() {
+                  SanPham = SanPham.copyWith(ProdName: value);
+                });
               },
             ),
           ),
@@ -235,6 +237,7 @@ void CapNhatGiaTri(Products_model SanPham){
               obscureText: false,
               keyboardType: TextInputType.text,
               textInputAction: TextInputAction.next,
+              controller: TempInfotmation.DonViTinh,
               onChanged: (String value){
                 SanPham = SanPham.copyWith(ProdUnit: value);
               },
@@ -248,8 +251,16 @@ void CapNhatGiaTri(Products_model SanPham){
               obscureText: false,
               keyboardType: TextInputType.number,
               textInputAction: TextInputAction.next,
+              controller: TempInfotmation.SoLuong,
               onChanged: (value){
-                SanPham = SanPham.copyWith(ProdQuantity: value as double);
+                //Chuyển đổi về kiểu double
+                final gtri = double.tryParse(value);
+                if(gtri != null){
+                  setState(() {
+                    SanPham = SanPham.copyWith(ProdQuantity: gtri);
+                    _soLuongSP = gtri;
+                  });
+                }
               },
             ),
           ),
@@ -261,8 +272,16 @@ void CapNhatGiaTri(Products_model SanPham){
               obscureText: false,
               keyboardType: TextInputType.number,
               textInputAction: TextInputAction.next,
+              controller: TempInfotmation.DonGia,
               onChanged: (value){
-                SanPham = SanPham.copyWith(ProdPrice: value as double);
+                //Chuyển đổi về kiểu double
+                final gtri = double.tryParse(value);
+                if(gtri != null){
+                  setState(() {
+                    SanPham = SanPham.copyWith(ProdPrice: gtri);
+                    _donGia = gtri;
+                  });
+                }
               },
             ),
           ),
@@ -272,11 +291,14 @@ void CapNhatGiaTri(Products_model SanPham){
             TextField(
               expands: false,
               obscureText: false,                     //Khong an ky tu
-              onChanged: (value){
-                CapNhatGiaTri(SanPham);
-              },
+              // controller: TempInfotmation.ThanhTienChuaTruCK
+              //     = _TinhThanhTienChuTruCK( TempInfotmation.DonGia.text as double, TempInfotmation.SoLuong.text as double),
+              // onChanged: (value){
+              //   setState(() {
+              //     _thanhTienChuaTruCK = value as double;
+              //   });
+              // },
               readOnly: true,
-              controller: TextEditingController(text: "${_thanhTienChuaTruCK}"),
               textInputAction: TextInputAction.next,
             ),
           ),
@@ -290,8 +312,16 @@ void CapNhatGiaTri(Products_model SanPham){
               textInputAction: TextInputAction.next,
               controller: TextEditingController(text: "${SanPham.Discount}"),
               onChanged: (value){
-                CapNhatGiaTri(SanPham);
-                SanPham = SanPham.copyWith(Discount: _chietKhau);
+                setState(() {
+                  SanPham = SanPham.copyWith(Discount: value as double);
+                  _chietKhau = value as double;
+                });
+              },
+              onSubmitted: (value){
+                setState(() {
+                  SanPham = SanPham.copyWith(Discount: value as double);
+                  _chietKhau = value as double;
+                });
               },
             ),
           ),
@@ -301,10 +331,18 @@ void CapNhatGiaTri(Products_model SanPham){
             TextField(
               expands: false,
               obscureText: false,
-              controller: TextEditingController(text: "${SanPham.DiscountAmount}"),
+              controller: TextEditingController(text: "${_TinhTienChietKhau(_thanhTienChuaTruCK, _chietKhau)}"),
               onChanged: (value){
-                CapNhatGiaTri(SanPham);
-                SanPham = SanPham.copyWith(DiscountAmount: _tienChietKhau);
+                setState(() {
+                  _tienChietKhau = _TinhTienChietKhau(_thanhTienChuaTruCK, _chietKhau);
+                  SanPham = SanPham.copyWith(DiscountAmount: _tienChietKhau);
+                });
+              },
+              onSubmitted: (value){
+                setState(() {
+                  _tienChietKhau = _TinhTienChietKhau(_thanhTienChuaTruCK, _chietKhau);
+                  SanPham = SanPham.copyWith(DiscountAmount: _tienChietKhau);
+                });
               },
               readOnly: true,
               textInputAction: TextInputAction.next,
@@ -316,8 +354,13 @@ void CapNhatGiaTri(Products_model SanPham){
             TextField(
               expands: false,
               obscureText: false,
+              controller: TextEditingController(text: "${_TinhThanhTienTruocThue(_thanhTienChuaTruCK, _tienChietKhau)}"),
               onChanged: (value){
-                CapNhatGiaTri(SanPham);
+                _ThanhTienTruocThue = _TinhThanhTienTruocThue(_thanhTienChuaTruCK, _tienChietKhau);
+                SanPham = SanPham.copyWith(Total: _ThanhTienTruocThue);
+              },
+              onSubmitted: (value){
+                _ThanhTienTruocThue = _TinhThanhTienTruocThue(_thanhTienChuaTruCK, _tienChietKhau);
                 SanPham = SanPham.copyWith(Total: _ThanhTienTruocThue);
               },
               readOnly: true,
@@ -335,7 +378,8 @@ void CapNhatGiaTri(Products_model SanPham){
                           child: TextButton(
                             onPressed: (){
                               setState(() {
-                                ThueSuatGTGT = "0%";
+                                ThueSuatGTGT_Text = "0%";
+                                _ThueSuatGTGT = 0.00;
                                 SanPham = SanPham.copyWith(VATRate: 0.00);
                               });
                             },
@@ -346,7 +390,8 @@ void CapNhatGiaTri(Products_model SanPham){
                           child: TextButton(
                             onPressed: (){
                               setState(() {
-                                ThueSuatGTGT = "5%";
+                                ThueSuatGTGT_Text = "5%";
+                                _ThueSuatGTGT = 0.05;
                                 SanPham = SanPham.copyWith(VATRate: 0.05);
                               });
                             },
@@ -357,7 +402,8 @@ void CapNhatGiaTri(Products_model SanPham){
                           child: TextButton(
                             onPressed: (){
                               setState(() {
-                                ThueSuatGTGT = "8%";
+                                ThueSuatGTGT_Text = "8%";
+                                _ThueSuatGTGT = 0.08;
                                 SanPham = SanPham.copyWith(VATRate: 0.08);
                               });
                             },
@@ -368,7 +414,8 @@ void CapNhatGiaTri(Products_model SanPham){
                           child: TextButton(
                             onPressed: (){
                               setState(() {
-                                ThueSuatGTGT = "10%";
+                                ThueSuatGTGT_Text = "10%";
+                                _ThueSuatGTGT = 0.10;
                                 SanPham = SanPham.copyWith(VATRate: 0.1);
                               });
                             },
@@ -379,7 +426,8 @@ void CapNhatGiaTri(Products_model SanPham){
                           child: TextButton(
                             onPressed: (){
                               setState(() {
-                                ThueSuatGTGT = "Không chịu thuế GTGT";
+                                ThueSuatGTGT_Text = "Không chịu thuế GTGT";
+                                _ThueSuatGTGT = 0.00;
                                 SanPham = SanPham.copyWith(VATRate: 0.00);
                               });
                             },
@@ -390,7 +438,8 @@ void CapNhatGiaTri(Products_model SanPham){
                           child: TextButton(
                             onPressed: (){
                               setState(() {
-                                ThueSuatGTGT = "Không kê khai nộp thuế GTGT";
+                                ThueSuatGTGT_Text = "Không kê khai nộp thuế GTGT";
+                                _ThueSuatGTGT = 0.00;
                                 SanPham = SanPham.copyWith(VATRate: 0.00);
                               });
                             },
@@ -401,7 +450,8 @@ void CapNhatGiaTri(Products_model SanPham){
                           child: TextButton(
                             onPressed: (){
                               setState(() {
-                                ThueSuatGTGT = "5% x 70%";
+                                ThueSuatGTGT_Text = "5% x 70%";
+                                _ThueSuatGTGT = 0.05 * 0.7;
                                 SanPham = SanPham.copyWith(VATRate: 0.05*0.7);
                               });
                             },
@@ -412,7 +462,8 @@ void CapNhatGiaTri(Products_model SanPham){
                           child: TextButton(
                             onPressed: (){
                               setState(() {
-                                ThueSuatGTGT = "10% x 70%";
+                                ThueSuatGTGT_Text = "10% x 70%";
+                                _ThueSuatGTGT = 0.1 * 0.7;
                                 SanPham = SanPham.copyWith(VATRate: 0.1*0.7);
                               });
                             },
@@ -423,7 +474,8 @@ void CapNhatGiaTri(Products_model SanPham){
                           child: TextButton(
                             onPressed: (){
                               setState(() {
-                                ThueSuatGTGT = "Khác";
+                                ThueSuatGTGT_Text = "Khác";
+                                _ThueSuatGTGT = 0.00;
                                 SanPham = SanPham.copyWith(VATRate: 0.0);
                               });
                             },
@@ -436,7 +488,7 @@ void CapNhatGiaTri(Products_model SanPham){
                     children: [
                       Expanded(
                         flex: 2,
-                          child: Text('${ThueSuatGTGT}'),
+                          child: Text('${ThueSuatGTGT_Text}'),
                       ),
                       Expanded(
                           flex: 1,
@@ -453,8 +505,13 @@ void CapNhatGiaTri(Products_model SanPham){
             TextField(
               expands: false,
               obscureText: false,
+              controller: TextEditingController(text: "${_TinhThueGTGT(_ThanhTienTruocThue, _ThueSuatGTGT)}"),
               onChanged: (value){
-                CapNhatGiaTri(SanPham);
+                _ThueGTGT = _TinhThueGTGT(_ThanhTienTruocThue, _ThueSuatGTGT);
+                SanPham = SanPham.copyWith(DiscountAmount: _ThueGTGT);
+              },
+              onSubmitted: (value){
+                _ThueGTGT = _TinhThueGTGT(_ThanhTienTruocThue, _ThueSuatGTGT);
                 SanPham = SanPham.copyWith(DiscountAmount: _ThueGTGT);
               },
               readOnly: true,
@@ -467,8 +524,9 @@ void CapNhatGiaTri(Products_model SanPham){
             TextField(
               expands: false,
               obscureText: false,
+              controller: TextEditingController(text: "${_TinhThanhTienSauThue(_ThanhTienTruocThue, _ThueGTGT)}"),
               onChanged: (value){
-                CapNhatGiaTri(SanPham);
+                _thanhTienSauThue = _TinhThanhTienSauThue(_ThanhTienTruocThue, _ThueGTGT);
                 SanPham = SanPham.copyWith(Amount: _thanhTienSauThue);
               },
               readOnly: true,
@@ -618,12 +676,11 @@ void CapNhatGiaTri(Products_model SanPham){
             onPressed: (){
               Products_model row = DanhSachSanPham[SoThuTuHang];
               print('\t--- So luong: ${DanhSachSanPham.length} ---\t');
-              print("Ma sản phẩm: ${row.code}");
+              print("Ma sản phẩm: ${TempInfotmation.MaSP.text}");
               print("ten sản phẩm: ${row.ProdName}");
               print("DVT: ${row.ProdUnit}");
               print("Đơn giá: ${row.ProdPrice}");
               print("Số lượng: ${row.ProdQuantity}");
-              print("Thành tiền chưa trừ CK: ${_thanhTienChuaTruCK}");
               print("Chiết khấu (%): ${row.Discount}");
               print("Tiền chiết khấu: ${row.DiscountAmount}");
               print("Thành tiền trước thuế: ${row.Total}");
@@ -635,6 +692,7 @@ void CapNhatGiaTri(Products_model SanPham){
 
               //Them sau khi kiem tra hang trước có điền thông tin
               DanhSachSanPham.add(addRow());
+              TempInfotmation.CleanTemporaryInformation();
               SoThuTuHang++;
             },
             child: const ListTile(

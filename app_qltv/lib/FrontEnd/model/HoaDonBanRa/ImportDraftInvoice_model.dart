@@ -1,3 +1,6 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+
 class Products_model{
   final String code;
   final String ProdName;
@@ -106,6 +109,45 @@ class Products_model{
       'ProdAttr':ProdAttr,
       'Remark':Remark,
     };
+  }
+}
+
+//Trinh giua cho gia tri nhan vao
+class EditControllerProduct{
+   TextEditingController MaSP = TextEditingController();
+   TextEditingController TenSP= TextEditingController();
+   TextEditingController DonViTinh= TextEditingController();
+   TextEditingController DonGia= TextEditingController();
+   TextEditingController SoLuong= TextEditingController();
+   TextEditingController ThanhTienChuaTruCK= TextEditingController();
+   TextEditingController ChietKhau= TextEditingController();
+   TextEditingController TienChietKhau= TextEditingController();
+   TextEditingController ThanhTienTruocThue= TextEditingController();
+   TextEditingController ThueSuatGTGT= TextEditingController();
+   TextEditingController ThueGTGT= TextEditingController();
+   TextEditingController ThanhTienSauThue= TextEditingController();
+   TextEditingController TinhChat= TextEditingController();
+
+  //Ham huy luu tạm thời
+  DiscardTheTemporarySave(){
+    this.MaSP.dispose(); this.TenSP.dispose();
+    this.DonViTinh.dispose(); this.DonGia.dispose();
+    this.SoLuong.dispose(); this.ThanhTienChuaTruCK.dispose();
+    this.ChietKhau.dispose(); this.TienChietKhau.dispose();
+    this.ThanhTienTruocThue.dispose(); this.ThueSuatGTGT.dispose();
+    this.ThueGTGT.dispose(); this.ThanhTienSauThue.dispose();
+    this.TinhChat.dispose();
+  }
+
+  //Ham làm sạch thông tin lưu trữ tạm thơi
+  CleanTemporaryInformation(){
+    this.MaSP.clear(); this.TenSP.clear();
+    this.DonViTinh.clear(); this.DonGia.clear();
+    this.SoLuong.clear(); this.ThanhTienChuaTruCK.clear();
+    this.ChietKhau.clear(); this.TienChietKhau.clear();
+    this.ThanhTienTruocThue.clear(); this.ThueSuatGTGT.clear();
+    this.ThueGTGT.clear(); this.ThanhTienSauThue.clear();
+    this.TinhChat.clear();
   }
 }
 

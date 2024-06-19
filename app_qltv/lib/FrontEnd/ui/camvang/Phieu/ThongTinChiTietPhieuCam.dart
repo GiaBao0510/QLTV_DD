@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import '../../../Service/ThuVien.dart';
+import 'package:app_qltv/FrontEnd/model/CamVang/PhieuDangCam.dart';
+import 'package:app_qltv/FrontEnd/ui/components/FormatCurrency.dart';
 
-ThongTinChiTiet(BuildContext context, Map<String,dynamic> item){
+ThongTinChiTiet(BuildContext context, PhieuDangCam_model item){
   return showDialog<void>(
       context: context,
       builder: (BuildContext context){
@@ -27,7 +28,7 @@ ThongTinChiTiet(BuildContext context, Map<String,dynamic> item){
                               TextSpan(
                                   children: [
                                     TextSpan(text: 'Khách hàng: ', style: TextStyle(fontWeight: FontWeight.bold)),
-                                    TextSpan(text: ' ${item['KH_TEN']}')
+                                    TextSpan(text: ' ${item.KH_TEN}')
                                   ]
                               )
                           ),
@@ -35,7 +36,7 @@ ThongTinChiTiet(BuildContext context, Map<String,dynamic> item){
                               TextSpan(
                                   children: [
                                     TextSpan(text: 'Số điện thoại: ', style: TextStyle(fontWeight: FontWeight.bold)),
-                                    TextSpan(text: ' ${item['DIEN_THOAI'] ?? 'null'}')
+                                    TextSpan(text: ' ${item.DIEN_THOAI ?? 'null'}')
                                   ]
                               )
                           ),
@@ -43,7 +44,7 @@ ThongTinChiTiet(BuildContext context, Map<String,dynamic> item){
                               TextSpan(
                                   children: [
                                     TextSpan(text: 'Địa chỉ: ', style: TextStyle(fontWeight: FontWeight.bold)),
-                                    TextSpan(text: ' ${item['DIA_CHI']?? 'null'}')
+                                    TextSpan(text: ' ${item.DIA_CHI?? 'null'}')
                                   ]
                               )
                           ),
@@ -61,7 +62,7 @@ ThongTinChiTiet(BuildContext context, Map<String,dynamic> item){
                               TextSpan(
                                   children: [
                                     TextSpan(text: 'Số phiếu: ', style: TextStyle(fontWeight: FontWeight.bold)),
-                                    TextSpan(text: ' ${item['PHIEU_MA']?? 'null'}')
+                                    TextSpan(text: ' ${item.PHIEU_MA?? 'null'}')
                                   ]
                               )
                           ),
@@ -69,7 +70,7 @@ ThongTinChiTiet(BuildContext context, Map<String,dynamic> item){
                             TextSpan(
                                 children: [
                                   TextSpan(text: 'Lãi suất/Tháng: ', style: TextStyle(fontWeight: FontWeight.bold)),
-                                  TextSpan(text: ' ${item['LAI_XUAT']?? 'null'}%')
+                                  TextSpan(text: ' ${item.LAI_XUAT?? 'null'}%')
                                 ]
                             ),
                           ),
@@ -77,7 +78,7 @@ ThongTinChiTiet(BuildContext context, Map<String,dynamic> item){
                             TextSpan(
                                 children: [
                                   TextSpan(text: 'Định giá: ', style: TextStyle(fontWeight: FontWeight.bold)),
-                                  TextSpan(text: ' ${DinhDangDonViTien_VND(item['DINHGIA'])}')
+                                  TextSpan(text: ' ${formatCurrencyDouble(item.DINH_GIA ?? 0.0)}')
                                 ]
                             ),
                           ),
@@ -85,7 +86,7 @@ ThongTinChiTiet(BuildContext context, Map<String,dynamic> item){
                             TextSpan(
                                 children: [
                                   TextSpan(text: 'Ngày cầm: ', style: TextStyle(fontWeight: FontWeight.bold)),
-                                  TextSpan(text: ' ${item['NGAY_CAM']?? 'null'}')
+                                  TextSpan(text: ' ${item.NGAY_CAM?? 'null'}')
                                 ]
                             ),
                           ),
@@ -93,7 +94,7 @@ ThongTinChiTiet(BuildContext context, Map<String,dynamic> item){
                             TextSpan(
                                 children: [
                                   TextSpan(text: 'Ngày hết hạn: ', style: TextStyle(fontWeight: FontWeight.bold)),
-                                  TextSpan(text: ' ${item['NGAY_QUA_HAN']?? 'null'}')
+                                  TextSpan(text: ' ${item.DEN_NGAY?? 'null'}')
                                 ]
                             ),
                           ),
@@ -101,7 +102,7 @@ ThongTinChiTiet(BuildContext context, Map<String,dynamic> item){
                             TextSpan(
                                 children: [
                                   TextSpan(text: 'Số ngày tính được: ', style: TextStyle(fontWeight: FontWeight.bold)),
-                                  TextSpan(text: ' ${item['SO_NGAY_TINH_DUOC']?? 'null'}')
+                                  TextSpan(text: ' ${item.SO_NGAY_TINH_DUOC?? 'null'}')
                                 ]
                             ),
                           ),
@@ -109,7 +110,7 @@ ThongTinChiTiet(BuildContext context, Map<String,dynamic> item){
                             TextSpan(
                                 children: [
                                   TextSpan(text: 'Số ngày hết hạn: ', style: TextStyle(fontWeight: FontWeight.bold)),
-                                  TextSpan(text: ' ${item['SO_NGAY_HET_HAN']?? 'null'}')
+                                  TextSpan(text: ' ${item.SO_NGAY_HET_HAN?? 'null'}')
                                 ]
                             ),
                           ),
@@ -117,7 +118,7 @@ ThongTinChiTiet(BuildContext context, Map<String,dynamic> item){
                             TextSpan(
                                 children: [
                                   TextSpan(text: 'Tiền cầm: ', style: TextStyle(fontWeight: FontWeight.bold)),
-                                  TextSpan(text: ' ${DinhDangDonViTien_VND(item['TIEN_KHACH_NHAN'])}')
+                                  TextSpan(text: ' ${formatCurrencyDouble(item.TIEN_KHACH_NHAN ?? 0.0)}')
                                 ]
                             ),
                           ),
@@ -125,7 +126,7 @@ ThongTinChiTiet(BuildContext context, Map<String,dynamic> item){
                             TextSpan(
                                 children: [
                                   TextSpan(text: 'Tiền thêm: ', style: TextStyle(fontWeight: FontWeight.bold)),
-                                  TextSpan(text: ' ${DinhDangDonViTien_VND(item['TIEN_THEM'])}')
+                                  TextSpan(text: ' ${formatCurrencyDouble(item.TIEN_THEM ?? 0.0)}')
                                 ]
                             ),
                           ),
@@ -133,7 +134,7 @@ ThongTinChiTiet(BuildContext context, Map<String,dynamic> item){
                             TextSpan(
                                 children: [
                                   TextSpan(text: 'Tiền cầm mới: ', style: TextStyle(fontWeight: FontWeight.bold)),
-                                  TextSpan(text: ' ${DinhDangDonViTien_VND(item['TIEN_CAM_MOI'])}')
+                                  TextSpan(text: ' ${formatCurrencyDouble(item.TIEN_MOI ?? 0.0)}')
                                 ]
                             ),
                           ),
@@ -141,7 +142,7 @@ ThongTinChiTiet(BuildContext context, Map<String,dynamic> item){
                             TextSpan(
                                 children: [
                                   TextSpan(text: 'Mất phiếu: ', style: TextStyle(fontWeight: FontWeight.bold)),
-                                  TextSpan(text: ' ${item['MAT_PHIEU']?? 'null'}')
+                                  TextSpan(text: ' ${item.MAT_PHIEU?? 'null'}')
                                 ]
                             ),
                           ),
@@ -149,7 +150,7 @@ ThongTinChiTiet(BuildContext context, Map<String,dynamic> item){
                             TextSpan(
                                 children: [
                                   TextSpan(text: ' Lý do mất phiếu: ', style: TextStyle(fontWeight: FontWeight.bold)),
-                                  TextSpan(text: ' ${item['LY_DO_MAT_PHIEU']?? 'null'}')
+                                  TextSpan(text: ' ${item.LY_DO_MAT_PHIEU?? 'null'}')
                                 ]
                             ),
                           ),
@@ -157,7 +158,7 @@ ThongTinChiTiet(BuildContext context, Map<String,dynamic> item){
                             TextSpan(
                                 children: [
                                   TextSpan(text: 'Ghi chú: ', style: TextStyle(fontWeight: FontWeight.bold)),
-                                  TextSpan(text: ' ${item['GHI_CHU']?? 'null'}')
+                                  TextSpan(text: ' ${item.GHI_CHU?? 'null'}')
                                 ]
                             ),
                           ),
@@ -175,7 +176,7 @@ ThongTinChiTiet(BuildContext context, Map<String,dynamic> item){
                               TextSpan(
                                   children: [
                                     TextSpan(text: 'Tên hàng: ', style: TextStyle(fontWeight: FontWeight.bold)),
-                                    TextSpan(text: ' ${item['TEN_HANG_HOA']?? 'null'}')
+                                    TextSpan(text: ' ${item.TEN_HANG_HOA?? 'null'}')
                                   ]
                               ),
                             ),
@@ -183,7 +184,7 @@ ThongTinChiTiet(BuildContext context, Map<String,dynamic> item){
                               TextSpan(
                                   children: [
                                     TextSpan(text: 'Loại vàng: ', style: TextStyle(fontWeight: FontWeight.bold)),
-                                    TextSpan(text: ' ${item['LOAI_VANG']?? 'null'}')
+                                    TextSpan(text: ' ${item.LOAI_VANG?? 'null'}')
                                   ]
                               ),
                             ),
@@ -191,7 +192,7 @@ ThongTinChiTiet(BuildContext context, Map<String,dynamic> item){
                               TextSpan(
                                   children: [
                                     TextSpan(text: 'Cân tổng: ', style: TextStyle(fontWeight: FontWeight.bold)),
-                                    TextSpan(text: ' ${DinhDangDonViTien_VND(item['CAN_TONG'])}')
+                                    TextSpan(text: ' ${formatCurrencyDouble(item.CAN_TONG ?? 0.0)}')
                                   ]
                               ),
                             ),
@@ -199,7 +200,7 @@ ThongTinChiTiet(BuildContext context, Map<String,dynamic> item){
                               TextSpan(
                                   children: [
                                     TextSpan(text: 'TL hột: ', style: TextStyle(fontWeight: FontWeight.bold)),
-                                    TextSpan(text: ' ${DinhDangDonViTien_VND(item['TL_HOT'])}')
+                                    TextSpan(text: ' ${formatCurrencyDouble(item.TL_HOT ?? 0.0)}')
                                   ]
                               ),
                             ),
@@ -207,7 +208,7 @@ ThongTinChiTiet(BuildContext context, Map<String,dynamic> item){
                               TextSpan(
                                   children: [
                                     TextSpan(text: 'TL thực: ', style: TextStyle(fontWeight: FontWeight.bold)),
-                                    TextSpan(text: ' ${DinhDangDonViTien_VND(item['TL_THUC'])}')
+                                    TextSpan(text: ' ${formatCurrencyDouble(item.TL_THUC ?? 0.0)}')
                                   ]
                               ),
                             ),
@@ -215,7 +216,7 @@ ThongTinChiTiet(BuildContext context, Map<String,dynamic> item){
                               TextSpan(
                                   children: [
                                     TextSpan(text: 'Đơn giá: ', style: TextStyle(fontWeight: FontWeight.bold)),
-                                    TextSpan(text: ' ${DinhDangDonViTien_VND(item['DON_GIA'])}')
+                                    TextSpan(text: ' ${formatCurrencyDouble(item.DON_GIA ??0.0)}')
                                   ]
                               ),
                             ),
@@ -223,7 +224,7 @@ ThongTinChiTiet(BuildContext context, Map<String,dynamic> item){
                               TextSpan(
                                   children: [
                                     TextSpan(text: 'Thành tiền: ', style: TextStyle(fontWeight: FontWeight.bold)),
-                                    TextSpan(text: ' ${DinhDangDonViTien_VND(item['THANH_TIEN'])}')
+                                    TextSpan(text: ' ${formatCurrencyDouble(item.THANH_TIEN ?? 0.0)}')
                                   ]
                               ),
                             ),

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:pdf/pdf.dart';
@@ -12,6 +13,8 @@ import '../../../ui/components/FormatCurrency.dart';
 import 'package:app_qltv/FrontEnd/ui/components/search_bar.dart';
 import '../../../Service/export/PDF/BangBaoCaoPhieuXuat_PDF.dart';
 import '../../../Service/export/PDF/PhieuXuat_PDF.dart';
+import 'package:app_qltv/FrontEnd/Service/ThuVien.dart';
+import '../../../Service/ThuVien.dart';
 
 class BaoCaoPhieuXuatScreen extends StatefulWidget {
   static const routeName = '/baocaophieuxuat';
@@ -27,6 +30,7 @@ class _BaoCaoPhieuXuat extends State<BaoCaoPhieuXuatScreen> {
   final TextEditingController _searchController = TextEditingController();
   List<BangBaoCaoPhieuXuat_model> _filterPhieuXuatList = [];
   List<BangBaoCaoPhieuXuat_model> _PhieuXuatList = [];
+  late ThuVienUntilState thuvien;
 
   late Future<ThongTinTinhTong_model> _ThongTinTinhTongFuture;
   ThongTinTinhTong_model _ThongTinTinhTong = ThongTinTinhTong_model(
@@ -38,12 +42,6 @@ class _BaoCaoPhieuXuat extends State<BaoCaoPhieuXuatScreen> {
       TongGiaGoc: 0.0,
       TongLaiLo: 0.0);
 
-  //Tim kiem theo ngay
-  final TextEditingController _StartDayController = TextEditingController(),
-      _EndDayController = TextEditingController();
-  late DateTime ngayBD, ngayKT;
-  final DateFormat _dateFormat = DateFormat('yyyy-MM-dd');
-
   int pages = 5; //So dong toi da duoc tai len
   int loadElements = 5; //Moi lan load chi lây 5 phân tử
   int SoLuong = 0;
@@ -52,11 +50,10 @@ class _BaoCaoPhieuXuat extends State<BaoCaoPhieuXuatScreen> {
   @override
   void initState() {
     super.initState();
-    ngayBD = DateTime.now();
-    ngayKT = DateTime.now();
     _loadBaoCaoPhieuXuat();
     _LoadSummary();
     _searchController.addListener(_filterBaoCaoPhieuXuat);
+    thuvien  =ThuVienUntilState();
   }
 
   @override
@@ -70,7 +67,7 @@ class _BaoCaoPhieuXuat extends State<BaoCaoPhieuXuatScreen> {
     //1.Load bang dữ liệu
     _bangBaoCaoPhieuXuatFuture =
         Provider.of<BaocaophieuxuatManage>(context, listen: false)
-            .LayDuLieuPhieuXuat_test(ngayBD, ngayKT, pages);
+            .LayDuLieuPhieuXuat_test(ThuVienUntilState.ngayBD, ThuVienUntilState.ngayKT, pages);
     _bangBaoCaoPhieuXuatFuture.then((BaoCaos) {
       setState(() {
         _PhieuXuatList = BaoCaos;
@@ -78,6 +75,7 @@ class _BaoCaoPhieuXuat extends State<BaoCaoPhieuXuatScreen> {
       });
     });
   }
+
 
   //2.Lọc dữ liệu
   void _filterBaoCaoPhieuXuat() {
@@ -121,13 +119,13 @@ class _BaoCaoPhieuXuat extends State<BaoCaoPhieuXuatScreen> {
   void _SelectStartDate() async {
     final DateTime? picked = await showDatePicker(
         context: context,
-        initialDate: ngayBD,
+        initialDate: ThuVienUntilState.ngayBD,
         firstDate: DateTime(1999),
         lastDate: DateTime(2200));
-    if (picked != null && picked != ngayBD) {
+    if (picked != null && picked != ThuVienUntilState.ngayBD) {
       setState(() {
-        ngayBD = picked;
-        _StartDayController.text = _dateFormat.format(ngayBD);
+        ThuVienUntilState.ngayBD = picked;
+        ThuVienUntilState.StartDayController.text = ThuVienUntilState.dateFormat.format(ThuVienUntilState.ngayBD);
       });
     }
   }
@@ -136,13 +134,13 @@ class _BaoCaoPhieuXuat extends State<BaoCaoPhieuXuatScreen> {
   void _SelectEndDate() async {
     final DateTime? picked = await showDatePicker(
         context: context,
-        initialDate: ngayKT,
+        initialDate: ThuVienUntilState.ngayKT,
         firstDate: DateTime(1999),
         lastDate: DateTime(2200));
-    if (picked != null && picked != ngayKT) {
+    if (picked != null && picked != ThuVienUntilState.ngayKT) {
       setState(() {
-        ngayKT = picked;
-        _EndDayController.text = _dateFormat.format(ngayKT);
+        ThuVienUntilState.ngayKT = picked;
+        ThuVienUntilState.EndDayController.text = ThuVienUntilState.dateFormat.format(ThuVienUntilState.ngayKT);
       });
     }
     //print('Ngày kết thúc đã chọn: $ngayKT');
@@ -152,7 +150,7 @@ class _BaoCaoPhieuXuat extends State<BaoCaoPhieuXuatScreen> {
   Future<void> _LoadSummary() async {
     _ThongTinTinhTongFuture =
         Provider.of<BaocaophieuxuatManage>(context, listen: false)
-            .TinhTongPhieuXuat(ngayBD, ngayKT);
+            .TinhTongPhieuXuat(ThuVienUntilState.ngayBD, ThuVienUntilState.ngayKT);
     _ThongTinTinhTongFuture.then((tinhtong) {
       print('thong tin tinh tong: ${tinhtong}');
       setState(() {
@@ -386,19 +384,19 @@ class _BaoCaoPhieuXuat extends State<BaoCaoPhieuXuatScreen> {
                             rows: [
                               ...BaoCao.PhieuXuat.map((hanghoa) {
                                 return DataRow(
-                                    cells: [
-                                      DataCell(Text('${hanghoa.HANG_HOA_TEN}')),
-                                      DataCell(Text(
-                                          '${formatCurrencyDouble(hanghoa.DON_GIA)}')),
-                                      DataCell(Text(
-                                          '${formatCurrencyDouble(hanghoa.THANH_TIEN)}')),
-                                      DataCell(Text(
-                                          '${formatCurrencyDouble(hanghoa.GiaGoc)}')),
-                                      DataCell(Text(
-                                          '${formatCurrencyDouble(hanghoa.LaiLo)}')),
-                                    ],
-                                    color: MaterialStateColor.resolveWith(
-                                        (states) => Colors.white));
+                                  cells: [
+                                    DataCell(Text('${hanghoa.HANG_HOA_TEN}')),
+                                    DataCell(Text(
+                                        '${formatCurrencyDouble(hanghoa.DON_GIA)}')),
+                                    DataCell(Text(
+                                        '${formatCurrencyDouble(hanghoa.THANH_TIEN)}')),
+                                    DataCell(Text(
+                                        '${formatCurrencyDouble(hanghoa.GiaGoc)}')),
+                                    DataCell(Text(
+                                        '${formatCurrencyDouble(hanghoa.LaiLo)}')),
+                                  ],
+                                  color: MaterialStateColor.resolveWith(
+                                      (states) => Colors.white));
                               }),
                             ]),
                       )
@@ -741,9 +739,9 @@ class _BaoCaoPhieuXuat extends State<BaoCaoPhieuXuatScreen> {
           Flexible(
               flex: 1,
               child: TextFormField(
-                controller: _StartDayController,
+                controller: ThuVienUntilState.StartDayController,
                 readOnly: true,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Ngày bắt đầu',
                   labelStyle: TextStyle(fontSize: 12),
                   filled: true,
@@ -760,9 +758,9 @@ class _BaoCaoPhieuXuat extends State<BaoCaoPhieuXuatScreen> {
           Flexible(
               flex: 1,
               child: TextFormField(
-                controller: _EndDayController,
+                controller: ThuVienUntilState.EndDayController,
                 readOnly: true,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Ngày kết thúc',
                   labelStyle: TextStyle(fontSize: 12),
                   filled: true,
@@ -783,15 +781,15 @@ class _BaoCaoPhieuXuat extends State<BaoCaoPhieuXuatScreen> {
                     fit: BoxFit.fitWidth,
                     child: Container(
                       padding: EdgeInsets.fromLTRB(25, 20, 25, 20),
-                      decoration: BoxDecoration(
-                          gradient: LinearGradient(
+                      decoration:  BoxDecoration(
+                          gradient: const LinearGradient(
                             colors: [Color(0xff536976), Color(0xff292e49)],
                             stops: [0, 1],
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
                           ),
                           borderRadius: BorderRadius.circular(10)),
-                      child: Text(
+                      child: const Text(
                         'Tìm kiếm',
                         style: TextStyle(color: Colors.white, fontSize: 30),
                       ),

@@ -23,6 +23,7 @@ import 'package:app_qltv/FrontEnd/controller/hethong/nguoidung_manager.dart';
 import 'package:app_qltv/FrontEnd/controller/hethong/nhom_manager.dart';
 import 'package:app_qltv/FrontEnd/controller/HoaDonBanRa/ImportDraftInvoice_manage.dart';
 import 'package:app_qltv/FrontEnd/model/danhmuc/kho.dart';
+import 'package:app_qltv/FrontEnd/controller/CamVang/PhieuDangCam_manage.dart';
 import 'package:app_qltv/FrontEnd/Service/ThuVien.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -107,6 +108,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => BaoCaoPhieuDoiManager()),
         ChangeNotifierProvider(create: (context) => TopKhachHangManager()),
         ChangeNotifierProvider(create: (context) => ImportDraftInvoiceManage()),
+        ChangeNotifierProvider(create: (context) => PhieuDangCamManage()),
       ],
       child: MaterialApp(
         title: 'Phần mềm vàng',
