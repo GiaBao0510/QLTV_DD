@@ -36,7 +36,7 @@ app.use('/api/groups', groupRoutes);
 app.use('/api/productType', productype);
 app.use('/api/cam', cam);
 app.use('/api/phieu',phieu);
-app.use('api/hoadonbanra/',HoaDonBanRa);
+app.use('api/hoadonbanra',HoaDonBanRa);
 app.use('/api/db', dbRoutes);
 
 //Áp dụng cấu hình phiên
