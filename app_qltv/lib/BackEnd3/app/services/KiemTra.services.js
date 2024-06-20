@@ -2,7 +2,7 @@ const { json } = require('body-parser');
 const cookieParser = require('cookie-parser');
 const express = require('express');
 var mysql = require('mysql');
-var db = require('../config/index_2');
+var {db, db2} = require('../config/index_2');
 var ApiError = require('../api-error');
 const jwt =require('jsonwebtoken');
 
