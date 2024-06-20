@@ -7,7 +7,7 @@ const cookieParser = require('cookie-parser');
 const jwt =require('jsonwebtoken');
 
 const ApiError = require('./app/api-error')
-const db = require('./app/config/index_2');
+const {db, db2} = require('./app/config/index_2');
 const admin = require('./app/routers/admin.router');
 const userRoutes = require('./app/routers/userRoutes');
 const groupRoutes = require ('./app/routers/groupRoutes');

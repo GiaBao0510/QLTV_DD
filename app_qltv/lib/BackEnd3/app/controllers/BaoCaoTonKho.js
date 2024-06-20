@@ -1,6 +1,6 @@
 var mysql = require('mysql');
 var express = require('express');
-var db = require('../config/index_2');
+var {db, db2} = require('../config/index_2');
 var ApiError = require('../api-error');
 
 exports.baoCaoTonKho = async (req, res, next)=>{
