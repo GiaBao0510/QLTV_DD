@@ -43,7 +43,7 @@ class Khachhang {
 
   factory Khachhang.fromMap(Map<String, dynamic> map) {
   return Khachhang(
-    kh_id: map['KH_ID'].toString(),  // Chuyển đổi ID thành chuỗi
+    kh_id: map['KH_ID'].toString(),  // Ensure KH_ID is treated as String
     kh_ma: map['KH_MA'],
     kh_ten: map['KH_TEN'],
     kh_cmnd: map['CMND'],
