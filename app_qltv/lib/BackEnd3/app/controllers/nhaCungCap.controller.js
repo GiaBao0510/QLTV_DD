@@ -1,6 +1,6 @@
 var mysql = require('mysql');
 var express = require('express');
-var {db, db2} = require('../config/index_2');
+var db = require('../config/index_2');
 var ApiError = require('../api-error');
 
 //1.xóa danh sách thông tin nhà cung cấp 
@@ -77,7 +77,7 @@ exports.Add_NhaCungCap = async (req, res, next) =>{
                 db.query("SELECT NCCID FROM phn_nha_cung_cap ORDER BY NCCID DESC LIMIT 1",(err, result)=> {
                     if(err){
                         console.log(`Lỗi khi xóa ID cuối thông tin nhà cung cấp - ${err}`);
-                return res.status(404).json({message: `Loi khi xóa ID cuối thong tin nhà cung cấp`});
+                        return res.status(404).json({message: `Loi khi xóa ID cuối thong tin nhà cung cấp`});
                     }else{
                         let IDcuoi = Number(result[0].NCCID);
 

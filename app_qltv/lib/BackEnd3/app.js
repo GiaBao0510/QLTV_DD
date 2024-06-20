@@ -7,13 +7,14 @@ const cookieParser = require('cookie-parser');
 const jwt =require('jsonwebtoken');
 
 const ApiError = require('./app/api-error')
-const {db, db2} = require('./app/config/index_2');
+const db= require('./app/config/index_2');
 const admin = require('./app/routers/admin.router');
 const userRoutes = require('./app/routers/userRoutes');
 const groupRoutes = require ('./app/routers/groupRoutes');
 const productype = require('./app/routers/productTypeRoute');
 const cam = require ('./app/routers/camvangRoute');
 const phieu = require ('./app/routers/phieuRoute');
+const HoaDonBanRa = require('./app/routers/HoaDonBanRa.router');
 const kiemtra =require('./app/services/KiemTra.services');
 const { decode } = require('punycode');
 const app = express();
@@ -35,6 +36,7 @@ app.use('/api/groups', groupRoutes);
 app.use('/api/productType', productype);
 app.use('/api/cam', cam);
 app.use('/api/phieu',phieu);
+app.use('api/hoadonbanra/',HoaDonBanRa);
 app.use('/api/db', dbRoutes);
 
 //Áp dụng cấu hình phiên

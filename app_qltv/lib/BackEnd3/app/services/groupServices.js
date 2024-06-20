@@ -1,4 +1,4 @@
-const {db, db2} = require('../config/index_2');
+const db= require('../config/index_2');
 
 const createGroupUser = async (userData) => {
   // return new Promise((resolve, reject) => {
