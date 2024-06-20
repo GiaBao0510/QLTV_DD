@@ -4,6 +4,7 @@ import 'package:app_qltv/FrontEnd/ui/components/search_bar.dart';
 import 'package:app_qltv/FrontEnd/ui/components/transitions.dart';
 import 'package:app_qltv/FrontEnd/ui/danh_muc/khachhang/components/chi_tiet_kh.dart';
 import 'package:app_qltv/FrontEnd/ui/danh_muc/khachhang/components/them_kh.dart';
+import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -18,11 +19,15 @@ class KhachhangScreen extends StatefulWidget {
   _KhachhangScreenState createState() => _KhachhangScreenState();
 }
 
+
+
 class _KhachhangScreenState extends State<KhachhangScreen> {
   late Future<List<Khachhang>> _khachhangFuture;
   final TextEditingController _searchController = TextEditingController();
   List<Khachhang> _filteredKhachhangList = [];
   List<Khachhang> _khachhangList = [];
+  int _currentPage = 1;
+  int _pageSize = 10;
 
   @override
   void initState() {
@@ -37,13 +42,14 @@ class _KhachhangScreenState extends State<KhachhangScreen> {
     super.dispose();
   }
 
-  Future<void> _loadKhachhang() async {
-    _khachhangFuture =
-        Provider.of<KhachhangManage>(context, listen: false).fetchKhachhang();
+  Future<void> _loadKhachhang({int page = 1}) async {
+    _khachhangFuture = Provider.of<KhachhangManage>(context, listen: false)
+        .fetchKhachhang(page: page, pageSize: _pageSize);
     _khachhangFuture.then((khachhangs) {
       setState(() {
         _khachhangList = khachhangs;
         _filteredKhachhangList = khachhangs;
+        _currentPage = page;
       });
     });
   }
@@ -74,11 +80,14 @@ class _KhachhangScreenState extends State<KhachhangScreen> {
         title: Row(
           children: [
             Expanded(child: Container()), // Spacer
-            const Text("Khách hàng",
-                style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.w900,
-                    fontSize: 20)),
+            const Text(
+              "Khách hàng",
+              style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.w900,
+                fontSize: 20,
+              ),
+            ),
             Expanded(child: Container()), // Spacer
           ],
         ),
@@ -91,7 +100,7 @@ class _KhachhangScreenState extends State<KhachhangScreen> {
                   createRoute((context) => const ThemKhachhangScreen()),
                 );
                 if (result == true) {
-                  _loadKhachhang(); // Refresh the list when receiving the result
+                  _loadKhachhang(page: _currentPage); // Refresh the list
                 }
               },
               icon: const Icon(CupertinoIcons.add),
@@ -100,24 +109,50 @@ class _KhachhangScreenState extends State<KhachhangScreen> {
         ],
       ),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: SingleChildScrollView(
-            // SingleChildScrollView for scrolling
+       
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(12.0),
             child: Column(
               children: [
                 Search_Bar(searchController: _searchController),
                 const SizedBox(height: 12.0),
                 ShowList(),
+                const SizedBox(height: 12.0),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Visibility(
+                      visible: _currentPage > 1,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          _loadKhachhang(page: _currentPage - 1);
+                        },
+                        child: const Text("Trang trước"),
+                      ),
+                    ),
+                    Visibility(
+                      visible: _currentPage <
+                          Provider.of<KhachhangManage>(context, listen: false)
+                              .totalPages,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          _loadKhachhang(page: _currentPage + 1);
+                        },
+                        child: const Text("Trang kế tiếp"),
+                      ),
+                    ),
+                  ],
+                ),
               ],
             ),
           ),
         ),
       ),
-    );
+      );
+    
   }
 
-  // ignore: non_constant_identifier_names
   FutureBuilder<List<Khachhang>> ShowList() {
     return FutureBuilder<List<Khachhang>>(
       future: _khachhangFuture,
@@ -128,11 +163,9 @@ class _KhachhangScreenState extends State<KhachhangScreen> {
           return Center(child: Text('Error: ${snapshot.error}'));
         } else {
           return ListView.builder(
-            shrinkWrap: true, // shrinkWrap to make ListView fit within Column
-            physics:
-                NeverScrollableScrollPhysics(), // Disable ListView's own scrolling
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
             itemCount: _filteredKhachhangList.length,
-            reverse: true,
             itemBuilder: (BuildContext context, int index) {
               return Container(
                 margin:
@@ -142,89 +175,97 @@ class _KhachhangScreenState extends State<KhachhangScreen> {
                   borderRadius: BorderRadius.circular(15.0),
                 ),
                 child: ListTile(
-                  title: Column(children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                _filteredKhachhangList[index].kh_ten ?? '',
-                                style: const TextStyle(
+                  title: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  _filteredKhachhangList[index].kh_ten ?? '',
+                                  style: const TextStyle(
                                     color: Colors.black,
                                     fontWeight: FontWeight.w800,
-                                    fontSize: 20),
+                                    fontSize: 20,
+                                  ),
+                                ),
                               ),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              const SizedBox(width: 10),
+                              deleteMethod(context, index),
+                            ],
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Text(
+                            "Mã: ${_filteredKhachhangList[index].kh_ma}",
+                            style: const TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.w700,
+                              fontSize: 14,
                             ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            const SizedBox(width: 10),
-                            deleteMethod(context, index),
-                          ],
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Text(
-                          "Mã: ${_filteredKhachhangList[index].kh_ma}",
-                          style: const TextStyle(
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Text(
+                            "CMND: ${_filteredKhachhangList[index].kh_cmnd}",
+                            style: const TextStyle(
                               color: Colors.black,
                               fontWeight: FontWeight.w700,
-                              fontSize: 14),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Text(
-                          "CMND: ${_filteredKhachhangList[index].kh_cmnd}",
-                          style: const TextStyle(
+                              fontSize: 14,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Text(
+                            "Điện thoại: ${_filteredKhachhangList[index].kh_sdt}",
+                            style: const TextStyle(
                               color: Colors.black,
                               fontWeight: FontWeight.w700,
-                              fontSize: 14),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Text(
-                          "Điện thoại: ${_filteredKhachhangList[index].kh_sdt}",
-                          style: const TextStyle(
+                              fontSize: 14,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Text(
+                            "Địa chỉ: ${_filteredKhachhangList[index].kh_dia_chi}",
+                            style: const TextStyle(
                               color: Colors.black,
                               fontWeight: FontWeight.w700,
-                              fontSize: 14),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Text(
-                          "Địa chỉ: ${_filteredKhachhangList[index].kh_dia_chi}",
-                          style: const TextStyle(
+                              fontSize: 14,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Text(
+                            "Ghi chú: ${_filteredKhachhangList[index].kh_ghi_chu}",
+                            style: const TextStyle(
                               color: Colors.black,
                               fontWeight: FontWeight.w700,
-                              fontSize: 14),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Text(
-                          "Ghi chú: ${_filteredKhachhangList[index].kh_ghi_chu}",
-                          style: const TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.w700,
-                              fontSize: 14),
-                        ),
-                      ],
-                    ),
-                  ]),
+                              fontSize: 14,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               );
             },
@@ -243,7 +284,8 @@ class _KhachhangScreenState extends State<KhachhangScreen> {
             return AlertDialog(
               title: const Text("Xác nhận"),
               content: Text(
-                  "Bạn có chắc chắn muốn xóa đơn vị ${_filteredKhachhangList[index].kh_ten?.toUpperCase()}?"),
+                "Bạn có chắc chắn muốn xóa đơn vị ${_filteredKhachhangList[index].kh_ten?.toUpperCase()}?",
+              ),
               actions: <Widget>[
                 TextButton(
                   onPressed: () {
@@ -264,21 +306,25 @@ class _KhachhangScreenState extends State<KhachhangScreen> {
                         content: const Text(
                           'Xóa thành công!',
                           style: TextStyle(
-                              fontWeight: FontWeight.w900, color: Colors.red),
+                            fontWeight: FontWeight.w900,
+                            color: Colors.red,
+                          ),
                           textAlign: TextAlign.center,
                         ),
                         backgroundColor: Colors.grey,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(15.0),
                           side: const BorderSide(
-                              color: Colors.grey, width: 2.0), // bo viền 15px
+                            color: Colors.grey,
+                            width: 2.0,
+                          ),
                         ),
-                        behavior: SnackBarBehavior
-                            .floating, // hiển thị ở cách đáy màn hình
+                        behavior: SnackBarBehavior.floating,
                         margin: const EdgeInsets.only(
-                            left: 15.0,
-                            right: 15.0,
-                            bottom: 15.0), // cách 2 cạnh và đáy màn hình 15px
+                          left: 15.0,
+                          right: 15.0,
+                          bottom: 15.0,
+                        ),
                       ),
                     );
                   },
@@ -286,13 +332,17 @@ class _KhachhangScreenState extends State<KhachhangScreen> {
                 ),
               ],
             );
-          },
-        );
-      },
-      child: const Icon(
-        CupertinoIcons.delete_solid,
-        color: Colors.black,
-      ),
-    );
-  }
+
+             
+        },
+      );
+    },
+    child: const Icon(
+      CupertinoIcons.delete_solid,
+      color: Colors.black,
+    ),
+  );
 }
+
+}
+
