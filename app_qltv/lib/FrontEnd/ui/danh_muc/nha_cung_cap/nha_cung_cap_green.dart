@@ -22,6 +22,8 @@ class _NhaCungCapScreenState extends State<NhaCungCapScreen> {
   final TextEditingController _searchController = TextEditingController();
   List<NhaCungCap> _filteredNhaCungCapList = [];
   List<NhaCungCap> _nhaCungCapList = [];
+  int _currentPage = 1;
+  int _pageSize = 10;
 
   @override
   void initState() {
@@ -36,13 +38,14 @@ class _NhaCungCapScreenState extends State<NhaCungCapScreen> {
     super.dispose();
   }
 
-  Future<void> _loadNhaCungCaps() async {
+  Future<void> _loadNhaCungCaps({int page = 1}) async {
     _nhaCungCapFuture = Provider.of<NhaCungCapManager>(context, listen: false)
-        .fetchNhaCungCap();
+        .fetchNhaCungCap(page: page, pageSize: _pageSize);
     _nhaCungCapFuture.then((nhaCungCaps) {
       setState(() {
         _nhaCungCapList = nhaCungCaps;
         _filteredNhaCungCapList = nhaCungCaps;
+        _currentPage = page;
       });
     });
   }
@@ -106,9 +109,77 @@ class _NhaCungCapScreenState extends State<NhaCungCapScreen> {
                 Search_Bar(searchController: _searchController),
                 const SizedBox(height: 12.0),
                 ShowList(),
+                const SizedBox(height: 12.0),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Visibility(
+                      visible: _currentPage > 1,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          _loadNhaCungCaps(page: _currentPage - 1);
+                        },
+                        child: const Text("Trang trước"),
+                      ),
+                    ),
+                    // danh sach hien thi cac so thu tu trang
+                    Visibility(
+                      visible: _currentPage <
+                          Provider.of<NhaCungCapManager>(context, listen: false)
+                              .totalPages,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          _loadNhaCungCaps(page: _currentPage + 1);
+                        },
+                        child: const Text("Trang kế tiếp"),
+                      ),
+                    ),
+                  ],
+                ),
               ],
             ),
           ),
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          showModalBottomSheet(
+            context: context,
+            builder: (BuildContext context) {
+              return Container(
+                height: 200,
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(15.0),
+                    topRight: Radius.circular(15.0),
+                  ),
+                  color: Color.fromARGB(255, 228, 200, 126),
+                ),
+                child: Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      const Text('Tổng Quan',
+                          style: TextStyle(
+                              fontWeight: FontWeight.w800, fontSize: 20)),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          'Tổng số lượng nhà cung cấp: ${Provider.of<NhaCungCapManager>(context, listen: false).totalRows}',
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          );
+        },
+        backgroundColor: Colors.white,
+        tooltip: 'Show Bottom Sheet',
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Image.asset('assets/images/list.png'),
         ),
       ),
     );

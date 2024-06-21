@@ -6,24 +6,36 @@ var ApiError = require('../api-error');
 //1.xóa danh sách thông tin nhà cung cấp 
 exports.list_NhaCungCap = async (req, res, next) =>{
     try{
+        const page = parseInt(req.query.page) || 1;
+        const pageSize = parseInt(req.query.pageSize) || 10;
+        const offset = (page - 1) * pageSize;
 
-        db.query(`SELECT * FROM phn_nha_cung_cap WHERE SU_DUNG = 1`,(err, results)=>{
-            if(err){
-                console.log(`Lỗi khi xóa danh sách thông tin nhà cung cấp - ${err}`);
-                return res.status(404).json({message: `Loi khi cập nhật thong tin nhà cung cấp`});
-            }else{
-                let KetQua = results.map(result =>({
-                        "NCCID": Number(result.NCCID),
-                        "NCCMA": result.NCCMA,
-                        "NCC_TEN": result.NCC_TEN,
-                        "NGAYBD": new Date(result.NGAYBD).toLocaleDateString('vi-VN'),//.getDate() + "/"+ Number(new Date(result.NGAYBD).getMonth() + 1) +'/'+ new Date(result.NGAYBD).getFullYear() ),
-                        "GIO_BD": new Date(result.NGAYBD).toLocaleTimeString('vi-VN'),
-                        "GHI_CHU": result.GHI_CHU,
-                        "SU_DUNG": result.SU_DUNG
-                    })
-                );
-                return res.status(200).json(KetQua);
+        db.query(`SELECT COUNT(*) as total FROM phn_nha_cung_cap WHERE SU_DUNG = 1`, (countErr, countResult) => {
+            if (countErr) {
+                console.log(`Error retrieving total count - ${countErr}`);
+                return res.status(500).json({ error: "Error retrieving total count" });
             }
+            
+            const totalRows = countResult[0].total;
+            const totalPages = Math.ceil(totalRows / pageSize);
+            db.query(`SELECT * FROM phn_nha_cung_cap WHERE SU_DUNG = 1 LIMIT ${pageSize} OFFSET ${offset}`,(err, results)=>{
+                if(err){
+                    console.log(`Lỗi khi xóa danh sách thông tin nhà cung cấp - ${err}`);
+                    return res.status(404).json({message: `Loi khi cập nhật thong tin nhà cung cấp`});
+                }else{
+                    let KetQua = results.map(result =>({
+                            "NCCID": Number(result.NCCID),
+                            "NCCMA": result.NCCMA,
+                            "NCC_TEN": result.NCC_TEN,
+                            "NGAYBD": new Date(result.NGAYBD).toLocaleDateString('vi-VN'),//.getDate() + "/"+ Number(new Date(result.NGAYBD).getMonth() + 1) +'/'+ new Date(result.NGAYBD).getFullYear() ),
+                            "GIO_BD": new Date(result.NGAYBD).toLocaleTimeString('vi-VN'),
+                            "GHI_CHU": result.GHI_CHU,
+                            "SU_DUNG": result.SU_DUNG
+                        })
+                    );
+                    return res.status(200).json({KetQua,page,totalRows,totalPages});
+                }
+            })
         })
     }catch(err){
         return next(new ApiError(500, `Loi xuat hien khi xóa danh sách nhà cung cấp: ${err.message}`));

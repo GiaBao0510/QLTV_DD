@@ -19,8 +19,6 @@ class KhachhangScreen extends StatefulWidget {
   _KhachhangScreenState createState() => _KhachhangScreenState();
 }
 
-
-
 class _KhachhangScreenState extends State<KhachhangScreen> {
   late Future<List<Khachhang>> _khachhangFuture;
   final TextEditingController _searchController = TextEditingController();
@@ -110,7 +108,6 @@ class _KhachhangScreenState extends State<KhachhangScreen> {
         ],
       ),
       body: SafeArea(
-       
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(12.0),
@@ -422,4 +419,3 @@ Table tableTotal(Map<String, double> total) {
     );
   }
 }
-

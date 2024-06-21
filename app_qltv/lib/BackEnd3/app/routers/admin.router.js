@@ -18,7 +18,7 @@ const KiemTra = require('../services/KiemTra.services');
 //0. Tạo 1 router để quản lý tuyến đường
 const router = express.Router();
 
-    // >>>>>>>>     Loại hàng
+    // >>>>>>>>     Loại hàng 
 //1. Thêm loại hàng
 router.route('/themloaihang').post( KiemTra.CheckLogin, loaihang.Add_LoaiHang);
 

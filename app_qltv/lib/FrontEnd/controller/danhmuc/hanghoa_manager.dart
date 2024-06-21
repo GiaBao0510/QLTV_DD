@@ -7,7 +7,6 @@ import 'dart:async';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:app_qltv/FrontEnd/constants/config.dart';
 
-
 class HangHoaManager with ChangeNotifier {
   List<HangHoa> _hangHoas = [];
 
@@ -15,23 +14,40 @@ class HangHoaManager with ChangeNotifier {
 
   int get hangHoasLength => _hangHoas.length;
 
-  Future<List<HangHoa>> fetchHangHoas() async {
+  int _currentPage = 1;
+  int _pageSize = 10;
+  int _totalPages = 1;
+  int _totalRows = 0;
+
+  int get currentPage => _currentPage;
+  int get totalPages => _totalPages;
+  int get totalRows => _totalRows;
+
+  Future<List<HangHoa>> fetchHangHoas({int page = 1, int pageSize = 10}) async {
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       final response = await http.get(
-        Uri.parse('$url/api/admin/danhsachhanghoa'),
-        headers: {
+          Uri.parse(
+              '$url/api/admin/danhsachhanghoa?page=$page&pageSize=$pageSize'),
+          headers: {
             "accesstoken": "${prefs.getString('accesstoken')}",
-        }
-      );
+          });
       if (response.statusCode == 200) {
-        List<dynamic> jsonList = jsonDecode(response.body);
-        List<HangHoa> hangHoaList = jsonList.map((e) => HangHoa.fromMap(e)).toList();
+        Map<String, dynamic> json = jsonDecode(response.body);
+        List<dynamic> jsonList = json['KetQua'];
+        // List<dynamic> jsonList = jsonDecode(response.body);
+        List<HangHoa> hangHoaList =
+            jsonList.map((e) => HangHoa.fromMap(e)).toList();
+
+        _currentPage = json['page'];
+        _totalPages = json['totalPages'];
+        _totalRows = json['totalRows'];
         _hangHoas = hangHoaList;
         notifyListeners();
         return hangHoaList;
       } else {
-        throw Exception('Failed to load data. Status code: ${response.statusCode}');
+        throw Exception(
+            'Failed to load data. Status code: ${response.statusCode}');
       }
     } catch (e) {
       if (e is SocketException) {
@@ -66,7 +82,8 @@ class HangHoaManager with ChangeNotifier {
     }
   }
 
-  Future<HangHoa> updateHangHoa(String hangHoaMa, HangHoa updatedHangHoa) async {
+  Future<HangHoa> updateHangHoa(
+      String hangHoaMa, HangHoa updatedHangHoa) async {
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       final response = await http.put(
@@ -79,12 +96,14 @@ class HangHoaManager with ChangeNotifier {
       );
 
       if (response.statusCode == 200) {
-        int index = _hangHoas.indexWhere((hangHoa) => hangHoa.hangHoaMa == hangHoaMa);
+        int index =
+            _hangHoas.indexWhere((hangHoa) => hangHoa.hangHoaMa == hangHoaMa);
         if (index != -1) {
           _hangHoas[index] = updatedHangHoa;
           notifyListeners();
         }
-        return HangHoa.fromMap(jsonDecode(response.body) as Map<String, dynamic>);
+        return HangHoa.fromMap(
+            jsonDecode(response.body) as Map<String, dynamic>);
       } else {
         throw Exception('Failed to update HangHoa: ${response.statusCode}');
       }
