@@ -19,8 +19,6 @@ class KhachhangScreen extends StatefulWidget {
   _KhachhangScreenState createState() => _KhachhangScreenState();
 }
 
-
-
 class _KhachhangScreenState extends State<KhachhangScreen> {
   late Future<List<Khachhang>> _khachhangFuture;
   final TextEditingController _searchController = TextEditingController();
@@ -109,7 +107,6 @@ class _KhachhangScreenState extends State<KhachhangScreen> {
         ],
       ),
       body: SafeArea(
-       
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(12.0),
@@ -149,8 +146,7 @@ class _KhachhangScreenState extends State<KhachhangScreen> {
           ),
         ),
       ),
-      );
-    
+    );
   }
 
   FutureBuilder<List<Khachhang>> ShowList() {
@@ -332,17 +328,13 @@ class _KhachhangScreenState extends State<KhachhangScreen> {
                 ),
               ],
             );
-
-             
-        },
-      );
-    },
-    child: const Icon(
-      CupertinoIcons.delete_solid,
-      color: Colors.black,
-    ),
-  );
+          },
+        );
+      },
+      child: const Icon(
+        CupertinoIcons.delete_solid,
+        color: Colors.black,
+      ),
+    );
+  }
 }
-
-}
-

@@ -20,7 +20,7 @@ class DonviManage with ChangeNotifier {
   Future<List<Donvi>> fetchDonvi() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final response =
-        await http.get(Uri.parse('$url/api/phieu/khovangmuavao'), headers: {
+        await http.get(Uri.parse('$url/api/admin/danhsachNSdonvi'), headers: {
       "accesstoken": "${prefs.getString('accesstoken')}",
     });
     if (response.statusCode == 200) {
