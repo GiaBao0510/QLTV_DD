@@ -6,44 +6,61 @@ var ApiError = require('../api-error');
 //1. danh sách thông tin kho
 exports.list_hangHoa = async (req, res, next) =>{
     try{
+        const page = parseInt(req.query.page) || 1;
+        const pageSize = parseInt(req.query.pageSize) || 10;
+        const offset = (page - 1) * pageSize;
 
-        db.query(`SELECT * FROM danh_muc_hang_hoa WHERE SU_DUNG = 1`,(err, results)=>{
-            if(err){
-                console.log(`Lỗi khi lấy danh sách thông tin hàng hóa - ${err}`);
-                return res.status(404).json({message: `Loi khi lấy danh sách thong tin  hàng hóa`});
-            }else{
-                let KetQua = results.map(result =>({
-                    "HANGHOAID": Number(result.HANGHOAID),
-                    "HANGHOAMA": result.HANGHOAMA,
-                    "LOAIID": result.LOAIID,
-                    "DVTID" : result.DVTID,
-                    "NHOMHANGID": result.NHOMHANGID,
-                    "NCCID": result.NCCID,
-                    "GIAM_GIA_ID": result.GIAM_GIA_ID,
-                    "HANG_HOA_TEN": result.HANG_HOA_TEN,
-                    "GIA_BAN": result.GIA_BAN,
-                    "VAT": result.VAT,
-                    "THUE": result.THUE,
-                    "SU_DUNG": result.SU_DUNG,
-                    "DANH_DAU": result.DANH_DAU,
-                    "SL_IN": result.SL_IN,
-                    "GHI_CHU": result.GHI_CHU,
-                    "TAO_MA": result.TAO_MA,
-                    "GIA_BAN_SI": result.GIA_BAN_SI,
-                    "CAN_TONG": result.CAN_TONG,
-                    "TL_HOT": result.TL_HOT,
-                    "GIA_CONG": result.GIA_CONG,
-                    "DON_GIA_GOC": result.DON_GIA_GOC,
-                    "CONG_GOC": result.CONG_GOC,
-                    "TUOI_BAN": result.TUOI_BAN,
-                    "TUOI_MUA": result.TUOI_MUA,
-                    "XUAT_XU": result.XUAT_XU,
-                    "KY_HIEU": result.KY_HIEU,
-                    "NGAY": new Date(result.NGAY),
-                    "SO_LUONG": Number(result.SO_LUONG)
-                }));
-                return res.status(200).json(KetQua);
+        db.query(`SELECT COUNT(*) as total FROM danh_muc_hang_hoa WHERE SU_DUNG = 1`, (countErr, countResult) => {
+            if (countErr) {
+                console.log(`Error retrieving total count - ${countErr}`);
+                return res.status(500).json({ error: "Error retrieving total count" });
             }
+            
+            const totalRows = countResult[0].total;
+            const totalPages = Math.ceil(totalRows / pageSize);
+
+            db.query(`SELECT * FROM danh_muc_hang_hoa WHERE SU_DUNG = 1 LIMIT ${pageSize} OFFSET ${offset}`,(err, results)=>{
+                if(err){
+                    console.log(`Lỗi khi lấy danh sách thông tin hàng hóa - ${err}`);
+                    return res.status(404).json({message: `Loi khi lấy danh sách thong tin  hàng hóa`});
+                }else{
+                    let KetQua = results.map(result =>({
+                        "HANGHOAID": Number(result.HANGHOAID),
+                        "HANGHOAMA": result.HANGHOAMA,
+                        "LOAIID": result.LOAIID,
+                        "DVTID" : result.DVTID,
+                        "NHOMHANGID": result.NHOMHANGID,
+                        "NCCID": result.NCCID,
+                        "GIAM_GIA_ID": result.GIAM_GIA_ID,
+                        "HANG_HOA_TEN": result.HANG_HOA_TEN,
+                        "GIA_BAN": result.GIA_BAN,
+                        "VAT": result.VAT,
+                        "THUE": result.THUE,
+                        "SU_DUNG": result.SU_DUNG,
+                        "DANH_DAU": result.DANH_DAU,
+                        "SL_IN": result.SL_IN,
+                        "GHI_CHU": result.GHI_CHU,
+                        "TAO_MA": result.TAO_MA,
+                        "GIA_BAN_SI": result.GIA_BAN_SI,
+                        "CAN_TONG": result.CAN_TONG,
+                        "TL_HOT": result.TL_HOT,
+                        "GIA_CONG": result.GIA_CONG,
+                        "DON_GIA_GOC": result.DON_GIA_GOC,
+                        "CONG_GOC": result.CONG_GOC,
+                        "TUOI_BAN": result.TUOI_BAN,
+                        "TUOI_MUA": result.TUOI_MUA,
+                        "XUAT_XU": result.XUAT_XU,
+                        "KY_HIEU": result.KY_HIEU,
+                        "NGAY": new Date(result.NGAY),
+                        "SO_LUONG": Number(result.SO_LUONG)
+                    }));
+                    return res.status(200).json(
+                        {KetQua,
+                        page,
+                        totalPages,
+                        totalRows});
+                }
+            })
         })
     }catch(err){
         return next(new ApiError(500, `Loi xuat hien khi lấy danh sách  hàng hóa: ${err.message}`));

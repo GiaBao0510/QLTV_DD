@@ -31,15 +31,33 @@ exports.deleteUser = async (req, res, next)=>{
     next(error);
   }
 }
+// exports.getUsers = async (req, res, next) => {
+//   try {
+//     const users = await userService.getAllUsers();
+//     res.status(200).json(users);
+//   } catch (error) {
+//     next(error);
+//   }
+// };
 exports.getUsers = async (req, res, next) => {
   try {
-    const users = await userService.getAllUsers();
-    res.status(200).json(users);
+    const page = parseInt(req.query.page) || 1;
+    const pageSize = parseInt(req.query.pageSize) || 10;
+    const offset = (page -1 ) *pageSize;
+    const usersdata = await userService.getAllUsersWithPagination(pageSize, offset);
+    const total = await userService.getAllUsers();
+    const totalPages = Math.ceil(total/pageSize);
+    res.status(200).json({
+      page,
+      pageSize,
+      totalPages,
+      totalRows:total,
+      data: usersdata
+    });
   } catch (error) {
     next(error);
   }
 };
-
 exports.getUserById = async (req, res, next) => {
   try {
     const user = await userService.getUserById(req.params.id);

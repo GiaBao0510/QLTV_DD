@@ -32,6 +32,8 @@ class _HangHoaScreenState extends State<HangHoaScreen> {
   List<HangHoa> _hangHoaList = [];
   late List<LoaiVang> loaiVangList; // Khai báo thuộc tính loaiVangList
   late List<NhomVang> nhomVangList; // Khai báo thuộc tính nhomVangList
+  int _currentPage = 1;
+  int _pageSize = 10;
 
   @override
   void initState() {
@@ -49,13 +51,14 @@ class _HangHoaScreenState extends State<HangHoaScreen> {
     super.dispose();
   }
 
-  Future<void> _loadHangHoas() async {
-    _hangHoaFuture =
-        Provider.of<HangHoaManager>(context, listen: false).fetchHangHoas();
+  Future<void> _loadHangHoas({int page = 1}) async {
+    _hangHoaFuture = Provider.of<HangHoaManager>(context, listen: false)
+        .fetchHangHoas(page: page, pageSize: _pageSize);
     _hangHoaFuture.then((hangHoas) {
       setState(() {
         _hangHoaList = hangHoas;
         _filteredHangHoaList = hangHoas;
+        _currentPage = page;
       });
     });
   }
@@ -119,9 +122,77 @@ class _HangHoaScreenState extends State<HangHoaScreen> {
                 Search_Bar(searchController: _searchController),
                 const SizedBox(height: 12.0),
                 ShowList(),
+                const SizedBox(height: 12.0),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Visibility(
+                      visible: _currentPage > 1,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          _loadHangHoas(page: _currentPage - 1);
+                        },
+                        child: const Text("Trang trước"),
+                      ),
+                    ),
+                    // danh sach hien thi cac so thu tu trang
+                    Visibility(
+                      visible: _currentPage <
+                          Provider.of<HangHoaManager>(context, listen: false)
+                              .totalPages,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          _loadHangHoas(page: _currentPage + 1);
+                        },
+                        child: const Text("Trang kế tiếp"),
+                      ),
+                    ),
+                  ],
+                ),
               ],
             ),
           ),
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          showModalBottomSheet(
+            context: context,
+            builder: (BuildContext context) {
+              return Container(
+                height: 200,
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(15.0),
+                    topRight: Radius.circular(15.0),
+                  ),
+                  color: Color.fromARGB(255, 228, 200, 126),
+                ),
+                child: Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      const Text('Tổng Quan',
+                          style: TextStyle(
+                              fontWeight: FontWeight.w800, fontSize: 20)),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          'Tổng số lượng hàng hóa: ${Provider.of<HangHoaManager>(context, listen: false).totalRows}',
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          );
+        },
+        backgroundColor: Colors.white,
+        tooltip: 'Show Bottom Sheet',
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Image.asset('assets/images/list.png'),
         ),
       ),
     );

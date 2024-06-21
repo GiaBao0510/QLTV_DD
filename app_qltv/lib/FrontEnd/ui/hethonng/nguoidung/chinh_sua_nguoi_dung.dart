@@ -12,7 +12,9 @@ class ChinhSuaNguoiDungScreen extends StatefulWidget {
 
   final NguoiDung nguoiDung;
 
-  const ChinhSuaNguoiDungScreen(this.nguoiDung, {super.key});
+  const ChinhSuaNguoiDungScreen({Key? key, required this.nguoiDung})
+      : super(key: key);
+
 
   @override
   State<ChinhSuaNguoiDungScreen> createState() =>
