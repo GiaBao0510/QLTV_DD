@@ -1,5 +1,5 @@
 
-const url = "http://192.168.0.109:3000";
+const url = "http://192.168.1.24:3000";
 
 const login = "$url/login"; //Đăng nhập
 const logout = "$url/exit"; //Đăng xuất
@@ -32,7 +32,8 @@ const DownloadFilePDF = '/api/v2/invoice/DownloadPdf';
 //8.Lay so hoa don sap phat hanh
 const GetTheInvoiceNumberToBeIssued = 'api/v2/invoice/GetInvoiceNo';
 //9. Lấy thông tin hóa đơn theo danh sách mã tra cứu fkey
-const GetInformationAccordingToLookUpCodeFKeyList = "/api/v2/invoice/GetInvoiceNoByMultiFkey";
+const GetInformationAccordingToLookUpCodeFKeyList =
+    "/api/v2/invoice/GetInvoiceNoByMultiFkey";
 //10. Phát hành phiếu xuất kho
 const PublishGoodsDeliveryNote = '/api/v2/invoice/importAndPublishPXK';
 //11. Import phiếu xuất kho nháp

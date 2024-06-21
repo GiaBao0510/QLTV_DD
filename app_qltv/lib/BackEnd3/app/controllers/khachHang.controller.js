@@ -1,6 +1,6 @@
 var mysql = require('mysql');
 var express = require('express');
-var {db, db2} = require('../config/index_2');
+var db = require('../config/index_2');
 
 //Thêm khách hàng
 exports.Add_khachHang = async(req, res, next) =>{

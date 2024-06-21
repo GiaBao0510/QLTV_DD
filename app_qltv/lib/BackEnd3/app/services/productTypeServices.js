@@ -1,5 +1,5 @@
-const {db, db2} = require('../config/index_2');
-
+const db = require('../config/index_2');
+ 
 const createProductType = async (userData) => {
   return new Promise((resolve, reject) => {
     db.query('INSERT INTO nhom_hang SET ?', userData, (error, results, fields) => {

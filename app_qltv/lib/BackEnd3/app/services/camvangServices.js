@@ -1,5 +1,5 @@
 const { json } = require('body-parser');
-const {db, db2}= require('../config/index_2');
+const db= require('../config/index_2');
 
 // // table cam_phieu_cam_vang
 
