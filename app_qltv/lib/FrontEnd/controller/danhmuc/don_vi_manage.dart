@@ -12,32 +12,28 @@ class DonviManage with ChangeNotifier {
   List<Donvi> get donvi => _donvi;
 
   int get donviLength => _donvi.length;
-  int _currentPage = 1;
-  int _pageSize = 10;
-  int _totalPages = 1;
-  
-  int get currentPage => _currentPage;
-  int get totalPages => _totalPages;
 
-  Future<List<Donvi>> fetchDonvi({int page = 1, int pageSize = 10}) async {
+  // if (response.statusCode == 200) {
+  //   final List<dynamic> data = json.decode(response.body);
+
+  //   return data.map((item) => Donvi.fromMap(item)).toList();
+  Future<List<Donvi>> fetchDonvi() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    notifyListeners();
     final response =
-        await http.get(Uri.parse('$url/api/admin/danhsachNSdonvi?page=$page&pageSize=$pageSize'), 
-      headers: {
+        await http.get(Uri.parse('$url/api/admin/danhsachNSdonvi'), headers: {
       "accesstoken": "${prefs.getString('accesstoken')}",
     });
     if (response.statusCode == 200) {
-      Map< String,dynamic> json = jsonDecode(response.body);
-      List<dynamic> data = json['data'];
-      List<Donvi> donvi = data.map((e)=> Donvi.fromMap(e)).toList();
-      //return data.map((item) => Donvi.fromMap(item)).toList();
-      _currentPage = json['page'];
-      _totalPages = json['totalPage'];
-      notifyListeners();
-      return donvi;
+      // Parse JSON array and convert to list of Donvi objects
+      // List<dynamic> jsonList = jsonDecode(response.body);
+      // List<Donvi> donviList = jsonList.map((e) => Donvi.fromMap(e)).toList();
+      // _donvi = jsonList.map((e) => Donvi.fromMap(e)).toList();
+      // notifyListeners();
+      // return donviList;
+      final List<dynamic> data = json.decode(response.body);
+
+      return data.map((item) => Donvi.fromMap(item)).toList();
     } else {
-      notifyListeners();
       throw Exception('Failed to load data');
     }
   }
