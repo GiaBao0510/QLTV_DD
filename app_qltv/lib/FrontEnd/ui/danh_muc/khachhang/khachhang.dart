@@ -28,7 +28,7 @@ class _KhachhangScreenState extends State<KhachhangScreen> {
   List<Khachhang> _khachhangList = [];
   int _currentPage = 1;
   int _pageSize = 10;
-
+  int _totalKhachhang = 0;
   @override
   void initState() {
     super.initState();
@@ -50,6 +50,7 @@ class _KhachhangScreenState extends State<KhachhangScreen> {
         _khachhangList = khachhangs;
         _filteredKhachhangList = khachhangs;
         _currentPage = page;
+        _totalKhachhang = _khachhangList.length;
       });
     });
   }
@@ -120,7 +121,7 @@ class _KhachhangScreenState extends State<KhachhangScreen> {
                 ShowList(),
                 const SizedBox(height: 12.0),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Visibility(
                       visible: _currentPage > 1,
@@ -149,6 +150,49 @@ class _KhachhangScreenState extends State<KhachhangScreen> {
           ),
         ),
       ),
+            floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          showModalBottomSheet(
+            context: context,
+            builder: (BuildContext context) {
+              return Container(
+                height: 200,
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(15.0),
+                    topRight: Radius.circular(15.0),
+                  ),
+                  color: Color.fromARGB(255, 228, 200, 126),
+                ),
+                child: Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      const Text('Tổng Quan',
+                          style: TextStyle(
+                              fontWeight: FontWeight.w800, fontSize: 20)),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: tableTotal({
+                          'total': _totalKhachhang.toDouble(),
+                        },
+                      ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          );
+        },
+        backgroundColor: Colors.white,
+        tooltip: 'Show Bottom Sheet',
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Image.asset('assets/images/list.png'),
+        ),
+      ),
+    
       );
     
   }
@@ -343,6 +387,39 @@ class _KhachhangScreenState extends State<KhachhangScreen> {
     ),
   );
 }
-
+Table tableTotal(Map<String, double> total) {
+    return Table(
+      border: TableBorder.all(color: Colors.grey),
+      children: [
+        const TableRow(
+          decoration: BoxDecoration(
+            color: Color.fromARGB(150, 218, 218, 218),
+          ),
+          children: [
+            Center(
+              child: Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text('Tổng Khách hàng',
+                    style: TextStyle(fontWeight: FontWeight.bold)),
+              ),
+            ),
+           
+          ],
+        ),
+        TableRow(
+          children: [
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text('${total['total']?.toInt() ?? 0}'),
+              ),
+            ),
+            
+          ],
+        ),
+        
+      ],
+    );
+  }
 }
 
