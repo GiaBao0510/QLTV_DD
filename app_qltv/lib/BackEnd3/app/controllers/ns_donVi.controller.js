@@ -12,7 +12,7 @@ exports.list_nsDonVi = async (req, res, next) =>{
                 return res.status(404).json({message: `Loi khi lấy danh sách thong tin  Đơn vị`});
             }else{
                 let KetQua = results.map(result =>({
-                    "DON_VI_ID": Number(result.DON_VI_ID),
+                    "DON_VI_ID": String(result.DON_VI_ID),
                     "DON_VI_MA": result.DON_VI_MA,
                     "DON_VI_TEN": result.DON_VI_TEN,
                     "SU_DUNG": result.SU_DUNG,
