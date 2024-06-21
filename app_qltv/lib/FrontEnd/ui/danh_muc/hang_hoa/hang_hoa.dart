@@ -213,7 +213,7 @@ class _HangHoaScreenState extends State<HangHoaScreen> {
             physics:
                 NeverScrollableScrollPhysics(), // Disable ListView's own scrolling
             itemCount: _filteredHangHoaList.length,
-            reverse: true,
+            reverse: false,
             itemBuilder: (BuildContext context, int index) {
               return GestureDetector(
                 onTap: () {
