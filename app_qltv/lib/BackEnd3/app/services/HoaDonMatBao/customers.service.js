@@ -32,7 +32,7 @@ const deleteKhachHang = async (MaKH) =>{
             }
         });
     });
-}
+} 
 
 //3.Xóa thông tin khách hàng thông qua mã sản phẩm
 const getKhachHang = async () =>{
@@ -71,7 +71,7 @@ const insertKhachHang = async (ReqBody) =>{
         `,(err, results) => {
             if(err){
                 return reject({message: `Lỗi không thể thêm thông tin khách hàng - Error: ${err}`});
-            }else if(results){
+            }else if(results.length > 0){
                 return reject({message: "Thông tin khách hàng đã tồn tại."});
             }else{
                 db.query(`
@@ -89,7 +89,37 @@ const insertKhachHang = async (ReqBody) =>{
     });
 }
 
+//5.  cập nhật 
+const updateKhachHang = async (MaKH ,ReqBody) =>{
+    return new Promise((resolve, reject) => {
+        //Lấy mã khách hàng và thông tin sắp cập nhật
+        const {
+            CusName, Buyer, CusAddress, 
+            CusPhone, CusTaxCode, CusEmail,
+            CusEmailCC, CusBankName, CusBankNo
+        } = ReqBody;
+
+        //Tìm kiếm xem thông tin khách hàng đã tồn tại hay chưa
+        db.query(`SELECT * FROM Client WHERE MaKH = '${MaKH}'`, (err, results) =>{
+            if(err){
+                return reject({message: `Lỗi không tìm thấy thông tin khách hàng cần cập nhật - Error: ${err}`});
+            }else{
+                db.query(`
+                UPDATE Client
+                SET CusName="${CusName}", Buyer="${Buyer}", CusAddress="${CusAddress}", CusPhone="${CusPhone}", CusTaxCode="${CusTaxCode}", CusEmail="${CusEmail}", CusEmailCC="${CusEmailCC}", CusBankName="${CusBankName}", CusBankNo="${CusBankNo}"
+                WHERE MaKH = '${MaKH}'
+                `, (err, results) => {
+                    if(err){
+                        return reject({message: `Lỗi khi cập nhật thông tin khách hàng - Error: ${err}`});
+                    }
+                    resolve(results);
+                });
+            }
+        });
+    });
+}
+
 module.exports = {
     getKhachHang_maKH, deleteKhachHang, getKhachHang,
-    insertKhachHang
+    insertKhachHang, updateKhachHang
 }

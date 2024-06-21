@@ -24,7 +24,9 @@ class _DonviScreenState extends State<DonviScreen> {
   final TextEditingController _searchController = TextEditingController();
   List<Donvi> _filteredDonviList = [];
   List<Donvi> _donviList = [];
-
+  int _currentPage = 1;
+  int _pageSize = 10;
+  int _totalDonvi = 0;
   @override
   void initState() {
     super.initState();
@@ -38,13 +40,15 @@ class _DonviScreenState extends State<DonviScreen> {
     super.dispose();
   }
 
-  Future<void> _loadDonvi() async {
-    _donviFuture =
-        Provider.of<DonviManage>(context, listen: false).fetchDonvi();
+  Future<void> _loadDonvi({int page = 1}) async {
+    _donviFuture = Provider.of<DonviManage>(context, listen: false)
+        .fetchDonvi(page: page, pageSize: _pageSize);
     _donviFuture.then((donvis) {
       setState(() {
         _donviList = donvis;
         _filteredDonviList = donvis;
+        _currentPage = page;
+        _totalDonvi = _donviList.length;
       });
     });
   }
@@ -108,9 +112,78 @@ class _DonviScreenState extends State<DonviScreen> {
                 Search_Bar(searchController: _searchController),
                 const SizedBox(height: 12.0),
                 ShowList(),
+                const SizedBox(height: 12.0),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Visibility(
+                      visible: _currentPage > 1,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          _loadDonvi(page: _currentPage - 1);
+                        },
+                        child: const Text("Trang trước"),
+                      ),
+                    ),
+                    Visibility(
+                      visible: _currentPage <
+                          Provider.of<DonviManage>(context, listen: false)
+                              .totalPages,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          _loadDonvi(page: _currentPage + 1);
+                        },
+                        child: const Text("Trang kế tiếp"),
+                      ),
+                    ),
+                  ],
+                ),
               ],
             ),
           ),
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          showModalBottomSheet(
+            context: context,
+            builder: (BuildContext context) {
+              return Container(
+                height: 200,
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(15.0),
+                    topRight: Radius.circular(15.0),
+                  ),
+                  color: Color.fromARGB(255, 228, 200, 126),
+                ),
+                child: Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      const Text('Tổng Quan',
+                          style: TextStyle(
+                              fontWeight: FontWeight.w800, fontSize: 20)),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: tableTotal(
+                          {
+                            'total': _totalDonvi.toDouble(),
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          );
+        },
+        backgroundColor: Colors.white,
+        tooltip: 'Show Bottom Sheet',
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Image.asset('assets/images/list.png'),
         ),
       ),
     );
@@ -278,7 +351,7 @@ class _DonviScreenState extends State<DonviScreen> {
                     final donviManage =
                         Provider.of<DonviManage>(context, listen: false);
                     await donviManage.deleteDonvi(
-                        int.parse(_filteredDonviList[index].dvi_id!));
+                        int.parse(_filteredDonviList[index].dvi_ma!));
                     Navigator.of(context).pop(); // Close the dialog
                     _loadDonvi(); // Refresh the list
                     ScaffoldMessenger.of(context).showSnackBar(
@@ -336,4 +409,36 @@ class _DonviScreenState extends State<DonviScreen> {
       ),
     );
   }
+  Table tableTotal(Map<String, double> total) {
+    return Table(
+      border: TableBorder.all(color: Colors.grey),
+      children: [
+        const TableRow(
+          decoration: BoxDecoration(
+            color: Color.fromARGB(150, 218, 218, 218),
+          ),
+          children: [
+            Center(
+              child: Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text('Tổng Đơn vị',
+                    style: TextStyle(fontWeight: FontWeight.bold)),
+              ),
+            ),
+          ],
+        ),
+        TableRow(
+          children: [
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text('${total['total']?.toInt() ?? 0}'),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
 }
+

@@ -21,8 +21,10 @@ class DonviManage with ChangeNotifier {
 
   Future<List<Donvi>> fetchDonvi({int page = 1, int pageSize = 10}) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
+    notifyListeners();
     final response =
-        await http.get(Uri.parse('$url/api/admin/danhsachNSdonvi'), headers: {
+        await http.get(Uri.parse('$url/api/admin/danhsachNSdonvi?page=$page&pageSize=$pageSize'), 
+      headers: {
       "accesstoken": "${prefs.getString('accesstoken')}",
     });
     if (response.statusCode == 200) {
