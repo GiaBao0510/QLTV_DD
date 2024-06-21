@@ -1,5 +1,4 @@
 var mysql = require('mysql');
-// var mysql2 = require('mysql2');
 
 // module.exports = db;
 

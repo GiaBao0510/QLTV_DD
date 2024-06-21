@@ -1,4 +1,4 @@
-const db = require('../config/index_2');
+const db= require('../config/index_2');
 const bcrypt = require('bcrypt');
 
 const createUser = async (userData) => {

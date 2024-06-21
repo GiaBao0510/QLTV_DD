@@ -77,7 +77,7 @@ exports.Add_NhaCungCap = async (req, res, next) =>{
                 db.query("SELECT NCCID FROM phn_nha_cung_cap ORDER BY NCCID DESC LIMIT 1",(err, result)=> {
                     if(err){
                         console.log(`Lỗi khi xóa ID cuối thông tin nhà cung cấp - ${err}`);
-                return res.status(404).json({message: `Loi khi xóa ID cuối thong tin nhà cung cấp`});
+                        return res.status(404).json({message: `Loi khi xóa ID cuối thong tin nhà cung cấp`});
                     }else{
                         let IDcuoi = Number(result[0].NCCID);
 

@@ -20,10 +20,10 @@ async function startServer(){
       //Kiểm tra kết nối đến csdl
       await db.connect((err)=>{
           if(err){
-              console.log(`Lỗi khi kết nối ${err}`);
+              console.log(`Lỗi khi kết nối - Error: ${err}`);
               process.exit();
           }else{
-              console.log(`Đã kết nối được cơ sở dữ liệu!!`);
+              console.log(`Đã kết nối được cơ sở dữ liệu phần mềm vàng!!`);
           }
       });
 
