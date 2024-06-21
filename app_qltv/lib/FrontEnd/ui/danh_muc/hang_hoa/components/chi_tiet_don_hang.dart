@@ -26,6 +26,7 @@ class ChiTietHangHoaScreen extends StatelessWidget {
     final double truHot = (hangHoa.canTong ?? 0) - (hangHoa.tlHot ?? 0);
 
     return Scaffold(
+      backgroundColor: Colors.grey[100],
       // appBar: AppBar(
       //   leading: const BackButton(color: Colors.black),
       //   title: Text(hangHoa.hangHoaTen ?? ''),
@@ -54,58 +55,70 @@ class ChiTietHangHoaScreen extends StatelessWidget {
         ),
       ),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              buildDetailRow('Mã Hàng:', '${int.parse(hangHoa.hangHoaMa!)}'),
-              buildDetailRow('Tên Hàng Hóa:', '${hangHoa.hangHoaTen}'),
-              FutureBuilder<LoaiVang>(
-                future: _getLoaiVangById(hangHoa.nhomHangId),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return buildDetailRow('Loại Vàng:',
-                        'Loading...'); // Hiển thị tiến trình đang tải
-                  } else if (snapshot.hasError) {
-                    return buildDetailRow('Loại Vàng:',
-                        'Unknown'); // Hiển thị thông báo lỗi nếu có lỗi xảy ra
-                  } else {
-                    LoaiVang? loaiVang = snapshot.data;
-                    return buildDetailRow(
-                        'Loại Vàng:', '${loaiVang?.nhomTen ?? "Unknown"}');
-                  }
-                },
+        child: SingleChildScrollView(
+          padding: EdgeInsets.only(top: 20),
+          child: Container(
+            margin:
+                    const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(15.0),
+                ),
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  buildDetailRow('Mã Hàng:', '${int.parse(hangHoa.hangHoaMa!)}'),
+                  //Divider(color: Colors.amber,),
+                  buildDetailRow('Tên Hàng Hóa:', '${hangHoa.hangHoaTen}'),
+                  FutureBuilder<LoaiVang>(
+                    future: _getLoaiVangById(hangHoa.nhomHangId),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return buildDetailRow('Loại Vàng:',
+                            'Loading...'); // Hiển thị tiến trình đang tải
+                      } else if (snapshot.hasError) {
+                        return buildDetailRow('Loại Vàng:',
+                            'Unknown'); // Hiển thị thông báo lỗi nếu có lỗi xảy ra
+                      } else {
+                        LoaiVang? loaiVang = snapshot.data;
+                        return buildDetailRow(
+                            'Loại Vàng:', '${loaiVang?.nhomTen ?? "Unknown"}');
+                      }
+                    },
+                  ),
+                  FutureBuilder<NhomVang>(
+                    future: _getNhomVangById(hangHoa.loaiId),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return buildDetailRow(
+                            'Nhóm:', 'Loading...'); // Hiển thị tiến trình đang tải
+                      } else if (snapshot.hasError) {
+                        return buildDetailRow('Nhóm:',
+                            'Unknownnnnn'); // Hiển thị thông báo lỗi nếu có lỗi xảy ra
+                      } else {
+                        NhomVang? nhomVang = snapshot.data;
+                        return buildDetailRow(
+                            'Nhóm:', '${nhomVang?.loaiTen ?? "Unknown"}');
+                      }
+                    },
+                  ),
+                  buildDetailRow('Cân Tổng:', '${hangHoa.canTong}'),
+                  buildDetailRow('TL Hột:', '${hangHoa.tlHot}'),
+                  buildDetailRow('Trừ Hột:', '$truHot'),
+                  buildDetailRow(
+                      'Công Gốc:', formatCurrency(hangHoa.congGoc ?? 0.0)),
+                  buildDetailRow(
+                      'Giá Công:', formatCurrency(hangHoa.giaCong ?? 0.0)),
+                  buildDetailRow(
+                      'Đơn Giá Gốc:', formatCurrency(hangHoa.donGiaGoc ?? 0.0)),
+                  buildDetailRow('Ghi Chú:', '${hangHoa.ghiChu}'),
+                  buildDetailRow('Xuất Xứ:', '${hangHoa.xuatXu}'),
+                  buildDetailRow('Ký Hiệu:', '${hangHoa.kyHieu}'),
+                ],
               ),
-              FutureBuilder<NhomVang>(
-                future: _getNhomVangById(hangHoa.loaiId),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return buildDetailRow(
-                        'Nhóm:', 'Loading...'); // Hiển thị tiến trình đang tải
-                  } else if (snapshot.hasError) {
-                    return buildDetailRow('Nhóm:',
-                        'Unknownnnnn'); // Hiển thị thông báo lỗi nếu có lỗi xảy ra
-                  } else {
-                    NhomVang? nhomVang = snapshot.data;
-                    return buildDetailRow(
-                        'Nhóm:', '${nhomVang?.loaiTen ?? "Unknown"}');
-                  }
-                },
-              ),
-              buildDetailRow('Cân Tổng:', '${hangHoa.canTong}'),
-              buildDetailRow('TL Hột:', '${hangHoa.tlHot}'),
-              buildDetailRow('Trừ Hột:', '$truHot'),
-              buildDetailRow(
-                  'Công Gốc:', formatCurrency(hangHoa.congGoc ?? 0.0)),
-              buildDetailRow(
-                  'Giá Công:', formatCurrency(hangHoa.giaCong ?? 0.0)),
-              buildDetailRow(
-                  'Đơn Giá Gốc:', formatCurrency(hangHoa.donGiaGoc ?? 0.0)),
-              buildDetailRow('Ghi Chú:', '${hangHoa.ghiChu}'),
-              buildDetailRow('Xuất Xứ:', '${hangHoa.xuatXu}'),
-              buildDetailRow('Ký Hiệu:', '${hangHoa.kyHieu}'),
-            ],
+            ),
           ),
         ),
       ),
@@ -115,22 +128,27 @@ class ChiTietHangHoaScreen extends StatelessWidget {
   Widget buildDetailRow(String label, String value) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+      child: Column(
         children: [
-          Text(
-            '$label ',
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Text(
+                '$label ',
+                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+              Expanded(
+                child: Text(
+                  value,
+                  style: const TextStyle(fontSize: 16),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.right,
+                ),
+              ),
+            ],
           ),
-          Expanded(
-            child: Text(
-              value,
-              style: const TextStyle(fontSize: 16),
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.right,
-            ),
-          ),
+          const Divider(color: Color.fromARGB(255, 200, 200, 200),height: 8,thickness: 2  ,),
         ],
       ),
     );

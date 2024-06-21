@@ -100,12 +100,38 @@ class _NguoiDungPageState extends State<NguoiDungPage> {
                     borderRadius: BorderRadius.circular(15.0),
                   ),
                   child: ListTile(
-                    title: Text(nguoidung.userTen ?? 'Null'),
+                    title: Text(nguoidung.userTen ?? 'Null',style: const TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w800,
+                                fontSize: 20),),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Nhóm người dùng: ${nguoidung.groupId.toString()}',style: const TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w700,
+                                fontSize: 14),),
+                        Text('Khóa: ${nguoidung.biKhoa == true ? "Có" : "Không"}',style: const TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w700,
+                                fontSize: 14),),
+                        Text('Lý do khóa: ${nguoidung.lyDoKhoa ?? 'N/A'}',style: const TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w700,
+                                fontSize: 14),),
+                        Text(
+                          'Ngày tạo : ${nguoidung.ngayTao != null ? nguoidung.ngayTao!.toIso8601String() : 'N/A'}',style: const TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.w700,
+                            fontSize: 14),
+                        ),
+                      ]
+                    ),
                     trailing: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         IconButton(
-                          icon: Icon(Icons.edit),
+                          icon: Icon(CupertinoIcons.pencil_circle,color: Colors.black,),
                           onPressed: () async {
                             final result = await Navigator.of(context).push(
                               createRoute(
@@ -118,7 +144,7 @@ class _NguoiDungPageState extends State<NguoiDungPage> {
                           },
                         ),
                         IconButton(
-                          icon: Icon(Icons.delete),
+                          icon: Icon(CupertinoIcons.delete_solid,color: Colors.black,),
                           onPressed: () {
                             showDialog(
                               context: context,
