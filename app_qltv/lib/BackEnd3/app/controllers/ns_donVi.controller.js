@@ -6,12 +6,24 @@ var ApiError = require('../api-error');
 //1. danh sách thông tin kho
 exports.list_nsDonVi = async (req, res, next) =>{
     try{
-        db.query(`SELECT * FROM ns_don_vi where SU_DUNG="1"`,(err, results)=>{
-            if(err){
-                console.log(`Lỗi khi lấy danh sách thông tin Đơn vị - ${err}`);
+        const page = parseInt(req.query.page) || 1;
+        const pageSize = parseInt(req.query.pageSize) || 10;
+        const offset = (page - 1) * pageSize;
+        db.query(`SELECT COUNT(*) as total FROM ns_don_vi where SU_DUNG="1"`,(countErr, countResult)=>{
+            if(countErr){
+                console.log(`Lỗi khi lấy danh sách thông tin Đơn vị - ${countErr}`);
                 return res.status(404).json({message: `Loi khi lấy danh sách thong tin  Đơn vị`});
-            }else{
-                let KetQua = results.map(result =>({
+            }
+            const totalRows = countResult[0].total;
+            const totalPages = Math.ceil(totalRows / pageSize);
+
+            db.query(`SELECT * FROM ns_don_vi WHERE SU_DUNG = 1 LIMIT ${pageSize} OFFSET ${offset}`, (err, result) => {
+                if (err) {
+                    console.log(`Error retrieving customer list - ${err}`);
+                    return res.status(500).json({ error: "Error retrieving customer list" });
+                }
+            else{
+                let KetQua = countResult.map(result =>({
                     "DON_VI_ID": String(result.DON_VI_ID),
                     "DON_VI_MA": result.DON_VI_MA,
                     "DON_VI_TEN": result.DON_VI_TEN,
@@ -26,9 +38,16 @@ exports.list_nsDonVi = async (req, res, next) =>{
                     "TIEU_DE_PHIEU_BAN": result.TIEU_DE_PHIEU_BAN,
                     "GIOI_THIEU": result.GIOI_THIEU,
                 }));
-                return res.status(200).json(KetQua);
-            }
-        })
+                return res.status(200).json(
+                    {
+                        data: result,
+                        page,
+                        totalPages,
+                        totalRows 
+                    }
+                );}
+            });
+        });
     }catch(err){
         return next(new ApiError(500, `Loi xuat hien khi lấy danh sách  Đơn vị: ${err.message}`));
     }
@@ -45,7 +64,7 @@ exports.lay_nsDonVi= async (req, res, next) =>{
                 return res.status(404).json({message: `Loi khong tin thay thong tin don vi - ${DON_VI_MA}`});
             }else{
                 let KetQua = results.map(result =>({
-                    "DON_VI_ID": Number(result.DON_VI_ID),
+                    "DON_VI_ID": String(result.DON_VI_ID),
                     "DON_VI_MA": result.DON_VI_MA,
                     "DON_VI_TEN": result.DON_VI_TEN,
                     "SU_DUNG": result.SU_DUNG,
