@@ -13,22 +13,38 @@ class NhaCungCapManager with ChangeNotifier {
 
   int get nhaCungCapsLength => _nhaCungCaps.length;
 
-  Future<List<NhaCungCap>> fetchNhaCungCap() async {
+  int _currentPage = 1;
+  // int _pageSize = 10;
+  int _totalPages = 1;
+  int _totalRows = 0;
+
+  int get currentPage => _currentPage;
+  int get totalPages => _totalPages;
+  int get totalRows => _totalRows;
+
+  Future<List<NhaCungCap>> fetchNhaCungCap(
+      {int page = 1, int pageSize = 10}) async {
     //Lay acctoken hien da luu ơ phan dang nhap
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
     final response = await http.get(
-      Uri.parse('$url/api/admin/danhsachnhacungcap'),
-      headers:{
-        'Content-Type': 'application/json',
-        "accesstoken": "${prefs.getString('accesstoken')}",
-      }
-    );
+        Uri.parse(
+            '$url/api/admin/danhsachnhacungcap?page=$page&pageSize=$pageSize'),
+        headers: {
+          'Content-Type': 'application/json',
+          "accesstoken": "${prefs.getString('accesstoken')}",
+        });
     if (response.statusCode == 200) {
       try {
-        List<dynamic> jsonList = jsonDecode(response.body);
-        List<NhaCungCap> nhaCungCapList = jsonList.map((e) => NhaCungCap.fromMap(e)).toList();
+        Map<String, dynamic> json = jsonDecode(response.body);
+        List<dynamic> jsonList = json['KetQua'];
+        // List<dynamic> jsonList = jsonDecode(response.body);
+        List<NhaCungCap> nhaCungCapList =
+            jsonList.map((e) => NhaCungCap.fromMap(e)).toList();
         _nhaCungCaps = nhaCungCapList;
+        _currentPage = json['page'];
+        _totalPages = json['totalPages'];
+        _totalRows = json['totalRows'];
         notifyListeners();
         return nhaCungCapList;
       } catch (e) {
@@ -64,7 +80,8 @@ class NhaCungCapManager with ChangeNotifier {
     }
   }
 
-  Future<NhaCungCap> updateNhaCungCap(String nccMa, String nccTen, String ghiChu, String ngayBd) async {
+  Future<NhaCungCap> updateNhaCungCap(
+      String nccMa, String nccTen, String ghiChu, String ngayBd) async {
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       final response = await http.put(
@@ -82,7 +99,8 @@ class NhaCungCapManager with ChangeNotifier {
 
       if (response.statusCode == 200) {
         notifyListeners();
-        return NhaCungCap.fromMap(jsonDecode(response.body) as Map<String, dynamic>);
+        return NhaCungCap.fromMap(
+            jsonDecode(response.body) as Map<String, dynamic>);
       } else {
         throw Exception('Failed to update NhaCungCap: ${response.statusCode}');
       }
