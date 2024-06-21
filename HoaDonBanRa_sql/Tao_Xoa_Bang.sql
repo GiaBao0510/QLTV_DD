@@ -86,11 +86,11 @@ CREATE TABLE ChiTietHoaDonBanRa(
 );
 
 -- Xoa bang
+DROP TABLE ChiTietHoaDonBanRa;
+DROP TABLE Invoice;
+DROP TABLE Products;
 DROP TABLE Client;
 DROP TABLE CurrencyType;
 DROP TABLE ProductProperties;
 DROP TABLE TaxPercentage;
 DROP TABLE PaymentMethod;
-DROP TABLE Invoice;
-DROP TABLE Products;
-DROP TABLE ChiTietHoaDonBanRa;
