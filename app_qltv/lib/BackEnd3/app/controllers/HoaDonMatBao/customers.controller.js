@@ -49,3 +49,12 @@ exports.UpdateCustomerID = async(req, res, next) => {
         next(err);
     }
 }
+exports.CheckCustomerAlreadyExists = async(req, res, next) =>{
+    try{
+        const {MaKH} = req.query;
+        const result = await CustomersServices.CheckCustomerAlreadyExists(MaKH);
+        res.status(200).json(result);
+    }catch(err){
+        next(err);
+    }
+}
