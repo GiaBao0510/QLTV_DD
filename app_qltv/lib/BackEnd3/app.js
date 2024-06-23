@@ -59,7 +59,7 @@ app.post('/login', async (req, res, next) => {
         const {USER_TEN,MAT_KHAU} = req.body;   //Lấy thông tin đầu vào
         
         //Tìm tài khoán có khớp không
-        db.query(`select * from pq_user where USER_TEN="${USER_TEN}"`,async (err, result)=>{
+        db.query(`select * from pq_user where USER_TEN="${USER_TEN}" and SU_DUNG = '1' `,async (err, result)=>{
             if(err){
                 return res.status(400).json({message: `Lỗi khi tìm USER_TEN: ${USER_TEN} `});
             }else if(!result || result.length == 0){

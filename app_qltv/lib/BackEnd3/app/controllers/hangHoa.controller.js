@@ -19,7 +19,13 @@ exports.list_hangHoa = async (req, res, next) =>{
             const totalRows = countResult[0].total;
             const totalPages = Math.ceil(totalRows / pageSize);
 
-            db.query(`SELECT * FROM danh_muc_hang_hoa WHERE SU_DUNG = 1 LIMIT ${pageSize} OFFSET ${offset}`,(err, results)=>{
+            db.query(`
+                    SELECT * 
+                    FROM danh_muc_hang_hoa 
+                    WHERE SU_DUNG = 1 
+                    ORDER BY HANGHOAID DESC 
+                    LIMIT ${pageSize} OFFSET ${offset}
+            `,(err, results)=>{
                 if(err){
                     console.log(`Lỗi khi lấy danh sách thông tin hàng hóa - ${err}`);
                     return res.status(404).json({message: `Loi khi lấy danh sách thong tin  hàng hóa`});

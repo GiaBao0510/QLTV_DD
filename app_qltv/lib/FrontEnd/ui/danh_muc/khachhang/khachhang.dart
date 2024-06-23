@@ -193,7 +193,7 @@ class _KhachhangScreenState extends State<KhachhangScreen> {
       );
     
   }
- 
+
   FutureBuilder<List<Khachhang>> ShowList() {
     return FutureBuilder<List<Khachhang>>(
       future: _khachhangFuture,
@@ -227,11 +227,11 @@ class _KhachhangScreenState extends State<KhachhangScreen> {
                               Align(
                                 alignment: Alignment.centerLeft,
                                 child: Text(
-                                  _filteredKhachhangList[index].kh_ten ?? '',
+                                  "Mã: ${_filteredKhachhangList[index].kh_ma}",
                                   style: const TextStyle(
                                     color: Colors.black,
-                                    fontWeight: FontWeight.w800,
-                                    fontSize: 20,
+                                    fontWeight: FontWeight.w200,
+                                    fontSize: 14,
                                   ),
                                 ),
                               ),
@@ -248,11 +248,11 @@ class _KhachhangScreenState extends State<KhachhangScreen> {
                       Row(
                         children: [
                           Text(
-                            "Mã: ${_filteredKhachhangList[index].kh_ma}",
+                            _filteredKhachhangList[index].kh_ten ?? '',
                             style: const TextStyle(
                               color: Colors.black,
-                              fontWeight: FontWeight.w700,
-                              fontSize: 14,
+                              fontWeight: FontWeight.w900,
+                              fontSize: 20,
                             ),
                           ),
                         ],
