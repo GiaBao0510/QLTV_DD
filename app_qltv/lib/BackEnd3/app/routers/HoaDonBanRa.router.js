@@ -10,12 +10,13 @@ const Products = require('../controllers/HoaDonMatBao/Products.controller');
 const Invoice= require('../controllers/HoaDonMatBao/Invoices.controller');
 const ChiTietHoaDonBanRa = require('../controllers/HoaDonMatBao/ChiTietHoaDonBanRa.controller');
 const HoaDonBanRa = require('../controllers/HoaDonMatBao/HoaDonBanRacontrollter')
+const InvoiceType = require('../controllers/HoaDonMatBao/InvoiceType.controller');
 
 //0. Tạo 1 router để quản lý tuyến đường
 const router = express.Router();
 
     //>>>>>>>>>>>>>>>>>>>> 
-    //>>> Khách hàng >>>>>
+    //>>> 0.Khách hàng >>>>>
     //>>>>>>>>>>>>>>>>>>>>
 //1. Thêm
 router.route('/addcustomer').post(KiemTra.CheckLogin, Customers.createCustomer);
@@ -33,7 +34,7 @@ router.route('/cumstomeralready').get(KiemTra.CheckLogin, Customers.CheckCustome
 router.route('/customers').get(KiemTra.CheckLogin, Customers.GetCustomers);
 
     //>>>>>>>>>>>>>>>>>>>> 
-    //>>> Phương thức thanh toán >>>>>
+    //>>> 1.Phương thức thanh toán >>>>>
     //>>>>>>>>>>>>>>>>>>>>
 //1. Thêm
 router.route('/addpaymentmethob').post(KiemTra.CheckLogin, PaymentMethob.createPaymentMethob);
@@ -49,7 +50,7 @@ router.route('/paymentmethobs')
         .get(KiemTra.CheckLogin, PaymentMethob.getAllPaymentMethob);
 
     //>>>>>>>>>>>>>>>>>>>> 
-    //>>> Đơn vị tiền tệ >
+    //>>> 2.Đơn vị tiền tệ >
     //>>>>>>>>>>>>>>>>>>>>
 //1. Thêm
 router.route('/addcurrencytype').post(KiemTra.CheckLogin, CurrencyType.createCurrencyType);
@@ -65,7 +66,7 @@ router.route('/currencytypes')
         .get(KiemTra.CheckLogin, CurrencyType.getAllCurrencyType);
 
     //>>>>>>>>>>>>>>>>>>>> 
-    //>>> Tính chất >>>>>>
+    //>>> 3.Tính chất >>>>>>
     //>>>>>>>>>>>>>>>>>>>>
 //1. Thêm
 router.route('/addproductproperties').post(KiemTra.CheckLogin, ProductProperties.createProductProperties);
@@ -84,7 +85,7 @@ router.route('/productproperties')
 router.route('/checkproductproperty').get(KiemTra.CheckLogin, ProductProperties.CheckProductPropertiesAlreadyExists);
 
     //>>>>>>>>>>>>>>>>>>>> 
-    //>> Phần trăm thuế >>
+    //>> 4.Phần trăm thuế >>
     //>>>>>>>>>>>>>>>>>>>>
 //1. Thêm
 router.route('/addtaxpercentage').post(KiemTra.CheckLogin, TaxPercentage.createTaxPercentage);
@@ -103,7 +104,7 @@ router.route('/taxpercentages')
 router.route('/checktaxpercentage').get(KiemTra.CheckLogin, TaxPercentage.CheckVATRateAlreadyExists);
 
     //>>>>>>>>>>>>>>>>>>>> 
-    //>>>> Sản phẩm >>>>>>
+    //>>>> 5.Sản phẩm >>>>>>
     //>>>>>>>>>>>>>>>>>>>>
 //1. Thêm
 router.route('/addproduct').post(KiemTra.CheckLogin, Products.createProducts);
@@ -122,7 +123,7 @@ router.route('/products')
 router.route('/checkproductcode').get(KiemTra.CheckLogin, Products.CheckProductAlreadyExists);
 
         //>>>>>>>>>>>>>>>>>>>> 
-        //>>>> hóa đơn >>>>>>
+        //>>>> 6.hóa đơn >>>>>>
         //>>>>>>>>>>>>>>>>>>>>
 //1. Thêm
 router.route('/addinvoice').post(KiemTra.CheckLogin, Invoice.createInvoice);
@@ -138,7 +139,7 @@ router.route('/invoices')
         .get(KiemTra.CheckLogin, Invoice.GetInvoices);
 
         //>>>>>>>>>>>>>>>>>>>> 
-        //> chi tiết hóa đơn>>
+        //> 7.chi tiết hóa đơn>>
         //>>>>>>>>>>>>>>>>>>>>
 //1. Thêm
 router.route('/addinvoicedetail').post(KiemTra.CheckLogin, ChiTietHoaDonBanRa.createChiTietHoaDonBanRa);
@@ -154,19 +155,61 @@ router.route('/invoicedetails')
         .get(KiemTra.CheckLogin, ChiTietHoaDonBanRa.GetChiTietHoaDonBanRa);
 
         //>>>>>>>>>>>>>>>>>>>> 
-        //1.Them hoa don nhap>
+        //> 8.loại hóa đơn>>
         //>>>>>>>>>>>>>>>>>>>>
-router.route('/addHoaDonNhap')
-        .post(KiemTra.CheckLogin, async(req, res, next) => {
-                try{
-                        await HoaDonBanRa.AddHoaDonNhap(req, res, next);
-                        await HoaDonBanRa.ImportHoaDonNhap(req, res, next);
-                        
-                        res.status(200).json({message: "Thêm thông tin hóa đơn bán ra thành công."});
-                }catch(err){
-                        next(err);
-                }
-        });
+//1. Thêm
+router.route('/addinvoicetype').post(KiemTra.CheckLogin, InvoiceType.createInvoiceType);
+
+//2. Lấy/Sửa/xóa theo ID
+router.route('/invoicetype')
+        .get(KiemTra.CheckLogin, InvoiceType.getInvoiceType_ID)
+        .put(KiemTra.CheckLogin, InvoiceType.updateInvoiceType_ID)
+        .delete(KiemTra.CheckLogin, InvoiceType.deleteInvoiceType_ID);
+
+//3.Lấy All
+router.route('/invoicetypes')
+        .get(KiemTra.CheckLogin, InvoiceType.getAllInvoiceType);
+
         
+
+//==================================================================================        
+        //1.Them hoa don nhap>
+router.route('/addHoaDonNhap').post(KiemTra.CheckLogin, async (req, res, next) => {
+        try {
+            await HoaDonBanRa.AddHoaDonNhap(req, res, next);
+        } catch (err) {
+            next(err);
+        }
+    })
+    .post(KiemTra.CheckLogin, async (req, res, next) => {
+        try {
+            await HoaDonBanRa.ImportHoaDonNhap(req, res, next);
+        } catch (err) {
+            return next(err);
+        }
+    });
+
+        //2. Danh sách hóa đơn nháp>
+router.route('/danhsachhoadonnhap').get(KiemTra.CheckLogin, HoaDonBanRa.DanhSachHoaDonNhap);
+        
+        //3. Xóa sửa hóa đơn
+router.route('/xoahoadonnhap')
+        .post(KiemTra.CheckLogin, async(req, res, next) =>{
+                try {
+                    await HoaDonBanRa.XoaHoaDonNhap(req, res, next);
+                } catch (err) {
+                    return next(err);
+                }
+            }, async (req, res, next) => {
+                try {
+                    await HoaDonBanRa.XoaHoaDonChuaPhatHanh(req, res, next);
+                } catch (err) {
+                    return next(err);
+                }
+            }, (req, res) => {
+                res.status(200).json({ message: "Xóa hóa đơn nháp thành công" });
+            });
+
+        //4. chỉnh sửa hóa đơn
 
 module.exports = router;

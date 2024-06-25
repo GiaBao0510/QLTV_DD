@@ -96,8 +96,8 @@ const queryDB = (query) =>{
 //5.Thêm
 const addInvoice = async (ReqBody) =>{
     let {Fkey,ApiInvPattern, ApiInvSerial, Total, DiscountAmount,
-        Amount, VATAmount, AmountInWords,
-        SO, NOTE, TyGia, MaKH, PaymentMethod, SoDVTT}  = ReqBody;
+        Amount, VATAmount, AmountInWords,SO, NOTE, TyGia, MaKH, 
+        PaymentMethod, SoDVTT, InvType}  = ReqBody;
     Fkey = String(Fkey);
     let ID_PM = 0;
 
@@ -135,22 +135,26 @@ const addInvoice = async (ReqBody) =>{
             //Tạo mới
             await queryDB(`INSERT INTO PaymentMethod(phuongthucthanhtoan) VALUE("${String(PaymentMethod) }");`);
         }
+
+        //4.Kiểm tra Mã loại hóa đơn có tồn tại không. Nếu không thì tạo mới
+        const DK5 = await queryDB(`SELECT * FROM InvoiceType WHERE InvType=${InvType}`);
+        if(DK5.length === 0) throw Error("Mã loại hóa đơn không tồn tại");
+
             //Lấy ID_PM cuối 
         const IDcuoi = await queryDB(`SELECT ID_PM FROM PaymentMethod ORDER BY ID_PM DESC LIMIT 1`);
         ID_PM = Number(IDcuoi[0].ID_PM);
 
-        //4.Kiểm tra xem Fkey có bị trùng không
+        //5.Kiểm tra xem Fkey có bị trùng không
         const DK4 = await queryDB(`SELECT * FROM Invoice WHERE Fkey="${Fkey}"`);
         if(DK4.length > 0)throw Error("Fkey đã tồn tại. Vui lòng điền Fkey khác");
 
-
         //Thực hiện thêm vào
         await queryDB(`
-            INSERT INTO Invoice(Fkey,ApiInvPattern,ApiInvSerial,Total,DiscountAmount,Amount,VATAmount,AmountInWords,SO,NOTE,TyGia,MaKH,ID_PM,SoDVTT) 
+            INSERT INTO Invoice(Fkey,ApiInvPattern,ApiInvSerial,Total,DiscountAmount,Amount,VATAmount,AmountInWords,SO,NOTE,TyGia,ArisingDate,MaKH,ID_PM,SoDVTT,InvType) 
             VALUE(
                 "${Fkey}" ,"${ApiInvPattern}" ,"${ApiInvSerial}" ,${Total} ,
                 ${DiscountAmount} ,${Amount} ,${VATAmount} ,"${AmountInWords}" ,
-                "${SO}" , "${NOTE}", ${TyGia}, "${MaKH}", ${ID_PM}, "${SoDVTT}"
+                "${SO}" , "${NOTE}", ${TyGia}, NOW(),"${MaKH}", ${ID_PM}, "${SoDVTT}", ${InvType}
             );
         `);
         console.log('Thêm thông tin hóa đơn thành công');

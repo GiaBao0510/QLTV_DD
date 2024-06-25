@@ -102,22 +102,26 @@ const addChiTietHoaDonBanRa = async (ReqBody) =>{
         //ĐK đầu vào Tìm trước các khóa ngoại xem có tồn tại hay không
         const tim_Fkey = await queryDB(`SELECT * FROM Invoice WHERE Fkey = "${Fkey}"`);
         if(tim_Fkey.length === 0){
+            console.log("Lỗi. không tìm thấy Fkey.");
             throw new Error('không tìm thấy Fkey');
         }
         
         const tim_Code = await queryDB(`SELECT * FROM Products WHERE Code = "${Code}"`);
         if(tim_Code.length === 0){
+            console.log("Lỗi. không tìm thấy Code.");
             throw new Error('không tìm thấy Code');
         }
 
         const tim_ProdAttr  = await queryDB(`SELECT * FROM ProductProperties  WHERE ProdAttr  = "${ProdAttr}"`);
         if(tim_ProdAttr.length === 0){
-            throw new Error('không tìm thấy ProdAttr');
+            console.log("Lỗi. không tìm thấy ProdAttr.");
+            throw new Error('Lỗi. không tìm thấy ProdAttr');
         }
 
         const tim_VATRate   = await queryDB(`SELECT * FROM TaxPercentage  WHERE VATRate  = "${VATRate}"`);
         if(tim_VATRate.length === 0){
-            throw new Error('không tìm thấy ProdAttr');
+            console.log("Lỗi. không tìm thấy VATRate.");
+            throw new Error("Lỗi. không tìm thấy VATRate.");
         }
 
         //Thêm thông tin 

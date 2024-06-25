@@ -6,8 +6,12 @@ const ProductProperties = require('../../services/HoaDonMatBao/ProductProperties
 const TaxPercentage = require('../../services/HoaDonMatBao/TaxPercentage.service');
 const Customers = require('../../services/HoaDonMatBao/customers.service');
 const Products = require('../../services/HoaDonMatBao/Products.service');
+const HoaDonBanRa =require('../../services/HoaDonMatBao/HoaDonBanRa.service');
 const axios = require('axios');
 
+
+var tempFkey ="";
+    // --- Thêm ----
 //Này thêm bên dữ liệu bên mình
 exports.AddHoaDonNhap = async (req, res, next) =>{
     
@@ -42,7 +46,8 @@ exports.AddHoaDonNhap = async (req, res, next) =>{
         TyGia: req.body.TyGia || 0, 
         MaKH: req.body.MaKH || "", 
         PaymentMethod: req.body.PaymentMethod || "", 
-        SoDVTT: String(req.body.DonViTienTe || "704"), 
+        SoDVTT: String(req.body.DonViTienTe || "704"),
+        InvType: req.body.InvType || 1,
     }
 
     //Thông tin sản phẩm
@@ -63,10 +68,13 @@ exports.AddHoaDonNhap = async (req, res, next) =>{
         
         //Thêm thông tin hóa đơn
         const ThemHoaDon = await Invoice.addInvoice(bill);
+        console.log(`Fkey: ${ThemHoaDon.Fkey}`);
 
         //Nếu Lấy Fkey của biến thêm hóa đơn mà khác null thì thêm thông tin sản phẩm
         if(ThemHoaDon.Fkey != null){
             
+            tempFkey = ThemHoaDon.Fkey;
+
             //Thêm thông tin khách hàng
             await Customers.updateKhachHang(customer.MaKH,customer);
             
@@ -101,11 +109,11 @@ exports.AddHoaDonNhap = async (req, res, next) =>{
                     Fkey: ThemHoaDon.Fkey, 
                     ProdAttr: e.ProdAttr,
                     VATRate: e.VATRate, 
-                    Code: e.Code
+                    Code: e.code
                 };
                 await ChiTietHoaDonBanRa.addChiTietHoaDonBanRa(ChiTiet);
             }
-            
+            next();
         }else{
             return res.status(200).json({message: "Fkey không tồn tại thêm thông tin hóa đơn bán ra thất bại."});
         }
@@ -117,20 +125,62 @@ exports.AddHoaDonNhap = async (req, res, next) =>{
 //Này thêm dữ liệu bên máy khách
 exports.ImportHoaDonNhap = async(req, res, next) => {
     const data = req.body;
+    data.Fkey = tempFkey;
     let SentFeedback = false;
     try{
 
-        const reponse = await axios.post('https://api-demo.matbao.in/api/v3/invoice/importInvTemp',data);
+        const response = await axios.post('https://api-demo.matbao.in/api/v3/invoice/importInvTemp',data);
 
         //Trả về trạng thái
-        console.log(` Trạng thái bên thứ 3: ${reponse.status}`);
-        res.status(reponse.status).json(reponse.data);
+        console.log(` Trạng thái bên thứ 3: ${response.status}`);
+        console.log(`Thông tin trả về bên thứ 3: ${JSON.stringify(response.data)}`);
         SentFeedback = true;    //Đánh dấu đã gửi
-
+        res.status(200).json(response.data );
     }catch(err){
         console.log(` Lỗi từ API bên thứ 3: ${err.message}`);
         if(!SentFeedback){  //Chỉ gửi phản hồi nếu chưa gửi
-            res.status(err.reponse ? err.reponse.status:500).json({message: err.message});
+            res.status(err.response ? err.response.status:500).json({message: err.message});
         }
+    }
+}
+
+    // --- Lấy danh sách hóa đơn ---
+exports.DanhSachHoaDonNhap = async(req, res, next) => {
+    try{
+        const kq = await HoaDonBanRa.DanhSachHoaDon_SV();
+        res.status(200).json(kq);
+    }catch(err){
+        next(err);
+    }
+}
+ 
+    // --- Xóa hóa đơn dựa trên Fkey
+//Xóa bên local
+exports.XoaHoaDonNhap  = async(req, res, next) => {
+    try{
+        await HoaDonBanRa.XoaHoaDonNhap(req.body.Fkey);
+        next();
+    }catch(err){
+        next(err);
+    }
+}
+
+//Xóa bên máy khâch
+exports.XoaHoaDonChuaPhatHanh = async(req, res, next) =>{
+    let SentFeedback = false;
+    const data = req.body;
+
+    try{
+        const response = await axios.post('https://api-demo.matbao.in/api/v3/invoice/deleteInvTemp', data);
+        console.log(` Trạng thái bên thứ 3: ${response.status}`);
+        console.log(`Dữ liệu trả về: ${JSON.stringify(response.data)}`);
+        SentFeedback = true;
+        res.status(200).json(response.data );
+    }catch(err){
+        console.log(` Lỗi từ API bên thứ 3: ${err.message}`);
+        if(!SentFeedback){  //Chỉ gửi phản hồi nếu chưa gửi
+            res.status(err.response ? err.response.status:500).json({message: err.message});
+        }
+        next(err);
     }
 }
