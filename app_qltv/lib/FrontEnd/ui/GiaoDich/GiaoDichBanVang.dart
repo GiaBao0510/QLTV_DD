@@ -4,14 +4,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:app_qltv/FrontEnd/Service/ThuVien.dart';
 
-class BanVang_QRcode extends StatefulWidget {
-  const BanVang_QRcode({super.key});
+class BanVang_Barcode extends StatefulWidget {
+  const BanVang_Barcode({super.key});
 
   @override
-  State<BanVang_QRcode> createState() => _BanVang_QRState();
+  State<BanVang_Barcode> createState() => _BanVang_BarcodeState();
 }
 
-class _BanVang_QRState extends State<BanVang_QRcode> {
+class _BanVang_BarcodeState extends State<BanVang_Barcode> {
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +56,7 @@ class _BanVang_QRState extends State<BanVang_QRcode> {
       ),
       body: SafeArea(
         child: Container(
-          child:Text('${ThuVienUntilState.maQR}') ,
+          child:Text('${ThuVienUntilState.maHangHoa}') ,
         ),
       ) ,
     );

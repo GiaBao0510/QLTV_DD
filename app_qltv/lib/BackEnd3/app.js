@@ -16,6 +16,7 @@ const cam = require ('./app/routers/camvangRoute');
 const phieu = require ('./app/routers/phieuRoute');
 const HoaDonBanRa = require('./app/routers/HoaDonBanRa.router');
 const kiemtra =require('./app/services/KiemTra.services');
+const GiaoDich = require('./app/routers/GiaoDich.router');
 const { decode } = require('punycode');
 const app = express();
 const dbRoutes = require('./app/config/dbRoutes');
@@ -36,6 +37,7 @@ app.use('/api/groups', groupRoutes);
 app.use('/api/productType', productype);
 app.use('/api/cam', cam);
 app.use('/api/phieu',phieu);
+app.use('/api/giaodich',GiaoDich);
 app.use('/api/hoadonbanra',HoaDonBanRa);
 app.use('/api/db', dbRoutes);
 
