@@ -147,8 +147,17 @@ exports.ImportHoaDonNhap = async(req, res, next) => {
     // --- Lấy danh sách hóa đơn ---
 exports.DanhSachHoaDonNhap = async(req, res, next) => {
     try{
-        const kq = await HoaDonBanRa.DanhSachHoaDon_SV();
-        res.status(200).json(kq);
+        const data =  {
+            ApiUserName: req.body.ApiUserName,
+            ApiPassword: req.body.ApiPassword,
+            ApiInvPattern: req.body.ApiInvPattern,
+            ApiInvSerial: req.body.ApiInvSerial,
+            ArisingDateFrom: req.body.ArisingDateFrom,
+            ArisingDateTo: req.body.ArisingDateTo,
+        };
+
+        const kq = await axios.post('https://api-demo.matbao.in/api/v2/invoice/SearchInvByDate', data);
+        res.status(200).json(kq.data);
     }catch(err){
         next(err);
     }

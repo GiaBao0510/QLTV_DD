@@ -190,7 +190,7 @@ router.route('/addHoaDonNhap').post(KiemTra.CheckLogin, async (req, res, next) =
     });
 
         //2. Danh sách hóa đơn nháp>
-router.route('/danhsachhoadonnhap').get(KiemTra.CheckLogin, HoaDonBanRa.DanhSachHoaDonNhap);
+router.route('/danhsachhoadonnhap').post(KiemTra.CheckLogin, HoaDonBanRa.DanhSachHoaDonNhap);
         
         //3. Xóa sửa hóa đơn
 router.route('/xoahoadonnhap')
