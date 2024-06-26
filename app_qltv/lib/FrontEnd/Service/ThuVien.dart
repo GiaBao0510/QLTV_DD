@@ -6,6 +6,8 @@ import 'package:intl/intl.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:async/async.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:app_qltv/FrontEnd/ui/GiaoDich/BanVang_Barcode.dart';
+import 'package:app_qltv/FrontEnd/ui/GiaoDich/BanVang_QRcode.dart';
 
   //>>>>>>>>>>>>>>>>>>>>>>
   //>>>>    Biến
@@ -122,20 +124,49 @@ class ThuVienUntilState extends State<ThuVienUntil> {
   }
 
   //3.Thực hiện thao tác quét mã vạch
-  static Future<void> scanBarcode() async{
-     String barcode = "";
+   static Future<void> scanBarcode(BuildContext context) async{
      try{
-       barcode = await FlutterBarcodeScanner.scanBarcode(
+       maVach = await FlutterBarcodeScanner.scanBarcode(
            '#ff6666',
            'Cancel',
            true,
            ScanMode.BARCODE,
        );
-
+       //Nếu quét thành công thì sang trang
+      if(!maVach.isEmpty && maVach!="-1"){
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => BanVang_Barcode(),
+          )
+        );
+      }
      }on PlatformException{
-       barcode = 'Failed to get platform version';
+       maVach = 'Failed to get platform version';
      }
+  }
 
+  //3.Thực hiện thao tác quét mã QR
+  static Future<void> scanQRcode(BuildContext context) async{
+    try{
+      maQR = await FlutterBarcodeScanner.scanBarcode(
+        '#ff6666',
+        'Cancel',
+        true,
+        ScanMode.QR,
+      );
+      //Nếu quét thành công thì sang trang
+      if(!maQR.isEmpty && maQR!="-1"){
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => BanVang_QRcode(),
+            )
+        );
+      }
+    }on PlatformException{
+      maQR = 'Failed to get platform version';
+    }
   }
 
   @override

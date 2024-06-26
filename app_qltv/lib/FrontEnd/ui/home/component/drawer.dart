@@ -462,7 +462,7 @@ class _drawerState extends State<drawer> {
                         title: const Text('Giao dịch bán vàng bằng QR-code',
                             style: TextStyle(fontWeight: FontWeight.w800)),
                         onTap: () {
-                          ThuVienUntilState.scanBarcode();
+                          ThuVienUntilState.scanQRcode(context);
                         },
                       ),
                     ),
@@ -478,12 +478,7 @@ class _drawerState extends State<drawer> {
                         title: const Text('Giao dịch bán vàng bằng Bar-code ',
                             style: TextStyle(fontWeight: FontWeight.w800)),
                         onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                const PhieuDangCamChiTiet()),
-                          );
+                          ThuVienUntilState.scanBarcode(context);
                         },
                       ),
                     ),
