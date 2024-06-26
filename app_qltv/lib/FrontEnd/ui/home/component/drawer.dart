@@ -88,8 +88,7 @@ class _drawerState extends State<drawer> {
   @override
   void initState() {
     super.initState();
-    ThuVienUntilState.maVach="";
-    ThuVienUntilState.maQR="";
+    ThuVienUntilState.maHangHoa="";
   }
 
   @override

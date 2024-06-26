@@ -6,8 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:async/async.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
-import 'package:app_qltv/FrontEnd/ui/GiaoDich/BanVang_Barcode.dart';
-import 'package:app_qltv/FrontEnd/ui/GiaoDich/BanVang_QRcode.dart';
+import 'package:app_qltv/FrontEnd/ui/GiaoDich/GiaoDichBanVang.dart';
 
   //>>>>>>>>>>>>>>>>>>>>>>
   //>>>>    Biến
@@ -79,9 +78,7 @@ class ThuVienUntilState extends State<ThuVienUntil> {
   static int increase = 15;    //Số lần tăng khi bỏ qua
   static DateTime ngayBD = DateTime.now();   //Ngày bắt đầu
   static DateTime ngayKT = DateTime.now();   //Ngày kết thúc
-  static String maVach ="";
-  static String maQR ="";
-
+  static String maHangHoa ="";
 
   static ScrollController scrollController = ScrollController();
   static TextEditingController StartDayController = TextEditingController();
@@ -126,46 +123,46 @@ class ThuVienUntilState extends State<ThuVienUntil> {
   //3.Thực hiện thao tác quét mã vạch
    static Future<void> scanBarcode(BuildContext context) async{
      try{
-       maVach = await FlutterBarcodeScanner.scanBarcode(
+       maHangHoa = await FlutterBarcodeScanner.scanBarcode(
            '#ff6666',
            'Cancel',
            true,
            ScanMode.BARCODE,
        );
        //Nếu quét thành công thì sang trang
-      if(!maVach.isEmpty && maVach!="-1"){
+      if(!maHangHoa.isEmpty && maHangHoa!="-1"){
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => BanVang_Barcode(),
+              builder: (context) => BanVang(),
           )
         );
       }
      }on PlatformException{
-       maVach = 'Failed to get platform version';
+       maHangHoa = 'Failed to get platform version';
      }
   }
 
   //3.Thực hiện thao tác quét mã QR
   static Future<void> scanQRcode(BuildContext context) async{
     try{
-      maQR = await FlutterBarcodeScanner.scanBarcode(
+      maHangHoa = await FlutterBarcodeScanner.scanBarcode(
         '#ff6666',
         'Cancel',
         true,
         ScanMode.QR,
       );
       //Nếu quét thành công thì sang trang
-      if(!maQR.isEmpty && maQR!="-1"){
+      if(!maHangHoa.isEmpty && maHangHoa!="-1"){
         Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => BanVang_QRcode(),
+              builder: (context) => BanVang(),
             )
         );
       }
     }on PlatformException{
-      maQR = 'Failed to get platform version';
+      maHangHoa = 'Failed to get platform version';
     }
   }
 

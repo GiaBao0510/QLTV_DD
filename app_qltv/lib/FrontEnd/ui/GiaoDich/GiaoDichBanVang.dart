@@ -4,14 +4,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:app_qltv/FrontEnd/Service/ThuVien.dart';
 
-class BanVang_Barcode extends StatefulWidget {
-  const BanVang_Barcode({super.key});
+class BanVang extends StatefulWidget {
+  const BanVang({super.key});
 
   @override
-  State<BanVang_Barcode> createState() => _BanVang_BarcodeState();
+  State<BanVang> createState() => _BanVangState();
 }
 
-class _BanVang_BarcodeState extends State<BanVang_Barcode> {
+class _BanVangState extends State<BanVang> {
 
   @override
   Widget build(BuildContext context) {
