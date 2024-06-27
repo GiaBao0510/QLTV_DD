@@ -115,8 +115,20 @@ exports.getKhoVangMuaVaoController = async (req, res, next) => {
 
 exports.getBCPhieuMuaVao = async (req, res, next) => {
   try {
-    const phieuList = await bao_caoPhieuServices.getBCPhieuMuaVao();
-    res.status(200).json(phieuList);
+   // const phieuList = await bao_caoPhieuServices.getBCPhieuMuaVao();
+    const page = parseInt(req.query.page) || 1;
+    const pageSize = parseInt(req.query.pageSize) || 10;
+    const offset = (page -1 ) *pageSize;
+    const usersdata = await bao_caoPhieuServices.getBCPhieuMuaVaoWithPagination(pageSize, offset);
+    const total = await bao_caoPhieuServices.getBCPhieuMuaVao();
+    const totalPages = Math.ceil(total/pageSize);
+    res.status(200).json({
+      page,
+      pageSize,
+      totalPages,
+      totalRows:total,
+      data: usersdata
+    });
   } catch (error) {
     next(error);
   }

@@ -48,8 +48,16 @@ class _KhachhangScreenState extends State<KhachhangScreen> {
         _khachhangList = khachhangs;
         _filteredKhachhangList = khachhangs;
         _currentPage = page;
-        _totalKhachhang = _khachhangList.length;
+       
       });
+    });
+  }
+  
+  Future<void> _loadTotalKhachhang() async {
+    final totalKhachhang = await Provider.of<KhachhangManage>(context, listen: false).fetchTotalKhachhang();
+   
+    setState(() {
+      _totalKhachhang = totalKhachhang;
     });
   }
 
@@ -99,7 +107,8 @@ class _KhachhangScreenState extends State<KhachhangScreen> {
                   createRoute((context) => const ThemKhachhangScreen()),
                 );
                 if (result == true) {
-                  _loadKhachhang(page: _currentPage); // Refresh the list
+                  _loadKhachhang(page: _currentPage);
+                  _loadTotalKhachhang();
                 }
               },
               icon: const Icon(CupertinoIcons.add),
@@ -108,14 +117,15 @@ class _KhachhangScreenState extends State<KhachhangScreen> {
         ],
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
+        //child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(12.0),
             child: Column(
               children: [
+                
                 Search_Bar(searchController: _searchController),
                 const SizedBox(height: 12.0),
-                ShowList(),
+                Expanded(child: ShowList(),),
                 const SizedBox(height: 12.0),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -146,7 +156,7 @@ class _KhachhangScreenState extends State<KhachhangScreen> {
             ),
           ),
         ),
-      ),
+      //),
             floatingActionButton: FloatingActionButton(
         onPressed: () {
           showModalBottomSheet(
@@ -204,8 +214,8 @@ class _KhachhangScreenState extends State<KhachhangScreen> {
           return Center(child: Text('Error: ${snapshot.error}'));
         } else {
           return ListView.builder(
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
+           // shrinkWrap: true,
+           // physics: NeverScrollableScrollPhysics(),
             itemCount: _filteredKhachhangList.length,
             itemBuilder: (BuildContext context, int index) {
               return Container(

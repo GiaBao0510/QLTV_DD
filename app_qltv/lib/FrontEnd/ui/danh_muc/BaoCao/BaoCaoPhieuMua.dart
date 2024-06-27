@@ -28,6 +28,10 @@ class _BaoCaoPhieuMuaScreenState extends State<BaoCaoPhieuMuaScreen> {
   List<BaoCaoPhieuMua> _filteredBaoCaoPhieuMuaList = [];
   List<BaoCaoPhieuMua> _BaoCaoPhieuMuaList = [];
 
+  int _currentPage = 1;
+  int _pageSize = 10;
+  int _totalPhieuMua = 0;
+
   DateTime? _startDate;
   DateTime? _endDate;
 
@@ -51,14 +55,16 @@ class _BaoCaoPhieuMuaScreenState extends State<BaoCaoPhieuMuaScreen> {
     super.dispose();
   }
 
-  Future<void> _loadBaoCaoPhieuMua() async {
+  Future<void> _loadBaoCaoPhieuMua({int page = 1}) async {
     _BaoCaoPhieuMuaFuture =
         Provider.of<BaocaophieumuaManeger>(context, listen: false)
-            .fecthbaoCaoPhieuMua();
+            .fecthbaoCaoPhieuMua(page: page, pageSize: _pageSize);
     _BaoCaoPhieuMuaFuture.then((baoCaoPhieuMua) {
       setState(() {
         _BaoCaoPhieuMuaList = baoCaoPhieuMua;
         _filteredBaoCaoPhieuMuaList = baoCaoPhieuMua;
+        _currentPage = page;
+        _totalPhieuMua = _BaoCaoPhieuMuaList.length;
       });
       for (int i = 0; i < _filteredBaoCaoPhieuMuaList.length; i++) {
         final item = _filteredBaoCaoPhieuMuaList[i];
@@ -213,13 +219,82 @@ class _BaoCaoPhieuMuaScreenState extends State<BaoCaoPhieuMuaScreen> {
                   ),
                 ],
               ),
+              
               Search_Bar(searchController: _searchController),
               const SizedBox(height: 12.0),
               Expanded(
                 child: ShowList(),
               ),
+               const SizedBox(height: 12.0),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Visibility(
+                      visible: _currentPage > 1,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          _loadBaoCaoPhieuMua(page: _currentPage - 1);
+                        },
+                        child: const Text("Trang trước"),
+                      ),
+                    ),
+                    Visibility(
+                      visible: _currentPage <
+                          Provider.of<BaocaophieumuaManeger>(context, listen: false)
+                              .totalPages,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          _loadBaoCaoPhieuMua(page: _currentPage + 1);
+                        },
+                        child: const Text("Trang kế tiếp"),
+                      ),
+                    ),
+                  ],
+                ),
             ],
           ),
+        ),
+      ),
+       floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          showModalBottomSheet(
+            context: context,
+            builder: (BuildContext context) {
+              return Container(
+                height: 200,
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(15.0),
+                    topRight: Radius.circular(15.0),
+                  ),
+                  color: Color.fromARGB(255, 228, 200, 126),
+                ),
+                child: Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      const Text('Tổng Quan',
+                          style: TextStyle(
+                              fontWeight: FontWeight.w800, fontSize: 20)),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: tableTotal({
+                          'total': _totalPhieuMua.toDouble(),
+                        },
+                      ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          );
+        },
+        backgroundColor: Colors.white,
+        tooltip: 'Show Bottom Sheet',
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Image.asset('assets/images/list.png'),
         ),
       ),
     );
@@ -429,4 +504,39 @@ class _BaoCaoPhieuMuaScreenState extends State<BaoCaoPhieuMuaScreen> {
       ],
     );
   }
+  Table tableTotal(Map<String, double> total) {
+    return Table(
+      border: TableBorder.all(color: Colors.grey),
+      children: [
+        const TableRow(
+          decoration: BoxDecoration(
+            color: Color.fromARGB(150, 218, 218, 218),
+          ),
+          children: [
+            Center(
+              child: Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text('Tổng Phiếu mua',
+                    style: TextStyle(fontWeight: FontWeight.bold)),
+              ),
+            ),
+           
+          ],
+        ),
+        TableRow(
+          children: [
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text('${total['total']?.toInt() ?? 0}'),
+              ),
+            ),
+            
+          ],
+        ),
+        
+      ],
+    );
+  }
+
 }
