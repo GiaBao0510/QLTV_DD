@@ -47,3 +47,13 @@ exports.getAllTaxPercentage = async(req, res, next) =>{
         next(err);
     }
 }
+
+exports.CheckVATRateAlreadyExists = async(req, res, next) =>{
+    try{
+        const {VATRate} = req.query;
+        const result = await TaxPercentageService.CheckVATRateAlreadyExists(VATRate);
+        res.status(200).json(result);
+    }catch(err){
+        next(err);
+    }
+}

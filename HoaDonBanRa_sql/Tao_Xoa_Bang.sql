@@ -49,6 +49,7 @@ CREATE TABLE Invoice(
     SO VARCHAR(255),
     NOTE VARCHAR(255),
     TyGia DOUBLE,
+    ArisingDate DateTime, 
     MaKH  VARCHAR(100) NOT NULL,
     ID_PM INT NOT NULL,
     DonViTienTe INT NOT NULL,
@@ -85,7 +86,18 @@ CREATE TABLE ChiTietHoaDonBanRa(
     FOREIGN KEY (Code) REFERENCES Products(Code)
 );
 
--- Xoa bang
+-- Loại Hóa đơn
+CREATE TABLE InvoiceType(
+    InvType INT PRIMARY KEY AUTO_INCREMENT,
+    TenLoaiHoaDon VARCHAR(255)
+);
+
+-- >>>>>>> KHóa ngoại <<<<<<<<<
+ALTER TABLE Invoice ADD InvType TINYINT;
+
+ALTER TABLE Invoice ADD CONSTRAINT fk_invtype FOREIGN KEY(InvType) REFERENCES InvoiceType(InvType);
+
+-- >>>>>>>>> Xoa bang <<<<<<<
 DROP TABLE ChiTietHoaDonBanRa;
 DROP TABLE Invoice;
 DROP TABLE Products;
@@ -94,3 +106,4 @@ DROP TABLE CurrencyType;
 DROP TABLE ProductProperties;
 DROP TABLE TaxPercentage;
 DROP TABLE PaymentMethod;
+DROP TABLE InvoiceType;

@@ -47,3 +47,13 @@ exports.getAllProductProperties = async(req, res, next) =>{
         next(err);
     }
 }
+
+exports.CheckProductPropertiesAlreadyExists = async(req, res, next) =>{
+    try{
+        const {ProdAttr} = req.query;
+        const result = await ProductPropertiesService.CheckProductPropertiesAlreadyExists(ProdAttr);
+        res.status(200).json(result);
+    }catch(err){
+        next(err);
+    }
+}
