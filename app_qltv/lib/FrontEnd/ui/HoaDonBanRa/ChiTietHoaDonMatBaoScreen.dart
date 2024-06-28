@@ -44,74 +44,38 @@ class ChiTietHoaDonMatBaoScreen extends StatelessWidget {
           ),
         ),
       ),
-      // body: SafeArea(
-      //   child: SingleChildScrollView(
-      //     padding: EdgeInsets.only(top: 20),
-      //     child: Container(
-      //       margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-      //       decoration: BoxDecoration(
-      //         color: Colors.white,
-      //         borderRadius: BorderRadius.circular(15.0),
-      //       ),
-      //       child: Padding(
-      //         padding: const EdgeInsets.all(16.0),
-      //         child: Column(
-      //           crossAxisAlignment: CrossAxisAlignment.start,
-      //           children: [
-      //             buildDetailRow(
-      //                 'Mã Hàng:', '${int.parse(hangHoa.hangHoaMa!)}'),
-      //             //Divider(color: Colors.amber,),
-      //             buildDetailRow('Tên Hàng Hóa:', '${hangHoa.hangHoaTen}'),
-      //             FutureBuilder<LoaiVang>(
-      //               future: _getLoaiVangById(hangHoa.nhomHangId),
-      //               builder: (context, snapshot) {
-      //                 if (snapshot.connectionState == ConnectionState.waiting) {
-      //                   return buildDetailRow('Loại Vàng:',
-      //                       'Loading...'); // Hiển thị tiến trình đang tải
-      //                 } else if (snapshot.hasError) {
-      //                   return buildDetailRow('Loại Vàng:',
-      //                       'Unknown'); // Hiển thị thông báo lỗi nếu có lỗi xảy ra
-      //                 } else {
-      //                   LoaiVang? loaiVang = snapshot.data;
-      //                   return buildDetailRow(
-      //                       'Loại Vàng:', '${loaiVang?.nhomTen ?? "Unknown"}');
-      //                 }
-      //               },
-      //             ),
-      //             FutureBuilder<NhomVang>(
-      //               future: _getNhomVangById(hangHoa.loaiId),
-      //               builder: (context, snapshot) {
-      //                 if (snapshot.connectionState == ConnectionState.waiting) {
-      //                   return buildDetailRow('Nhóm:',
-      //                       'Loading...'); // Hiển thị tiến trình đang tải
-      //                 } else if (snapshot.hasError) {
-      //                   return buildDetailRow('Nhóm:',
-      //                       'Unknownnnnn'); // Hiển thị thông báo lỗi nếu có lỗi xảy ra
-      //                 } else {
-      //                   NhomVang? nhomVang = snapshot.data;
-      //                   return buildDetailRow(
-      //                       'Nhóm:', '${nhomVang?.loaiTen ?? "Unknown"}');
-      //                 }
-      //               },
-      //             ),
-      //             buildDetailRow('Cân Tổng:', '${hangHoa.canTong}'),
-      //             buildDetailRow('TL Hột:', '${hangHoa.tlHot}'),
-      //             buildDetailRow('Trừ Hột:', '$truHot'),
-      //             buildDetailRow(
-      //                 'Công Gốc:', formatCurrency(hangHoa.congGoc ?? 0.0)),
-      //             buildDetailRow(
-      //                 'Giá Công:', formatCurrency(hangHoa.giaCong ?? 0.0)),
-      //             buildDetailRow(
-      //                 'Đơn Giá Gốc:', formatCurrency(hangHoa.donGiaGoc ?? 0.0)),
-      //             buildDetailRow('Ghi Chú:', '${hangHoa.ghiChu}'),
-      //             buildDetailRow('Xuất Xứ:', '${hangHoa.xuatXu}'),
-      //             buildDetailRow('Ký Hiệu:', '${hangHoa.kyHieu}'),
-      //           ],
-      //         ),
-      //       ),
-      //     ),
-      //   ),
-      // ),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: EdgeInsets.only(top: 20),
+          child: Container(
+            margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(15.0),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  buildDetailRow('Trạng thái','${hoaDonMatBao.trangThaiHD}'),
+                  buildDetailRow('Mẫu số - ký hiệu', '${hoaDonMatBao.pattern+hoaDonMatBao.serial}'),
+                  buildDetailRow('Số hóa đơn', '${hoaDonMatBao.no}'),
+                  buildDetailRow('Ngày lập', '${hoaDonMatBao.arisingDate}'),
+                  buildDetailRow('Mã tham chiếu', '${hoaDonMatBao.so}'),
+                  buildDetailRow('Mã khách hàng', '${hoaDonMatBao.cusCode}'),
+                  buildDetailRow('Tên khách hàng', '${hoaDonMatBao.cusName}'),
+                  buildDetailRow('Mã số thuế', '${hoaDonMatBao.cusTaxCode}'),
+                  buildDetailRow('Giá trị', '${hoaDonMatBao.amount}'),
+                  buildDetailRow('Loại hóa đơn', '${hoaDonMatBao.loaiHoaDon}'),
+                  buildDetailRow('Mã thông điệp', '${hoaDonMatBao.maThongDiep}'),
+                  buildDetailRow('Mã cơ quan thuế', '${hoaDonMatBao.mccqt}'),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 
@@ -128,6 +92,7 @@ class ChiTietHoaDonMatBaoScreen extends StatelessWidget {
                 style:
                     const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
+              SizedBox(width: 20,),
               Expanded(
                 child: Text(
                   value,
@@ -149,30 +114,5 @@ class ChiTietHoaDonMatBaoScreen extends StatelessWidget {
     );
   }
 
-  Future<LoaiVang> _getLoaiVangById(String? loaiId) async {
-    try {
-      final loaiVangManager = LoaiVangManager();
-      return await loaiVangManager.getLoaiVangById(int.parse(loaiId!)) ??
-          LoaiVang(nhomTen: "Unknown");
-    } catch (error) {
-      print('Error fetching LoaiVang by id: $error');
-      throw Exception('Failed to fetch LoaiVang by id');
-    }
-  }
 
-  Future<NhomVang> _getNhomVangById(String? nhomHangId) async {
-    try {
-      final nhomVangManager = NhomVangManager();
-      return await nhomVangManager.getNhomVangById(int.parse(nhomHangId!));
-    } catch (error) {
-      print('Error fetching NhomVang by id: $error');
-      throw Exception('Failed to fetch NhomVang by id');
-    }
-  }
-
-  // Hàm định dạng tiền tệ
-  String formatCurrency(double amount) {
-    final NumberFormat formatter = NumberFormat('#,##0', 'vi_VN');
-    return formatter.format(amount);
-  }
 }

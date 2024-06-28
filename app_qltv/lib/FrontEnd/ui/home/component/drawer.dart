@@ -704,7 +704,7 @@ class _drawerState extends State<drawer> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) =>
-                                    const DanhSachPhieuCamScreen()),
+                                    const DanhSachHoaDonMBScreen()),
                           );
                         },
                       ),
