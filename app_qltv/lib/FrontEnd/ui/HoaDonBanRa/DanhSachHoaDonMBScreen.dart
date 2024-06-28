@@ -5,16 +5,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class DanhSachPhieuCamScreen extends StatefulWidget {
-  static const routeName = "/phieudangcamchitiet";
+class DanhSachHoaDonMBScreen extends StatefulWidget {
+  static const routeName = "/danhSachHoaDonMBScreent";
 
-  const DanhSachPhieuCamScreen({Key? key}) : super(key: key);
+  const DanhSachHoaDonMBScreen({Key? key}) : super(key: key);
 
   @override
   _DanhSachPhieuCamScreen createState() => _DanhSachPhieuCamScreen();
 }
 
-class _DanhSachPhieuCamScreen extends State<DanhSachPhieuCamScreen> {
+class _DanhSachPhieuCamScreen extends State<DanhSachHoaDonMBScreen> {
   late Future<List<HoaDonMatBao>> _hoaDonFuture;
   late List<HoaDonMatBao> _hoaDonList; // Khai báo thuộc tính loaiVangList
 
