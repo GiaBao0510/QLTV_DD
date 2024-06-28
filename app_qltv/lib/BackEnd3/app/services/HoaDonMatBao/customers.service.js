@@ -49,7 +49,7 @@ const getKhachHang = async () =>{
     });
 }
 
-//4. Thêm thông tin khách hàng
+//4. Thêm thông tin khách hàng 
 const insertKhachHang = async (ReqBody) =>{
     const {
         MaKH ,CusName, Buyer, CusAddress, 
@@ -112,14 +112,30 @@ const updateKhachHang = async (MaKH ,ReqBody) =>{
                     if(err){
                         return reject({message: `Lỗi khi cập nhật thông tin khách hàng - Error: ${err}`});
                     }
-                    resolve(results);
+                    console.log("Cập nhật thông tin khách hàng thành công");
+                    resolve({message: "Cập nhật thông tin khách hàng thành công"});
                 });
             }
         });
     });
 }
 
+const CheckCustomerAlreadyExists = async (MaKH)=>{
+    return new Promise((resolve, reject)=>{
+        if(MaKH == ""){
+            return reject({message: "Lỗi vì không điền mã khách hàng."});
+        }
+
+        db.query(`SELECT * FROM Client WHERE MaKH = '${MaKH}'`,(err, result)=>{
+            if(err) return reject({message: "Lỗi khi tìm thông tin khách hàng"});
+            else if(result.length === 0) return resolve(0);
+            return resolve(1);
+        })
+    } );
+}
+
 module.exports = {
     getKhachHang_maKH, deleteKhachHang, getKhachHang,
-    insertKhachHang, updateKhachHang
+    insertKhachHang, updateKhachHang,
+    CheckCustomerAlreadyExists
 }

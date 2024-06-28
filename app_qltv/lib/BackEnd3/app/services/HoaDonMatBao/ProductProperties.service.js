@@ -91,10 +91,22 @@ const addProductProperties = async (ReqBody) =>{
     });
 }
 
+//6. Kiểm tra xem tính chất sản phẩm có tồn tại hay không dựa trên ProdAttr
+const CheckProductPropertiesAlreadyExists = async (ProdAttr) =>{
+    return new Promise((resolve, reject)=> {
+        db.query(`SELECT * FROM ProductProperties WHERE ProdAttr = "${ProdAttr}"`, (err, result) => {
+            if(err)  return reject({message: "Lỗi khi tìm không điền thông tin tính chất."});
+            else if(result.length === 0) return resolve(0);
+            return resolve(1);
+        });
+    });
+}
+
 module.exports = {
     getProductProperties_ID,
     deleteProductProperties_ID,
     updateProductProperties_ID,
     addProductProperties,
-    getProductProperties
+    getProductProperties,
+    CheckProductPropertiesAlreadyExists
 }
