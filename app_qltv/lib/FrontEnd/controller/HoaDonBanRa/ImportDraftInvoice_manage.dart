@@ -5,14 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:app_qltv/FrontEnd/constants/config.dart';
 import 'package:app_qltv/FrontEnd/model/HoaDonBanRa/ImportDraftInvoice_model.dart';
 
-class ImportDraftInvoiceManage with ChangeNotifier{
+class ImportDraftInvoiceManage with ChangeNotifier {
   List<ImportDraftInvoice_Model> _importDraftInvoice = [];
   List<ImportDraftInvoice_Model> get importDaftInvoices => _importDraftInvoice;
   int get importDaftInvoice_length => _importDraftInvoice.length;
 
   //Them hoa don nhap
-  Future<void> addDraftInvoice(ImportDraftInvoice_Model DraftInvoice) async{
-
+  Future<void> addDraftInvoice(ImportDraftInvoice_Model DraftInvoice) async {
     print('Đầu vào: ${DraftInvoice}');
 
     final reponse = await http.post(
@@ -49,12 +48,11 @@ class ImportDraftInvoiceManage with ChangeNotifier{
 
     print(reponse.body);
 
-    if(reponse.statusCode == 200){
-        _importDraftInvoice.add(DraftInvoice);
-        notifyListeners();
-    }else{
+    if (reponse.statusCode == 200) {
+      _importDraftInvoice.add(DraftInvoice);
+      notifyListeners();
+    } else {
       throw Exception('Failed to add Draft Invoice');
     }
-  } 
-
+  }
 }
