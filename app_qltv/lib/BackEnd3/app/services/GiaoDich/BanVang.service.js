@@ -20,8 +20,8 @@ const KiemTraMaHangHoa = async (HANGHOAMA) =>{
         let ThongTinHangHoa = await ThuVien.queryDB(`
             SELECT hh.HANGHOAID, nh.NHOMHANGID, hh.HANGHOAMA MA, hh.HANG_HOA_TEN TEN_HANG, l.LOAI_TEN LOAIVANG, nh.NHOM_TEN,
                 hh.CAN_TONG, hh.TL_HOT, (hh.CAN_TONG - hh.TL_HOT) TRU_HOT, 
-                hh.GIA_CONG, hh.DON_GIA_GOC, nh.DON_GIA_BAN,
-                ((nh.DON_GIA_BAN * (hh.CAN_TONG - hh.TL_HOT)) + hh.GIA_CONG ) THANH_TIEN  
+                hh.GIA_CONG, hh.DON_GIA_GOC, nh.DON_GIA_BAN, COUNT(hh.HANGHOAMA) SL,
+                ((nh.DON_GIA_BAN * ((hh.CAN_TONG - hh.TL_HOT)/100.0)) + hh.GIA_CONG ) THANH_TIEN
             FROM danh_muc_hang_hoa hh INNER 
                 JOIN ton_kho tk ON hh.HANGHOAID = tk.HANGHOAID 
                 JOIN loai_hang l ON l.LOAIID = hh.LOAIID
