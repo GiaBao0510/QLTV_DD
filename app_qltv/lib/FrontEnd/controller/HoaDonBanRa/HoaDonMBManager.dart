@@ -81,7 +81,8 @@ class HoaDonMatBaoManager with ChangeNotifier {
   String _stt = '';
   String get stt => _stt;
 
-  Future<List<HoaDonMatBao>> fetchDanhSachHoaDonMB() async {
+  Future<List<HoaDonMatBao>> fetchDanhSachHoaDonMB(
+      {String dateStart = '2024-01-01', String dateEnd = '2024-01-01'}) async {
     final response = await http.post(
       Uri.parse('https://api-demo.matbao.in/api/v2/invoice/SearchInvByDate'),
       headers: <String, String>{
@@ -92,8 +93,8 @@ class HoaDonMatBaoManager with ChangeNotifier {
         "ApiPassword": "Gtybf@12sd",
         "ApiInvPattern": "1",
         "ApiInvSerial": "C24TAT",
-        "ArisingDateFrom": "2024-06-28",
-        "ArisingDateTo": "2024-06-28"
+        "ArisingDateFrom": dateStart,
+        "ArisingDateTo": dateEnd
       }),
     );
     if (response.statusCode == 200) {
