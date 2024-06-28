@@ -39,7 +39,20 @@ exports.getPhieuDangCamById = async (req, res, next) => {
 // //  table cam_chi_tiet_phieu_cam_vang
 exports.getChiTietPhieuCam = async (req, res, next) => {
     try {
+      
       const phieuList = await camvangServices.getChiTietPhieuCam();
+      res.status(200).json(phieuList);
+    } catch (error) {
+      next(error);
+    }
+  };
+  exports.getChiTietPhieuCamByLoaiVang = async (req, res, next) => {
+    try {
+      const loaivang = String( req.query.loaivang || '');
+      const page = parseInt(req.query.page) || 1;
+      const pageSize = parseInt(req.query.pageSize) || 10;
+      const offset = (page - 1) * pageSize;
+      const phieuList = await camvangServices.getChiTietPhieuCamByLoaiVang(loaivang,pageSize,offset);
       res.status(200).json(phieuList);
     } catch (error) {
       next(error);

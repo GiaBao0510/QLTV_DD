@@ -135,91 +135,180 @@ const getPhieuDangCamById = async (id) => {
 // //  table cam_chi_tiet_phieu_cam_vang
 
 const getChiTietPhieuCam = async () => {
-    return new Promise((resolve, reject) => {
-      //Lấy tên từng thể loại vàng trước
-      db.query(
-      `
-        SELECT DISTINCT ctcv.LOAI_VANG 
-        FROM cam_phieu_cam_vang cv
-          INNER JOIN cam_chi_tiet_phieu_cam_vang ctcv ON cv.PHIEU_CAM_VANG_ID = ctcv.PHIEU_CAM_VANG_ID
-      `, async (error, results) => {
+  return new Promise((resolve, reject) => {
+    try {
+          db.query(
+            `
+              SELECT DISTINCT ctcv.LOAI_VANG 
+              FROM cam_phieu_cam_vang cv
+              INNER JOIN cam_chi_tiet_phieu_cam_vang ctcv ON cv.PHIEU_CAM_VANG_ID = ctcv.PHIEU_CAM_VANG_ID
+            `,
+            async (error, results) => {
+              if (error) {
+                reject(error);
+              } else {
+                resolve(results);
+              } 
+          })
+      } catch { };       
+  })
+};
+
+const getChiTietPhieuCamByLoaiVang = async (loaivang, pageSize, offset) => {
+  return new Promise((resolve, reject) => {
+    try {
+      // Truy vấn để lấy dữ liệu với LIMIT và OFFSET
+      const queryData = `
+        SELECT 
+          cv.PHIEU_CAM_VANG_ID, 
+          kh.KH_TEN, 
+          kh.DIEN_THOAI, 
+          kh.DIA_CHI,
+          cv.NGAY_LAP, 
+          cv.NGAY_CAM, 
+          cv.PHIEU_MA, 
+          cv.CAN_TONG, 
+          cv.TONG_GIA_TRI AS DINHGIA,
+          cv.TU_NGAY,
+          cv.DEN_NGAY AS NGAY_QUA_HAN, 
+          cv.TIEN_KHACH_NHAN, 
+          cnt.TIEN_THEM,
+          (cv.CAN_TONG - cv.TL_HOT) AS TL_THUC, 
+          cv.TL_HOT, 
+          cv.LY_DO_MAT_PHIEU,
+          (cv.TIEN_KHACH_NHAN + IFNULL(cnt.TIEN_THEM, 0)) AS TIEN_CAM_MOI, 
+          cv.LAI_XUAT,
+          DATEDIFF(cv.DEN_NGAY, cv.NGAY_LAP) AS SO_NGAY_HET_HAN, 
+          cv.MAT_PHIEU,
+          DATEDIFF(CURDATE(), cv.NGAY_LAP) AS SO_NGAY_TINH_DUOC,
+          ctcv.THANH_TIEN,
+          cv.GHI_CHU, 
+          ctcv.LOAI_VANG, 
+          ctcv.TEN_HANG_HOA, 
+          ctcv.DON_GIA
+        FROM 
+          cam_phieu_cam_vang cv
+        INNER JOIN 
+          cam_chi_tiet_phieu_cam_vang ctcv ON cv.PHIEU_CAM_VANG_ID = ctcv.PHIEU_CAM_VANG_ID
+        INNER JOIN 
+          phx_khach_hang kh ON cv.KH_ID = kh.KH_ID
+        LEFT JOIN 
+          cam_nhan_tien_them cnt ON cnt.PHIEU_CAM_ID = cv.PHIEU_CAM_VANG_ID
+        WHERE 
+          cv.SU_DUNG = 1 
+          AND ctcv.SU_DUNG = 1 
+          AND kh.SU_DUNG = 1 
+          AND ctcv.LOAI_VANG = ?
+        ORDER BY 
+          cv.PHIEU_CAM_VANG_ID DESC
+        LIMIT ?
+        OFFSET ?
+      `;
+
+      // Truy vấn để đếm tổng số phần tử
+      const queryCount = `
+        SELECT COUNT(*) AS total
+        FROM 
+          cam_phieu_cam_vang cv
+        INNER JOIN 
+          cam_chi_tiet_phieu_cam_vang ctcv ON cv.PHIEU_CAM_VANG_ID = ctcv.PHIEU_CAM_VANG_ID
+        INNER JOIN 
+          phx_khach_hang kh ON cv.KH_ID = kh.KH_ID
+        LEFT JOIN 
+          cam_nhan_tien_them cnt ON cnt.PHIEU_CAM_ID = cv.PHIEU_CAM_VANG_ID
+        WHERE 
+          cv.SU_DUNG = 1 
+          AND ctcv.SU_DUNG = 1 
+          AND kh.SU_DUNG = 1 
+          AND ctcv.LOAI_VANG = ?
+      `;
+
+      // Truy vấn tính tổng 3 giá trị
+      const querySum = `
+        SELECT 
+          SUM(cv.CAN_TONG) AS TONG_CAN_TONG,
+          SUM(cv.CAN_TONG - cv.TL_HOT) AS TONG_TL_THUC,
+          SUM(cv.TL_HOT) AS TONG_TL_HOT
+        FROM 
+          cam_phieu_cam_vang cv
+        INNER JOIN 
+          cam_chi_tiet_phieu_cam_vang ctcv ON cv.PHIEU_CAM_VANG_ID = ctcv.PHIEU_CAM_VANG_ID
+        INNER JOIN 
+          phx_khach_hang kh ON cv.KH_ID = kh.KH_ID
+        LEFT JOIN 
+          cam_nhan_tien_them cnt ON cnt.PHIEU_CAM_ID = cv.PHIEU_CAM_VANG_ID
+        WHERE 
+          cv.SU_DUNG = 1 
+          AND ctcv.SU_DUNG = 1 
+          AND kh.SU_DUNG = 1 
+          AND ctcv.LOAI_VANG = ?
+      `;
+
+      // Thực hiện cả hai truy vấn
+      db.query(queryData, [loaivang, pageSize, offset], (error, results) => {
         if (error) {
           reject(error);
         } else {
-          
-          let output = [];
+          const ketqua = results.map((e) => ({
+            PHIEU_CAM_VANG_ID: e.PHIEU_CAM_VANG_ID,
+            KH_TEN: e.KH_TEN,
+            TEN_HANG_HOA: e.TEN_HANG_HOA,
+            DIEN_THOAI: e.DIEN_THOAI,
+            DIA_CHI: e.DIA_CHI,
+            NGAY_LAP: String(new Date(e.NGAY_LAP).toLocaleDateString('vi-VN')),
+            NGAY_CAM: String(new Date(e.NGAY_CAM).toLocaleDateString('vi-VN')),
+            PHIEU_MA: e.PHIEU_MA,
+            CAN_TONG: Number(e.CAN_TONG),
+            DINHGIA: Number(e.DINHGIA),
+            TU_NGAY: String(new Date(e.TU_NGAY).toLocaleDateString('vi-VN')),
+            NGAY_QUA_HAN: String(new Date(e.NGAY_QUA_HAN).toLocaleDateString('vi-VN')),
+            TIEN_KHACH_NHAN: Number(e.TIEN_KHACH_NHAN),
+            TIEN_THEM: Number(e.TIEN_THEM),
+            TL_THUC: Number(e.TL_THUC),
+            TL_HOT: Number(e.TL_HOT),
+            TIEN_CAM_MOI: Number(e.TIEN_CAM_MOI),
+            LAI_XUAT: Number(e.LAI_XUAT),
+            DON_GIA: Number(e.DON_GIA),
+            SO_NGAY_TINH_DUOC: e.SO_NGAY_TINH_DUOC,
+            SO_NGAY_HET_HAN: e.SO_NGAY_HET_HAN,
+            THANH_TIEN: Number(e.THANH_TIEN),
+            MAT_PHIEU: e.MAT_PHIEU,
+            LY_DO_MAT_PHIEU: e.LY_DO_MAT_PHIEU,
+            GHI_CHU: e.GHI_CHU,
+            LOAI_VANG: e.LOAI_VANG,
+          }));
 
-          //Tìm kiếm thông tin chi tiết phiếu cầm vàng liên qua đến từng loại vàng
-          try{
-            const promise = results.map(i =>{
-              return new Promise((resolve, reject) =>{
-                //Thực hiện truy vấn từng thông tin phiếu đang cầm có liên quan đến loại vàng
-                db.query(
-                `
-                  SELECT cv.PHIEU_CAM_VANG_ID, kh.KH_TEN, kh.DIEN_THOAI, kh.DIA_CHI,
-                      cv.NGAY_LAP, cv.NGAY_CAM, cv.PHIEU_MA, cv.CAN_TONG, cv.TONG_GIA_TRI DINHGIA,
-                      cv.TU_NGAY ,cv.DEN_NGAY NGAY_QUA_HAN, cv.TIEN_KHACH_NHAN, cnt.TIEN_THEM,
-                      (cv.CAN_TONG - cv.TL_HOT) TL_THUC, cv.TL_HOT, cv.LY_DO_MAT_PHIEU,
-                      ( cv.TIEN_KHACH_NHAN +  IFNULL(cnt.TIEN_THEM,0)) TIEN_CAM_MOI, cv.LAI_XUAT,
-                      DATEDIFF(cv.DEN_NGAY, cv.NGAY_LAP) AS SO_NGAY_HET_HAN, cv.MAT_PHIEU,
-                      DATEDIFF( CURDATE() ,cv.NGAY_LAP) SO_NGAY_TINH_DUOC,ctcv.THANH_TIEN,
-                      cv.GHI_CHU, ctcv.LOAI_VANG, ctcv.TEN_HANG_HOA, ctcv.DON_GIA
-                  FROM cam_phieu_cam_vang cv
-                    INNER JOIN cam_chi_tiet_phieu_cam_vang ctcv ON cv.PHIEU_CAM_VANG_ID = ctcv.PHIEU_CAM_VANG_ID
-                    JOIN phx_khach_hang kh ON cv.KH_ID = kh.KH_ID
-                    left JOIN cam_nhan_tien_them cnt ON cnt.PHIEU_CAM_ID = cv.PHIEU_CAM_VANG_ID
-                  WHERE cv.SU_DUNG=1 AND ctcv.SU_DUNG=1 AND kh.SU_DUNG=1 AND ctcv.LOAI_VANG = "${i.LOAI_VANG}"
-                `, (err, result) => {
-                  if(err){
-                    reject(err);
-                  }
+          // Thực hiện truy vấn đếm tổng số phần tử
+          db.query(queryCount, [loaivang], (error, countResults) => {
+            if (error) {
+              reject(error);
+            } else {
+              const totalCount = countResults[0].total;
 
-                  //Thực hiện chuyển đổi
-                  const ketqua = result.map( e =>({
-                    "PHIEU_CAM_VANG_ID": e.PHIEU_CAM_VANG_ID,
-                    "KH_TEN": e.KH_TEN,
-                    "TEN_HANG_HOA": e.TEN_HANG_HOA,
-                    "DIEN_THOAI": e.DIEN_THOAI,
-                    "DIA_CHI": e.DIA_CHI,
-                    "NGAY_LAP": String( new Date(e.NGAY_LAP).toLocaleDateString('vi-VN') ),
-                    "NGAY_CAM": String( new Date(e.NGAY_CAM).toLocaleDateString('vi-VN') ),
-                    "PHIEU_MA": e.PHIEU_MA,
-                    "CAN_TONG": Number(e.CAN_TONG),
-                    "DINHGIA": Number(e.DINHGIA),
-                    "TU_NGAY": String( new Date(e.TU_NGAY).toLocaleDateString('vi-VN') ),
-                    "NGAY_QUA_HAN": String( new Date(e.NGAY_QUA_HAN).toLocaleDateString('vi-VN') ),
-                    "TIEN_KHACH_NHAN": Number(e.TIEN_KHACH_NHAN),
-                    "TIEN_THEM": Number(e.TIEN_THEM),
-                    "TL_THUC": Number(e.TL_THUC),
-                    "TL_HOT": Number(e.TL_HOT),
-                    "TIEN_CAM_MOI": Number(e.TIEN_CAM_MOI),
-                    "LAI_XUAT": Number(e.LAI_XUAT),
-                    "DON_GIA": Number(e.DON_GIA),
-                    "SO_NGAY_TINH_DUOC": e.SO_NGAY_TINH_DUOC,
-                    "SO_NGAY_HET_HAN": e.SO_NGAY_HET_HAN,
-                    "THANH_TIEN": Number(e.THANH_TIEN),
-                    "MAT_PHIEU": e.MAT_PHIEU,
-                    "LY_DO_MAT_PHIEU": e.LY_DO_MAT_PHIEU,
-                    "GHI_CHU": e.GHI_CHU,
-                    "LOAI_VANG": e.LOAI_VANG
-                  }));
+              db.query(querySum, [loaivang], (error, countResults) => {
+                if (error) {
+                  reject(error);
+                } else {
+                  const canTong = countResults[0].TONG_CAN_TONG;
+                  const tLThuc = countResults[0].TONG_TL_THUC;
+                  const tLHot = countResults[0].TONG_TL_HOT;
 
-                  //Lưu
-                  const data = {LOAI_VANG: i.LOAI_VANG, data:ketqua};
+                  // Lưu kết quả và tổng số phần tử
+                  const data = { data: ketqua, total: totalCount, sumCanTong: canTong, sumTLThuc: tLThuc, sumTLHot: tLHot };
                   resolve(data);
-                });
+                }
               });
-            });
-            
-            output = await Promise.all(promise);
-            resolve(output);
-          }catch(err){
-            reject(err);
-          }
+            }
+          });
         }
       });
-    });
-  };
+    } catch (err) {
+      reject(err);
+    }
+  });
+};
+
+
   
 const getChiTietPhieuCamById = async (id) => {
   return new Promise((resolve, reject) => {
@@ -264,5 +353,6 @@ module.exports = {
   getChiTietPhieuCamById,
   getPhieuXuat,
   getPhieuXuatById,
-  getThongTinTinhTongPhieuDangCam
+  getThongTinTinhTongPhieuDangCam,
+  getChiTietPhieuCamByLoaiVang
 };

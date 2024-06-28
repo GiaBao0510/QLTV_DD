@@ -212,12 +212,13 @@ class _BaoCaoTonKhoVangScreen extends State<BaoCaoTonKhoVangScreen> {
                       margin: EdgeInsets.fromLTRB(5, 15, 5, 10),
                       padding: EdgeInsets.fromLTRB(5, 10, 5, 10),
                       decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [Color(0xffe65c00), Color(0xfff9d423)],
-                          stops: [0, 1],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
+                        // gradient: LinearGradient(
+                        //   colors: [Color(0xffe65c00), Color(0xfff9d423)],
+                        //   stops: [0, 1],
+                        //   begin: Alignment.topLeft,
+                        //   end: Alignment.bottomRight,
+                        // ),
+                        color: const Color.fromARGB(255, 228, 200, 126),
                         borderRadius: BorderRadius.circular(10),
                         boxShadow: [
                           BoxShadow(
@@ -330,95 +331,124 @@ class _BaoCaoTonKhoVangScreen extends State<BaoCaoTonKhoVangScreen> {
   //Hiển thi chi tiết
   Future<void> ThongTinChiTiet(
       BuildContext context, BaoCaoTonKhoVang_Model item) {
-    return showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text(
-              'Thông tin chi tiết',
-              style: TextStyle(decoration: TextDecoration.underline),
-            ),
-            content: FractionallySizedBox(
-              heightFactor: 0.5,
-              child: Scrollbar(
-                child: ListView(
-                  children: [
-                    Column(
-                      children: [
-                        Text.rich(TextSpan(children: [
-                          TextSpan(
-                              text: 'Loại: ',
-                              style: TextStyle(fontWeight: FontWeight.bold)),
-                          TextSpan(text: ' ${item.NHOM_TEN}')
-                        ])),
-                        Text.rich(TextSpan(children: [
-                          TextSpan(
-                              text: 'Số lượng: ',
-                              style: TextStyle(fontWeight: FontWeight.bold)),
-                          TextSpan(text: ' ${item.SoLuong}')
-                        ])),
-                        Text.rich(TextSpan(children: [
-                          TextSpan(
-                              text: 'TL thực: ',
-                              style: TextStyle(fontWeight: FontWeight.bold)),
-                          TextSpan(
-                              text: ' ${formatCurrencyDouble(item.TL_Thuc)}')
-                        ])),
-                        Text.rich(TextSpan(children: [
-                          TextSpan(
-                              text: 'TL hột: ',
-                              style: TextStyle(fontWeight: FontWeight.bold)),
-                          TextSpan(
-                              text: ' ${formatCurrencyDouble(item.TL_hot)}')
-                        ])),
-                        Text.rich(TextSpan(children: [
-                          TextSpan(
-                              text: 'TL vàng: ',
-                              style: TextStyle(fontWeight: FontWeight.bold)),
-                          TextSpan(
-                              text: ' ${formatCurrencyDouble(item.TL_vang)}')
-                        ])),
-                        Text.rich(TextSpan(children: [
-                          TextSpan(
-                              text: 'Công gốc: ',
-                              style: TextStyle(fontWeight: FontWeight.bold)),
-                          TextSpan(
-                              text: ' ${formatCurrencyDouble(item.CONG_GOC)}')
-                        ])),
-                        Text.rich(TextSpan(children: [
-                          TextSpan(
-                              text: 'Giá công: ',
-                              style: TextStyle(fontWeight: FontWeight.bold)),
-                          TextSpan(
-                              text: ' ${formatCurrencyDouble(item.GIA_CONG)}')
-                        ])),
-                        Text.rich(TextSpan(children: [
-                          TextSpan(
-                              text: 'Than tiền: ',
-                              style: TextStyle(fontWeight: FontWeight.bold)),
-                          TextSpan(
-                              text: ' ${formatCurrencyDouble(item.ThanhTien)}')
-                        ])),
-                      ],
-                    )
-                  ],
+    return showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          height: 400,
+          padding: EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Text(
+                  'Thông tin chi tiết',
+                  style: TextStyle(
+                    decoration: TextDecoration.underline,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
-            ),
-            actions: <Widget>[
-              ListTile(
-                leading: Icon(Icons.close_outlined, color: Colors.red),
-                title: Text(
-                  'Đóng',
-                  style: TextStyle(
+              SizedBox(height: 16),
+              Expanded(
+                child: Scrollbar(
+                  child: ListView(
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text.rich(TextSpan(children: [
+                            TextSpan(
+                                text: 'Loại: ',
+                                style: TextStyle(fontWeight: FontWeight.bold)),
+                            TextSpan(text: ' ${item.NHOM_TEN}')
+                          ])),
+                          SizedBox(height: 8),
+                          Text.rich(TextSpan(children: [
+                            TextSpan(
+                                text: 'Số lượng: ',
+                                style: TextStyle(fontWeight: FontWeight.bold)),
+                            TextSpan(text: ' ${item.SoLuong}')
+                          ])),
+                          SizedBox(height: 8),
+                          Text.rich(TextSpan(children: [
+                            TextSpan(
+                                text: 'TL thực: ',
+                                style: TextStyle(fontWeight: FontWeight.bold)),
+                            TextSpan(
+                                text: ' ${formatCurrencyDouble(item.TL_Thuc)}')
+                          ])),
+                          SizedBox(height: 8),
+                          Text.rich(TextSpan(children: [
+                            TextSpan(
+                                text: 'TL hột: ',
+                                style: TextStyle(fontWeight: FontWeight.bold)),
+                            TextSpan(
+                                text: ' ${formatCurrencyDouble(item.TL_hot)}')
+                          ])),
+                          SizedBox(height: 8),
+                          Text.rich(TextSpan(children: [
+                            TextSpan(
+                                text: 'TL vàng: ',
+                                style: TextStyle(fontWeight: FontWeight.bold)),
+                            TextSpan(
+                                text: ' ${formatCurrencyDouble(item.TL_vang)}')
+                          ])),
+                          SizedBox(height: 8),
+                          Text.rich(TextSpan(children: [
+                            TextSpan(
+                                text: 'Công gốc: ',
+                                style: TextStyle(fontWeight: FontWeight.bold)),
+                            TextSpan(
+                                text: ' ${formatCurrencyDouble(item.CONG_GOC)}')
+                          ])),
+                          SizedBox(height: 8),
+                          Text.rich(TextSpan(children: [
+                            TextSpan(
+                                text: 'Giá công: ',
+                                style: TextStyle(fontWeight: FontWeight.bold)),
+                            TextSpan(
+                                text: ' ${formatCurrencyDouble(item.GIA_CONG)}')
+                          ])),
+                          SizedBox(height: 8),
+                          Text.rich(TextSpan(children: [
+                            TextSpan(
+                                text: 'Thành tiền: ',
+                                style: TextStyle(fontWeight: FontWeight.bold)),
+                            TextSpan(
+                                text:
+                                    ' ${formatCurrencyDouble(item.ThanhTien)}')
+                          ])),
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              ),
+              SizedBox(height: 16),
+              Center(
+                child: ElevatedButton.icon(
+                  icon: Icon(Icons.close_outlined, color: Colors.red),
+                  label: Text(
+                    'Đóng',
+                    style: TextStyle(
                       color: Colors.red,
                       fontWeight: FontWeight.bold,
-                      fontSize: 20),
+                      fontSize: 20,
+                    ),
+                  ),
+                  onPressed: () => Navigator.pop(context),
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.red,
+                    backgroundColor: Colors.white,
+                  ),
                 ),
-                onTap: () => Navigator.pop(context),
-              )
+              ),
             ],
-          );
-        });
+          ),
+        );
+      },
+    );
   }
 }

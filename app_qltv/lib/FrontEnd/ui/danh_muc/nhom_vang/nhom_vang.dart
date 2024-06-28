@@ -142,44 +142,46 @@ class _NhomVangScreenState extends State<NhomVangScreen> {
                   title: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment
-                            .start, // Align children to the start (left) of the column
-                        children: [
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              _filteredNhomVangList[index].loaiTen ?? '',
-                              style: const TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w800,
-                                  fontSize: 20),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment
+                              .start, // Align children to the start (left) of the column
+                          children: [
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                _filteredNhomVangList[index].loaiTen ?? '',
+                                style: const TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w800,
+                                    fontSize: 20),
+                              ),
                             ),
-                          ),
-                          Row(
-                            children: [
-                              Text(
-                                "Mã: ${_filteredNhomVangList[index].loaiMa}",
-                                style: const TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 14),
-                              ),
-                              const SizedBox(width: 20),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Text(
-                                "Ký hiệu: ${_filteredNhomVangList[index].ghiChu}",
-                                style: const TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 14),
-                              ),
-                            ],
-                          ),
-                        ],
+                            Row(
+                              children: [
+                                Text(
+                                  "Mã: ${_filteredNhomVangList[index].loaiMa}",
+                                  style: const TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 14),
+                                ),
+                                const SizedBox(width: 20),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Text(
+                                  "Ký hiệu: ${_filteredNhomVangList[index].ghiChu}",
+                                  style: const TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 14),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                       Row(
                         children: [

@@ -27,6 +27,7 @@ class _KhachhangScreenState extends State<KhachhangScreen> {
   int _currentPage = 1;
   int _pageSize = 10;
   int _totalKhachhang = 0;
+  int _totalRows = 0;
   @override
   void initState() {
     super.initState();
@@ -41,15 +42,25 @@ class _KhachhangScreenState extends State<KhachhangScreen> {
   }
 
   Future<void> _loadKhachhang({int page = 1}) async {
-    _khachhangFuture = Provider.of<KhachhangManage>(context, listen: false)
-        .fetchKhachhang(page: page, pageSize: _pageSize);
+    final manager = Provider.of<KhachhangManage>(context, listen: false);
+
+       _khachhangFuture = manager.fetchKhachhang(page: page, pageSize: _pageSize);
     _khachhangFuture.then((khachhangs) {
       setState(() {
         _khachhangList = khachhangs;
         _filteredKhachhangList = khachhangs;
         _currentPage = page;
-        _totalKhachhang = _khachhangList.length;
+        _totalRows = manager.totalRows;
+       
       });
+    });
+  }
+  
+  Future<void> _loadTotalKhachhang() async {
+    final totalKhachhang = await Provider.of<KhachhangManage>(context, listen: false).fetchTotalKhachhang();
+   
+    setState(() {
+      _totalKhachhang = totalKhachhang;
     });
   }
 
@@ -99,7 +110,8 @@ class _KhachhangScreenState extends State<KhachhangScreen> {
                   createRoute((context) => const ThemKhachhangScreen()),
                 );
                 if (result == true) {
-                  _loadKhachhang(page: _currentPage); // Refresh the list
+                  _loadKhachhang(page: _currentPage);
+                  _loadTotalKhachhang();
                 }
               },
               icon: const Icon(CupertinoIcons.add),
@@ -108,14 +120,15 @@ class _KhachhangScreenState extends State<KhachhangScreen> {
         ],
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
+        //child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(12.0),
             child: Column(
               children: [
+                
                 Search_Bar(searchController: _searchController),
                 const SizedBox(height: 12.0),
-                ShowList(),
+                Expanded(child: ShowList(),),
                 const SizedBox(height: 12.0),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -146,7 +159,7 @@ class _KhachhangScreenState extends State<KhachhangScreen> {
             ),
           ),
         ),
-      ),
+      //),
             floatingActionButton: FloatingActionButton(
         onPressed: () {
           showModalBottomSheet(
@@ -171,7 +184,7 @@ class _KhachhangScreenState extends State<KhachhangScreen> {
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: tableTotal({
-                          'total': _totalKhachhang.toDouble(),
+                          'total': _totalRows.toDouble(),
                         },
                       ),
                       ),
@@ -204,8 +217,8 @@ class _KhachhangScreenState extends State<KhachhangScreen> {
           return Center(child: Text('Error: ${snapshot.error}'));
         } else {
           return ListView.builder(
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
+           // shrinkWrap: true,
+           // physics: NeverScrollableScrollPhysics(),
             itemCount: _filteredKhachhangList.length,
             itemBuilder: (BuildContext context, int index) {
               return Container(

@@ -73,14 +73,15 @@ class _BaoCaoTonKhoNhomVangScreenState
             Navigator.of(context).pop();
           },
         ),
-        title: const Center(
-          child: Padding(
-            padding: EdgeInsets.only(right: 50.0),
-            child: Text(
-              "Tồn Kho Theo Nhóm Vàng",
-              style:
-                  TextStyle(color: Colors.black, fontWeight: FontWeight.w900),
-              textAlign: TextAlign.center,
+        title: const Padding(
+          padding: EdgeInsets.only(right: 50),
+          child: Align(
+            alignment: Alignment.center,
+            child: FittedBox(
+              fit: BoxFit.fitWidth,
+              child: Text("Tồn Kho Theo Nhóm Vàng",
+                  style: TextStyle(
+                      color: Colors.black, fontWeight: FontWeight.bold)),
             ),
           ),
         ),

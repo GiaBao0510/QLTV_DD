@@ -15,9 +15,11 @@ class NguoiDungManager with ChangeNotifier {
   int _currentPage = 1;
   int _pageSize = 10;
   int _totalPages = 1;
+  int _totalRows = 0;
  // bool _isLoading = false;
   int get currentPage => _currentPage;
   int get totalPages => _totalPages;
+  int get totalRows => _totalRows;
     // Method to filter users by groupid
   List<NguoiDung> filterNguoiDungsByGroupId(String groupId) {
     return _nguoidung.where((user) => groupId == user.groupId.toString()).toList();
@@ -47,6 +49,7 @@ class NguoiDungManager with ChangeNotifier {
 
       _currentPage = json['page'];
       _totalPages = json['totalPages'];
+      _totalRows = json['totalRows'];
       //_isLoading = false;
       notifyListeners();
       return nguoidung; 

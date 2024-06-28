@@ -252,7 +252,7 @@ const getKhoVangMuaVao = async () => {
 const getBCPhieuMuaVao = async () => {
   return new Promise((resolve, reject) => {
     db.query(`
-       SELECT pmv.PHIEU_MUA_VAO_ID, pmv.PHIEU_MA, pmv.KHACH_HANG_ID,pmv.THANH_TOAN,
+       SELECT COUNT(*) AS count,pmv.PHIEU_MUA_VAO_ID, pmv.PHIEU_MA, pmv.KHACH_HANG_ID,pmv.THANH_TOAN,
                    pmv.NGAY_PHIEU, pmv.NGAY_NHAP, pmv.SU_DUNG, pmv.GHI_CHU, pmv.PHIEU_DOI,
                     ctpv.HANG_HOA_TEN, ctpv.NHOM_ID, 
                    ctpv.CAN_TONG, ctpv.TL_HOT , (ctpv.CAN_TONG - IFNULL(ctpv.TL_HOT, 0)) AS TL_THUC, ctpv.SO_LUONG, 
@@ -266,13 +266,36 @@ const getBCPhieuMuaVao = async () => {
         if (error) {
           reject(error);
         } else {
-          resolve(results);
+          resolve(results[0].count);
         }
     });
   });
 };
-;
 
+const getBCPhieuMuaVaoWithPagination = async (pageSize, offset) => {
+  return new Promise((resolve, reject) => {
+    db.query(`
+      SELECT pmv.PHIEU_MUA_VAO_ID, pmv.PHIEU_MA, pmv.KHACH_HANG_ID, pmv.THANH_TOAN,
+             pmv.NGAY_PHIEU, pmv.NGAY_NHAP, pmv.SU_DUNG, pmv.GHI_CHU, pmv.PHIEU_DOI,
+             ctpv.HANG_HOA_TEN, ctpv.NHOM_ID, 
+             ctpv.CAN_TONG, ctpv.TL_HOT , (ctpv.CAN_TONG - IFNULL(ctpv.TL_HOT, 0)) AS TL_THUC, ctpv.SO_LUONG, 
+             ctpv.DON_GIA, ctpv.THANH_TIEN , nh.NHOM_TEN
+      FROM phm_phieu_mua_vao pmv
+      JOIN phm_chi_tiet_phieu_mua_vao ctpv ON pmv.PHIEU_MUA_VAO_ID = ctpv.PHIEU_MUA_VAO_ID
+      LEFT JOIN nhom_hang nh ON ctpv.NHOM_ID = nh.NHOMHANGID
+      WHERE pmv.SU_DUNG = 1
+      LIMIT ? OFFSET ?`, 
+      [pageSize, offset], 
+      (error, results) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(results);
+        }
+      }
+    );
+  });
+};
 
 const getBCPhieuMuaVaoById = async (id) => {
   return new Promise((resolve, reject) => {
@@ -331,7 +354,7 @@ module.exports = {
   // getTonKhoGPById,
   getKhoVangMuaVao,
   getBCPhieuMuaVao,
- 
+  getBCPhieuMuaVaoWithPagination,
   getBCPhieuMuaVaoById,
   getPhieuDoi,
   getTopKhachHang,
