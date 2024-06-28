@@ -39,6 +39,7 @@ exports.getPhieuDangCamById = async (req, res, next) => {
 // //  table cam_chi_tiet_phieu_cam_vang
 exports.getChiTietPhieuCam = async (req, res, next) => {
     try {
+      
       const phieuList = await camvangServices.getChiTietPhieuCam();
       res.status(200).json(phieuList);
     } catch (error) {

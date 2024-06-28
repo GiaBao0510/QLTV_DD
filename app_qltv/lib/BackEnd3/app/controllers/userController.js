@@ -31,14 +31,16 @@ exports.deleteUser = async (req, res, next)=>{
     next(error);
   }
 }
-// exports.getUsers = async (req, res, next) => {
-//   try {
-//     const users = await userService.getAllUsers();
-//     res.status(200).json(users);
-//   } catch (error) {
-//     next(error);
-//   }
-// };
+exports.countUsers = async (req, res, next) => {
+  try {
+    const userCount = await userService.getAllUsers();
+    console.log("User Count:", userCount); // Thêm log để kiểm tra giá trị
+    res.status(200).json({ totalUsers: userCount });
+  } catch (error) {
+    console.error('Error in countUsers controller:', error); // Log lỗi
+    next(error);
+  }
+};
 exports.getUsers = async (req, res, next) => {
   try {
     const page = parseInt(req.query.page) || 1;
@@ -58,6 +60,7 @@ exports.getUsers = async (req, res, next) => {
     next(error);
   }
 };
+
 exports.getUserById = async (req, res, next) => {
   try {
     const user = await userService.getUserById(req.params.id);

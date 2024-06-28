@@ -66,19 +66,6 @@ const getUserById = async (id) => {
   });
 };
 
-// const getAllUsers = async () => {
-//   return new Promise((resolve, reject) => {
-//     db.query('SELECT * FROM pq_user WHERE SU_DUNG = 1', (error, results) => {
-//       if (error) {
-//         reject(error);
-//       } else {
-//         resolve(results);
-//       }
-//     });
-//   });
-// };
-
-
 const getAllUsers = async () => {
   return new Promise((resolve, reject) => {
     db.query('SELECT COUNT(*) AS count FROM pq_user WHERE SU_DUNG = 1', (error, results) => {
@@ -107,5 +94,6 @@ module.exports = {
   deleteUser,
   getUserById,
   getAllUsers,
+ 
   getAllUsersWithPagination
 };
