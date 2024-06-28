@@ -33,6 +33,7 @@ class _BanVangPlusState extends State<BanVangPlus> {
   int _pageSize = 10;
   int _totalKhachhang = 0;
   int _totalRows = 0;
+  double _totalThanhToan = 0;
 
   final TextEditingController _tongtien = TextEditingController(),
       _tienbot = TextEditingController(),
@@ -49,6 +50,7 @@ class _BanVangPlusState extends State<BanVangPlus> {
     _thongTinHangHoaFuture.then((thongtin) {
       setState(() {
         _hangHoaList.add(thongtin);
+        _totalThanhToan = _totalThanhToan + thongtin.THANH_TIEN!;
       });
     });
   }
@@ -380,28 +382,12 @@ class _BanVangPlusState extends State<BanVangPlus> {
           Row(
             children: [
               Expanded(
-                flex: 2,
-                child: TextFormField(
-                  readOnly: true,
-                  controller: _thanhtoan,
-                  decoration: const InputDecoration(
-                    labelText: 'Thanh Toán',
-                    labelStyle: TextStyle(
-                        color: Colors.black, fontWeight: FontWeight.bold),
-                    filled: true,
-                    fillColor: Colors.white,
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white, width: 15.0),
-                      borderRadius: BorderRadius.all(Radius.circular(15.0)),
-                    ),
-                  ),
-                  textInputAction: TextInputAction.next,
-                  keyboardType: TextInputType.number,
-                  onSaved: (value) {
-                    // _ThongTinhThucHienBanVang =
-                    //     _ThongTinhThucHienBanVang.copyWith(
-                    //         TONG_TIEN: double.tryParse(value ?? '') ?? 0.0);
-                  },
+                child: Text(
+                  formatCurrencyDouble(_totalThanhToan),
+                  style: const TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.w900,
+                      color: Color.fromARGB(255, 231, 107, 40)),
                 ),
               ),
               const SizedBox(
