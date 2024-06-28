@@ -56,27 +56,7 @@ class _BaoCaoPhieuMuaScreenState extends State<BaoCaoPhieuMuaScreen> {
     super.dispose();
   }
 
-  // Future<void> _loadBaoCaoPhieuMua({int page = 1}) async {
-  //   _BaoCaoPhieuMuaFuture =
-  //       Provider.of<BaocaophieumuaManeger>(context, listen: false)
-  //           .fecthbaoCaoPhieuMua(page: page, pageSize: _pageSize);
-  //   _BaoCaoPhieuMuaFuture.then((baoCaoPhieuMua) {
-  //     setState(() {
-  //       _BaoCaoPhieuMuaList = baoCaoPhieuMua;
-  //       _filteredBaoCaoPhieuMuaList = baoCaoPhieuMua;
-  //       _currentPage = page;
-  //       _totalPhieuMua = _BaoCaoPhieuMuaList.length;
-  //      // _totalRows = BaocaophieumuaManeger.totalRows;
-  //     });
-  //     for (int i = 0; i < _filteredBaoCaoPhieuMuaList.length; i++) {
-  //       final item = _filteredBaoCaoPhieuMuaList[i];
-  //       tong_Cantong += item.canTong ?? 0.0;
-  //       tong_TLhot += item.tlHot ?? 0.0;
-  //       tong_TLthuc += item.tlThuc ?? 0.0;
-  //       tong_ThanhTien += item.thanhTien ?? 0.0;
-  //     }
-  //   });
-  // }
+
 Future<void> _loadBaoCaoPhieuMua({int page = 1}) async {
   final manager = Provider.of<BaocaophieumuaManeger>(context, listen: false);
   _BaoCaoPhieuMuaFuture = manager.fecthbaoCaoPhieuMua(page: page, pageSize: _pageSize);

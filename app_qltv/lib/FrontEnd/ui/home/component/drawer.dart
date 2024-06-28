@@ -704,7 +704,7 @@ class _drawerState extends State<drawer> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) =>
-                                    const DanhSachPhieuCamScreen()),
+                                    const DanhSachHoaDonMBScreen()),
                           );
                         },
                       ),
@@ -729,69 +729,69 @@ class _drawerState extends State<drawer> {
                         },
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          left: 16.0), // Khoảng cách thụt lề
-                      child: ListTile(
-                        leading: Image.asset(
-                          'assets/images/deleteInvoice.png',
-                          width: 24.0,
-                          height: 24.0,
-                        ),
-                        title: const Text('Xóa hóa đơn ',
-                            style: TextStyle(fontWeight: FontWeight.w800)),
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    const PhieuDangCamChiTiet()),
-                          );
-                        },
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          left: 16.0), // Khoảng cách thụt lề
-                      child: ListTile(
-                        leading: Image.asset(
-                          'assets/images/InvoiceAdjustment.png',
-                          width: 24.0,
-                          height: 24.0,
-                        ),
-                        title: const Text('Điều chỉnh hóa đơn ',
-                            style: TextStyle(fontWeight: FontWeight.w800)),
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    const PhieuDangCamChiTiet()),
-                          );
-                        },
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          left: 16.0), // Khoảng cách thụt lề
-                      child: ListTile(
-                        leading: Image.asset(
-                          'assets/images/ChangeBill.png',
-                          width: 24.0,
-                          height: 24.0,
-                        ),
-                        title: const Text('Thay thế hóa đơn ',
-                            style: TextStyle(fontWeight: FontWeight.w800)),
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    const PhieuDangCamChiTiet()),
-                          );
-                        },
-                      ),
-                    ),
+                    // Padding(
+                    //   padding: const EdgeInsets.only(
+                    //       left: 16.0), // Khoảng cách thụt lề
+                    //   child: ListTile(
+                    //     leading: Image.asset(
+                    //       'assets/images/deleteInvoice.png',
+                    //       width: 24.0,
+                    //       height: 24.0,
+                    //     ),
+                    //     title: const Text('Xóa hóa đơn ',
+                    //         style: TextStyle(fontWeight: FontWeight.w800)),
+                    //     onTap: () {
+                    //       Navigator.push(
+                    //         context,
+                    //         MaterialPageRoute(
+                    //             builder: (context) =>
+                    //                 const PhieuDangCamChiTiet()),
+                    //       );
+                    //     },
+                    //   ),
+                    // ),
+                    // Padding(
+                    //   padding: const EdgeInsets.only(
+                    //       left: 16.0), // Khoảng cách thụt lề
+                    //   child: ListTile(
+                    //     leading: Image.asset(
+                    //       'assets/images/InvoiceAdjustment.png',
+                    //       width: 24.0,
+                    //       height: 24.0,
+                    //     ),
+                    //     title: const Text('Điều chỉnh hóa đơn ',
+                    //         style: TextStyle(fontWeight: FontWeight.w800)),
+                    //     onTap: () {
+                    //       Navigator.push(
+                    //         context,
+                    //         MaterialPageRoute(
+                    //             builder: (context) =>
+                    //                 const PhieuDangCamChiTiet()),
+                    //       );
+                    //     },
+                    //   ),
+                    // ),
+                    // Padding(
+                    //   padding: const EdgeInsets.only(
+                    //       left: 16.0), // Khoảng cách thụt lề
+                    //   child: ListTile(
+                    //     leading: Image.asset(
+                    //       'assets/images/ChangeBill.png',
+                    //       width: 24.0,
+                    //       height: 24.0,
+                    //     ),
+                    //     title: const Text('Thay thế hóa đơn ',
+                    //         style: TextStyle(fontWeight: FontWeight.w800)),
+                    //     onTap: () {
+                    //       Navigator.push(
+                    //         context,
+                    //         MaterialPageRoute(
+                    //             builder: (context) =>
+                    //                 const PhieuDangCamChiTiet()),
+                    //       );
+                    //     },
+                    //   ),
+                    // ),
                   ],
                 ),
               ],
