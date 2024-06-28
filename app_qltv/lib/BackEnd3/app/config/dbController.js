@@ -22,37 +22,6 @@ exports.getDatabaseInfo = function(req, res) {
     });
 };
 
-// exports.updateDatabaseConnection = function(req, res) {
-//     var newConfig = {
-//         host: req.body.host,
-//         database: req.body.database,
-//         port: req.body.port,
-//         user: req.body.user,
-//         password: req.body.password
-//     };
-
-//     try {
-//         fs.writeFile('./app/config/test.json', JSON.stringify(newConfig, null, 2), (err) => {
-//             if (err) {
-//               return res.status(500).send('Failed to update configuration');
-//             }
-        
-//             // Reinitialize database connection
-//             db = reinitializeDbConnection(newConfig);
-        
-//             res.status(200).send('Configuration updated successfully');
-            
-//         });
-//     } catch (error) {
-//         console.error('Error updating database connection:', error.stack);
-//         res.status(500).send('Error updating database connection');
-//     }
-// };
-
-// function reinitializeDbConnection(config){
-//     const mysql = require('mysql');
-//     return mysql.createConnection(config);
-// }
 
 exports.updateDatabaseConnection = function(req, res) {
     // New configuration from request body

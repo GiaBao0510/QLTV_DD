@@ -1,43 +1,68 @@
 import 'package:app_qltv/FrontEnd/controller/HoaDonBanRa/HoaDonMBManager.dart';
 import 'package:app_qltv/FrontEnd/ui/HoaDonBanRa/ChiTietHoaDonMatBaoScreen.dart';
-
+import 'package:app_qltv/FrontEnd/ui/components/search_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 
 class DanhSachHoaDonMBScreen extends StatefulWidget {
-  static const routeName = "/danhSachHoaDonMBScreent";
+  static const routeName = "/danhSachHoaDonMBScreen";
 
   const DanhSachHoaDonMBScreen({Key? key}) : super(key: key);
 
   @override
-  _DanhSachPhieuCamScreen createState() => _DanhSachPhieuCamScreen();
+  _DanhSachHoaDonMBScreen createState() => _DanhSachHoaDonMBScreen();
 }
 
-class _DanhSachPhieuCamScreen extends State<DanhSachHoaDonMBScreen> {
+class _DanhSachHoaDonMBScreen extends State<DanhSachHoaDonMBScreen> {
   late Future<List<HoaDonMatBao>> _hoaDonFuture;
-  late List<HoaDonMatBao> _hoaDonList; // Khai báo thuộc tính loaiVangList
+  final TextEditingController _searchController = TextEditingController();
+  List<HoaDonMatBao> _hoaDonList = [];
+  DateTime _startDate = DateTime.now();
+  DateTime _endDate = DateTime.now();
 
   @override
   void initState() {
     super.initState();
     _loadDanhSachHoaDon();
-    _hoaDonList = []; // Gán giá trị ban đầu cho loaiVangList
   }
 
   @override
   void dispose() {
+    _searchController.dispose();
     super.dispose();
   }
 
   Future<void> _loadDanhSachHoaDon() async {
+    String formattedStartDate = DateFormat('yyyy-MM-dd').format(_startDate);
+    String formattedEndDate = DateFormat('yyyy-MM-dd').format(_endDate);
     _hoaDonFuture = Provider.of<HoaDonMatBaoManager>(context, listen: false)
-        .fetchDanhSachHoaDonMB();
+        .fetchDanhSachHoaDonMB(
+            dateStart: formattedStartDate, dateEnd: formattedEndDate);
     _hoaDonFuture.then((hoaDon) {
       setState(() {
         _hoaDonList = hoaDon;
       });
     });
+  }
+
+  Future<void> _selectDateRange(BuildContext context) async {
+    final DateTimeRange? picked = await showDateRangePicker(
+      context: context,
+      firstDate: DateTime(2020, 1),
+      lastDate: DateTime(2101),
+    );
+
+    if (picked != null) {
+      setState(() {
+        _startDate = picked.start;
+        _endDate = picked.end;
+      });
+    }
+    print('_startDate');
+    print(_startDate.toString());
+    _loadDanhSachHoaDon();
   }
 
   @override
@@ -65,42 +90,53 @@ class _DanhSachPhieuCamScreen extends State<DanhSachHoaDonMBScreen> {
             )
           ],
         ),
-        // actions: [
-        //   Padding(
-        //     padding: const EdgeInsets.only(right: 12.0),
-        //     child: IconButton(
-        //       onPressed: () async {
-        //         final result = await Navigator.of(context).push(
-        //           createRoute((context) => ThemHangHoaScreen()),
-        //         );
-        //         if (result == true) {
-        //           _loadHangHoas(); // Refresh the list when receiving the result
-        //         }
-        //       },
-        //       icon: const Icon(CupertinoIcons.add),
-        //     ),
-        //   ),
-        // ],
       ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(12.0),
-          child: SingleChildScrollView(
-            // SingleChildScrollView for scrolling
-            child: Column(
-              children: [
-                const SizedBox(height: 12.0),
-                ShowList(),
-                const SizedBox(height: 12.0),
-              ],
-            ),
+          //child: SingleChildScrollView(
+          // SingleChildScrollView for scrolling
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      _startDate == null
+                          ? 'Chọn ngày bắt đầu'
+                          : DateFormat('dd/MM/yyyy').format(_startDate!),
+                    ),
+                  ),
+                  Expanded(
+                    child: Text(
+                      _endDate == null
+                          ? 'Chọn ngày kết thúc'
+                          : DateFormat('dd/MM/yyyy').format(_endDate!),
+                    ),
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.date_range),
+                    onPressed: () {
+                      _selectDateRange(context);
+                    },
+                  ),
+                ],
+              ),
+              // Search_Bar(searchController: _searchController),
+              const SizedBox(height: 12.0),
+              Expanded(
+                child: SingleChildScrollView(child: ShowList()),
+              ),
+              const SizedBox(height: 12.0),
+            ],
           ),
         ),
       ),
+      //   ),
     );
   }
 
-  // ignore: non_constant_identifier_names
+  //ignore: non_constant_identifier_names
   FutureBuilder<List<HoaDonMatBao>> ShowList() {
     return FutureBuilder<List<HoaDonMatBao>>(
       future: _hoaDonFuture,
