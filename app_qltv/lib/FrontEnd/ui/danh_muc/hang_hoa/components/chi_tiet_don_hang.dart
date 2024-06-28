@@ -58,18 +58,18 @@ class ChiTietHangHoaScreen extends StatelessWidget {
         child: SingleChildScrollView(
           padding: EdgeInsets.only(top: 20),
           child: Container(
-            margin:
-                    const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(15.0),
-                ),
+            margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(15.0),
+            ),
             child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  buildDetailRow('Mã Hàng:', '${int.parse(hangHoa.hangHoaMa!)}'),
+                  buildDetailRow(
+                      'Mã Hàng:', '${int.parse(hangHoa.hangHoaMa!)}'),
                   //Divider(color: Colors.amber,),
                   buildDetailRow('Tên Hàng Hóa:', '${hangHoa.hangHoaTen}'),
                   FutureBuilder<LoaiVang>(
@@ -92,8 +92,8 @@ class ChiTietHangHoaScreen extends StatelessWidget {
                     future: _getNhomVangById(hangHoa.loaiId),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
-                        return buildDetailRow(
-                            'Nhóm:', 'Loading...'); // Hiển thị tiến trình đang tải
+                        return buildDetailRow('Nhóm:',
+                            'Loading...'); // Hiển thị tiến trình đang tải
                       } else if (snapshot.hasError) {
                         return buildDetailRow('Nhóm:',
                             'Unknownnnnn'); // Hiển thị thông báo lỗi nếu có lỗi xảy ra
@@ -135,7 +135,8 @@ class ChiTietHangHoaScreen extends StatelessWidget {
             children: [
               Text(
                 '$label ',
-                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                style:
+                    const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
               Expanded(
                 child: Text(
@@ -148,7 +149,11 @@ class ChiTietHangHoaScreen extends StatelessWidget {
               ),
             ],
           ),
-          const Divider(color: Color.fromARGB(255, 200, 200, 200),height: 8,thickness: 2  ,),
+          const Divider(
+            color: Color.fromARGB(255, 200, 200, 200),
+            height: 8,
+            thickness: 2,
+          ),
         ],
       ),
     );

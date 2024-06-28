@@ -1,4 +1,4 @@
-
+import 'package:app_qltv/FrontEnd/ui/HoaDonBanRa/DanhSachHoaDonMBScreen.dart';
 import 'package:app_qltv/FrontEnd/ui/danh_muc/BaoCao/BaoCaoPhieuMua.dart';
 
 import 'package:app_qltv/FrontEnd/ui/danh_muc/BaoCao/BaoCao_KhoVangMuaVao.dart';
@@ -44,7 +44,6 @@ class drawer extends StatefulWidget {
 }
 
 class _drawerState extends State<drawer> {
-
   //Lấy tên người dùng
   Future<String> _getTenAdmin() async {
     return await SessionManager().getString('username');
@@ -88,7 +87,7 @@ class _drawerState extends State<drawer> {
   @override
   void initState() {
     super.initState();
-    ThuVienUntilState.maHangHoa="";
+    ThuVienUntilState.maHangHoa = "";
   }
 
   @override
@@ -365,7 +364,8 @@ class _drawerState extends State<drawer> {
                         onTap: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => const KetNoiPage()),
+                            MaterialPageRoute(
+                                builder: (context) => const KetNoiPage()),
                           );
                         },
                       ),
@@ -433,7 +433,7 @@ class _drawerState extends State<drawer> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) =>
-                                const PhieuDangCamChiTiet()),
+                                    const PhieuDangCamChiTiet()),
                           );
                         },
                       ),
@@ -508,7 +508,7 @@ class _drawerState extends State<drawer> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) =>
-                                const BaoCaoPhieuXuatScreen()),
+                                    const BaoCaoPhieuXuatScreen()),
                           );
                         },
                       ),
@@ -530,7 +530,7 @@ class _drawerState extends State<drawer> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) =>
-                                const BaoCaoTonKhoLoaiVangScreen()),
+                                    const BaoCaoTonKhoLoaiVangScreen()),
                           );
                         },
                       ),
@@ -572,7 +572,7 @@ class _drawerState extends State<drawer> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) =>
-                                const BaoCaoTonKhoNhomVangScreen()),
+                                    const BaoCaoTonKhoNhomVangScreen()),
                           );
                         },
                       ),
@@ -593,7 +593,7 @@ class _drawerState extends State<drawer> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) =>
-                                const KhoVangMuaVaoScreen()),
+                                    const KhoVangMuaVaoScreen()),
                           );
                         },
                       ),
@@ -630,7 +630,7 @@ class _drawerState extends State<drawer> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) =>
-                                const BaoCaoTopKhachHangScreen()),
+                                    const BaoCaoTopKhachHangScreen()),
                           );
                         },
                       ),
@@ -651,7 +651,7 @@ class _drawerState extends State<drawer> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) =>
-                                const BaoCaoPhieuMuaScreen()),
+                                    const BaoCaoPhieuMuaScreen()),
                           );
                         },
                       ),
@@ -672,14 +672,13 @@ class _drawerState extends State<drawer> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) =>
-                                const BaoCaoPhieuDoiScreen()),
+                                    const BaoCaoPhieuDoiScreen()),
                           );
                         },
                       ),
                     ),
                   ],
                 ),
-
                 ExpansionTile(
                   leading: Image.asset(
                     'assets/images/billofsale.png',
@@ -704,7 +703,8 @@ class _drawerState extends State<drawer> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const PhieuDangCam()),
+                                builder: (context) =>
+                                    const DanhSachPhieuCamScreen()),
                           );
                         },
                       ),
@@ -724,8 +724,7 @@ class _drawerState extends State<drawer> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) =>
-                                const ThemHoaDon_nhap()),
+                                builder: (context) => const ThemHoaDon_nhap()),
                           );
                         },
                       ),
@@ -746,7 +745,7 @@ class _drawerState extends State<drawer> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) =>
-                                const PhieuDangCamChiTiet()),
+                                    const PhieuDangCamChiTiet()),
                           );
                         },
                       ),
@@ -767,7 +766,7 @@ class _drawerState extends State<drawer> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) =>
-                                const PhieuDangCamChiTiet()),
+                                    const PhieuDangCamChiTiet()),
                           );
                         },
                       ),
@@ -788,7 +787,7 @@ class _drawerState extends State<drawer> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) =>
-                                const PhieuDangCamChiTiet()),
+                                    const PhieuDangCamChiTiet()),
                           );
                         },
                       ),
@@ -804,9 +803,7 @@ class _drawerState extends State<drawer> {
             child: ListTile(
               leading: Image.asset('assets/images/test.png'),
               title: Text('Test chức năng'),
-              onTap: () {
-
-              },
+              onTap: () {},
             ),
           ),
 

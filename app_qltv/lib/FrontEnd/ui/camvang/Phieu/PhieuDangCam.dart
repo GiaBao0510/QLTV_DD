@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:pdf/pdf.dart';
@@ -181,9 +182,14 @@ class _PhieuDangCam extends State<PhieuDangCam> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          iconTheme: IconThemeData(
-            color: Colors.white,
-            size: 28,
+          leading: IconButton(
+            icon: const Icon(
+              CupertinoIcons.left_chevron,
+              color: Colors.black,
+            ),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
           ),
           title: Row(
             children: [
@@ -194,7 +200,7 @@ class _PhieuDangCam extends State<PhieuDangCam> {
                   child: Text(
                     'Phiếu đang cầm',
                     style: TextStyle(
-                        color: Colors.white,
+                        color: Colors.black,
                         fontSize: 20,
                         fontFamily: 'Align',
                         fontWeight: FontWeight.bold),
@@ -229,7 +235,7 @@ class _PhieuDangCam extends State<PhieuDangCam> {
                       child: Center(
                           child: Text(
                         'Export PDF',
-                        style: TextStyle(fontSize: 12),
+                        style: TextStyle(fontSize: 15, color: Colors.black),
                         textAlign: TextAlign.center,
                       )),
                     )),

@@ -1,4 +1,5 @@
 import 'package:app_qltv/FrontEnd/controller/CamVang/ChiTietCamVang_manager.dart';
+import 'package:app_qltv/FrontEnd/controller/HoaDonBanRa/HoaDonMBManager.dart';
 import 'package:app_qltv/FrontEnd/controller/danhmuc/BaoCaoPhieuMua_maneger.dart';
 
 import 'package:app_qltv/FrontEnd/controller/baocao/BaoCaoPhieuDoi.dart';
@@ -110,6 +111,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => ImportDraftInvoiceManage()),
         ChangeNotifierProvider(create: (context) => PhieuDangCamManage()),
         ChangeNotifierProvider(create: (context) => ChiTietPhieuCamManager()),
+        ChangeNotifierProvider(create: (context) => HoaDonMatBaoManager()),
       ],
       child: MaterialApp(
         title: 'Phần mềm vàng',
