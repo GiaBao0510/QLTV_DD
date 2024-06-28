@@ -106,24 +106,44 @@ class _NhomPageState extends State<NhomPage> {
                               ChiTietNhom(groupId: nhom.groupMa.toString())));
                     },
                     child: ListTile(
-                      title: Text(nhom.groupTen ?? 'No Name'),
+                      title: Text(nhom.groupTen ?? 'No Name',style: const TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w800,
+                                fontSize: 20),),
                       subtitle: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('Mã nhóm: ${nhom.groupMa ?? 'N/A'}'),
-                          Text('Khóa: ${nhom.biKhoa == true ? "Có" : "Không"}'),
-                          Text('Lý do khóa: ${nhom.lyDoKhoa ?? 'N/A'}'),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text('Mã nhóm: ${nhom.groupMa ?? 'N/A'}',style: const TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w700,
+                                fontSize: 14),),
+                              Text('Khóa: ${nhom.biKhoa == true ? "Có" : "Không"}',style: const TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w700,
+                                fontSize: 14),),
+                            ],
+                          ),
+                          Text('Lý do khóa: ${nhom.lyDoKhoa ?? 'N/A'}',style: const TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w700,
+                                fontSize: 14),),
                           Text(
-                              'Sử dụng: ${nhom.suDung == true ? "Có" : "Không"}'),
-                          Text(
-                              'Ngày tạo: ${nhom.ngayTao != null ? nhom.ngayTao!.toIso8601String() : 'N/A'}'),
+                              'Ngày tạo : ${nhom.ngayTao != null ? nhom.ngayTao!.toIso8601String() : 'N/A'}',style: const TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w700,
+                                fontSize: 14),),
                         ],
                       ),
-                      trailing: Row(
+                      trailing: 
+                      Row(
                         mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           IconButton(
-                            icon: Icon(Icons.edit),
+                            icon: Icon(CupertinoIcons.pencil_circle,color: Colors.black,),
                             onPressed: () async {
                               final result = await Navigator.of(context).push(
                                 createRoute(
@@ -135,8 +155,9 @@ class _NhomPageState extends State<NhomPage> {
                               }
                             },
                           ),
+                          SizedBox(width: 0,),
                           IconButton(
-                            icon: Icon(Icons.delete),
+                            icon: Icon(CupertinoIcons.delete_solid,color: Colors.black,),
                             onPressed: () {
                               showDialog(
                                 context: context,
@@ -200,7 +221,6 @@ class _NhomPageState extends State<NhomPage> {
                               );
                             },
                           ),
-                          if (nhom.biKhoa == true) Icon(Icons.lock),
                         ],
                       ),
                     ),
@@ -211,16 +231,6 @@ class _NhomPageState extends State<NhomPage> {
           }
         },
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () {
-      //     // Điều hướng đến trang thêm nhóm mới
-      //     Navigator.push(
-      //       context,
-      //       MaterialPageRoute(builder: (context) => AddNhomPage()),
-      //     );
-      //   },
-      //   child: Icon(Icons.add),
-      // ),
     );
   }
 }

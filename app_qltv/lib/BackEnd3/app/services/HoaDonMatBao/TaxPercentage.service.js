@@ -91,10 +91,22 @@ const addTaxPercentage = async (ReqBody) =>{
     });
 }
 
+//6. Kiểm tra ID của phần trăm thuế có tồn tại không
+const CheckVATRateAlreadyExists = async (VATRate) =>{
+    return new Promise((resolve, reject)=> {
+        db.query(`SELECT * FROM TaxPercentage WHERE VATRate = ${VATRate}`, (err, result) => {
+            if(err)  return reject({message: "Lỗi khi tìm không điền thông tin phầm trăm thuế."});
+            else if(result.length === 0) return resolve(0);
+            return resolve(1);
+        });
+    });
+}
+
 module.exports = {
     getTaxPercentage_ID,
     deleteTaxPercentage_ID,
     updateTaxPercentage_ID,
     addTaxPercentage,
-    getTaxPercentages
+    getTaxPercentages,
+    CheckVATRateAlreadyExists
 }

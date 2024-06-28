@@ -16,6 +16,7 @@ const cam = require ('./app/routers/camvangRoute');
 const phieu = require ('./app/routers/phieuRoute');
 const HoaDonBanRa = require('./app/routers/HoaDonBanRa.router');
 const kiemtra =require('./app/services/KiemTra.services');
+const GiaoDich = require('./app/routers/GiaoDich.router');
 const { decode } = require('punycode');
 const app = express();
 const dbRoutes = require('./app/config/dbRoutes');
@@ -36,6 +37,7 @@ app.use('/api/groups', groupRoutes);
 app.use('/api/productType', productype);
 app.use('/api/cam', cam);
 app.use('/api/phieu',phieu);
+app.use('/api/giaodich',GiaoDich);
 app.use('/api/hoadonbanra',HoaDonBanRa);
 app.use('/api/db', dbRoutes);
 
@@ -59,7 +61,7 @@ app.post('/login', async (req, res, next) => {
         const {USER_TEN,MAT_KHAU} = req.body;   //Lấy thông tin đầu vào
         
         //Tìm tài khoán có khớp không
-        db.query(`select * from pq_user where USER_TEN="${USER_TEN}"`,async (err, result)=>{
+        db.query(`select * from pq_user where USER_TEN="${USER_TEN}" and SU_DUNG = '1' `,async (err, result)=>{
             if(err){
                 return res.status(400).json({message: `Lỗi khi tìm USER_TEN: ${USER_TEN} `});
             }else if(!result || result.length == 0){

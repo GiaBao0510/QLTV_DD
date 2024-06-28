@@ -23,6 +23,7 @@ import 'package:app_qltv/FrontEnd/constants/config.dart';
 import 'package:app_qltv/FrontEnd/ui/hethonng/nguoidung/nguoi_dung_page.dart';
 import 'package:app_qltv/FrontEnd/ui/hethonng/nhom/nhompage.dart';
 import 'package:app_qltv/FrontEnd/ui/HoaDonBanRa/TaoHoaDonNhap.dart';
+import 'package:app_qltv/FrontEnd/Service/ThuVien.dart';
 import 'package:app_qltv/FrontEnd/temp.dart';
 import 'package:app_qltv/main.dart';
 import 'package:flutter/cupertino.dart';
@@ -35,10 +36,14 @@ import 'dart:core';
 import 'package:intl/intl.dart';
 
 // ignore: camel_case_types
-class drawer extends StatelessWidget {
-  const drawer({
-    super.key,
-  });
+class drawer extends StatefulWidget {
+  const drawer({super.key});
+
+  @override
+  State<drawer> createState() => _drawerState();
+}
+
+class _drawerState extends State<drawer> {
 
   //Lấy tên người dùng
   Future<String> _getTenAdmin() async {
@@ -78,6 +83,17 @@ class drawer extends StatelessWidget {
     } catch (e) {
       print('Lỗi khi thực hiện đăng xuất: $e');
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    ThuVienUntilState.maHangHoa="";
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
@@ -417,8 +433,51 @@ class drawer extends StatelessWidget {
                             context,
                             MaterialPageRoute(
                                 builder: (context) =>
-                                    const PhieuDangCamChiTiet()),
+                                const PhieuDangCamChiTiet()),
                           );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+                ExpansionTile(
+                  leading: Image.asset(
+                    'assets/images/transaction.png',
+                    width: 24.0,
+                    height: 24.0,
+                  ),
+                  title: const Text('Giao dịch',
+                      style: TextStyle(fontWeight: FontWeight.w800)),
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          left: 16.0), // Khoảng cách thụt lề
+                      child: ListTile(
+                        leading: Image.asset(
+                          'assets/images/qr-code.png',
+                          width: 24.0,
+                          height: 24.0,
+                        ),
+                        title: const Text('Giao dịch bán vàng bằng QR-code',
+                            style: TextStyle(fontWeight: FontWeight.w800)),
+                        onTap: () {
+                          ThuVienUntilState.scanQRcode(context);
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          left: 16.0), // Khoảng cách thụt lề
+                      child: ListTile(
+                        leading: Image.asset(
+                          'assets/images/barcode-scan.png',
+                          width: 24.0,
+                          height: 24.0,
+                        ),
+                        title: const Text('Giao dịch bán vàng bằng Bar-code ',
+                            style: TextStyle(fontWeight: FontWeight.w800)),
+                        onTap: () {
+                          ThuVienUntilState.scanBarcode(context);
                         },
                       ),
                     ),
@@ -449,7 +508,7 @@ class drawer extends StatelessWidget {
                             context,
                             MaterialPageRoute(
                                 builder: (context) =>
-                                    const BaoCaoPhieuXuatScreen()),
+                                const BaoCaoPhieuXuatScreen()),
                           );
                         },
                       ),
@@ -471,7 +530,7 @@ class drawer extends StatelessWidget {
                             context,
                             MaterialPageRoute(
                                 builder: (context) =>
-                                    const BaoCaoTonKhoLoaiVangScreen()),
+                                const BaoCaoTonKhoLoaiVangScreen()),
                           );
                         },
                       ),
@@ -513,7 +572,7 @@ class drawer extends StatelessWidget {
                             context,
                             MaterialPageRoute(
                                 builder: (context) =>
-                                    const BaoCaoTonKhoNhomVangScreen()),
+                                const BaoCaoTonKhoNhomVangScreen()),
                           );
                         },
                       ),
@@ -534,7 +593,7 @@ class drawer extends StatelessWidget {
                             context,
                             MaterialPageRoute(
                                 builder: (context) =>
-                                    const KhoVangMuaVaoScreen()),
+                                const KhoVangMuaVaoScreen()),
                           );
                         },
                       ),
@@ -571,7 +630,7 @@ class drawer extends StatelessWidget {
                             context,
                             MaterialPageRoute(
                                 builder: (context) =>
-                                    const BaoCaoTopKhachHangScreen()),
+                                const BaoCaoTopKhachHangScreen()),
                           );
                         },
                       ),
@@ -592,7 +651,7 @@ class drawer extends StatelessWidget {
                             context,
                             MaterialPageRoute(
                                 builder: (context) =>
-                                    const BaoCaoPhieuMuaScreen()),
+                                const BaoCaoPhieuMuaScreen()),
                           );
                         },
                       ),
@@ -613,7 +672,7 @@ class drawer extends StatelessWidget {
                             context,
                             MaterialPageRoute(
                                 builder: (context) =>
-                                    const BaoCaoPhieuDoiScreen()),
+                                const BaoCaoPhieuDoiScreen()),
                           );
                         },
                       ),
@@ -792,3 +851,11 @@ class drawer extends StatelessWidget {
     );
   }
 }
+
+// class drawer extends StatelessWidget {
+//   const drawer({
+//     super.key,
+//   });
+//
+//
+// }

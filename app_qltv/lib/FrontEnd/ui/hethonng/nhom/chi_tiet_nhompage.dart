@@ -89,10 +89,24 @@ class ChiTietNhom extends StatelessWidget {
               itemCount: nguoiDungs.length,
               itemBuilder: (context, index) {
                 NguoiDung nguoiDung = nguoiDungs[index];
-                return ListTile(
-                  title: Text(nguoiDung.userTen
-                      .toString()), // Assuming 'name' is a property of NguoiDung
-                  subtitle: Text('ID: ${nguoiDung.groupId}'),
+                return Container(
+                  margin: const EdgeInsets.symmetric(
+                      vertical: 8.0, horizontal: 16.0),
+                  decoration: BoxDecoration(
+                    color: const Color.fromARGB(255, 228, 200, 126),
+                    borderRadius: BorderRadius.circular(15.0),
+                  ),
+                  child: ListTile(
+                    title: Text(nguoiDung.userTen
+                        .toString(),style: const TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w800,
+                                fontSize: 20),), // Assuming 'name' is a property of NguoiDung
+                    subtitle: Text('ID: ${nguoiDung.groupId}',style: const TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w700,
+                                fontSize: 14),),
+                  ),
                 );
               },
             );

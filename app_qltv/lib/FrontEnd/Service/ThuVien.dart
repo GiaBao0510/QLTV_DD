@@ -1,9 +1,12 @@
   //>>>>  Thự viện
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'dart:io';
 import 'package:intl/intl.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:async/async.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:app_qltv/FrontEnd/ui/GiaoDich/GiaoDichBanVang.dart';
 
   //>>>>>>>>>>>>>>>>>>>>>>
   //>>>>    Biến
@@ -75,6 +78,7 @@ class ThuVienUntilState extends State<ThuVienUntil> {
   static int increase = 15;    //Số lần tăng khi bỏ qua
   static DateTime ngayBD = DateTime.now();   //Ngày bắt đầu
   static DateTime ngayKT = DateTime.now();   //Ngày kết thúc
+  static String maHangHoa ="";
 
   static ScrollController scrollController = ScrollController();
   static TextEditingController StartDayController = TextEditingController();
@@ -113,6 +117,52 @@ class ThuVienUntilState extends State<ThuVienUntil> {
         ngayKT = picked;
         EndDayController.text = dateFormat.format(ngayKT);
       });
+    }
+  }
+
+  //3.Thực hiện thao tác quét mã vạch
+   static Future<void> scanBarcode(BuildContext context) async{
+     try{
+       maHangHoa = await FlutterBarcodeScanner.scanBarcode(
+           '#ff6666',
+           'Cancel',
+           true,
+           ScanMode.BARCODE,
+       );
+       //Nếu quét thành công thì sang trang
+      if(!maHangHoa.isEmpty && maHangHoa!="-1"){
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => BanVang(),
+          )
+        );
+      }
+     }on PlatformException{
+       maHangHoa = 'Failed to get platform version';
+     }
+  }
+
+  //3.Thực hiện thao tác quét mã QR
+  static Future<void> scanQRcode(BuildContext context) async{
+    try{
+      maHangHoa = await FlutterBarcodeScanner.scanBarcode(
+        '#ff6666',
+        'Cancel',
+        true,
+        ScanMode.QR,
+      );
+      //Nếu quét thành công thì sang trang
+      if(!maHangHoa.isEmpty && maHangHoa!="-1"){
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => BanVang(),
+            )
+        );
+      }
+    }on PlatformException{
+      maHangHoa = 'Failed to get platform version';
     }
   }
 
