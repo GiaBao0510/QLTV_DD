@@ -1,3 +1,4 @@
+
 import 'package:app_qltv/FrontEnd/Service/export/Excel/BaoCaoPhieuXuat_Excel.dart';
 import 'package:app_qltv/FrontEnd/controller/danhmuc/BaoCaoPhieuMua_maneger.dart';
 import 'package:app_qltv/FrontEnd/model/danhmuc/BaoCaoPhieuMua.dart';
@@ -9,7 +10,7 @@ import 'package:provider/provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:printing/printing.dart';
 import 'package:app_qltv/FrontEnd/ui/components/search_bar.dart';
-import 'package:intl/intl.dart'; // Để định dạng ngày
+import 'package:intl/intl.dart'; 
 import 'package:app_qltv/FrontEnd/Service/export/Excel/BaoCaoPhieuMua_Excel.dart';
 import 'package:app_qltv/FrontEnd/Service/export/PDF/BangBaoCaoPhieuMua_PDF..dart';
 
@@ -30,8 +31,8 @@ class _BaoCaoPhieuMuaScreenState extends State<BaoCaoPhieuMuaScreen> {
 
   int _currentPage = 1;
   int _pageSize = 10;
-  int _totalPhieuMua = 0;
-
+  //int _totalPhieuMua = 0;
+  int _totalRows = 0;
   DateTime? _startDate;
   DateTime? _endDate;
 
@@ -55,17 +56,45 @@ class _BaoCaoPhieuMuaScreenState extends State<BaoCaoPhieuMuaScreen> {
     super.dispose();
   }
 
-  Future<void> _loadBaoCaoPhieuMua({int page = 1}) async {
-    _BaoCaoPhieuMuaFuture =
-        Provider.of<BaocaophieumuaManeger>(context, listen: false)
-            .fecthbaoCaoPhieuMua(page: page, pageSize: _pageSize);
-    _BaoCaoPhieuMuaFuture.then((baoCaoPhieuMua) {
-      setState(() {
-        _BaoCaoPhieuMuaList = baoCaoPhieuMua;
-        _filteredBaoCaoPhieuMuaList = baoCaoPhieuMua;
-        _currentPage = page;
-        _totalPhieuMua = _BaoCaoPhieuMuaList.length;
-      });
+  // Future<void> _loadBaoCaoPhieuMua({int page = 1}) async {
+  //   _BaoCaoPhieuMuaFuture =
+  //       Provider.of<BaocaophieumuaManeger>(context, listen: false)
+  //           .fecthbaoCaoPhieuMua(page: page, pageSize: _pageSize);
+  //   _BaoCaoPhieuMuaFuture.then((baoCaoPhieuMua) {
+  //     setState(() {
+  //       _BaoCaoPhieuMuaList = baoCaoPhieuMua;
+  //       _filteredBaoCaoPhieuMuaList = baoCaoPhieuMua;
+  //       _currentPage = page;
+  //       _totalPhieuMua = _BaoCaoPhieuMuaList.length;
+  //      // _totalRows = BaocaophieumuaManeger.totalRows;
+  //     });
+  //     for (int i = 0; i < _filteredBaoCaoPhieuMuaList.length; i++) {
+  //       final item = _filteredBaoCaoPhieuMuaList[i];
+  //       tong_Cantong += item.canTong ?? 0.0;
+  //       tong_TLhot += item.tlHot ?? 0.0;
+  //       tong_TLthuc += item.tlThuc ?? 0.0;
+  //       tong_ThanhTien += item.thanhTien ?? 0.0;
+  //     }
+  //   });
+  // }
+Future<void> _loadBaoCaoPhieuMua({int page = 1}) async {
+  final manager = Provider.of<BaocaophieumuaManeger>(context, listen: false);
+  _BaoCaoPhieuMuaFuture = manager.fecthbaoCaoPhieuMua(page: page, pageSize: _pageSize);
+  
+  _BaoCaoPhieuMuaFuture.then((baoCaoPhieuMua) {
+    setState(() {
+      _BaoCaoPhieuMuaList = baoCaoPhieuMua;
+      _filteredBaoCaoPhieuMuaList = baoCaoPhieuMua;
+      _currentPage = page;
+      //_totalPhieuMua = _BaoCaoPhieuMuaList.length;
+      _totalRows = manager.totalRows; 
+
+  
+      tong_Cantong = 0.0;
+      tong_TLhot = 0.0;
+      tong_TLthuc = 0.0;
+      tong_ThanhTien = 0.0;
+
       for (int i = 0; i < _filteredBaoCaoPhieuMuaList.length; i++) {
         final item = _filteredBaoCaoPhieuMuaList[i];
         tong_Cantong += item.canTong ?? 0.0;
@@ -74,7 +103,8 @@ class _BaoCaoPhieuMuaScreenState extends State<BaoCaoPhieuMuaScreen> {
         tong_ThanhTien += item.thanhTien ?? 0.0;
       }
     });
-  }
+  });
+}
 
   void _filterBaoCaoPhieuMua() {
     final query = _searchController.text.toLowerCase();
@@ -279,7 +309,7 @@ class _BaoCaoPhieuMuaScreenState extends State<BaoCaoPhieuMuaScreen> {
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: tableTotal({
-                          'total': _totalPhieuMua.toDouble(),
+                          'total': _totalRows.toDouble(),
                         },
                       ),
                       ),

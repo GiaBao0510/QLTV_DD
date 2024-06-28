@@ -133,16 +133,6 @@ exports.getBCPhieuMuaVao = async (req, res, next) => {
     next(error);
   }
 };
-exports.getBCPhieuMuaVaoById = async (req, res, next) => {
-  try {
-    const phieu = await bao_caoPhieuServices.getBCPhieuMuaVaoById(req.params.id);
-    res.status(200).json(phieu);
-  } catch (error) {
-    next(error);
-  }
-};
-
-
 exports.getBCPhieuMuaVaoByDate = async (req, res, next) => {
   try {
     const { ngayBD, ngayKT } = req.query;
@@ -157,6 +147,17 @@ exports.getBCPhieuMuaVaoByDate = async (req, res, next) => {
     next(err);
   }
 };
+exports.getBCPhieuMuaVaoById = async (req, res, next) => {
+  try {
+    const phieu = await bao_caoPhieuServices.getBCPhieuMuaVaoById(req.params.id);
+    res.status(200).json(phieu);
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+
 
 exports.getPhieuDoiController = async (req, res, next) => {
   try {

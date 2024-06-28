@@ -27,6 +27,7 @@ class _KhachhangScreenState extends State<KhachhangScreen> {
   int _currentPage = 1;
   int _pageSize = 10;
   int _totalKhachhang = 0;
+  int _totalRows = 0;
   @override
   void initState() {
     super.initState();
@@ -41,13 +42,15 @@ class _KhachhangScreenState extends State<KhachhangScreen> {
   }
 
   Future<void> _loadKhachhang({int page = 1}) async {
-    _khachhangFuture = Provider.of<KhachhangManage>(context, listen: false)
-        .fetchKhachhang(page: page, pageSize: _pageSize);
+    final manager = Provider.of<KhachhangManage>(context, listen: false);
+
+       _khachhangFuture = manager.fetchKhachhang(page: page, pageSize: _pageSize);
     _khachhangFuture.then((khachhangs) {
       setState(() {
         _khachhangList = khachhangs;
         _filteredKhachhangList = khachhangs;
         _currentPage = page;
+        _totalRows = manager.totalRows;
        
       });
     });
@@ -181,7 +184,7 @@ class _KhachhangScreenState extends State<KhachhangScreen> {
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: tableTotal({
-                          'total': _totalKhachhang.toDouble(),
+                          'total': _totalRows.toDouble(),
                         },
                       ),
                       ),

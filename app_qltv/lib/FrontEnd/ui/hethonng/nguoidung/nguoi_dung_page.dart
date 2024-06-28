@@ -24,7 +24,7 @@ class _NguoiDungPageState extends State<NguoiDungPage> {
 
   int _currentPage = 1;
   int _pageSize = 10;
-
+  int _totalRows = 0;
   int _totalNguoiDung = 0;
   int _totalNguoiDungBiKhoa = 0;
   int _totalNguoiDungSuDung = 0;
@@ -43,17 +43,19 @@ class _NguoiDungPageState extends State<NguoiDungPage> {
   }
 
   Future<void> _loadNguoiDung({int page = 1}) async {
-    _nguoidungFuture = Provider.of<NguoiDungManager>(context, listen: false)
-        .fetchNguoiDungs(page: page, pageSize: _pageSize);
+    final maneger = Provider.of<NguoiDungManager>(context, listen: false);
+       _nguoidungFuture = maneger.fetchNguoiDungs(page: page, pageSize: _pageSize);
     _nguoidungFuture.then((nhoms) {
       setState(() {
         _nhomList = nhoms;
         _filteredNhomList = nhoms;
         _currentPage = page;
 
-        _totalNguoiDung = _nhomList.length;
+        _totalRows = maneger.totalRows;
+        //_totalNguoiDung = _nhomList.length;
         _totalNguoiDungBiKhoa = _nhomList.where((nhom) => nhom.biKhoa!).length;
-        _totalNguoiDungSuDung = _totalNguoiDung - _totalNguoiDungBiKhoa;
+        _totalNguoiDungSuDung = _totalRows - _totalNguoiDungBiKhoa;
+        
       });
     });
   }
@@ -173,7 +175,7 @@ class _NguoiDungPageState extends State<NguoiDungPage> {
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: tableTotal({
-                          'total': _totalNguoiDung.toDouble(),
+                          'total': _totalRows.toDouble(),
                           'locked': _totalNguoiDungBiKhoa.toDouble(),
                           'active': _totalNguoiDungSuDung.toDouble(),
                         }),

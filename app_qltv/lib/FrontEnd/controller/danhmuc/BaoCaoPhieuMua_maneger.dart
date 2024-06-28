@@ -13,9 +13,11 @@ class BaocaophieumuaManeger with ChangeNotifier {
   int _currentPage = 1;
   int _pageSize = 10;
   int _totalPages = 1;
+  int _totalRows = 0;
  // bool _isLoading = false;
   int get currentPage => _currentPage;
   int get totalPages => _totalPages;
+  int get totalRows => _totalRows;
 
   Future<List<BaoCaoPhieuMua>> fecthbaoCaoPhieuMua({int page = 1, int pageSize = 10}) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -33,6 +35,7 @@ class BaocaophieumuaManeger with ChangeNotifier {
       //_BaoCaoPhieuMua = jsonList.map((e) => BaoCaoPhieuMua.fromMap(e)).toList();
       _currentPage = json['page'];
       _totalPages = json['totalPages'];
+      _totalRows = json['totalRows'];
       notifyListeners();
       return BaoCaoPhieuMuaList;
     } else {

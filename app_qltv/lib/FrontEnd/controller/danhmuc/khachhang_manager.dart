@@ -12,9 +12,13 @@ class KhachhangManage with ChangeNotifier {
   int _pageSize = 10;
   int _totalPages = 1;
   int _totalKhachhang = 0;
+  int _totalRows = 0;
+
   int get currentPage => _currentPage;
   int get totalPages => _totalPages;
   int get totalKhachhang => _totalKhachhang;
+  int get totalRows => _totalRows;
+
 
   Future<List<Khachhang>> fetchKhachhang({int page = 1, int pageSize = 10}) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -34,6 +38,7 @@ class KhachhangManage with ChangeNotifier {
 
       _currentPage = json['page'];
       _totalPages = json['totalPages'];
+      _totalRows = json['totalRows'];
       notifyListeners();
       return khachhang;
     } else {
