@@ -110,11 +110,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => TopKhachHangManager()),
         ChangeNotifierProvider(create: (context) => ImportDraftInvoiceManage()),
         ChangeNotifierProvider(create: (context) => PhieuDangCamManage()),
-<<<<<<< HEAD
         ChangeNotifierProvider(create: (context) => BanvangController()),
-=======
         ChangeNotifierProvider(create: (context) => ChiTietPhieuCamManager()),
->>>>>>> 9f8bacca124dab03e548dede20b0739d971be5f6
       ],
       child: MaterialApp(
         title: 'Phần mềm vàng',
