@@ -97,6 +97,74 @@ exports.Update_KhachHang = async (req, res, next) =>{
         return next(new ApiError(500, `Loi xuat hien khi xóa khach hang: ${err.message}`));
     }
 }
+exports.list_KhachHang = async (req, res, next) => {
+    try {
+        const page = parseInt(req.query.page) || 1;
+        const pageSize = parseInt(req.query.pageSize) || 10;
+        const offset = (page - 1) * pageSize;
+
+        db.query(`SELECT COUNT(*) as total FROM phx_khach_hang WHERE SU_DUNG = 1`, (countErr, countResult) => {
+            if (countErr) {
+                console.log(`Error retrieving total count - ${countErr}`);
+                return res.status(500).json({ error: "Error retrieving total count" });
+            }
+            
+            const totalRows = countResult[0].total;
+            const totalPages = Math.ceil(totalRows / pageSize);
+
+            db.query(`SELECT * FROM phx_khach_hang WHERE SU_DUNG = 1 ORDER BY KH_MA DESC LIMIT ${pageSize} OFFSET ${offset}`, (err, result) => {
+                if (err) {
+                    console.log(`Error retrieving customer list - ${err}`);
+                    return res.status(500).json({ error: "Error retrieving customer list" });
+                } else {
+                    return res.status(200).json({
+                        data: result,
+                        page,
+                        totalPages,
+                        totalRows
+                    });
+                }
+            });
+        });
+    } catch (err) {
+        console.log(`Error: ${err}`);
+        return res.status(500).json({ error: "Internal server error" });
+    }
+}
+exports.lay_KhachHang = async (req, res, next) => {
+    try {
+        // Lấy thông tin truy vấn
+        const page = parseInt(req.query.page) || 1;
+        const pageSize = parseInt(req.query.pageSize) || 10;
+        const offset = (page - 1) * pageSize;
+
+        db.query(`SELECT COUNT(*) as total FROM phx_khach_hang WHERE SU_DUNG = 1`, (countErr, countResult) => {
+            if (countErr) {
+                console.log(`Lỗi khi lấy tổng số khách hàng - ${countErr}`);
+                return res.status(404).json({ message: `Lỗi khi lấy tổng số khách hàng` });
+            }
+            
+            const totalRows = countResult[0].total;
+            const totalPages = Math.ceil(totalRows / pageSize);
+
+            db.query(`SELECT * FROM phx_khach_hang WHERE SU_DUNG = 1 ORDER BY KH_MA DESC LIMIT ${pageSize} OFFSET ${offset}`, (err, result) => {
+                if (err) {
+                    console.log(`Lỗi khi lấy thông tin khách hàng - ${err}`);
+                    return res.status(404).json({ message: `Lỗi khi lấy thông tin khách hàng` });
+                } else {
+                    return res.status(200).json({
+                        data: result,
+                        page,
+                        totalPages,
+                        totalRows
+                    });
+                }
+            });
+        });
+    } catch (err) {
+        return next(new ApiError(500, `Lỗi xuất hiện khi lấy thông tin khách hàng: ${err.message}`));
+    }
+}
 
 //4.Lấy danh sách thông tin khách hàng 
 // exports.list_KhachHang = async (req, res, next) =>{
@@ -134,91 +202,74 @@ exports.Update_KhachHang = async (req, res, next) =>{
 //         return next(new ApiError(500, `Loi xuat hien khi lấy thông tin khách hang: ${err.message}`));
 //     }
 // }
-exports.list_KhachHang = async (req, res, next) => {
-    try {
-        const page = parseInt(req.query.page) || 1;
-        const pageSize = parseInt(req.query.pageSize) || 10;
-        const offset = (page - 1) * pageSize;
 
-        db.query(`SELECT COUNT(*) as total FROM phx_khach_hang WHERE SU_DUNG = 1`, (countErr, countResult) => {
-            if (countErr) {
-                console.log(`Error retrieving total count - ${countErr}`);
-                return res.status(500).json({ error: "Error retrieving total count" });
-            }
-            
-            const totalRows = countResult[0].total;
-            const totalPages = Math.ceil(totalRows / pageSize);
 
-            db.query(`SELECT * FROM phx_khach_hang WHERE SU_DUNG = 1 LIMIT ${pageSize} OFFSET ${offset}`, (err, result) => {
-                if (err) {
-                    console.log(`Error retrieving customer list - ${err}`);
-                    return res.status(500).json({ error: "Error retrieving customer list" });
-                } else {
-                    return res.status(200).json({
-                        data: result,
-                        page,
-                        totalPages,
-                        totalRows
-                    });
-                }
-            });
-        });
-    } catch (err) {
-        console.log(`Error: ${err}`);
-        return res.status(500).json({ error: "Internal server error" });
-    }
-}
+// exports.list_KhachHang = async (req, res, next) => {
+//     try {
+//         const page = parseInt(req.query.page) || 1;
+//         const pageSize = parseInt(req.query.pageSize) || 10;
+//         const offset = (page - 1) * pageSize;
 
-//5. Lấy thông tin khách hàng theo ID
-// exports.lay_KhachHang = async (req, res, next) =>{
-//     try{
-//         //Thông tin truy vẫn
-//         let KH_MA = req.params.KH_MA;
-//         KH_MA = String(KH_MA);
-    
-//         db.query(`select * from phx_khach_hang  where KH_MA="${KH_MA}" AND SU_DUNG="1"`,(err, result)=>{
-//             if(err){
-//                 console.log(`Lỗi khi lấy thông tin khách hàng - ${err}`);
-//                 return res.status(404).json({message: `Loi khi lấy thong tin khách hang - ${KH_MA}`});
-//             }else{
-//                 return res.status(200).json(result);
+//         db.query(`SELECT COUNT(*) as total FROM phx_khach_hang WHERE SU_DUNG = 1`, (countErr, countResult) => {
+//             if (countErr) {
+//                 console.log(`Error retrieving total count - ${countErr}`);
+//                 return res.status(500).json({ error: "Error retrieving total count" });
 //             }
-//         })
-//     }catch(err){
-//         return next(new ApiError(500, `Loi xuat hien khi lấy thông tin khách hang: ${err.message}`));
+            
+//             const totalRows = countResult[0].total;
+//             const totalPages = Math.ceil(totalRows / pageSize);
+
+//             db.query(`SELECT * FROM phx_khach_hang WHERE SU_DUNG = 1 LIMIT ${pageSize} OFFSET ${offset}`, (err, result) => {
+//                 if (err) {
+//                     console.log(`Error retrieving customer list - ${err}`);
+//                     return res.status(500).json({ error: "Error retrieving customer list" });
+//                 } else {
+//                     return res.status(200).json({
+//                         data: result,
+//                         page,
+//                         totalPages,
+//                         totalRows
+//                     });
+//                 }
+//             });
+//         });
+//     } catch (err) {
+//         console.log(`Error: ${err}`);
+//         return res.status(500).json({ error: "Internal server error" });
 //     }
 // }
-exports.lay_KhachHang = async (req, res, next) => {
-    try {
-        // Lấy thông tin truy vấn
-        const page = parseInt(req.query.page) || 1;
-        const pageSize = parseInt(req.query.pageSize) || 10;
-        const offset = (page - 1) * pageSize;
 
-        db.query(`SELECT COUNT(*) as total FROM phx_khach_hang WHERE SU_DUNG = 1`, (countErr, countResult) => {
-            if (countErr) {
-                console.log(`Lỗi khi lấy tổng số khách hàng - ${countErr}`);
-                return res.status(404).json({ message: `Lỗi khi lấy tổng số khách hàng` });
-            }
+// exports.lay_KhachHang = async (req, res, next) => {
+//     try {
+//         // Lấy thông tin truy vấn
+//         const page = parseInt(req.query.page) || 1;
+//         const pageSize = parseInt(req.query.pageSize) || 10;
+//         const offset = (page - 1) * pageSize;
+
+//         db.query(`SELECT COUNT(*) as total FROM phx_khach_hang WHERE SU_DUNG = 1`, (countErr, countResult) => {
+//             if (countErr) {
+//                 console.log(`Lỗi khi lấy tổng số khách hàng - ${countErr}`);
+//                 return res.status(404).json({ message: `Lỗi khi lấy tổng số khách hàng` });
+//             }
             
-            const totalRows = countResult[0].total;
-            const totalPages = Math.ceil(totalRows / pageSize);
+//             const totalRows = countResult[0].total;
+//             const totalPages = Math.ceil(totalRows / pageSize);
 
-            db.query(`SELECT * FROM phx_khach_hang WHERE SU_DUNG = 1 LIMIT ${pageSize} OFFSET ${offset}`, (err, result) => {
-                if (err) {
-                    console.log(`Lỗi khi lấy thông tin khách hàng - ${err}`);
-                    return res.status(404).json({ message: `Lỗi khi lấy thông tin khách hàng` });
-                } else {
-                    return res.status(200).json({
-                        data: result,
-                        page,
-                        totalPages,
-                        totalRows
-                    });
-                }
-            });
-        });
-    } catch (err) {
-        return next(new ApiError(500, `Lỗi xuất hiện khi lấy thông tin khách hàng: ${err.message}`));
-    }
-}
+//             db.query(`SELECT * FROM phx_khach_hang WHERE SU_DUNG = 1 LIMIT ${pageSize} OFFSET ${offset}`, (err, result) => {
+//                 if (err) {
+//                     console.log(`Lỗi khi lấy thông tin khách hàng - ${err}`);
+//                     return res.status(404).json({ message: `Lỗi khi lấy thông tin khách hàng` });
+//                 } else {
+//                     return res.status(200).json({
+//                         data: result,
+//                         page,
+//                         totalPages,
+//                         totalRows
+//                     });
+//                 }
+//             });
+//         });
+//     } catch (err) {
+//         return next(new ApiError(500, `Lỗi xuất hiện khi lấy thông tin khách hàng: ${err.message}`));
+//     }
+// }

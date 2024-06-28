@@ -68,7 +68,7 @@ const getUserById = async (id) => {
 
 const getAllUsers = async () => {
   return new Promise((resolve, reject) => {
-    db.query('SELECT COUNT(*) AS count FROM pq_user WHERE SU_DUNG = 1', (error, results) => {
+    db.query('SELECT COUNT(*) AS count FROM pq_user WHERE SU_DUNG = 1 ORDER BY USER_ID DESC', (error, results) => {
       if (error) {
         reject(error);
       } else {
@@ -79,7 +79,7 @@ const getAllUsers = async () => {
 };
 const getAllUsersWithPagination = async (pageSize, offset) => {
   return new Promise((resolve, reject) => {
-    db.query('SELECT * FROM pq_user WHERE SU_DUNG = 1 LIMIT ? OFFSET ?',[pageSize,offset], (error, results) => {
+    db.query('SELECT * FROM pq_user WHERE SU_DUNG = 1 ORDER BY USER_ID DESC LIMIT ? OFFSET ?',[pageSize,offset], (error, results) => {
       if (error) {
         reject(error);
       } else {
