@@ -36,6 +36,7 @@ class _BanVangState extends State<BanVang> {
   int _currentPage = 1;
   int _pageSize = 10;
   int _totalKhachhang = 0;
+  int _totalRows = 0;
 
     //Lấy thông tin trước khi bán vàng
   late TruocKhiThucHienBanVang_model _ThongTinHangHoa ;
@@ -53,7 +54,7 @@ class _BanVangState extends State<BanVang> {
   // --- Phương thức/ Hàm ----
 
     //1. Load dữ liệu
-  Future<void> _LoadData({int page = 1}) async{
+  Future<void> _LoadData() async{
     //Lấy thông tin hàng hóa
     _thongTinHangHoaFuture = Provider.of<BanvangController>(context, listen: false)
         .ThongTinSanPham();
@@ -63,21 +64,34 @@ class _BanVangState extends State<BanVang> {
         _ThongTinHangHoa = thongtin;
       });
     });
+  }
 
+    //2.Load danh sách khách hàng
+  Future<void> _loadKhachhang({int page = 1}) async{
+    final manager = Provider.of<KhachhangManage>(context, listen: false);
     //Lấy thông tin khách hàng
     _khachHangFuture = Provider.of<KhachhangManage>(context, listen: false)
-      .fetchKhachhang(page: page, pageSize: _pageSize);
+        .fetchKhachhang(page: page, pageSize: _pageSize);
     _khachHangFuture.then((clients){
       setState(() {
         _khachHangList = clients;
         _filteredKhachHang = clients;
         _currentPage = page;
-        _totalKhachhang = _khachHangList.length;
+        _totalRows = manager.totalRows;
       });
     });
   }
 
-    //2. Tạo bộ lọc tìm khách hàng dựa trên tên
+    //3.Đếm số tỏng khách hàng
+    Future<void> _loadTotalKhachhang() async{
+      final totalKhachhang = await Provider.of<KhachhangManage>(context, listen: false).fetchTotalKhachhang();
+
+      setState(() {
+        _totalKhachhang = totalKhachhang;
+      });
+    }
+
+    //4. Tạo bộ lọc tìm khách hàng dựa trên tên
   void _filterKhachhang(){
     final query = _searchController.text.toLowerCase();
     setState(() {
@@ -87,7 +101,7 @@ class _BanVangState extends State<BanVang> {
     });
   }
 
-    //3. Cập nhật gi trị thanh toán
+    //5. Cập nhật gi trị thanh toán
   void _updateThanhToan(){
     final tongTien = double.tryParse(_tongtien.text) ?? 0.0;
     final tienBot = double.tryParse(_tienbot.text) ?? 0.0;
@@ -104,6 +118,7 @@ class _BanVangState extends State<BanVang> {
     _tongtien.addListener(_updateThanhToan);
     _tienbot.addListener(_updateThanhToan);
     _LoadData();
+    _loadKhachhang();
     _searchController.addListener(_filterKhachhang);
   }
 
@@ -495,11 +510,36 @@ class _BanVangState extends State<BanVang> {
           return AlertDialog(
             title: Text('Chọn khách hàng', style: TextStyle(decoration: TextDecoration.underline),),
             content: FractionallySizedBox(
+              widthFactor: 1,
               child: Scrollbar(
                 child: ListView(
                   children: [
                     Column(children: [
                       ShowListClient(),
+                      const SizedBox(height: 20,),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Visibility(
+                              child: ElevatedButton(
+                                onPressed: (){
+                                  _loadKhachhang(page: _currentPage -1);
+                                },
+                                child: const Text('<'),
+                              )
+                          ),
+                          const SizedBox(width: 20,),
+                          Visibility(
+                              child: ElevatedButton(
+                                onPressed: (){
+                                  _loadKhachhang(page: _currentPage +1);
+                                },
+                                child: const Text('>'),
+                              )
+                          ),
+                        ],
+                      )
+
                     ],),
                   ],
                 ),
@@ -520,13 +560,28 @@ class _BanVangState extends State<BanVang> {
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           }else{
-            return ListView.builder(
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              itemCount: _filteredKhachHang.length,
-              itemBuilder: (BuildContext context, int index){
-                return Text('ma: ${_filteredKhachHang[index].kh_ten}');
-              }
+            return SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: DataTable(
+                  headingRowColor: MaterialStateColor.resolveWith(
+                          (states) => Colors.indigo),
+                  columns: [
+                    DataColumn(label: Text('Tên', style: TextStyle(color: Colors.white),), ),
+                    DataColumn(label: Text('Điện thoại', style: TextStyle(color: Colors.white)) ),
+                    DataColumn(label: Text('Địa chỉ', style: TextStyle(color: Colors.white)) ),
+                  ],
+                  rows: [
+                    ..._filteredKhachHang.map((client){
+                      return DataRow(
+                          cells: [
+                            DataCell(Text('${client.kh_ten}')),
+                            DataCell(Text('${client.kh_sdt}')),
+                            DataCell(Text('${client.kh_dia_chi}')),
+                          ]
+                      );
+                    })
+                  ]
+              ),
             );
           }
         }
