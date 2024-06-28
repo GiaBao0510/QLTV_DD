@@ -4,14 +4,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'dart:async';
+import 'package:number_to_vietnamese_words/number_to_vietnamese_words.dart';
 import 'package:app_qltv/FrontEnd/ui/components/search_bar.dart';
 import 'package:app_qltv/FrontEnd/ui/components/transitions.dart';
 import 'package:app_qltv/FrontEnd/ui/components/FormatCurrency.dart';
 import 'package:app_qltv/FrontEnd/Service/ThuVien.dart';
+import 'package:app_qltv/FrontEnd/constants/config.dart';
 import 'package:app_qltv/FrontEnd/model/GiaoDich/BanVang_model.dart';
 import 'package:app_qltv/FrontEnd/controller/GiaoDich/BanVang_controller.dart';
 import 'package:app_qltv/FrontEnd/model/danhmuc/khachhang.dart';
 import 'package:app_qltv/FrontEnd/controller/danhmuc/khachhang_manager.dart';
+import 'package:app_qltv/FrontEnd/model/HoaDonBanRa/ImportDraftInvoice_model.dart';
 
 
 class BanVang extends StatefulWidget {
@@ -24,6 +27,7 @@ class BanVang extends StatefulWidget {
 
 class _BanVangState extends State<BanVang> {
   //   --- Thuộc tính   ---
+  final _formKey = GlobalKey<FormState>();
   late Future<List<Khachhang>> _khachHangFuture;
   final TextEditingController _searchController = TextEditingController();
   List<Khachhang> _filteredKhachHang = [];
@@ -32,14 +36,35 @@ class _BanVangState extends State<BanVang> {
   final TextEditingController _tongtien = TextEditingController(),
                               _tienbot = TextEditingController(),
                               _thanhtoan = TextEditingController(),
-                              _tenKhachHang = TextEditingController();
+                              _tenKhachHang = TextEditingController(),
+                              _IDkhachHang = TextEditingController();
   int _currentPage = 1;
   int _pageSize = 10;
   int _totalKhachhang = 0;
   int _totalRows = 0;
 
+    //Tạo danh sách sản phẩm
+  List<Products_model> _list_SanPham = [];
+
+    //Lấy thông tin sản phẩm
+  Products_model _SanPham = Products_model(
+      code: '', ProdName: '', ProdUnit: '', ProdQuantity: 1.0,
+      DiscountAmount: 0.0, Discount: 0.0, ProdPrice: 0.0, VATRate: 0.0,
+      VATAmount: 0.0, Total: 0.0, Amount: 0.0, ProdAttr: 1, Remark: '');
+
+    //Lây thong tin hoa don nhap
+  late ImportDraftInvoice_Model _HoaDonNhap = ImportDraftInvoice_Model(
+      ApiUserName: ApiUserName, ApiPassword: ApiPassword,
+      ApiInvPattern: '1', ApiInvSerial: 'C24TAT',
+      Fkey: '', ArisingDate: CurrentDateAndTime() , SO: '', MaKH: '',
+      CusName: '', Buyer: '', CusAddress: '', CusPhone: '', CusTaxCode: '',
+      CusEmail: '', CusEmailCC: '', CusBankName: '', CusBankNo: '', PaymentMethod: '1', Product: _list_SanPham,
+      Total: 0.0, DiscountAmount: 0.0, VATAmount: 0.0, Amount: 0.0, Extra: '',
+      DonViTienTe: 704, TyGia: 0.0, AmountInWords: '');
+
     //Lấy thông tin trước khi bán vàng
   late TruocKhiThucHienBanVang_model _ThongTinHangHoa ;
+
     //Lấy thông tin nếu sau khi bán vàng
   late SauKhiThucHienBangVang_model _ThongTinhThucHienBanVang = SauKhiThucHienBangVang_model(
       KH_ID: '',
@@ -59,11 +84,26 @@ class _BanVangState extends State<BanVang> {
     _thongTinHangHoaFuture = Provider.of<BanvangController>(context, listen: false)
         .ThongTinSanPham();
     _thongTinHangHoaFuture.then((thongtin){
-      print('Thông tin hàng hóa: ${thongtin}');
       setState(() {
         _ThongTinHangHoa = thongtin;
       });
     });
+    print('Đã check thông tin sản phâẩm');
+
+    //Lưu lại thoog tin sản phẩm cho MATBAO
+    setState(() {
+      _SanPham = _SanPham.copyWith(code: _ThongTinHangHoa.MA);
+      _SanPham = _SanPham.copyWith(ProdName: _ThongTinHangHoa.TEN_HANG);
+      _SanPham = _SanPham.copyWith(ProdPrice: _ThongTinHangHoa.DON_GIA_BAN);
+      _SanPham = _SanPham.copyWith(ProdQuantity: 1.0);
+      _SanPham = _SanPham.copyWith(Total: _ThongTinHangHoa.THANH_TIEN);
+      _SanPham = _SanPham.copyWith(VATAmount: _ThongTinHangHoa.THANH_TIEN);
+      _SanPham = _SanPham.copyWith(Amount: _ThongTinHangHoa.THANH_TIEN);
+      _SanPham = _SanPham.copyWith(ProdUnit: 'Chiếc');
+      _SanPham = _SanPham.copyWith(ProdAttr: 1);
+    });
+
+    //_list_SanPham.add(_SanPham);
   }
 
     //2.Load danh sách khách hàng
@@ -114,6 +154,8 @@ class _BanVangState extends State<BanVang> {
     super.initState();
     _tongtien.text = _ThongTinhThucHienBanVang.TONG_TIEN.toString();
     _tienbot.text = _ThongTinhThucHienBanVang.TIEN_BOT.toString();
+    _tenKhachHang.text = "";
+    _IDkhachHang.text = "";
     _updateThanhToan();
     _tongtien.addListener(_updateThanhToan);
     _tienbot.addListener(_updateThanhToan);
@@ -187,7 +229,6 @@ class _BanVangState extends State<BanVang> {
                         style: TextStyle(fontSize: 10),
                       ));
                 }else{
-
                   return ListView(
                     children: [
                       Column(
@@ -356,7 +397,7 @@ class _BanVangState extends State<BanVang> {
     );
   }
 
-  //Form nhập tiền
+  //0.Form nhập tiền
   Widget BangDienThongTin(BuildContext context){
 
     //Cập nhật lại thông tin sau khi quét mã
@@ -384,6 +425,7 @@ class _BanVangState extends State<BanVang> {
     return Container(
       margin: EdgeInsets.fromLTRB(15, 0, 15, 0),
       child: Form(
+        key: _formKey,
         child: Column(children: [
           Align(
             alignment: Alignment.center,
@@ -398,7 +440,7 @@ class _BanVangState extends State<BanVang> {
               Expanded(
                 flex: 2,
                   child: TextFormField(
-                    controller: _tongtien,
+                    controller: _tenKhachHang,
                     decoration: const InputDecoration(
                       labelText: 'Tên khách hàng:',
                       labelStyle: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
@@ -410,9 +452,15 @@ class _BanVangState extends State<BanVang> {
                       ),
                     ),
                     textInputAction: TextInputAction.next,
-                    keyboardType: TextInputType.number,
+                    readOnly: true,
+                    validator: (value){
+                      if(value!.isEmpty){
+                        return "Vui lòng chọn khách hàng để thanh toán";
+                      }
+                      return null;
+                    },
                     onSaved: (value){
-                      _ThongTinhThucHienBanVang = _ThongTinhThucHienBanVang.copyWith(TONG_TIEN: double.tryParse(value ?? '') ?? 0.0 );
+                      _ThongTinhThucHienBanVang = _ThongTinhThucHienBanVang.copyWith(KH_ID: _IDkhachHang.text);
                     },
                   ),
               ),
@@ -497,12 +545,40 @@ class _BanVangState extends State<BanVang> {
               _ThongTinhThucHienBanVang = _ThongTinhThucHienBanVang.copyWith(THANH_TOAN: double.tryParse(value ?? '') ?? 0.0);
             },
           ),
+
+          const SizedBox(height: 25,),
+          TextButton(
+            onPressed: (){
+              _SaveThanhToan(context);
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(15),
+                gradient: const LinearGradient(
+                  colors: [Color(0xffe65c00), Color(0xfff9d423)],
+                  stops: [0, 1],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+              ),
+              padding: EdgeInsets.fromLTRB(0, 15, 0, 15),
+              width: double.infinity,
+              child:Text(
+                'Thanh toán',
+                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18) ,
+                textAlign: TextAlign.center,
+              ),
+            )
+          ),
+
+
+          const SizedBox(height: 15,),
         ],)
       ),
     );
   }
 
-  //Bảng chọn thông tin khách hàng
+  //1.Bảng chọn thông tin khách hàng
   Future<void> BangChonKhachHang(BuildContext context) async{
     return showDialog(
         context: context,
@@ -550,7 +626,7 @@ class _BanVangState extends State<BanVang> {
     );
   }
 
-  //Show list Khách hàng
+  //2.Show list Khách hàng
   FutureBuilder<List<Khachhang>> ShowListClient(){
     return FutureBuilder<List<Khachhang>>(
         future: _khachHangFuture,
@@ -573,6 +649,13 @@ class _BanVangState extends State<BanVang> {
                   rows: [
                     ..._filteredKhachHang.map((client){
                       return DataRow(
+                        onLongPress: (){
+                          setState(() {
+                            _tenKhachHang.text = client.kh_ten ?? '';
+                            _IDkhachHang.text = client.kh_id ?? '';
+                          });
+                          Navigator.pop(context);
+                        },
                           cells: [
                             DataCell(Text('${client.kh_ten}')),
                             DataCell(Text('${client.kh_sdt}')),
@@ -586,5 +669,59 @@ class _BanVangState extends State<BanVang> {
           }
         }
     );
+  }
+
+  //3.Save thông tin
+  Future<void> _SaveThanhToan(BuildContext context) async{
+    final isValid = _formKey.currentState!.validate();
+    if(!isValid){
+      return;
+    }
+    _ThongTinhThucHienBanVang = _ThongTinhThucHienBanVang.copyWith(KH_ID: _IDkhachHang.text);
+    print('Thông tin cap nhật OK: ${_ThongTinhThucHienBanVang.toMap()}');
+
+    //Lưu lại thông tin nếu hợp lệ
+    print('Thông tin sản phẩm: ${_SanPham.toMap()}');
+    _list_SanPham.forEach((e) {
+      print(e.ProdPrice);
+    });
+
+
+    _formKey.currentState!.save();
+
+    // try{
+    //   final banVangController = Provider.of<BanvangController>(context, listen: false);
+    //   await banVangController.ThucHienGiaoDichBanVang(_ThongTinhThucHienBanVang);
+    //
+    //   ScaffoldMessenger.of(context).showSnackBar(
+    //     SnackBar(
+    //       content: const Text('Thanh toán thành công',style: TextStyle(fontWeight: FontWeight.bold), textAlign: TextAlign.center, ),
+    //       backgroundColor: Colors.grey,
+    //       shape: RoundedRectangleBorder(
+    //         borderRadius: BorderRadius.circular(15.0),
+    //         side: const BorderSide(
+    //             color: Colors.grey, width: 2.0), // bo viền 15px
+    //       ),
+    //       behavior: SnackBarBehavior.floating,
+    //       margin: EdgeInsets.fromLTRB(15, 0, 15, 15),
+    //     ),
+    //   );
+    //
+    //   Navigator.of(context).pop(true);
+    // }catch(err){
+    //   ScaffoldMessenger.of(context).showSnackBar(
+    //     SnackBar(
+    //       content: const Text('Có lỗi khi thực hiện thanh toán',style: TextStyle(fontWeight: FontWeight.bold), textAlign: TextAlign.center, ),
+    //       backgroundColor: Colors.grey,
+    //       shape: RoundedRectangleBorder(
+    //         borderRadius: BorderRadius.circular(15.0),
+    //         side: const BorderSide(
+    //             color: Colors.grey, width: 2.0), // bo viền 15px
+    //       ),
+    //       behavior: SnackBarBehavior.floating,
+    //       margin: EdgeInsets.fromLTRB(15, 0, 15, 15),
+    //     ),
+    //   );
+    // }
   }
 }

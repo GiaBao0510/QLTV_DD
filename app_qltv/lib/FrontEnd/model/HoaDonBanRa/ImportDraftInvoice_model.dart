@@ -93,7 +93,7 @@ class Products_model{
   }
 
   //CHuyen doi object sang map
-  Map<String, dynamic> toMap(Map<String,dynamic> map){
+  Map<String, dynamic> toMap(){
     return {
       'code': code,
       'ProdName': ProdName,
@@ -177,6 +177,7 @@ class ImportDraftInvoice_Model{
   final double Total;
   final double DiscountAmount;
   final double VATAmount;
+  final String AmountInWords;
   final double Amount;
 
   ImportDraftInvoice_Model({
@@ -206,6 +207,7 @@ class ImportDraftInvoice_Model{
     required this.Extra,
     required this.DonViTienTe,
     required this.TyGia,
+    required this.AmountInWords,
   });
 
   //Ham sao chep
@@ -236,6 +238,7 @@ class ImportDraftInvoice_Model{
     double? DiscountAmount,
     double? VATAmount,
     double? Amount,
+    String? AmountInWords,
   }){
     return ImportDraftInvoice_Model(
       ApiUserName: ApiUserName ?? this.ApiUserName,
@@ -264,6 +267,7 @@ class ImportDraftInvoice_Model{
       DiscountAmount: DiscountAmount ?? this.DiscountAmount,
       VATAmount: VATAmount ?? this.VATAmount,
       Amount: Amount ?? this.Amount,
+      AmountInWords: AmountInWords ?? this.AmountInWords,
     );
   }
 
@@ -304,11 +308,12 @@ class ImportDraftInvoice_Model{
         (json['VATAmount'] is double)? json['VATAmount'] : 0.0,
       Amount: (json['Amount'] is int) ? (json['Amount'] as int).toDouble():
         (json['Amount'] is double)? json['Amount'] : 0.0,
+      AmountInWords : json['AmountInWords'] ?? '',
     );
   }
 
   //Chuyen object sang map
-  Map<String ,dynamic> toMap(Map<String,dynamic> map){
+  Map<String ,dynamic> toMap(){
     return{
       'ApiUserName' : ApiUserName,
       'ApiPassword': ApiPassword,
@@ -335,6 +340,7 @@ class ImportDraftInvoice_Model{
       'DiscountAmount': DiscountAmount,
       'VATAmount': VATAmount,
       'Amount': Amount,
+      'AmountInWords': AmountInWords,
     };
   }
 }
