@@ -29,11 +29,14 @@ class _NguoiDungPageState extends State<NguoiDungPage> {
   int _totalNguoiDungBiKhoa = 0;
   int _totalNguoiDungSuDung = 0;
 
+  bool isRever = false;
+
   @override
   void initState() {
     super.initState();
     _loadNguoiDung();
     _searchController.addListener(_filterNguoidung);
+
   }
 
   @override
@@ -47,15 +50,16 @@ class _NguoiDungPageState extends State<NguoiDungPage> {
        _nguoidungFuture = maneger.fetchNguoiDungs(page: page, pageSize: _pageSize);
     _nguoidungFuture.then((nhoms) {
       setState(() {
+        isRever = true;
         _nhomList = nhoms;
         _filteredNhomList = nhoms;
         _currentPage = page;
-
+       
         _totalRows = maneger.totalRows;
         //_totalNguoiDung = _nhomList.length;
         _totalNguoiDungBiKhoa = _nhomList.where((nhom) => nhom.biKhoa!).length;
         _totalNguoiDungSuDung = _totalRows - _totalNguoiDungBiKhoa;
-        
+      
       });
     });
   }
@@ -68,6 +72,7 @@ class _NguoiDungPageState extends State<NguoiDungPage> {
       }).toList();
     });
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -102,7 +107,11 @@ class _NguoiDungPageState extends State<NguoiDungPage> {
                 );
                 if (result == true) {
                   _loadNguoiDung(page: _currentPage); // Refresh the list
-                }
+                
+                 setState(() {
+                  isRever = true;
+                 
+                });}
               },
               icon: const Icon(CupertinoIcons.add),
             ),
@@ -209,6 +218,7 @@ class _NguoiDungPageState extends State<NguoiDungPage> {
         } else {
           return ListView.builder(
             shrinkWrap: true,
+            reverse: isRever,
             physics: const NeverScrollableScrollPhysics(),
             itemCount: _filteredNhomList.length,
             itemBuilder: (BuildContext context, int index) {
