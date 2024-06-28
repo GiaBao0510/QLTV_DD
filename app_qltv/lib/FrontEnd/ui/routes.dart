@@ -12,6 +12,7 @@ import 'package:app_qltv/FrontEnd/ui/danh_muc/hang_hoa/hang_hoa.dart';
 import 'package:app_qltv/FrontEnd/ui/danh_muc/khachhang/khachhang.dart';
 import 'package:app_qltv/FrontEnd/ui/danh_muc/loai_vang/loai_vang.dart';
 import 'package:app_qltv/FrontEnd/ui/danh_muc/kho/kho.dart';
+import 'package:app_qltv/FrontEnd/ui/GiaoDich/GiaoDichBanVang.dart';
 import 'package:app_qltv/FrontEnd/ui/danh_muc/nha_cung_cap/nha_cung_cap_green.dart';
 import 'package:app_qltv/FrontEnd/ui/danh_muc/nhom_vang/components/them_nhom_vang.dart';
 import 'package:app_qltv/FrontEnd/ui/danh_muc/nhom_vang/nhom_vang.dart';
@@ -61,4 +62,5 @@ final Map<String, WidgetBuilder> routes = {
   BaoCaoTopKhachHangScreen.routeName: (ctx) => BaoCaoTopKhachHangScreen(),
   Interfaceerror500.routerName: (ctx) => Interfaceerror500(EroRecordedinText: "",),
   Loadinginterface.routeName: (ctx) => Loadinginterface(),
+  BanVang.routerName: (ctx) => BanVang(),
 };

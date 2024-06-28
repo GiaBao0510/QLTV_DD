@@ -12,12 +12,14 @@ class TruocKhiThucHienBanVang_model{
   final double? DON_GIA_GOC;
   final double? DON_GIA_BAN;
   final double? THANH_TIEN;
+  final int? SL;
 
   //Hàm nhâp
   TruocKhiThucHienBanVang_model({
     required this.HANGHOAID,
     required this.NHOMHANGID,
     required this.MA,
+    required this.SL,
     required this.TEN_HANG,
     required this.LOAIVANG,
     required this.NHOM_TEN,
@@ -34,6 +36,7 @@ class TruocKhiThucHienBanVang_model{
     String? HANGHOAID,
     String? NHOMHANGID,
     String? MA,
+    int? SL,
     String? TEN_HANG,
     String? LOAIVANG,
     String? NHOM_TEN,
@@ -49,6 +52,7 @@ class TruocKhiThucHienBanVang_model{
       HANGHOAID: HANGHOAID ?? this.HANGHOAID,
       NHOMHANGID: NHOMHANGID ?? this.NHOMHANGID,
       MA: MA ?? this.MA,
+      SL: SL ?? this.SL,
       TEN_HANG: TEN_HANG ?? this.TEN_HANG,
       LOAIVANG: LOAIVANG ?? this.LOAIVANG,
       NHOM_TEN: NHOM_TEN ?? this.NHOM_TEN,
@@ -68,6 +72,7 @@ class TruocKhiThucHienBanVang_model{
       'HANGHOAID':HANGHOAID,
       'NHOMHANGID':NHOMHANGID,
       'MA':MA,
+      'SL': SL,
       'TEN_HANG':TEN_HANG,
       'LOAIVANG':LOAIVANG,
       'NHOM_TEN':NHOM_TEN,
@@ -87,6 +92,7 @@ class TruocKhiThucHienBanVang_model{
       HANGHOAID: json['HANGHOAID'] ?? '',
       NHOMHANGID: json['NHOMHANGID'] ?? '',
       MA: json['MA'] ?? '',
+      SL: (json['SL'] is int)? json['SL'] : 1,
       TEN_HANG: json['TEN_HANG'] ?? '',
       LOAIVANG: json['LOAIVANG'] ?? '',
       NHOM_TEN: json['NHOM_TEN'] ?? '',

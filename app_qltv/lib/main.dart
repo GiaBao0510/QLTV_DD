@@ -22,6 +22,7 @@ import 'package:app_qltv/FrontEnd/controller/danhmuc/nhacungcap_manager.dart';
 import 'package:app_qltv/FrontEnd/controller/hethong/ketnoi_manager.dart';
 import 'package:app_qltv/FrontEnd/controller/hethong/nguoidung_manager.dart';
 import 'package:app_qltv/FrontEnd/controller/hethong/nhom_manager.dart';
+import 'package:app_qltv/FrontEnd/controller/GiaoDich/BanVang_controller.dart';
 import 'package:app_qltv/FrontEnd/controller/HoaDonBanRa/ImportDraftInvoice_manage.dart';
 import 'package:app_qltv/FrontEnd/model/danhmuc/kho.dart';
 import 'package:app_qltv/FrontEnd/controller/CamVang/PhieuDangCam_manage.dart';
@@ -110,6 +111,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => TopKhachHangManager()),
         ChangeNotifierProvider(create: (context) => ImportDraftInvoiceManage()),
         ChangeNotifierProvider(create: (context) => PhieuDangCamManage()),
+        ChangeNotifierProvider(create: (context) => BanvangController()),
         ChangeNotifierProvider(create: (context) => ChiTietPhieuCamManager()),
         ChangeNotifierProvider(create: (context) => HoaDonMatBaoManager()),
       ],

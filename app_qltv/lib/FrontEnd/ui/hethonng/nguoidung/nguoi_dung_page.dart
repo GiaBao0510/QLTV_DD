@@ -29,7 +29,6 @@ class _NguoiDungPageState extends State<NguoiDungPage> {
   int _totalNguoiDungBiKhoa = 0;
   int _totalNguoiDungSuDung = 0;
 
-  bool isRever = false;
 
   @override
   void initState() {
@@ -50,7 +49,7 @@ class _NguoiDungPageState extends State<NguoiDungPage> {
        _nguoidungFuture = maneger.fetchNguoiDungs(page: page, pageSize: _pageSize);
     _nguoidungFuture.then((nhoms) {
       setState(() {
-        isRever = true;
+        
         _nhomList = nhoms;
         _filteredNhomList = nhoms;
         _currentPage = page;
@@ -108,10 +107,7 @@ class _NguoiDungPageState extends State<NguoiDungPage> {
                 if (result == true) {
                   _loadNguoiDung(page: _currentPage); // Refresh the list
                 
-                 setState(() {
-                  isRever = true;
-                 
-                });}
+                }
               },
               icon: const Icon(CupertinoIcons.add),
             ),
@@ -136,6 +132,7 @@ class _NguoiDungPageState extends State<NguoiDungPage> {
                       child: ElevatedButton(
                         onPressed: () {
                           _loadNguoiDung(page: _currentPage - 1);
+                          
                         },
                         child: const Text("Trang trước"),
                       ),
@@ -218,7 +215,7 @@ class _NguoiDungPageState extends State<NguoiDungPage> {
         } else {
           return ListView.builder(
             shrinkWrap: true,
-            reverse: isRever,
+           
             physics: const NeverScrollableScrollPhysics(),
             itemCount: _filteredNhomList.length,
             itemBuilder: (BuildContext context, int index) {
