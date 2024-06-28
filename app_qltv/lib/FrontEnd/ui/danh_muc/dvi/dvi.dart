@@ -145,20 +145,22 @@ class _DonviScreenState extends State<DonviScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                _filteredDonviList[index].dvi_ten ?? '',
-                                style: const TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w800,
-                                    fontSize: 20),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  _filteredDonviList[index].dvi_ten ?? '',
+                                  style: const TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w800,
+                                      fontSize: 20),
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                         Row(
                           children: [
@@ -169,7 +171,8 @@ class _DonviScreenState extends State<DonviScreen> {
                         ),
                       ],
                     ),
-                    Row(
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           "Mã: ${_filteredDonviList[index].dvi_ma}",
@@ -178,10 +181,6 @@ class _DonviScreenState extends State<DonviScreen> {
                               fontWeight: FontWeight.w700,
                               fontSize: 14),
                         ),
-                      ],
-                    ),
-                    Row(
-                      children: [
                         Text(
                           "Địa chỉ: ${_filteredDonviList[index].dvi_ghichu}",
                           style: const TextStyle(
@@ -189,10 +188,6 @@ class _DonviScreenState extends State<DonviScreen> {
                               fontWeight: FontWeight.w700,
                               fontSize: 14),
                         ),
-                      ],
-                    ),
-                    Row(
-                      children: [
                         Text(
                           "Tên hóa đơn: ${_filteredDonviList[index].dvi_ten_hd}",
                           style: const TextStyle(
@@ -200,10 +195,6 @@ class _DonviScreenState extends State<DonviScreen> {
                               fontWeight: FontWeight.w700,
                               fontSize: 14),
                         ),
-                      ],
-                    ),
-                    Row(
-                      children: [
                         Text(
                           "Địa chỉ hóa đơn: ${_filteredDonviList[index].dvi_dia_chi_hd}",
                           style: const TextStyle(
@@ -211,10 +202,6 @@ class _DonviScreenState extends State<DonviScreen> {
                               fontWeight: FontWeight.w700,
                               fontSize: 14),
                         ),
-                      ],
-                    ),
-                    Row(
-                      children: [
                         Text(
                           "SĐT: ${_filteredDonviList[index].dvi_sdt}",
                           style: const TextStyle(
@@ -222,10 +209,6 @@ class _DonviScreenState extends State<DonviScreen> {
                               fontWeight: FontWeight.w700,
                               fontSize: 14),
                         ),
-                      ],
-                    ),
-                    Row(
-                      children: [
                         Text(
                           "Tên giao dịch: ${_filteredDonviList[index].dvi_ten_gd}",
                           style: const TextStyle(
@@ -233,10 +216,6 @@ class _DonviScreenState extends State<DonviScreen> {
                               fontWeight: FontWeight.w700,
                               fontSize: 14),
                         ),
-                      ],
-                    ),
-                    Row(
-                      children: [
                         Text(
                           "Lưu ý: ${_filteredDonviList[index].dvi_luu_y}",
                           style: const TextStyle(
@@ -246,6 +225,72 @@ class _DonviScreenState extends State<DonviScreen> {
                         ),
                       ],
                     ),
+                    // Column(
+                    //   children: [
+                    //     Text(
+                    //       "Địa chỉ: ${_filteredDonviList[index].dvi_ghichu}",
+                    //       style: const TextStyle(
+                    //           color: Colors.black,
+                    //           fontWeight: FontWeight.w700,
+                    //           fontSize: 14),
+                    //     ),
+                    //   ],
+                    // ),
+                    // Column(
+                    //   children: [
+                    //     Text(
+                    //       "Tên hóa đơn: ${_filteredDonviList[index].dvi_ten_hd}",
+                    //       style: const TextStyle(
+                    //           color: Colors.black,
+                    //           fontWeight: FontWeight.w700,
+                    //           fontSize: 14),
+                    //     ),
+                    //   ],
+                    // ),
+                    // Column(
+                    //   children: [
+                    //     Text(
+                    //       "Địa chỉ hóa đơn: ${_filteredDonviList[index].dvi_dia_chi_hd}",
+                    //       style: const TextStyle(
+                    //           color: Colors.black,
+                    //           fontWeight: FontWeight.w700,
+                    //           fontSize: 14),
+                    //     ),
+                    //   ],
+                    // ),
+                    // Column(
+                    //   children: [
+                    //     Text(
+                    //       "SĐT: ${_filteredDonviList[index].dvi_sdt}",
+                    //       style: const TextStyle(
+                    //           color: Colors.black,
+                    //           fontWeight: FontWeight.w700,
+                    //           fontSize: 14),
+                    //     ),
+                    //   ],
+                    // ),
+                    // Column(
+                    //   children: [
+                    //     Text(
+                    //       "Tên giao dịch: ${_filteredDonviList[index].dvi_ten_gd}",
+                    //       style: const TextStyle(
+                    //           color: Colors.black,
+                    //           fontWeight: FontWeight.w700,
+                    //           fontSize: 14),
+                    //     ),
+                    //   ],
+                    // ),
+                    //  Column(
+                    //   children: [
+                    //     Text(
+                    //       "Lưu ý: ${_filteredDonviList[index].dvi_luu_y}",
+                    //       style: const TextStyle(
+                    //           color: Colors.black,
+                    //           fontWeight: FontWeight.w700,
+                    //           fontSize: 14),
+                    //     ),
+                    //   ],
+                    // ),
                   ]),
                 ),
               );

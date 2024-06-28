@@ -520,11 +520,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                 height: 64.0,
                               ),
                               const SizedBox(height: 5),
-                              Text(
-                                baocao_items[index]['text']!,
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.w800),
-                                textAlign: TextAlign.center,
+                              Expanded(
+                                child: Text(
+                                  baocao_items[index]['text']!,
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.w800),
+                                  textAlign: TextAlign.center,
+                                ),
                               ),
                             ],
                           ),
