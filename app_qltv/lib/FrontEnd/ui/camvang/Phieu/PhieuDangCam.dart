@@ -25,20 +25,20 @@ class PhieuDangCam extends StatefulWidget {
 }
 
 class _PhieuDangCam extends State<PhieuDangCam> {
-    //--------------------------
-    // ------ Thuộc tính -------
-    //--------------------------
+  //--------------------------
+  // ------ Thuộc tính -------
+  //--------------------------
   late Future<List<PhieuDangCam_model>> _phieuDangCam_Future;
   late Future<TinhTongPhieuDangCam_model> _tinhTongPhieuDangCam_Future;
   final TextEditingController _searchController = TextEditingController();
   List<PhieuDangCam_model> _fillterPhieuDangCam = [];
   List<PhieuDangCam_model> _PhieuDangCam_List = [];
   late TinhTongPhieuDangCam_model thongTinhTinhTong;
-  final dkCuon =ScrollController();
+  final dkCuon = ScrollController();
 
-    //--------------------------
-    // ------ phương thức ------
-    //--------------------------
+  //--------------------------
+  // ------ phương thức ------
+  //--------------------------
   //1. Hàm khởi tạo
   @override
   void initState() {
@@ -62,21 +62,25 @@ class _PhieuDangCam extends State<PhieuDangCam> {
   }
 
   //3.Load dữ liệu tìm kiếm theo ngày
-  Future<void> _loadDuLieuPhieuDangCam() async{
+  Future<void> _loadDuLieuPhieuDangCam() async {
     _phieuDangCam_Future =
         Provider.of<PhieuDangCamManage>(context, listen: false)
-      .fetchPhieuDangCam(ThuVienUntilState.ngayBD, ThuVienUntilState.ngayKT, ThuVienUntilState.limit, ThuVienUntilState.offset);
+            .fetchPhieuDangCam(
+                ThuVienUntilState.ngayBD,
+                ThuVienUntilState.ngayKT,
+                ThuVienUntilState.limit,
+                ThuVienUntilState.offset);
 
-    if(ThuVienUntilState.offset == 0){
-      _phieuDangCam_Future.then((PhieuDangCams){
+    if (ThuVienUntilState.offset == 0) {
+      _phieuDangCam_Future.then((PhieuDangCams) {
         setState(() {
           _PhieuDangCam_List = PhieuDangCams;
           _fillterPhieuDangCam = PhieuDangCams;
         });
       });
-    }else{
-      _phieuDangCam_Future.then((PhieuDangCams){
-        for(int i = 0; i< PhieuDangCams.length; i++){
+    } else {
+      _phieuDangCam_Future.then((PhieuDangCams) {
+        for (int i = 0; i < PhieuDangCams.length; i++) {
           PhieuDangCam_model item = PhieuDangCams[i];
           setState(() {
             _fillterPhieuDangCam.add(item);
@@ -87,10 +91,12 @@ class _PhieuDangCam extends State<PhieuDangCam> {
   }
 
   //4.Load dữ liệu tính tổng
-  Future<void> _LoadTongTinTinhTong() async{
-    _tinhTongPhieuDangCam_Future = Provider.of<PhieuDangCamManage>(context, listen: false).
-      fetchTinhTongPhieuDangCam(ThuVienUntilState.ngayBD, ThuVienUntilState.ngayKT);
-    _tinhTongPhieuDangCam_Future.then((values){
+  Future<void> _LoadTongTinTinhTong() async {
+    _tinhTongPhieuDangCam_Future =
+        Provider.of<PhieuDangCamManage>(context, listen: false)
+            .fetchTinhTongPhieuDangCam(
+                ThuVienUntilState.ngayBD, ThuVienUntilState.ngayKT);
+    _tinhTongPhieuDangCam_Future.then((values) {
       setState(() {
         print("Giá trị Tính tống: ${values}");
         thongTinhTinhTong = values;
@@ -99,17 +105,17 @@ class _PhieuDangCam extends State<PhieuDangCam> {
   }
 
   //5.Lọc dữ liệu dữ trên max phieu dang cam
-  void _FillterPhieuDangCam(){
+  void _FillterPhieuDangCam() {
     final query = _searchController.text.toLowerCase();
     setState(() {
-      _fillterPhieuDangCam = _PhieuDangCam_List.where((PhieuDangCam){
+      _fillterPhieuDangCam = _PhieuDangCam_List.where((PhieuDangCam) {
         return PhieuDangCam.PHIEU_MA!.toLowerCase().contains(query);
       }).toList();
     });
   }
 
   //6. Làm mới dữ liệu
-  Future<void> _refreshData() async{
+  Future<void> _refreshData() async {
     ThuVienUntilState.ngayBD = DateTime.now();
     ThuVienUntilState.ngayKT = DateTime.now();
     ThuVienUntilState.offset = 0;
@@ -129,7 +135,8 @@ class _PhieuDangCam extends State<PhieuDangCam> {
     if (picked != null && picked != ThuVienUntilState.ngayBD) {
       setState(() {
         ThuVienUntilState.ngayBD = picked;
-        ThuVienUntilState.StartDayController.text = ThuVienUntilState.dateFormat.format(ThuVienUntilState.ngayBD);
+        ThuVienUntilState.StartDayController.text =
+            ThuVienUntilState.dateFormat.format(ThuVienUntilState.ngayBD);
       });
     }
   }
@@ -144,7 +151,8 @@ class _PhieuDangCam extends State<PhieuDangCam> {
     if (picked != null && picked != ThuVienUntilState.ngayKT) {
       setState(() {
         ThuVienUntilState.ngayKT = picked;
-        ThuVienUntilState.EndDayController.text = ThuVienUntilState.dateFormat.format(ThuVienUntilState.ngayKT);
+        ThuVienUntilState.EndDayController.text =
+            ThuVienUntilState.dateFormat.format(ThuVienUntilState.ngayKT);
       });
     }
     //print('Ngày kết thúc đã chọn: $ngayKT');
@@ -164,9 +172,9 @@ class _PhieuDangCam extends State<PhieuDangCam> {
     }
   }
 
-    //--------------------------
-    // ------ Tien ích ---------
-    //--------------------------
+  //--------------------------
+  // ------ Tien ích ---------
+  //--------------------------
   //1.Giao diện
   @override
   Widget build(BuildContext context) {
@@ -220,20 +228,22 @@ class _PhieuDangCam extends State<PhieuDangCam> {
                       ),
                       child: Center(
                           child: Text(
-                            'Export PDF',
-                            style: TextStyle(fontSize: 12),
-                            textAlign: TextAlign.center,
-                          )),
+                        'Export PDF',
+                        style: TextStyle(fontSize: 12),
+                        textAlign: TextAlign.center,
+                      )),
                     )),
               ),
             ],
           ),
           flexibleSpace: Container(
-            decoration: BoxDecoration(
-                gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [Colors.orange, Colors.amber])),
+            decoration: const BoxDecoration(
+              // gradient: LinearGradient(
+              //     begin: Alignment.topLeft,
+              //     end: Alignment.bottomRight,
+              //     colors: [Colors.orange, Colors.amber])
+              color: Color.fromARGB(255, 228, 200, 126),
+            ),
           ),
         ),
         body: RefreshIndicator(
@@ -242,59 +252,65 @@ class _PhieuDangCam extends State<PhieuDangCam> {
             child: Container(
               padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
               color: Colors.grey[100],
-              child: Column(
-                children:[
-                  const SizedBox(height: 10,),
-                  Search_Bar(searchController: _searchController),
-
-                  const SizedBox(height: 12,),
-                  SearchByDay(context),
-
-                  const SizedBox(height: 15,),
-                  Expanded(
-                    child:Scrollbar(
-                      controller: dkCuon,
-                      child: ListView(
+              child: Column(children: [
+                const SizedBox(
+                  height: 10,
+                ),
+                Search_Bar(searchController: _searchController),
+                const SizedBox(
+                  height: 12,
+                ),
+                SearchByDay(context),
+                const SizedBox(
+                  height: 15,
+                ),
+                Expanded(
+                    child: Scrollbar(
+                  controller: dkCuon,
+                  child: ListView(
+                    children: [
+                      Column(
                         children: [
-                          Column(children: [
-                            ShowList(),
-
-                            const SizedBox(height: 5,),
-                            NutLoadDuLieu(context),
-                            const SizedBox(height: 15,),
-                          ],)
+                          ShowList(),
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          NutLoadDuLieu(context),
+                          const SizedBox(
+                            height: 15,
+                          ),
                         ],
-                      ),
-                    )
+                      )
+                    ],
                   ),
-
-                ]
-              ),
+                )),
+              ]),
             ),
           ),
         ),
         floatingActionButton: FloatingActionButton(
-          onPressed: (){
+          onPressed: () {
             showModalBottomSheet(
                 context: context,
-                builder: (BuildContext context){
+                builder: (BuildContext context) {
                   return FractionallySizedBox(
                     heightFactor: 0.8,
                     child: Container(
                       decoration: const BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [Color(0xffff512f), Color(0xfff09819)],
-                          stops: [0, 1],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
-                        borderRadius: BorderRadius.only(topLeft: Radius.circular(25) ,topRight: Radius.circular(25))
-                      ),
-                        child: BangTongQuan(context),
-                    ) ,
+                          // gradient: LinearGradient(
+                          //   colors: [Color(0xffff512f), Color(0xfff09819)],
+                          //   stops: [0, 1],
+                          //   begin: Alignment.topLeft,
+                          //   end: Alignment.bottomRight,
+                          // ),
+                          color: const Color.fromARGB(255, 228, 200, 126),
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(25),
+                              topRight: Radius.circular(25))),
+                      child: BangTongQuan(context),
+                    ),
                   );
-                }
-            );
+                });
           },
           backgroundColor: Colors.white,
           tooltip: 'Show Bottom Sheet',
@@ -308,7 +324,7 @@ class _PhieuDangCam extends State<PhieuDangCam> {
   }
 
   //2.Thông tin từng phiếu đang cầm
-  FutureBuilder<List<PhieuDangCam_model>> ShowList(){
+  FutureBuilder<List<PhieuDangCam_model>> ShowList() {
     return FutureBuilder<List<PhieuDangCam_model>>(
         future: _phieuDangCam_Future,
         builder: (context, snapshot) {
@@ -317,168 +333,289 @@ class _PhieuDangCam extends State<PhieuDangCam> {
           } else if (snapshot.hasError) {
             return Center(
                 child: Text(
-                  'Error: ${snapshot.error}',
-                  style: TextStyle(fontSize: 10),
+              'Error: ${snapshot.error}',
+              style: TextStyle(fontSize: 10),
             ));
-          }else{
+          } else {
             return ListView.builder(
-              controller: dkCuon,
-              shrinkWrap: true,
-              //reverse: true,
-              itemCount: _fillterPhieuDangCam.length,
-              itemBuilder: (_, index){
-                final BaoCao = _fillterPhieuDangCam[index];
-                return Container(
-                  margin: EdgeInsets.fromLTRB(5, 15, 5, 10),
-                  padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
-                  decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      colors: [Color(0xffe65c00), Color(0xfff9d423)],
-                      stops: [0, 1],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
+                controller: dkCuon,
+                shrinkWrap: true,
+                //reverse: true,
+                itemCount: _fillterPhieuDangCam.length,
+                itemBuilder: (_, index) {
+                  final BaoCao = _fillterPhieuDangCam[index];
+                  return Container(
+                    margin: EdgeInsets.fromLTRB(5, 15, 5, 10),
+                    padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
+                    decoration: BoxDecoration(
+                      // gradient: const LinearGradient(
+                      //   colors: [Color(0xffe65c00), Color(0xfff9d423)],
+                      //   stops: [0, 1],
+                      //   begin: Alignment.topLeft,
+                      //   end: Alignment.bottomRight,
+                      // ),
+                      color: const Color.fromARGB(255, 228, 200, 126),
+                      borderRadius: BorderRadius.circular(10),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 2,
+                          blurRadius: 5,
+                          offset: Offset(0, 3),
+                        ),
+                      ],
                     ),
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        spreadRadius: 2,
-                        blurRadius: 5,
-                        offset: Offset(0, 3),
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    children: [
-
-                      //Phan head
-                      Row(children: [
-                        Expanded(
-                          flex: 3,
-                          child: FittedBox(
-                            fit: BoxFit.fitWidth,
-                            child: Text(
-                              'Mã phiếu: ${BaoCao.PHIEU_MA}',
-                              style: TextStyle(
-                                  fontSize: 15, fontWeight: FontWeight.bold
+                    child: Column(
+                      children: [
+                        //Phan head
+                        Row(
+                          children: [
+                            Expanded(
+                              flex: 3,
+                              child: FittedBox(
+                                fit: BoxFit.fitWidth,
+                                child: Text(
+                                  'Mã phiếu: ${BaoCao.PHIEU_MA}',
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold),
+                                ),
                               ),
                             ),
-                          ),
-                        ),
-                        Expanded(
-                          flex: 1,
-                          child: IconButton(
-                              onPressed: (){
-                                ThongTinChiTiet(context, BaoCao);
-                              },
-                              icon: const Icon(Icons.info_outline, size: 30,)
-                          ),
-                        )
-                      ],),
-
-                      //body
-                      SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-
-                        child: DataTable(
-                          headingRowColor: MaterialStateColor.resolveWith(
-                                  (states) => Colors.black87),
-                          columns: const [
-                            DataColumn(label: Text('Định Giá', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),)),
-                            DataColumn(label: Text('Tiền khách nhận', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),)),
-                            DataColumn(label: Text('Tiền nhận thêm', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),)),
-                            DataColumn(label: Text('Tiền cầm mới', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),)),
-                            DataColumn(label: Text('Lãi lỗ', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),)),
+                            Expanded(
+                              flex: 1,
+                              child: IconButton(
+                                  onPressed: () {
+                                    ThongTinChiTiet(context, BaoCao);
+                                  },
+                                  icon: const Icon(
+                                    Icons.info_outline,
+                                    size: 30,
+                                  )),
+                            )
                           ],
-                          rows: [
-                            DataRow(
+                        ),
+
+                        //body
+                        SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: DataTable(
+                            headingRowColor: MaterialStateColor.resolveWith(
+                                (states) => Colors.black87),
+                            columns: const [
+                              DataColumn(
+                                  label: Text(
+                                'Định Giá',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white),
+                              )),
+                              DataColumn(
+                                  label: Text(
+                                'Tiền khách nhận',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white),
+                              )),
+                              DataColumn(
+                                  label: Text(
+                                'Tiền nhận thêm',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white),
+                              )),
+                              DataColumn(
+                                  label: Text(
+                                'Tiền cầm mới',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white),
+                              )),
+                              DataColumn(
+                                  label: Text(
+                                'Lãi lỗ',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white),
+                              )),
+                            ],
+                            rows: [
+                              DataRow(
                                 cells: [
-                                  DataCell(Text('${formatCurrencyDouble(BaoCao.DINH_GIA ?? 0.0)}')),
-                                  DataCell(Text('${formatCurrencyDouble(BaoCao.TIEN_KHACH_NHAN ?? 0.0)}')),
-                                  DataCell(Text('${formatCurrencyDouble(BaoCao.TIEN_THEM ?? 0.0)}')),
-                                  DataCell(Text('${formatCurrencyDouble(BaoCao.TIEN_MOI ?? 0.0)}')),
-                                  DataCell(Text('${formatCurrencyDouble(BaoCao.LAI_XUAT ?? 0.0)}%')),
+                                  DataCell(Text(
+                                      '${formatCurrencyDouble(BaoCao.DINH_GIA ?? 0.0)}')),
+                                  DataCell(Text(
+                                      '${formatCurrencyDouble(BaoCao.TIEN_KHACH_NHAN ?? 0.0)}')),
+                                  DataCell(Text(
+                                      '${formatCurrencyDouble(BaoCao.TIEN_THEM ?? 0.0)}')),
+                                  DataCell(Text(
+                                      '${formatCurrencyDouble(BaoCao.TIEN_MOI ?? 0.0)}')),
+                                  DataCell(Text(
+                                      '${formatCurrencyDouble(BaoCao.LAI_XUAT ?? 0.0)}%')),
                                 ],
-                              color:  MaterialStateColor.resolveWith(
-                                      (states) => Colors.white),
-                            ),
-                          ],
+                                color: MaterialStateColor.resolveWith(
+                                    (states) => Colors.white),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                );
-              }
-            );
+                      ],
+                    ),
+                  );
+                });
           }
-        }
-    );
+        });
   }
 
   //3.Bảng tổng quan
-  Widget BangTongQuan(BuildContext context){
+  Widget BangTongQuan(BuildContext context) {
     return Column(
       children: [
-        const SizedBox(height: 10,),
-        Flexible(
-            child: Text('Tổng Quan', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),)
+        const SizedBox(
+          height: 10,
         ),
-        const SizedBox(height: 30,),
         Flexible(
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: DataTable(
-                  headingRowColor: MaterialStateColor.resolveWith(
-                          (states) => Colors.black87),
-                  columns: const [
-                    DataColumn(label: Text('Số lượng', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.white),)),
-                    DataColumn(label: Text('Cân tổng', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.white),)),
-                    DataColumn(label: Text('TL hột', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.white),)),
-                    DataColumn(label: Text('TL thực', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.white),)),
-                  ],
-                  rows: [
-                    DataRow(
-                      cells: [
-                        DataCell(Text('${thongTinhTinhTong.SoLuong}', style: TextStyle(color: Colors.red, fontSize: 12),)),
-                        DataCell(Text('${formatCurrencyDouble(thongTinhTinhTong.TongCanTong ?? 0.0) }', style: TextStyle(color: Colors.red, fontSize: 12),)),
-                        DataCell(Text('${formatCurrencyDouble(thongTinhTinhTong.Tong_TL_HOT ?? 0.0) }', style: TextStyle(color: Colors.red, fontSize: 12),)),
-                        DataCell(Text('${formatCurrencyDouble(thongTinhTinhTong.Tong_TLthuc ?? 0.0) }', style: TextStyle(color: Colors.red, fontSize: 12),)),
-                      ],
-                      color: MaterialStateColor.resolveWith(
+            child: Text(
+          'Tổng Quan',
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        )),
+        const SizedBox(
+          height: 30,
+        ),
+        Flexible(
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: DataTable(
+                headingRowColor:
+                    MaterialStateColor.resolveWith((states) => Colors.black87),
+                columns: const [
+                  DataColumn(
+                      label: Text(
+                    'Số lượng',
+                    style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
+                  )),
+                  DataColumn(
+                      label: Text(
+                    'Cân tổng',
+                    style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
+                  )),
+                  DataColumn(
+                      label: Text(
+                    'TL hột',
+                    style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
+                  )),
+                  DataColumn(
+                      label: Text(
+                    'TL thực',
+                    style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
+                  )),
+                ],
+                rows: [
+                  DataRow(
+                    cells: [
+                      DataCell(Text(
+                        '${thongTinhTinhTong.SoLuong}',
+                        style: TextStyle(color: Colors.red, fontSize: 12),
+                      )),
+                      DataCell(Text(
+                        '${formatCurrencyDouble(thongTinhTinhTong.TongCanTong ?? 0.0)}',
+                        style: TextStyle(color: Colors.red, fontSize: 12),
+                      )),
+                      DataCell(Text(
+                        '${formatCurrencyDouble(thongTinhTinhTong.Tong_TL_HOT ?? 0.0)}',
+                        style: TextStyle(color: Colors.red, fontSize: 12),
+                      )),
+                      DataCell(Text(
+                        '${formatCurrencyDouble(thongTinhTinhTong.Tong_TLthuc ?? 0.0)}',
+                        style: TextStyle(color: Colors.red, fontSize: 12),
+                      )),
+                    ],
+                    color: MaterialStateColor.resolveWith(
                         (states) => Colors.white),
-                    )
-                  ]
-              ),
-            ),
+                  )
+                ]),
+          ),
         ),
-        const SizedBox(height: 15,),
-
+        const SizedBox(
+          height: 15,
+        ),
         Flexible(
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: DataTable(
-                  headingRowColor: MaterialStateColor.resolveWith(
-                          (states) => Colors.black87),
-                  columns: const [
-                    DataColumn(label: Text('Định giá', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.white),)),
-                    DataColumn(label: Text('Tiền khách nhận', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.white),)),
-                    DataColumn(label: Text('Tiền nhận thêm', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.white),)),
-                    DataColumn(label: Text('Tiền cầm mới', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.white),)),
-                  ],
-                  rows: [
-                    DataRow(
-                      cells: [
-                        DataCell(Text('${formatCurrencyDouble(thongTinhTinhTong.TongDinhGia ?? 0.0) }', style: TextStyle(color: Colors.red, fontSize: 12),)),
-                        DataCell(Text('${formatCurrencyDouble(thongTinhTinhTong.TongTienKhachNhan ?? 0.0) }', style: TextStyle(color: Colors.red, fontSize: 12),)),
-                        DataCell(Text('${formatCurrencyDouble(thongTinhTinhTong.TongTienThem ?? 0.0) }', style: TextStyle(color: Colors.red, fontSize: 12),)),
-                        DataCell(Text('${formatCurrencyDouble(thongTinhTinhTong.TongTienMoi ?? 0.0) }', style: TextStyle(color: Colors.red, fontSize: 12),)),
-                      ],
-                      color: MaterialStateColor.resolveWith(
-                              (states) => Colors.white),
-                    )
-                  ]
-              ),
-            ),
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: DataTable(
+                headingRowColor:
+                    MaterialStateColor.resolveWith((states) => Colors.black87),
+                columns: const [
+                  DataColumn(
+                      label: Text(
+                    'Định giá',
+                    style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
+                  )),
+                  DataColumn(
+                      label: Text(
+                    'Tiền khách nhận',
+                    style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
+                  )),
+                  DataColumn(
+                      label: Text(
+                    'Tiền nhận thêm',
+                    style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
+                  )),
+                  DataColumn(
+                      label: Text(
+                    'Tiền cầm mới',
+                    style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
+                  )),
+                ],
+                rows: [
+                  DataRow(
+                    cells: [
+                      DataCell(Text(
+                        '${formatCurrencyDouble(thongTinhTinhTong.TongDinhGia ?? 0.0)}',
+                        style: TextStyle(color: Colors.red, fontSize: 12),
+                      )),
+                      DataCell(Text(
+                        '${formatCurrencyDouble(thongTinhTinhTong.TongTienKhachNhan ?? 0.0)}',
+                        style: TextStyle(color: Colors.red, fontSize: 12),
+                      )),
+                      DataCell(Text(
+                        '${formatCurrencyDouble(thongTinhTinhTong.TongTienThem ?? 0.0)}',
+                        style: TextStyle(color: Colors.red, fontSize: 12),
+                      )),
+                      DataCell(Text(
+                        '${formatCurrencyDouble(thongTinhTinhTong.TongTienMoi ?? 0.0)}',
+                        style: TextStyle(color: Colors.red, fontSize: 12),
+                      )),
+                    ],
+                    color: MaterialStateColor.resolveWith(
+                        (states) => Colors.white),
+                  )
+                ]),
+          ),
         ),
       ],
     );
@@ -558,8 +695,8 @@ class _PhieuDangCam extends State<PhieuDangCam> {
   }
 
   //5.Thông tin hiển thị thêm
-  Widget NutLoadDuLieu(BuildContext context){
-    if(_fillterPhieuDangCam.length == 0){
+  Widget NutLoadDuLieu(BuildContext context) {
+    if (_fillterPhieuDangCam.length == 0) {
       return Text('');
     }
     return Container(
@@ -574,30 +711,30 @@ class _PhieuDangCam extends State<PhieuDangCam> {
         borderRadius: BorderRadius.circular(30),
       ),
       child: TextButton(
-        onPressed: (){
-
+        onPressed: () {
           //Kiểm tra nếu đạ độ dai tối đa thì không load thêm
           int DoDaiToiDa = thongTinhTinhTong.SoLuong ?? 0;
           print('ĐỘ dài tối đa mới lấy: ${DoDaiToiDa}');
           print('ĐỘ dài hiện tại: ${ThuVienUntilState.offset}');
-          if( ThuVienUntilState.offset >= DoDaiToiDa){
+          if (ThuVienUntilState.offset >= DoDaiToiDa) {
             print('Đạt tối đa');
-            ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: const Text(
-                      'Đã hết dữ liệu để hiển thị',
-                    textAlign: TextAlign.center,
-                  ),
-                )
-            );
-          }else{
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: const Text(
+                'Đã hết dữ liệu để hiển thị',
+                textAlign: TextAlign.center,
+              ),
+            ));
+          } else {
             setState(() {
               ThuVienUntilState.offset += 10;
             });
             _loadDuLieuPhieuDangCam();
           }
         },
-        child: Text('Xem thêm...', style: TextStyle(color: Colors.black),),
+        child: Text(
+          'Xem thêm...',
+          style: TextStyle(color: Colors.black),
+        ),
       ),
     );
   }
