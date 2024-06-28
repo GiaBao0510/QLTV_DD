@@ -41,6 +41,7 @@ class _ThemHoaDon_nhapState extends State<ThemHoaDon_nhap> {
         CusEmail: '', CusEmailCC: '',
         CusBankName: '', CusBankNo: '',
         PaymentMethod: '', Extra: '',
+        AmountInWords: '',
         DonViTienTe: 704, Product: DanhSachSanPham,
         TyGia: 0.0, Total: 0.0,
         DiscountAmount: 0.0, VATAmount: 0.0, Amount: 0.0
