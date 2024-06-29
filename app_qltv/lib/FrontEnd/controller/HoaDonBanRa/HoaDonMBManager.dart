@@ -112,6 +112,30 @@ class HoaDonMatBaoManager with ChangeNotifier {
     }
   }
 
+  Future<String> getFKey() async {
+    String key;
+    final response = await http.post(
+      Uri.parse('https://api-demo.matbao.in/api/v2/invoice/GetFkey'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        "ApiUserName": "admin",
+        "ApiPassword": "Gtybf@12sd",
+        "ApiInvPattern": "1",
+        "ApiInvSerial": "C24TAT",
+      }),
+    );
+    if (response.statusCode == 200) {
+      Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+      key = jsonResponse['fkey'];
+      notifyListeners();
+      return key;
+    } else {
+      throw Exception('Failed to load key');
+    }
+  }
+
   Future<void> postHoaDonMatBao({
     required String fkey,
     required String arisingDate,
@@ -168,6 +192,7 @@ class HoaDonMatBaoManager with ChangeNotifier {
     if (response.statusCode == 200) {
       Map<String, dynamic> jsonResponse = jsonDecode(response.body);
       _stt = jsonResponse['messages'];
+      print('Thực hiện giao dịch bán vàng và Xuất Hóa Đơn Mắt Bảo thành công.');
       notifyListeners();
     } else {
       throw Exception('Failed to post data');

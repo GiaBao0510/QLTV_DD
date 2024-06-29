@@ -5,5 +5,5 @@ app_qltv/lib/BackEnd3/node_modules
 
 #bỏ qua thụ mục ghi chí
 ghiChu/
-app_qltv/lib/FrontEnd/constants/config.dart
 app_qltv/lib/BackEnd3/app/config/test.json
+app_qltv/lib/FrontEnd/constants/config.dart

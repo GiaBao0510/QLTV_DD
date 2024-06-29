@@ -56,6 +56,35 @@ class BanvangController with ChangeNotifier {
     }
   }
 
+  //Thực hiện giao dịch bán vàng Plus
+  Future<void> ThucHienGiaoDichBanVangPlus({
+    required String maKH,
+    required double khachDua,
+    required double tienBot,
+    required List<TruocKhiThucHienBanVang_model> hangHoa,
+  }) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final res = await http.post(
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          "accesstoken": "${prefs.getString('accesstoken')}",
+        },
+        Uri.parse('$url/api/giaodich/giaodichbanvang'),
+        body: jsonEncode(<String, dynamic>{
+          "KH_ID": maKH,
+          "KHACH_DUA": khachDua,
+          "TIEN_BOT": tienBot,
+          "Products": hangHoa.map((e) => e.toMap()).toList(),
+        }));
+
+    if (res.statusCode == 200) {
+      print('Thực hiện giao dịch bán vàng và In Phiếu Xuất thành công.');
+      notifyListeners();
+    } else {
+      throw Exception('Lỗi khi thực hiện giao dịch bán vàng');
+    }
+  }
+
   //Thực hiện giao dịch bán vàng
   Future<void> ThucHienGiaoDichBanVang(
       SauKhiThucHienBangVang_model giaoDich) async {

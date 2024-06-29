@@ -42,7 +42,7 @@ class _BaoCaoPhieuXuat extends State<BaoCaoPhieuXuatScreen> {
       TongGiaGoc: 0.0,
       TongLaiLo: 0.0);
 
-  int pages = 5; //So dong toi da duoc tai len
+  int pages = 15; //So dong toi da duoc tai len
   int loadElements = 5; //Moi lan load chi lây 5 phân tử
   int SoLuong = 0;
 

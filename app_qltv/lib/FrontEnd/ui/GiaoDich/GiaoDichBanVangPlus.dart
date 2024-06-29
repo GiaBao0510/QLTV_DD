@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ffi';
 
 import 'package:app_qltv/FrontEnd/Service/ThuVien.dart';
 import 'package:app_qltv/FrontEnd/controller/GiaoDich/BanVang_controller.dart';
@@ -11,6 +12,7 @@ import 'package:app_qltv/FrontEnd/ui/components/FormatCurrency.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter/cupertino.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class BanVangPlus extends StatefulWidget {
@@ -186,27 +188,71 @@ class _BanVangPlusState extends State<BanVangPlus> {
     print('HANGHOA[]: $jsonString');
   }
 
-  void sendInvoiceMatBao() async {
-    HoaDonMatBaoManager manager = HoaDonMatBaoManager();
-    await manager.postHoaDonMatBao(
-      fkey: "X536D3558D",
-      arisingDate: "29/06/2024",
-      so: "",
-      maKH: maKH,
-      cusName: nameKH,
-      buyer: "Tập đoàn X",
-      cusAddress:
-          "43 Đường số 09, Khu tái định cư Thới Nhựt 2, Phường An Khánh, Quận Ninh Kiều, Thành Phố Cần Thơ",
-      cusPhone: "0345 77 7426",
-      cusTaxCode: "1801 671 581",
-      cusEmail: "huyminhcantho@gmail.com",
-      paymentMethod: "TM/CK",
-      products: _productList,
-      total: _totalThanhToan,
-      discountAmount: 0.0,
-      vatAmount: 0.0,
-      amount: _totalThanhToan,
-    );
+  Future<bool> sendInvoiceMatBao() async {
+    try {
+      HoaDonMatBaoManager manager = HoaDonMatBaoManager();
+      DateTime date = DateTime.now();
+      String formattedDateNow = DateFormat('dd/MM/yyyy').format(date);
+      String fKey = await manager.getFKey();
+      print('=========fkey: $fKey =========');
+      print('=========formattedDateNow: $formattedDateNow =========');
+      await manager.postHoaDonMatBao(
+        fkey: fKey,
+        arisingDate: '',
+        so: "",
+        maKH: maKH,
+        cusName: nameKH,
+        buyer: "Tập đoàn X",
+        cusAddress: "",
+        cusPhone: "",
+        cusTaxCode: "",
+        cusEmail: "",
+        paymentMethod: "",
+        products: _productList,
+        total: _totalThanhToan,
+        discountAmount: 0.0,
+        vatAmount: 0.0,
+        amount: _totalThanhToan,
+      );
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<bool> sendPhieuXuat() async {
+    try {
+      BanvangController manager = BanvangController();
+      await manager.ThucHienGiaoDichBanVangPlus(
+        maKH: maKH,
+        khachDua: 0,
+        tienBot: 0,
+        hangHoa: _hangHoaList,
+      );
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  void handleThanhToan() async {
+    showListSanPham();
+
+    bool invoiceSuccess = await sendInvoiceMatBao();
+    bool phieuXuatSuccess = await sendPhieuXuat();
+
+    if (invoiceSuccess && phieuXuatSuccess) {
+      setState(() {
+        _hangHoaList.clear();
+        _productList.clear();
+        _totalThanhToan = 0.0;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: const Text('Gửi hóa đơn và phiếu xuất thành công!')));
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Gửi hóa đơn hoặc phiếu xuất thất bại.')));
+    }
   }
 
   @override
@@ -435,8 +481,7 @@ class _BanVangPlusState extends State<BanVangPlus> {
                         borderRadius: BorderRadius.circular(15)),
                     child: TextButton(
                       onPressed: () {
-                        showListSanPham();
-                        sendInvoiceMatBao();
+                        handleThanhToan();
                       },
                       child: const Align(
                           alignment: Alignment.center,

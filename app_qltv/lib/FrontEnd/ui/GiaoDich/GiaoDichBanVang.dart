@@ -15,6 +15,7 @@ import 'package:app_qltv/FrontEnd/controller/GiaoDich/BanVang_controller.dart';
 import 'package:app_qltv/FrontEnd/model/danhmuc/khachhang.dart';
 import 'package:app_qltv/FrontEnd/controller/danhmuc/khachhang_manager.dart';
 import 'package:app_qltv/FrontEnd/model/HoaDonBanRa/ImportDraftInvoice_model.dart';
+import 'package:app_qltv/FrontEnd/controller/HoaDonBanRa/ImportDraftInvoice_manage.dart';
 
 class BanVang extends StatefulWidget {
   static const routerName = '/giaodichbanvang';
@@ -28,6 +29,7 @@ class _BanVangState extends State<BanVang> {
   //   --- Thuộc tính   ---
   final _formKey = GlobalKey<FormState>();
   late Future<List<Khachhang>> _khachHangFuture;
+  late Khachhang _khachHangThanhToan;
   final TextEditingController _searchController = TextEditingController();
   List<Khachhang> _filteredKhachHang = [];
   List<Khachhang> _khachHangList = [];
@@ -67,20 +69,20 @@ class _BanVangState extends State<BanVang> {
       ApiPassword: ApiPassword,
       ApiInvPattern: '1',
       ApiInvSerial: 'C24TAT',
-      Fkey: '',
+      Fkey: "",
       ArisingDate: CurrentDateAndTime(),
       SO: '',
       MaKH: '',
       CusName: '',
-      Buyer: '',
+      Buyer: 'Công ty TNHH TM DV Công Nghệ Huy Minh Pro',
       CusAddress: '',
       CusPhone: '',
-      CusTaxCode: '',
+      CusTaxCode: '1801 671 581',
       CusEmail: '',
       CusEmailCC: '',
       CusBankName: '',
       CusBankNo: '',
-      PaymentMethod: '1',
+      PaymentMethod: 'TM/CK',
       Product: _list_SanPham,
       Total: 0.0,
       DiscountAmount: 0.0,
@@ -127,24 +129,19 @@ class _BanVangState extends State<BanVang> {
     _thongTinHangHoaFuture.then((thongtin) {
       setState(() {
         _ThongTinHangHoa = thongtin;
+
+        _SanPham = _SanPham.copyWith(code: thongtin.MA);
+        _SanPham = _SanPham.copyWith(ProdName: thongtin.TEN_HANG);
+        _SanPham = _SanPham.copyWith(ProdPrice: thongtin.DON_GIA_BAN);
+        _SanPham = _SanPham.copyWith(ProdQuantity: 1.0);
+        _SanPham = _SanPham.copyWith(Total: thongtin.THANH_TIEN);
+        _SanPham = _SanPham.copyWith(VATAmount: thongtin.THANH_TIEN);
+        _SanPham = _SanPham.copyWith(Amount: thongtin.THANH_TIEN);
+        _SanPham = _SanPham.copyWith(ProdUnit: 'Chiếc');
+        _SanPham = _SanPham.copyWith(ProdAttr: 1);
+        _list_SanPham.add(_SanPham);
       });
     });
-    print('Đã check thông tin sản phâẩm');
-
-    //Lưu lại thoog tin sản phẩm cho MATBAO
-    setState(() {
-      _SanPham = _SanPham.copyWith(code: _ThongTinHangHoa.MA);
-      _SanPham = _SanPham.copyWith(ProdName: _ThongTinHangHoa.TEN_HANG);
-      _SanPham = _SanPham.copyWith(ProdPrice: _ThongTinHangHoa.DON_GIA_BAN);
-      _SanPham = _SanPham.copyWith(ProdQuantity: 1.0);
-      _SanPham = _SanPham.copyWith(Total: _ThongTinHangHoa.THANH_TIEN);
-      _SanPham = _SanPham.copyWith(VATAmount: _ThongTinHangHoa.THANH_TIEN);
-      _SanPham = _SanPham.copyWith(Amount: _ThongTinHangHoa.THANH_TIEN);
-      _SanPham = _SanPham.copyWith(ProdUnit: 'Chiếc');
-      _SanPham = _SanPham.copyWith(ProdAttr: 1);
-    });
-
-    //_list_SanPham.add(_SanPham);
   }
 
   //2.Load danh sách khách hàng
@@ -214,6 +211,7 @@ class _BanVangState extends State<BanVang> {
     _tienbot.dispose();
     _thanhtoan.dispose();
     _tenKhachHang.dispose();
+    _list_SanPham.clear();
     super.dispose();
   }
 
@@ -743,7 +741,7 @@ class _BanVangState extends State<BanVang> {
                     ),
                     padding: EdgeInsets.fromLTRB(0, 15, 0, 15),
                     width: double.infinity,
-                    child: Text(
+                    child: const Text(
                       'Thanh toán',
                       style: TextStyle(
                           color: Colors.white,
@@ -849,6 +847,7 @@ class _BanVangState extends State<BanVang> {
                             setState(() {
                               _tenKhachHang.text = client.kh_ten ?? '';
                               _IDkhachHang.text = client.kh_id ?? '';
+                              _khachHangThanhToan = client;
                             });
                             Navigator.pop(context);
                           },
@@ -872,49 +871,57 @@ class _BanVangState extends State<BanVang> {
     }
     _ThongTinhThucHienBanVang =
         _ThongTinhThucHienBanVang.copyWith(KH_ID: _IDkhachHang.text);
-    print('Thông tin cap nhật OK: ${_ThongTinhThucHienBanVang.toMap()}');
 
-    //Lưu lại thông tin nếu hợp lệ
-    print('Thông tin sản phẩm: ${_SanPham.toMap()}');
-    _list_SanPham.forEach((e) {
-      print(e.ProdPrice);
-    });
-
+    print('Hiện tại: ${DetailedTimeSeries()}');
+    //Cập nhật lại thông tin hóa đơn
+    _HoaDonNhap = _HoaDonNhap.copyWith(MaKH: _khachHangThanhToan.kh_ma);
+    _HoaDonNhap = _HoaDonNhap.copyWith(CusName: _khachHangThanhToan.kh_ten);
+    _HoaDonNhap = _HoaDonNhap.copyWith(CusAddress: _khachHangThanhToan.kh_dia_chi);
+    _HoaDonNhap = _HoaDonNhap.copyWith(CusPhone: _khachHangThanhToan.kh_sdt);
+    _HoaDonNhap = _HoaDonNhap.copyWith(Product: _list_SanPham );
+    _HoaDonNhap = _HoaDonNhap.copyWith(Total: _ThongTinhThucHienBanVang.THANH_TIEN);
+    _HoaDonNhap = _HoaDonNhap.copyWith(Amount: _ThongTinhThucHienBanVang.THANH_TIEN);
+    _HoaDonNhap = _HoaDonNhap.copyWith(AmountInWords: (_ThongTinhThucHienBanVang.THANH_TIEN!.toInt()).toVietnameseWords()+' đồng.' );
+    _HoaDonNhap = _HoaDonNhap.copyWith(Fkey: "SO"+DetailedTimeSeries());
     _formKey.currentState!.save();
 
-    // try{
-    //   final banVangController = Provider.of<BanvangController>(context, listen: false);
-    //   await banVangController.ThucHienGiaoDichBanVang(_ThongTinhThucHienBanVang);
-    //
-    //   ScaffoldMessenger.of(context).showSnackBar(
-    //     SnackBar(
-    //       content: const Text('Thanh toán thành công',style: TextStyle(fontWeight: FontWeight.bold), textAlign: TextAlign.center, ),
-    //       backgroundColor: Colors.grey,
-    //       shape: RoundedRectangleBorder(
-    //         borderRadius: BorderRadius.circular(15.0),
-    //         side: const BorderSide(
-    //             color: Colors.grey, width: 2.0), // bo viền 15px
-    //       ),
-    //       behavior: SnackBarBehavior.floating,
-    //       margin: EdgeInsets.fromLTRB(15, 0, 15, 15),
-    //     ),
-    //   );
-    //
-    //   Navigator.of(context).pop(true);
-    // }catch(err){
-    //   ScaffoldMessenger.of(context).showSnackBar(
-    //     SnackBar(
-    //       content: const Text('Có lỗi khi thực hiện thanh toán',style: TextStyle(fontWeight: FontWeight.bold), textAlign: TextAlign.center, ),
-    //       backgroundColor: Colors.grey,
-    //       shape: RoundedRectangleBorder(
-    //         borderRadius: BorderRadius.circular(15.0),
-    //         side: const BorderSide(
-    //             color: Colors.grey, width: 2.0), // bo viền 15px
-    //       ),
-    //       behavior: SnackBarBehavior.floating,
-    //       margin: EdgeInsets.fromLTRB(15, 0, 15, 15),
-    //     ),
-    //   );
-    // }
+    try{
+      final banVangController = Provider.of<BanvangController>(context, listen: false);
+      final hoaDonNhapCotroller = Provider.of<ImportDraftInvoiceManage>(context, listen: false);
+
+      await banVangController.ThucHienGiaoDichBanVang(_ThongTinhThucHienBanVang);
+      await hoaDonNhapCotroller.addDraftInvoice(_HoaDonNhap);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text('Thanh toán thành công',style: TextStyle(fontWeight: FontWeight.bold), textAlign: TextAlign.center, ),
+          backgroundColor: Colors.grey,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15.0),
+            side: const BorderSide(
+                color: Colors.grey, width: 2.0), // bo viền 15px
+          ),
+          behavior: SnackBarBehavior.floating,
+          margin: EdgeInsets.fromLTRB(15, 0, 15, 15),
+        ),
+      );
+
+      Navigator.of(context).pop(true);
+    }catch(err){
+      print("ERROR: ${err}");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Có lỗi khi thực hiện thanh toán.',style: TextStyle(fontWeight: FontWeight.bold), textAlign: TextAlign.center, ),
+          backgroundColor: Colors.grey,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15.0),
+            side: const BorderSide(
+                color: Colors.grey, width: 2.0), // bo viền 15px
+          ),
+          behavior: SnackBarBehavior.floating,
+          margin: EdgeInsets.fromLTRB(15, 0, 15, 15),
+        ),
+      );
+    }
   }
 }
