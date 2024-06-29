@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:app_qltv/FrontEnd/model/GiaoDich/ProductMB.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -108,6 +109,68 @@ class HoaDonMatBaoManager with ChangeNotifier {
       return phieuCamVangList;
     } else {
       throw Exception('Failed to load data');
+    }
+  }
+
+  Future<void> postHoaDonMatBao({
+    required String fkey,
+    required String arisingDate,
+    required String so,
+    required String maKH,
+    required String cusName,
+    required String buyer,
+    required String cusAddress,
+    required String cusPhone,
+    required String cusTaxCode,
+    required String cusEmail,
+    required String paymentMethod,
+    required List<Product> products,
+    required double total,
+    required double discountAmount,
+    required double vatAmount,
+    required double amount,
+  }) async {
+    final response = await http.post(
+      Uri.parse(
+          'https://api-demo.matbao.in/api/v2/invoice/importAndPublishInv'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, dynamic>{
+        "ApiUserName": "admin",
+        "ApiPassword": "Gtybf@12sd",
+        "ApiInvPattern": "1",
+        "ApiInvSerial": "C24TAT",
+        "Fkey": fkey,
+        "ArisingDate": arisingDate,
+        "SO": so,
+        "MaKH": maKH,
+        "CusName": cusName,
+        "Buyer": buyer,
+        "CusAddress": cusAddress,
+        "CusPhone": cusPhone,
+        "CusTaxCode": cusTaxCode,
+        "CusEmail": cusEmail,
+        "CusEmailCC": "",
+        "CusBankName": "",
+        "CusBankNo": "",
+        "PaymentMethod": paymentMethod,
+        "DonViTienTe": 704,
+        "Products": products.map((e) => e.toMap()).toList(),
+        "Total": total,
+        "DiscountAmount": discountAmount,
+        "VATAmount": vatAmount,
+        "Amount": amount,
+        "InvType": 1
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+      _stt = jsonResponse['messages'];
+      notifyListeners();
+    } else {
+      throw Exception('Failed to post data');
     }
   }
 }

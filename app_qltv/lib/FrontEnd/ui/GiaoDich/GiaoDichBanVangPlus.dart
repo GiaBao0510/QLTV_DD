@@ -2,8 +2,10 @@ import 'dart:convert';
 
 import 'package:app_qltv/FrontEnd/Service/ThuVien.dart';
 import 'package:app_qltv/FrontEnd/controller/GiaoDich/BanVang_controller.dart';
+import 'package:app_qltv/FrontEnd/controller/HoaDonBanRa/HoaDonMBManager.dart';
 import 'package:app_qltv/FrontEnd/controller/danhmuc/khachhang_manager.dart';
 import 'package:app_qltv/FrontEnd/model/GiaoDich/BanVang_model.dart';
+import 'package:app_qltv/FrontEnd/model/GiaoDich/ProductMB.dart';
 import 'package:app_qltv/FrontEnd/model/danhmuc/khachhang.dart';
 import 'package:app_qltv/FrontEnd/ui/components/FormatCurrency.dart';
 import 'package:flutter/material.dart';
@@ -24,10 +26,23 @@ class _BanVangPlusState extends State<BanVangPlus> {
 
   late Future<TruocKhiThucHienBanVang_model> _thongTinHangHoaFuture;
   late final List<TruocKhiThucHienBanVang_model> _hangHoaList = [];
+  late final List<Product> _productList = [];
+  Product product = Product(
+    code: '',
+    prodName: '',
+    prodUnit: '',
+    prodQuantity: 0,
+    prodPrice: 0,
+    vatRate: 0,
+    vatAmount: 0.0,
+    total: 0,
+    amount: 0,
+    prodAttr: 0,
+  );
 
   late Future<List<Khachhang>> _khachHangFuture;
   List<Khachhang> _filteredKhachHang = [];
-  String nameKH = 'unknow';
+  String nameKH = '_____';
   String maKH = '';
   int _currentPage = 1;
   double _totalThanhToan = 0;
@@ -40,8 +55,21 @@ class _BanVangPlusState extends State<BanVangPlus> {
         Provider.of<BanvangController>(context, listen: false)
             .FecthThongTinSanPham(maSP: maSp);
     _thongTinHangHoaFuture.then((thongtin) {
+      product = product.copyWith(
+        code: thongtin.HANGHOAID,
+        prodName: thongtin.TEN_HANG,
+        prodUnit: '',
+        prodQuantity: thongtin.SL,
+        prodPrice: thongtin.THANH_TIEN,
+        vatRate: 0,
+        vatAmount: 0.0,
+        total: thongtin.THANH_TIEN,
+        amount: thongtin.THANH_TIEN,
+        prodAttr: 0,
+      );
       setState(() {
         _hangHoaList.add(thongtin);
+        _productList.add(product);
         _totalThanhToan = _totalThanhToan + thongtin.THANH_TIEN!;
       });
     });
@@ -54,8 +82,21 @@ class _BanVangPlusState extends State<BanVangPlus> {
         Provider.of<BanvangController>(context, listen: false)
             .ThongTinSanPham();
     _thongTinHangHoaFuture.then((thongtin) {
+      product = product.copyWith(
+        code: thongtin.HANGHOAID,
+        prodName: thongtin.TEN_HANG,
+        prodUnit: '',
+        prodQuantity: thongtin.SL,
+        prodPrice: thongtin.THANH_TIEN,
+        vatRate: 0,
+        vatAmount: 0.0,
+        total: thongtin.THANH_TIEN,
+        amount: thongtin.THANH_TIEN,
+        prodAttr: 0,
+      );
       setState(() {
         _hangHoaList.add(thongtin);
+        _productList.add(product);
         _totalThanhToan = _totalThanhToan + thongtin.THANH_TIEN!;
       });
     });
@@ -91,37 +132,43 @@ class _BanVangPlusState extends State<BanVangPlus> {
   void nhapMaSanPham(BuildContext context) {
     showModalBottomSheet(
       context: context,
+      isScrollControlled: true,
       builder: (BuildContext context) {
         return Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Text(
-                'Nhập Mã Sản Phẩm',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 10),
-              TextField(
-                controller: _controller,
-                decoration: const InputDecoration(
-                  labelText: 'Mã Sản Phẩm',
-                  border: OutlineInputBorder(),
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+            left: 16.0,
+            right: 16.0,
+            top: 16.0,
+          ),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text(
+                  'Nhập Mã Sản Phẩm',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
-              ),
-              const SizedBox(height: 10),
-              ElevatedButton(
-                onPressed: () {
-                  String maSanPham = _controller.text;
-                  // Xử lý mã sản phẩm tại đây
-                  print('Mã Sản Phẩm: $maSanPham');
-                  _LoadData(maSanPham);
-                  Navigator.pop(context); // Đóng BottomSheet
-                },
-                child: const Text('Xác Nhận'),
-              ),
-              const SizedBox(height: 300),
-            ],
+                const SizedBox(height: 10),
+                TextField(
+                  controller: _controller,
+                  decoration: const InputDecoration(
+                    labelText: 'Mã Sản Phẩm',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                ElevatedButton(
+                  onPressed: () {
+                    String maSanPham = _controller.text;
+                    print('Mã Sản Phẩm: $maSanPham');
+                    _LoadData(maSanPham);
+                    Navigator.pop(context); // Đóng BottomSheet
+                  },
+                  child: const Text('Xác Nhận'),
+                ),
+              ],
+            ),
           ),
         );
       },
@@ -131,12 +178,35 @@ class _BanVangPlusState extends State<BanVangPlus> {
   void showListSanPham() {
     print('DANHSACHHANGHOA');
     List<Map<String, dynamic>> jsonList =
-        _hangHoaList.map((item) => item.toMap()).toList();
+        _productList.map((item) => item.toMap()).toList();
 
     // Mã hóa danh sách các map thành chuỗi JSON
     String jsonString = jsonEncode(jsonList);
 
     print('HANGHOA[]: $jsonString');
+  }
+
+  void sendInvoiceMatBao() async {
+    HoaDonMatBaoManager manager = HoaDonMatBaoManager();
+    await manager.postHoaDonMatBao(
+      fkey: "X536D3558D",
+      arisingDate: "29/06/2024",
+      so: "",
+      maKH: maKH,
+      cusName: nameKH,
+      buyer: "Tập đoàn X",
+      cusAddress:
+          "43 Đường số 09, Khu tái định cư Thới Nhựt 2, Phường An Khánh, Quận Ninh Kiều, Thành Phố Cần Thơ",
+      cusPhone: "0345 77 7426",
+      cusTaxCode: "1801 671 581",
+      cusEmail: "huyminhcantho@gmail.com",
+      paymentMethod: "TM/CK",
+      products: _productList,
+      total: _totalThanhToan,
+      discountAmount: 0.0,
+      vatAmount: 0.0,
+      amount: _totalThanhToan,
+    );
   }
 
   @override
@@ -366,6 +436,7 @@ class _BanVangPlusState extends State<BanVangPlus> {
                     child: TextButton(
                       onPressed: () {
                         showListSanPham();
+                        sendInvoiceMatBao();
                       },
                       child: const Align(
                           alignment: Alignment.center,
@@ -553,6 +624,7 @@ class _BanVangPlusState extends State<BanVangPlus> {
   }
 
   //Bảng chọn thông tin khách hàng
+  // ignore: non_constant_identifier_names
   Future<void> BangChonKhachHang(BuildContext context) async {
     return showModalBottomSheet(
       context: context,
@@ -560,7 +632,7 @@ class _BanVangPlusState extends State<BanVangPlus> {
       builder: (BuildContext context) {
         return StatefulBuilder(
           builder: (BuildContext context, StateSetter setState) {
-            void _loadPage(int page) async {
+            void loadPage(int page) async {
               await _loadKhachhang(page: page);
               setState(() {}); // Update the state within the bottom sheet
             }
@@ -596,7 +668,7 @@ class _BanVangPlusState extends State<BanVangPlus> {
                                         _currentPage > 1, // Control visibility
                                     child: ElevatedButton(
                                       onPressed: () {
-                                        _loadPage(_currentPage - 1);
+                                        loadPage(_currentPage - 1);
                                       },
                                       child: const Text('<'),
                                     ),
@@ -606,7 +678,7 @@ class _BanVangPlusState extends State<BanVangPlus> {
                                     visible: true, // Control visibility
                                     child: ElevatedButton(
                                       onPressed: () {
-                                        _loadPage(_currentPage + 1);
+                                        loadPage(_currentPage + 1);
                                       },
                                       child: const Text('>'),
                                     ),
@@ -629,6 +701,7 @@ class _BanVangPlusState extends State<BanVangPlus> {
   }
 
   //Show list Khách hàng
+  // ignore: non_constant_identifier_names
   FutureBuilder<List<Khachhang>> ShowListClient() {
     return FutureBuilder<List<Khachhang>>(
       future: _khachHangFuture,
@@ -662,16 +735,45 @@ class _BanVangPlusState extends State<BanVangPlus> {
                 ..._filteredKhachHang.map((client) {
                   return DataRow(
                     cells: [
-                      DataCell(Text('${client.kh_ten}'), onTap: () {
-                        // Xử lý khi chọn khách hàng
-                        setState(() {
-                          nameKH = client.kh_ten!;
-                          maKH = client.kh_ma!;
-                        });
-                        Navigator.pop(context); // Đóng BottomSheet
-                      }),
-                      DataCell(Text('${client.kh_sdt}')),
-                      DataCell(Text('${client.kh_dia_chi}')),
+                      DataCell(
+                        GestureDetector(
+                          onTap: () {
+                            // Xử lý khi chọn khách hàng
+                            setState(() {
+                              nameKH = client.kh_ten!;
+                              maKH = client.kh_ma!;
+                            });
+                            Navigator.pop(context); // Đóng BottomSheet
+                          },
+                          child: Text('${client.kh_ten}'),
+                        ),
+                      ),
+                      DataCell(
+                        GestureDetector(
+                          onTap: () {
+                            // Xử lý khi chọn khách hàng
+                            setState(() {
+                              nameKH = client.kh_ten!;
+                              maKH = client.kh_ma!;
+                            });
+                            Navigator.pop(context); // Đóng BottomSheet
+                          },
+                          child: Text('${client.kh_sdt}'),
+                        ),
+                      ),
+                      DataCell(
+                        GestureDetector(
+                          onTap: () {
+                            // Xử lý khi chọn khách hàng
+                            setState(() {
+                              nameKH = client.kh_ten!;
+                              maKH = client.kh_ma!;
+                            });
+                            Navigator.pop(context); // Đóng BottomSheet
+                          },
+                          child: Text('${client.kh_dia_chi}'),
+                        ),
+                      ),
                     ],
                   );
                 }),
