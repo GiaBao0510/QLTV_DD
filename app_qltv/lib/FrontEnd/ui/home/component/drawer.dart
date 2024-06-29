@@ -1,3 +1,4 @@
+import 'package:app_qltv/FrontEnd/ui/GiaoDich/GiaoDichBanVangPlus.dart';
 import 'package:app_qltv/FrontEnd/ui/HoaDonBanRa/DanhSachHoaDonMBScreen.dart';
 import 'package:app_qltv/FrontEnd/ui/danh_muc/BaoCao/BaoCaoPhieuMua.dart';
 
@@ -449,6 +450,26 @@ class _drawerState extends State<drawer> {
                   title: const Text('Giao dịch',
                       style: TextStyle(fontWeight: FontWeight.w800)),
                   children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          left: 16.0), // Khoảng cách thụt lề
+                      child: ListTile(
+                        leading: Image.asset(
+                          'assets/images/qr-code.png',
+                          width: 24.0,
+                          height: 24.0,
+                        ),
+                        title: const Text('Giao Dịch Bán Vàng',
+                            style: TextStyle(fontWeight: FontWeight.w800)),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const BanVangPlus()),
+                          );
+                        },
+                      ),
+                    ),
                     Padding(
                       padding: const EdgeInsets.only(
                           left: 16.0), // Khoảng cách thụt lề
