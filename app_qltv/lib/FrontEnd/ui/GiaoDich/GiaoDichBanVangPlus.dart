@@ -38,7 +38,8 @@ class _BanVangPlusState extends State<BanVangPlus> {
   final TextEditingController _tongtien = TextEditingController(),
       _tienbot = TextEditingController(),
       _thanhtoan = TextEditingController(),
-      _tenKhachHang = TextEditingController();
+      _tenKhachHang = TextEditingController(),
+      _IDkhachHang = TextEditingController();
 
   // ignore: non_constant_identifier_names
   Future<void> _LoadData(maSp) async {
@@ -60,10 +61,11 @@ class _BanVangPlusState extends State<BanVangPlus> {
     //Lấy thông tin hàng hóa
     _thongTinHangHoaFuture =
         Provider.of<BanvangController>(context, listen: false)
-            .FecthThongTinSanPham();
+            .ThongTinSanPham();
     _thongTinHangHoaFuture.then((thongtin) {
       setState(() {
         _hangHoaList.add(thongtin);
+        _totalThanhToan = _totalThanhToan + thongtin.THANH_TIEN!;
       });
     });
   }
@@ -114,8 +116,8 @@ class _BanVangPlusState extends State<BanVangPlus> {
     });
   }
 
-  void quetMaQR(context) {
-    ThuVienUntilState.scanQRcodePlus(context);
+  void quetMaQR(context) async {
+    await ThuVienUntilState.scanQRcodePlus(context);
     _LoadDatabyCamera();
   }
 
@@ -184,6 +186,7 @@ class _BanVangPlusState extends State<BanVangPlus> {
 
   @override
   void dispose() {
+    _hangHoaList.clear();
     super.dispose();
   }
 

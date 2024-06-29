@@ -12,7 +12,11 @@ class ImportDraftInvoiceManage with ChangeNotifier {
 
   //Them hoa don nhap
   Future<void> addDraftInvoice(ImportDraftInvoice_Model DraftInvoice) async {
-    print('Đầu vào: ${DraftInvoice}');
+    final dsSanPham = await DraftInvoice.Product.map((e) => e.toMap()).toList();
+    print('Danh Sách sản pham: ${dsSanPham}');
+    print('Đầu vào: ${DraftInvoice.toMap()}');
+
+
 
     final reponse = await http.post(
       Uri.parse('${urlMatBao + ImportHoaDonNhap}'),
@@ -38,7 +42,7 @@ class ImportDraftInvoiceManage with ChangeNotifier {
         'CusBankName': DraftInvoice.CusBankName,
         'CusBankNo': DraftInvoice.CusBankNo,
         'PaymentMethod': DraftInvoice.PaymentMethod,
-        'Product': DraftInvoice.Product,
+        'Products': dsSanPham,
         'Total': DraftInvoice.Total,
         'DiscountAmount': DraftInvoice.DiscountAmount,
         'VATAmount': DraftInvoice.VATAmount,
@@ -46,7 +50,7 @@ class ImportDraftInvoiceManage with ChangeNotifier {
       }),
     );
 
-    print(reponse.body);
+    print('BODY: ${reponse.body}');
 
     if (reponse.statusCode == 200) {
       _importDraftInvoice.add(DraftInvoice);

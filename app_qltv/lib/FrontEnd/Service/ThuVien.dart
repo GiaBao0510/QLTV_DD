@@ -60,6 +60,18 @@ String CurrentDateAndTime() {
   return formatterDate;
 }
 
+//4. Lấy chuỗi năm:tháng:ngày:giờ:phút:giay:miligiay
+String DetailedTimeSeries(){
+  String year = DateTime.now().year.toString(),
+        month = DateTime.now().month.toString(),
+        day = DateTime.now().day.toString(),
+      hour = DateTime.now().hour.toString(),
+      minute = DateTime.now().minute.toString(),
+      second = DateTime.now().second.toString(),
+      milisecond = DateTime.now().millisecond.toString();
+  return "$year$month$day$hour$minute$second$milisecond";
+}
+
 //Thu vien
 class ThuVienUntil extends StatefulWidget {
   const ThuVienUntil({super.key});
@@ -189,6 +201,7 @@ class ThuVienUntilState extends State<ThuVienUntil> {
   //3.Thực hiện thao tác quét mã QR
   static Future<void> scanQRcodePlus(BuildContext context) async {
     try {
+      maHangHoa = "";
       maHangHoa = await FlutterBarcodeScanner.scanBarcode(
         '#ff6666',
         'Cancel',
@@ -197,7 +210,7 @@ class ThuVienUntilState extends State<ThuVienUntil> {
       );
       //Nếu quét thành công thì sang trang
       if (maHangHoa.isNotEmpty && maHangHoa != "-1") {
-        Navigator.pop(context);
+        //Navigator.pop(context);
         // Navigator.push(
         //     context,
         //     MaterialPageRoute(
