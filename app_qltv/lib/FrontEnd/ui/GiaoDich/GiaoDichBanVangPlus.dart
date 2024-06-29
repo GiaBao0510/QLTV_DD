@@ -23,22 +23,14 @@ class _BanVangPlusState extends State<BanVangPlus> {
   final TextEditingController _controller = TextEditingController();
 
   late Future<TruocKhiThucHienBanVang_model> _thongTinHangHoaFuture;
-  late List<TruocKhiThucHienBanVang_model> _hangHoaList = [];
+  late final List<TruocKhiThucHienBanVang_model> _hangHoaList = [];
 
   late Future<List<Khachhang>> _khachHangFuture;
-  List<Khachhang> _khachHangList = [];
   List<Khachhang> _filteredKhachHang = [];
-  final TextEditingController _searchController = TextEditingController();
+  String nameKH = 'unknow';
+  String maKH = '';
   int _currentPage = 1;
-  int _pageSize = 10;
-  int _totalKhachhang = 0;
-  int _totalRows = 0;
   double _totalThanhToan = 0;
-
-  final TextEditingController _tongtien = TextEditingController(),
-      _tienbot = TextEditingController(),
-      _thanhtoan = TextEditingController(),
-      _tenKhachHang = TextEditingController();
 
   // ignore: non_constant_identifier_names
   Future<void> _LoadData(maSp) async {
@@ -60,10 +52,11 @@ class _BanVangPlusState extends State<BanVangPlus> {
     //Lấy thông tin hàng hóa
     _thongTinHangHoaFuture =
         Provider.of<BanvangController>(context, listen: false)
-            .FecthThongTinSanPham();
+            .ThongTinSanPham();
     _thongTinHangHoaFuture.then((thongtin) {
       setState(() {
         _hangHoaList.add(thongtin);
+        _totalThanhToan = _totalThanhToan + thongtin.THANH_TIEN!;
       });
     });
   }
@@ -71,41 +64,12 @@ class _BanVangPlusState extends State<BanVangPlus> {
   Future<void> _loadKhachhang({int page = 1}) async {
     final manager = Provider.of<KhachhangManage>(context, listen: false);
     // Fetch customer information
-    _khachHangFuture = manager.fetchKhachhang(page: page, pageSize: _pageSize);
+    _khachHangFuture = manager.fetchKhachhang(page: page, pageSize: 10);
     final clients = await _khachHangFuture;
     setState(() {
-      _khachHangList = clients;
       _filteredKhachHang = clients;
       _currentPage = page;
-      _totalRows = manager.totalRows;
     });
-  }
-
-  Future<void> _loadTotalKhachhang() async {
-    final totalKhachhang =
-        await Provider.of<KhachhangManage>(context, listen: false)
-            .fetchTotalKhachhang();
-
-    setState(() {
-      _totalKhachhang = totalKhachhang;
-    });
-  }
-
-  //4. Tạo bộ lọc tìm khách hàng dựa trên tên
-  void _filterKhachhang() {
-    final query = _searchController.text.toLowerCase();
-    setState(() {
-      _filteredKhachHang = _khachHangList.where((client) {
-        return client.kh_ten!.toLowerCase().contains(query);
-      }).toList();
-    });
-  }
-
-  void _updateThanhToan() {
-    final tongTien = double.tryParse(_tongtien.text) ?? 0.0;
-    final tienBot = double.tryParse(_tienbot.text) ?? 0.0;
-    final thanhToan = tongTien - tienBot;
-    _thanhtoan.text = thanhToan.toStringAsFixed(2);
   }
 
   void removeHangHoa(hangHoa) {
@@ -114,14 +78,14 @@ class _BanVangPlusState extends State<BanVangPlus> {
     });
   }
 
-  void quetMaQR(context) {
-    ThuVienUntilState.scanQRcodePlus(context);
+  void quetMaQR(context) async {
+    await ThuVienUntilState.scanQRcodePlus(context);
     _LoadDatabyCamera();
   }
 
-  void quetBarQR(context) {
+  void quetBarQR(context) async {
     ThuVienUntilState.scanBarcodePlus(context);
-    _LoadDatabyCamera();
+    await _LoadDatabyCamera();
   }
 
   void nhapMaSanPham(BuildContext context) {
@@ -179,7 +143,6 @@ class _BanVangPlusState extends State<BanVangPlus> {
   void initState() {
     super.initState();
     _loadKhachhang();
-    _searchController.addListener(_filterKhachhang);
   }
 
   @override
@@ -327,28 +290,22 @@ class _BanVangPlusState extends State<BanVangPlus> {
           Row(
             children: [
               Expanded(
-                flex: 2,
-                child: TextFormField(
-                  readOnly: true,
-                  controller: _tenKhachHang,
-                  decoration: const InputDecoration(
-                    labelText: 'Tên khách hàng:',
-                    labelStyle: TextStyle(
-                        color: Colors.black, fontWeight: FontWeight.bold),
-                    filled: true,
-                    fillColor: Colors.white,
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white, width: 15.0),
-                      borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.grey,
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+                    child: Text(
+                      nameKH,
+                      style: const TextStyle(
+                          fontSize: 20,
+                          // fontWeight: FontWeight.bold,
+                          color: Color.fromARGB(255, 0, 0, 0)),
+                      textAlign: TextAlign.center,
                     ),
                   ),
-                  textInputAction: TextInputAction.next,
-                  keyboardType: TextInputType.text,
-                  onSaved: (value) {
-                    // _ThongTinhThucHienBanVang =
-                    //     _ThongTinhThucHienBanVang.copyWith(
-                    //         TONG_TIEN: double.tryParse(value ?? '') ?? 0.0);
-                  },
                 ),
               ),
               const SizedBox(
@@ -382,16 +339,23 @@ class _BanVangPlusState extends State<BanVangPlus> {
           Row(
             children: [
               Expanded(
-                child: Text(
-                  formatCurrencyDouble(_totalThanhToan),
-                  style: const TextStyle(
-                      fontSize: 30,
-                      fontWeight: FontWeight.w900,
-                      color: Color.fromARGB(255, 231, 107, 40)),
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.only(top: 8.0, bottom: 8.0, left: 8),
+                    child: Text(
+                      formatCurrencyDouble(_totalThanhToan),
+                      style: const TextStyle(
+                          fontSize: 25,
+                          fontWeight: FontWeight.w900,
+                          color: Color.fromARGB(255, 231, 107, 40)),
+                      textAlign: TextAlign.left,
+                    ),
+                  ),
                 ),
-              ),
-              const SizedBox(
-                width: 10,
               ),
               Expanded(
                   flex: 1,
@@ -408,6 +372,7 @@ class _BanVangPlusState extends State<BanVangPlus> {
                           child: Text(
                             'THANH TOÁN',
                             style: TextStyle(
+                                fontSize: 20,
                                 color: Colors.black,
                                 fontWeight: FontWeight.w900),
                           )),
@@ -418,72 +383,6 @@ class _BanVangPlusState extends State<BanVangPlus> {
           const SizedBox(
             height: 10,
           ),
-          // TextFormField(
-          //   controller: _tongtien,
-          //   decoration: const InputDecoration(
-          //     labelText: 'Tổng tiền:',
-          //     labelStyle:
-          //         TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-          //     filled: true,
-          //     fillColor: Colors.white,
-          //     border: OutlineInputBorder(
-          //       borderSide: BorderSide(color: Colors.white, width: 15.0),
-          //       borderRadius: BorderRadius.all(Radius.circular(15.0)),
-          //     ),
-          //   ),
-          //   textInputAction: TextInputAction.next,
-          //   keyboardType: TextInputType.number,
-          //   onSaved: (value) {
-          //     // _ThongTinhThucHienBanVang = _ThongTinhThucHienBanVang.copyWith(
-          //     //     TONG_TIEN: double.tryParse(value ?? '') ?? 0.0);
-          //   },
-          // ),
-          // const SizedBox(
-          //   height: 15,
-          // ),
-          // TextFormField(
-          //   controller: _tienbot,
-          //   decoration: const InputDecoration(
-          //     labelText: 'Tiền bớt:',
-          //     labelStyle:
-          //         TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-          //     filled: true,
-          //     fillColor: Colors.white,
-          //     border: OutlineInputBorder(
-          //       borderSide: BorderSide(color: Colors.white, width: 15.0),
-          //       borderRadius: BorderRadius.all(Radius.circular(15.0)),
-          //     ),
-          //   ),
-          //   textInputAction: TextInputAction.next,
-          //   keyboardType: TextInputType.number,
-          //   onSaved: (value) {
-          //     //   _ThongTinhThucHienBanVang = _ThongTinhThucHienBanVang.copyWith(
-          //     //       TIEN_BOT: double.tryParse(value ?? '') ?? 0.0);
-          //   },
-          // ),
-          // const SizedBox(
-          //   height: 15,
-          // ),
-          // TextFormField(
-          //   controller: _thanhtoan,
-          //   decoration: const InputDecoration(
-          //     labelText: 'Thanh toán:',
-          //     labelStyle:
-          //         TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-          //     filled: true,
-          //     fillColor: Colors.white,
-          //     border: OutlineInputBorder(
-          //       borderSide: BorderSide(color: Colors.white, width: 15.0),
-          //       borderRadius: BorderRadius.all(Radius.circular(15.0)),
-          //     ),
-          //   ),
-          //   textInputAction: TextInputAction.next,
-          //   keyboardType: TextInputType.number,
-          //   onSaved: (value) {
-          //     // _ThongTinhThucHienBanVang = _ThongTinhThucHienBanVang.copyWith(
-          //     //     THANH_TOAN: double.tryParse(value ?? '') ?? 0.0);
-          //   },
-          // ),
         ],
       )),
     );
@@ -766,7 +665,8 @@ class _BanVangPlusState extends State<BanVangPlus> {
                       DataCell(Text('${client.kh_ten}'), onTap: () {
                         // Xử lý khi chọn khách hàng
                         setState(() {
-                          _tenKhachHang.text = client.kh_ten!;
+                          nameKH = client.kh_ten!;
+                          maKH = client.kh_ma!;
                         });
                         Navigator.pop(context); // Đóng BottomSheet
                       }),
