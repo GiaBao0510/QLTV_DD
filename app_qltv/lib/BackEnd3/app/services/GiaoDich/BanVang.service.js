@@ -93,6 +93,7 @@ const ThucHienGiaoDich = async (Input) =>{
 
             //2.0 Cập nhật tiền thói lại
             _Thoi_Lai = KHACH_DUA - _TONG_TIEN;
+            _Thanh_Toan = Math.max(_TONG_TIEN ,KHACH_DUA);
 
             //2.1Tạo phiếu xuất
             const TaoPhieuXuat = await ThuVien.InsertUpdateDB(`
@@ -142,7 +143,6 @@ const ThucHienGiaoDich = async (Input) =>{
                 }else{
                     console.log('Đã lấy tạo chi tiết phieus xuất');
                 }
-
             }
 
             return [ 200, {message: "Thực hiện giao dịch bán vàng thành công."}];
