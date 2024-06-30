@@ -245,10 +245,8 @@ class _BanVangPlusState extends State<BanVangPlus> {
   void handleThanhToan() async {
     showListSanPham();
 
-    // bool invoiceSuccess = await sendInvoiceMatBao();
-    // bool phieuXuatSuccess = await sendPhieuXuat();
-    bool invoiceSuccess = false;
-    bool phieuXuatSuccess = false;
+    bool invoiceSuccess = await sendInvoiceMatBao();
+    bool phieuXuatSuccess = await sendPhieuXuat();
 
     if (invoiceSuccess && phieuXuatSuccess) {
       setState(() {
