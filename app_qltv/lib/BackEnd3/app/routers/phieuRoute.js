@@ -18,5 +18,6 @@ router.route('/phieumuatheongay').get(KiemTra.CheckLogin, phieucam.getBCPhieuMua
 router.route('/phieumua/:id').get( KiemTra.CheckLogin, phieucam.getBCPhieuMuaVaoById);
 router.route('/phieudoi').get( KiemTra.CheckLogin, phieucam.getPhieuDoiController);
 router.route('/topkhachhang').get( KiemTra.CheckLogin, phieucam.getTopKhachHangController);
+router.route('/phieuxuatganday').get( KiemTra.CheckLogin, phieucam.currentPhieuXuat);
 
 module.exports = router;

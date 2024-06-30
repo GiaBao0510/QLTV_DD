@@ -17,9 +17,19 @@ exports.getPhieuXuat = async (req, res, next) => {
     next(error);
   }
 };
+
 exports.getPhieuXuatById = async (req, res, next) => {
   try {
     const phieu = await bao_caoPhieuServices.getPhieuXuatById(req.params.id);
+    res.status(200).json(phieu);
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.currentPhieuXuat = async (req, res, next) => {
+  try {
+    const phieu = await bao_caoPhieuServices.ThongTinPhieuXuatGanDay();
     res.status(200).json(phieu);
   } catch (error) {
     next(error);

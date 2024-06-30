@@ -1,4 +1,5 @@
 const db = require('../config/index_2');
+const thuVien = require('../ThuVien');
 //  table phx_phieu_xuat
 const getPhieuXuat = async (ngayBD, ngayKT, pages) => {
   return new Promise((resolve, reject) => {
@@ -8,7 +9,8 @@ const getPhieuXuat = async (ngayBD, ngayKT, pages) => {
       SELECT PHIEU_XUAT_MA 
       FROM phx_phieu_xuat
       WHERE Date(NGAY_XUAT) BETWEEN "${ngayBD}" AND "${ngayKT}"
-      LIMIT ${pages}
+      ORDER BY PHIEU_XUAT_MA
+      LIMIT 10 OFFSET ${pages}
     `  
     , async (error, results) => {
       if (error) {
@@ -84,7 +86,70 @@ const getPhieuXuat = async (ngayBD, ngayKT, pages) => {
   });
 };
 
+//Lấy thông tin phiếu xuất cuối cùng
+const ThongTinPhieuXuatGanDay = async() =>{
 
+  try{
+    //Lấy mã phiếu xuất cuối
+    let MaPhieuCuoi = await thuVien.queryDB(`
+      SELECT PHIEU_XUAT_ID
+      FROM phx_phieu_xuat
+      ORDER BY PHIEU_XUAT_ID DESC LIMIT 1`
+    );
+    if(MaPhieuCuoi.length == 0) throw Error('Xảy ra lỗi khi lấy mã ID phiếu xuất cuối cùng');
+
+    let PhieuXuatGanDay = await thuVien.queryDB(`
+      SELECT px.PHIEU_XUAT_MA, ctpx.HANGHOAMA, dmhh.HANG_HOA_TEN, ctpx.LOAIVANG,
+          dmhh.CAN_TONG, dmhh.TL_HOT, (dmhh.CAN_TONG - dmhh.TL_HOT) TL_Vang,
+          px.NGAY_XUAT, ctpx.DON_GIA, ctpx.THANH_TIEN, dmhh.CONG_GOC GiaGoc,
+          (ctpx.THANH_TIEN - dmhh.CONG_GOC) LaiLo, px.TIEN_BOT, px.TIEN_VANG_THEM,
+          kh.KH_TEN, ctpx.SO_LUONG, dmhh.GIA_CONG, px.TONG_TIEN, px.THANH_TOAN, 
+          IFNULL(pd.TRI_GIA_MUA,0) as TRI_GIA_MUA 
+      FROM phx_phieu_xuat px
+        INNER JOIN phx_khach_hang kh ON kh.KH_ID = px.KH_ID
+        JOIN phx_chi_tiet_phieu_xuat ctpx ON ctpx.PHIEU_XUAT_ID = px.PHIEU_XUAT_ID
+        JOIN danh_muc_hang_hoa dmhh ON dmhh.HANGHOAID = ctpx.HANGHOAID
+        left JOIN phd_phieu_doi pd ON px.PHIEU_XUAT_ID = pd.PHIEU_XUAT_ID
+      WHERE px.PHIEU_XUAT_ID="${MaPhieuCuoi[0].PHIEU_XUAT_ID}"
+    `);
+    if(PhieuXuatGanDay.length == 0) throw Error('Xảy ra lỗi khi lấy mã ID phiếu xuất cuối cùng');
+  
+    let customKetQuaTruyVan = PhieuXuatGanDay.map((e) => ({
+      "PHIEU_XUAT_MA": e.PHIEU_XUAT_MA,
+      "HANGHOAMA": e.HANGHOAMA,
+      "HANG_HOA_TEN": e.HANG_HOA_TEN,
+      "LOAIVANG": e.LOAIVANG,
+      "CAN_TONG": e.CAN_TONG,
+      "TL_HOT": e.TL_HOT,
+      "TL_Vang": e.TL_Vang,
+      "NGAY_XUAT": new Date(e.NGAY_XUAT).toLocaleDateString('vi-VN'),
+      "DON_GIA": e.DON_GIA,
+      "THANH_TIEN": e.THANH_TIEN,
+      "GiaGoc": e.GiaGoc,
+      "LaiLo": e.LaiLo,
+      "KH_TEN": e.KH_TEN,
+      "TIEN_BOT": Number(e.TIEN_BOT),
+      "SO_LUONG": Number(e.SO_LUONG),
+      "GIA_CONG": Number(e.GIA_CONG),
+      "TONG_TIEN": Number(e.TONG_TIEN),
+      "THANH_TOAN": Number(e.THANH_TOAN),
+      "TRI_GIA_MUA": Number(e.TRI_GIA_MUA),
+    }));
+  
+    let KQ = {
+      PhieuXuatMa: MaPhieuCuoi[0].PHIEU_XUAT_ID,
+      data: customKetQuaTruyVan
+    }
+    return KQ;
+
+  }catch(err){
+    console.log(`Lỗi: ${err.message}`);
+    return {message: `Lỗi: ${err.message}`};
+  }
+
+}
+
+//Lấy số lượng phiếu xuất theo từng thời điểm
 const laySoLuongPhieuXuatTheoThoiDiem = async (ngayBD, ngayKT) =>{
   return new Promise( (resolve, reject)=>{
     db.query(
@@ -116,8 +181,8 @@ const TinhTongPhieuXuatTheoThoiDiem = async (ngayBD, ngayKT) =>{
       `
       SELECT count(*) SoLuongHang, SUM(dmhh.CAN_TONG) TongCanTong,
         SUM(dmhh.TL_HOT) TongTLhot, SUM( (dmhh.CAN_TONG - dmhh.TL_HOT)) TongTLvang,
-        SUM(ctpx.THANH_TIEN) TongThanhTien, SUM(( (dmhh.DON_GIA_GOC * (dmhh.CAN_TONG - dmhh.TL_HOT)) + dmhh.CONG_GOC) ) TongGiaGoc,
-        SUM( (ctpx.THANH_TIEN - dmhh.CONG_GOC)) TongLaiLo
+        SUM(ctpx.THANH_TIEN) TongThanhTien, SUM( (dmhh.DON_GIA_GOC * ((dmhh.CAN_TONG - dmhh.TL_HOT)/100) + dmhh.CONG_GOC)) TongGiaGoc,
+        SUM( (ctpx.THANH_TIEN - (dmhh.DON_GIA_GOC * ((dmhh.CAN_TONG - dmhh.TL_HOT)/100) + dmhh.CONG_GOC) )) TongLaiLo
       FROM phx_phieu_xuat px 
         INNER JOIN phx_chi_tiet_phieu_xuat ctpx ON px.PHIEU_XUAT_ID = ctpx.PHIEU_XUAT_ID
         JOIN danh_muc_hang_hoa dmhh ON dmhh.HANGHOAID = ctpx.HANGHOAID
@@ -360,4 +425,5 @@ module.exports = {
   getTopKhachHang,
   laySoLuongPhieuXuatTheoThoiDiem,
   TinhTongPhieuXuatTheoThoiDiem,
+  ThongTinPhieuXuatGanDay,
 };

@@ -60,12 +60,15 @@ const ThucHienGiaoDich = async (Input) =>{
         phut = new Date().getMinutes(),
         giay = new Date().getSeconds();
     const PHIEU_XUAT_MA = "PX"+String(nam)+String(thang)+String(ngay)+String(gio)+String(phut)+String(giay);
+    const ThoiGianTao = `${nam}-${thang}-${ngay} ${gio}:${phut}:${giay}`;
+    console.log('THời gian tạo: ',ThoiGianTao);
 
     try{
         //0.Truy vấn thông tin khách hàng dựa trên mã khách hàng
         let KT_khachHang = await ThuVien.queryDB(`SELECT * FROM phx_khach_hang WHERE KH_ID = ${KH_ID}`);
         if(KT_khachHang.length === 0){
             status = 404;
+            console.log('ERROR: Mã khách hàng không tồn tại.');
             throw Error("Mã khách hàng không tồn tại.");
         }else{
             console.log('Đã tìm thấy khách hàng');
@@ -99,10 +102,11 @@ const ThucHienGiaoDich = async (Input) =>{
             const TaoPhieuXuat = await ThuVien.InsertUpdateDB(`
                 INSERT INTO 
                 phx_phieu_xuat(KH_ID, PHIEU_XUAT_MA, NGAY_XUAT,TONG_TIEN, KHACH_DUA, THOI_LAI, TONG_SL, CAN_TONG, TL_HOT, GIA_CONG, TIEN_BOT, THANH_TOAN)
-                VALUES(${KH_ID},"${PHIEU_XUAT_MA}", NOW(), ${_TONG_TIEN}, ${KHACH_DUA}, ${_Thoi_Lai}, ${_tong_SoLuong}, ${_tong_CanTong}, ${_tong_TL_HOT}, ${_tong_GiaCong}, ${TIEN_BOT}, ${_Thanh_Toan});
+                VALUES(${KH_ID},"${PHIEU_XUAT_MA}", "${String(ThoiGianTao)}" ,${_TONG_TIEN}, ${KHACH_DUA}, ${_Thoi_Lai}, ${_tong_SoLuong}, ${_tong_CanTong}, ${_tong_TL_HOT}, ${_tong_GiaCong}, ${TIEN_BOT}, ${_Thanh_Toan});
             `);
             if(TaoPhieuXuat == 0){
                 status = 500;
+                console.log('ERROR: Lỗi khi tạo phiếu xuất.');
                 throw Error("Lỗi khi tạo phiếu xuất.");
             }else{
                 console.log('Đã Tạo phiếu xuất: ',PHIEU_XUAT_MA);
@@ -115,6 +119,7 @@ const ThucHienGiaoDich = async (Input) =>{
             `);
             if(PHIEU_XUAT_ID.length === 0){
                 status = 500;
+                console.log('ERROR: Lỗi khi lấy ID cuối phiếu xuất');
                 throw Error("Lỗi khi lấy ID cuối phiếu xuất.");
             }else{
                 console.log('Đã lấy ID cuối phieus xuất');
@@ -126,6 +131,7 @@ const ThucHienGiaoDich = async (Input) =>{
                 const CapNhatBangTonKho = await ThuVien.InsertUpdateDB(`UPDATE ton_kho SET SL_TON=SL_TON-1, SL_Xuat=SL_Xuat+1 WHERE KHOID = 1 and HANGHOAID = "${e.HANGHOAID}";`);
                 if(CapNhatBangTonKho === 0){
                     status = 500;
+                    console.log('ERROR: Lỗi khi cập nhật số lượng tồn kho.');
                     throw Error("Lỗi khi cập nhật số lượng tồn kho.");
                 }else{
                     console.log('Đã cập nhật số lượng tồn hàng hóa');
@@ -139,6 +145,7 @@ const ThucHienGiaoDich = async (Input) =>{
                 `);
                 if(Tao_CTphieuXuat == 0){
                     status = 500;
+                    console.log('ERROR: Lỗi khi tạo chi tiết phiếu xuất.');
                     throw Error("Lỗi khi tạo chi tiết phiếu xuất.");
                 }else{
                     console.log('Đã lấy tạo chi tiết phieus xuất');
