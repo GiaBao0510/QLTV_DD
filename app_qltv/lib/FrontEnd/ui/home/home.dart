@@ -11,6 +11,19 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
+    String getGreetingMessage() {
+      int hour = DateTime.now().hour;
+      if (hour < 10) {
+        return 'Chúc bạn buổi sáng tốt lành!';
+      } else if (hour < 13) {
+        return 'Chúc bạn buổi trưa tốt lành!';
+      } else if (hour < 18) {
+        return 'Chúc bạn buổi chiều tốt lành!';
+      } else {
+        return 'Chúc bạn buổi tối tốt lành!';
+      }
+    }
+
     final danhmuc_items = [
       {
         'image': 'assets/images/gold-ingot.png',
@@ -65,11 +78,6 @@ class _HomeScreenState extends State<HomeScreen> {
         'text': 'Kết Nối',
         'routeName': '/ketnoi'
       },
-      // {
-      //   'image': 'assets/images/access-control.png',
-      //   'text': 'Quản Lý Quyền',
-      //   'routeName': '/loaivang'
-      // },
     ];
 
     final camvang_items = [
@@ -179,13 +187,29 @@ class _HomeScreenState extends State<HomeScreen> {
                 borderRadius: BorderRadius.circular(20.0),
               ),
               width: double.infinity, // Ensure container expands horizontally
-              child: const Text(
-                'XIN CHÀO!',
-                style: TextStyle(
-                  color: Color.fromARGB(255, 228, 200, 126),
-                  fontWeight: FontWeight.w900,
-                  fontSize: 30,
-                ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text(
+                    'XIN CHÀO!',
+                    style: TextStyle(
+                      color: Color.fromARGB(255, 255, 187, 0),
+                      fontWeight: FontWeight.w900,
+                      fontSize: 30,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    getGreetingMessage(),
+                    style: const TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 18,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
               ),
             ),
             const SizedBox(height: 20),
