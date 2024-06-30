@@ -32,26 +32,19 @@ class _BaoCaoPhieuXuat extends State<BaoCaoPhieuXuatScreen> {
   List<BangBaoCaoPhieuXuat_model> _PhieuXuatList = [];
   late ThuVienUntilState thuvien;
 
-  late Future<ThongTinTinhTong_model> _ThongTinTinhTongFuture;
   ThongTinTinhTong_model _ThongTinTinhTong = ThongTinTinhTong_model(
-      SoLuongHang: 0,
-      TongCanTong: 0.0,
-      TongTLhot: 0.0,
-      TongTLvang: 0.0,
-      TongThanhTien: 0.0,
-      TongGiaGoc: 0.0,
+      SoLuongHang: 0, TongCanTong: 0.0, TongTLhot: 0.0,
+      TongTLvang: 0.0, TongThanhTien: 0.0, TongGiaGoc: 0.0,
       TongLaiLo: 0.0);
 
-  int pages = 15; //So dong toi da duoc tai len
-  int loadElements = 5; //Moi lan load chi lây 5 phân tử
-  int SoLuong = 0;
+  int pages = 0; //So dong toi da duoc tai len
+  int SoLuongPhieuXuat = 0;
 
   //Phuong thuc khoi tao truoc build
   @override
   void initState() {
     super.initState();
-    _loadBaoCaoPhieuXuat();
-    _LoadSummary();
+    _loadBaoCaoPhieuXuat(pages);
     _searchController.addListener(_filterBaoCaoPhieuXuat);
     thuvien = ThuVienUntilState();
   }
@@ -62,7 +55,7 @@ class _BaoCaoPhieuXuat extends State<BaoCaoPhieuXuatScreen> {
     super.dispose();
   }
 
-  Future<void> _loadBaoCaoPhieuXuat() async {
+  Future<void> _loadBaoCaoPhieuXuat(int pages) async {
     //--- Ghi phuương thức --------
     //1.Load bang dữ liệu
     _bangBaoCaoPhieuXuatFuture =
@@ -102,14 +95,13 @@ class _BaoCaoPhieuXuat extends State<BaoCaoPhieuXuatScreen> {
   }
 
   //4.Chuyển sang phần xuất file PDF Dang bảng
-  Future<void> printDoc(List<BangBaoCaoPhieuXuat_model> data,
-      Map<String, dynamic> GetThongTinTinhTong) async {
+  Future<void> printDoc(List<BangBaoCaoPhieuXuat_model> data) async {
     final font = await loadFont('assets/fonts/Roboto-Regular.ttf');
     final doc = pw.Document();
     doc.addPage(pw.Page(
         pageFormat: PdfPageFormat.a4,
         build: (pw.Context context) {
-          return buildPrintableData(data, font, GetThongTinTinhTong);
+          return buildPrintableData(data, font, _ThongTinTinhTong);
         }));
     await Printing.layoutPdf(
         onLayout: (PdfPageFormat format) async => doc.save());
@@ -150,14 +142,18 @@ class _BaoCaoPhieuXuat extends State<BaoCaoPhieuXuatScreen> {
 
   //7. Load tinh tong
   Future<void> _LoadSummary() async {
-    _ThongTinTinhTongFuture = Provider.of<BaocaophieuxuatManage>(context,
-            listen: false)
-        .TinhTongPhieuXuat(ThuVienUntilState.ngayBD, ThuVienUntilState.ngayKT);
-    _ThongTinTinhTongFuture.then((tinhtong) {
-      print('thong tin tinh tong: ${tinhtong}');
-      setState(() {
-        _ThongTinTinhTong = tinhtong;
-      });
+    final thongTinTinhTong = await Provider.of<BaocaophieuxuatManage>(context,listen: false).TinhTongPhieuXuat(ThuVienUntilState.ngayBD, ThuVienUntilState.ngayKT);
+    setState(() {
+      _ThongTinTinhTong = thongTinTinhTong;
+    });
+  }
+
+  //8. Load so luong phieu xuat
+  Future<void> LaySoLuongPhieuXuat() async{
+    final _baoCaoPhieuXuatController = Provider.of<BaocaophieuxuatManage>(context, listen: false);
+    int SL = await _baoCaoPhieuXuatController.SoLuongPhieuXuat(ThuVienUntilState.ngayBD, ThuVienUntilState.ngayKT);
+    setState(() {
+      SoLuongPhieuXuat = SL;
     });
   }
 
@@ -193,9 +189,17 @@ class _BaoCaoPhieuXuat extends State<BaoCaoPhieuXuatScreen> {
                     child: TextButton(
                       onPressed: () {
                         print('Chuyen sang PDF');
-                        //printDoc(_filterPhieuXuatList, ThongTinTinhTong);
+                        printDoc(_filterPhieuXuatList);
                       },
                       child: Text('Export PDF'),
+                    ),
+                  ),
+                  PopupMenuItem<String>(
+                    child: TextButton(
+                      onPressed: () {
+                        print('Chuyen sang Excel');
+                      },
+                      child: Text('Export Excel'),
                     ),
                   ),
                 ];
@@ -203,7 +207,7 @@ class _BaoCaoPhieuXuat extends State<BaoCaoPhieuXuatScreen> {
         ],
       ),
       body: RefreshIndicator(
-        onRefresh: () => _loadBaoCaoPhieuXuat(),
+        onRefresh: () => _loadBaoCaoPhieuXuat(pages),
         child: SafeArea(
           child: Container(
             padding: EdgeInsets.fromLTRB(10, 15, 10, 0),
@@ -230,6 +234,10 @@ class _BaoCaoPhieuXuat extends State<BaoCaoPhieuXuatScreen> {
                     ),
                   ),
                 ),
+                Align(
+                    alignment: Alignment.bottomCenter,
+                    child: ChangePage(context)
+                ),
               ],
             ),
           ),
@@ -237,21 +245,79 @@ class _BaoCaoPhieuXuat extends State<BaoCaoPhieuXuatScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          print('${_ThongTinTinhTong}');
           showModalBottomSheet(
               context: context,
               builder: (BuildContext context) {
                 return Container(
                   decoration: const BoxDecoration(
                     borderRadius: BorderRadius.only(
-                      topRight: Radius.circular(15),
-                      topLeft: Radius.circular(15),
+                      topRight: Radius.circular(20),
+                      topLeft: Radius.circular(20),
                     ),
-                    color: Colors.red,
+                    gradient: LinearGradient(
+                      colors: [Color(0xffff8008), Color(0xffffc837)],
+                      stops: [0, 1],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
                   ),
-                  width: 50,
-                  height: 50,
-                  child: Text('${_ThongTinTinhTong}'),
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 15,),
+                      Align(
+                        alignment: Alignment.center,
+                        child: Text('Tổng quan', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),),
+                      ),
+
+                      const SizedBox(height: 20,),
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: DataTable(
+                            headingRowColor: MaterialStateColor.resolveWith(
+                                    (states) => Colors.black87),
+                            columns: [
+                              DataColumn(label: Text('Số lượng',style: TextStyle(color: Colors.white),) ),
+                              DataColumn(label: Text('Cân tổng',style: TextStyle(color: Colors.white),) ),
+                              DataColumn(label: Text('TL hột',style: TextStyle(color: Colors.white),) ),
+                              DataColumn(label: Text('TL vàng',style: TextStyle(color: Colors.white),) ),
+                            ],
+                            rows: [
+                              DataRow(cells: [
+                                DataCell(Text('${_ThongTinTinhTong.SoLuongHang}')),
+                                DataCell(Text('${formatCurrencyDouble(_ThongTinTinhTong.TongCanTong)}')),
+                                DataCell(Text('${formatCurrencyDouble(_ThongTinTinhTong.TongTLhot)}')),
+                                DataCell(Text('${formatCurrencyDouble(_ThongTinTinhTong.TongTLvang)}')),
+                              ]),
+                            ],
+                          dataRowColor: MaterialStateColor.resolveWith(
+                                  (states) => Colors.white),
+                        ),
+                      ),
+
+                      const SizedBox(height: 20,),
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: DataTable(
+                          headingRowColor: MaterialStateColor.resolveWith(
+                                  (states) => Colors.black87),
+                          columns: [
+                            DataColumn(label: Text('Thành tiền',style: TextStyle(color: Colors.white),) ),
+                            DataColumn(label: Text('Giá công',style: TextStyle(color: Colors.white),) ),
+                            DataColumn(label: Text('Lãi lỗ',style: TextStyle(color: Colors.white),) ),
+                          ],
+                          rows: [
+                            DataRow(cells: [
+                              DataCell(Text('${formatCurrencyDouble(_ThongTinTinhTong.TongThanhTien)}')),
+                              DataCell(Text('${formatCurrencyDouble(_ThongTinTinhTong.TongGiaGoc)}')),
+                              DataCell(Text('${formatCurrencyDouble(_ThongTinTinhTong.TongLaiLo)}')),
+                            ]),
+                          ],
+                          dataRowColor: MaterialStateColor.resolveWith(
+                                  (states) => Colors.white),
+                        ),
+                      ),
+                    ],
+                  ),
                 );
               });
         },
@@ -290,12 +356,6 @@ class _BaoCaoPhieuXuat extends State<BaoCaoPhieuXuatScreen> {
                   margin: EdgeInsets.fromLTRB(5, 15, 5, 10),
                   padding: EdgeInsets.fromLTRB(5, 10, 5, 10),
                   decoration: BoxDecoration(
-                    // gradient: LinearGradient(
-                    //   colors: [Color(0xffe65c00), Color(0xfff9d423)],
-                    //   stops: [0, 1],
-                    //   begin: Alignment.topLeft,
-                    //   end: Alignment.bottomRight,
-                    // ),
                     color: const Color.fromARGB(255, 228, 200, 126),
                     borderRadius: BorderRadius.circular(10),
                     boxShadow: [
@@ -312,30 +372,30 @@ class _BaoCaoPhieuXuat extends State<BaoCaoPhieuXuatScreen> {
                       //Tieu de
                       Align(
                           alignment: Alignment.centerLeft,
-                          child: Row(
-                            children: [
-                              FittedBox(
-                                fit: BoxFit.fitWidth,
-                                child: Text(
+                          child: FittedBox(
+                            fit: BoxFit.fitWidth,
+                            child: Row(
+                              children: [
+                                Text(
                                   "Phiếu xuất mã: ${BaoCao.MaPhieuXuat}",
                                   style: TextStyle(
                                       fontSize: 15,
                                       fontWeight: FontWeight.bold),
                                   textAlign: TextAlign.center,
                                 ),
-                              ),
-                              const SizedBox(
-                                width: 25,
-                              ),
-                              IconButton(
-                                  onPressed: () {
-                                    ThongTinChiTiet(context, BaoCao);
-                                  },
-                                  icon: Icon(
-                                    Icons.info_outline,
-                                    size: 30,
-                                  )),
-                            ],
+                                const SizedBox(
+                                  width: 25,
+                                ),
+                                IconButton(
+                                    onPressed: () {
+                                      ThongTinChiTiet(context, BaoCao);
+                                    },
+                                    icon: Icon(
+                                      Icons.info_outline,
+                                      size: 30,
+                                    )),
+                              ],
+                            ),
                           )),
 
                       const SizedBox(
@@ -796,7 +856,9 @@ class _BaoCaoPhieuXuat extends State<BaoCaoPhieuXuatScreen> {
               flex: 1,
               child: TextButton(
                   onPressed: () {
-                    _loadBaoCaoPhieuXuat();
+                    _loadBaoCaoPhieuXuat(pages);
+                    LaySoLuongPhieuXuat();
+                    _LoadSummary();
                   },
                   child: FittedBox(
                     fit: BoxFit.fitWidth,
@@ -820,4 +882,44 @@ class _BaoCaoPhieuXuat extends State<BaoCaoPhieuXuatScreen> {
       ),
     );
   }
+
+  //Tính năng chuyển trang khi người dùng bấm
+  Widget ChangePage(BuildContext context){
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Visibility(
+          visible: pages >= 0,
+            child: ElevatedButton(
+              onPressed: (){
+                setState(() {
+                  pages-=10;
+                });
+                if(pages >= 0){
+                  _loadBaoCaoPhieuXuat(pages);
+                }
+              },
+              child: const Text('<'),
+            )
+        ),
+
+        const SizedBox(width: 50,),
+        Visibility(
+            visible: pages <= SoLuongPhieuXuat,
+            child: ElevatedButton(
+              onPressed: (){
+                setState(() {
+                  pages+=10;
+                });
+                if(pages <= SoLuongPhieuXuat){
+                  _loadBaoCaoPhieuXuat(pages);
+                }
+              },
+              child: const Text('>'),
+            )
+        ),
+      ],
+    );
+  }
+
 }

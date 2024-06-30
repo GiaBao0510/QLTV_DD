@@ -470,38 +470,6 @@ class _drawerState extends State<drawer> {
                         },
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          left: 16.0), // Khoảng cách thụt lề
-                      child: ListTile(
-                        leading: Image.asset(
-                          'assets/images/qr-code.png',
-                          width: 24.0,
-                          height: 24.0,
-                        ),
-                        title: const Text('Giao dịch bán vàng bằng QR-code',
-                            style: TextStyle(fontWeight: FontWeight.w800)),
-                        onTap: () {
-                          ThuVienUntilState.scanQRcode(context);
-                        },
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          left: 16.0), // Khoảng cách thụt lề
-                      child: ListTile(
-                        leading: Image.asset(
-                          'assets/images/barcode-scan.png',
-                          width: 24.0,
-                          height: 24.0,
-                        ),
-                        title: const Text('Giao dịch bán vàng bằng Bar-code ',
-                            style: TextStyle(fontWeight: FontWeight.w800)),
-                        onTap: () {
-                          ThuVienUntilState.scanBarcode(context);
-                        },
-                      ),
-                    ),
                   ],
                 ),
                 ExpansionTile(

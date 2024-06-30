@@ -8,12 +8,18 @@ import 'package:app_qltv/FrontEnd/controller/danhmuc/khachhang_manager.dart';
 import 'package:app_qltv/FrontEnd/model/GiaoDich/BanVang_model.dart';
 import 'package:app_qltv/FrontEnd/model/GiaoDich/ProductMB.dart';
 import 'package:app_qltv/FrontEnd/model/danhmuc/khachhang.dart';
+import 'package:app_qltv/FrontEnd/model/danhmuc/BaoCaoPhieuXuat.dart';
+import 'package:app_qltv/FrontEnd/controller/danhmuc/BaoCaoPhieuXuat_manage.dart';
+import 'package:app_qltv/FrontEnd/Service/export/PDF/PhieuXuat_PDF.dart';
 import 'package:app_qltv/FrontEnd/ui/components/FormatCurrency.dart';
-import 'package:flutter/material.dart';
 
+import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:pdf/pdf.dart';
+import 'package:printing/printing.dart';
 
 class BanVangPlus extends StatefulWidget {
   static const routerName = '/giaodichbanvangplus';
@@ -42,6 +48,9 @@ class _BanVangPlusState extends State<BanVangPlus> {
     prodAttr: 0,
   );
 
+  late BangBaoCaoPhieuXuat_model _phieuXuatPDF;
+  List<BaoCaoPhieuXuat_model> _chiTietTungHang = [];
+  String MaPhieuXuat = '';
   late Future<List<Khachhang>> _khachHangFuture;
   List<Khachhang> _filteredKhachHang = [];
   String nameKH = '_____';
@@ -235,11 +244,28 @@ class _BanVangPlusState extends State<BanVangPlus> {
     }
   }
 
+  //Chuyển sang phân phiếu xuất sau khi giao dịch thành công
+  Future<void> PrintInvoice(BangBaoCaoPhieuXuat_model item) async{
+    final Front = await LoadFont('assets/fonts/Roboto-Regular.ttf');
+    final Doc = pw.Document();
+    Doc.addPage(pw.Page(
+      orientation: pw.PageOrientation.landscape,
+      pageFormat: PdfPageFormat.a4,
+      build: (pw.Context context){
+        return CreateInvoice(item, Front);
+      }
+    ));
+    await Printing.layoutPdf(
+      onLayout: (PdfPageFormat format) async => Doc.save(),
+    );
+  }
+
   void handleThanhToan() async {
     showListSanPham();
-
     bool invoiceSuccess = await sendInvoiceMatBao();
     bool phieuXuatSuccess = await sendPhieuXuat();
+    final phieuXuatGanDay = Provider.of<BaocaophieuxuatManage>(context, listen: false);
+    BangBaoCaoPhieuXuat_model bill = await phieuXuatGanDay.layPhieuXuatGanDay();
 
     if (invoiceSuccess && phieuXuatSuccess) {
       setState(() {
@@ -247,6 +273,8 @@ class _BanVangPlusState extends State<BanVangPlus> {
         _productList.clear();
         _totalThanhToan = 0.0;
       });
+      PrintInvoice(bill);
+
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: const Text('Gửi hóa đơn và phiếu xuất thành công!')));
     } else {
@@ -746,7 +774,6 @@ class _BanVangPlusState extends State<BanVangPlus> {
   }
 
   //Show list Khách hàng
-  // ignore: non_constant_identifier_names
   FutureBuilder<List<Khachhang>> ShowListClient() {
     return FutureBuilder<List<Khachhang>>(
       future: _khachHangFuture,

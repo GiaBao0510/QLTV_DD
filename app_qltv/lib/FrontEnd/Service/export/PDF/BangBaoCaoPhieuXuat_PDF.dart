@@ -59,7 +59,7 @@ List<pw.TableRow> BuildListItems(List<BangBaoCaoPhieuXuat_model> data, pw.Font f
 }
 
 //Phan hien thị chinh
-buildPrintableData(List<BangBaoCaoPhieuXuat_model> data,pw.Font font, Map<String, dynamic> thongTinTinhTong ){
+buildPrintableData(List<BangBaoCaoPhieuXuat_model> data,pw.Font font, ThongTinTinhTong_model thongTinTinhTong ){
   List<pw.TableRow> rows = BuildListItems(data, font);
   return pw.Container(
       child: pw.Table(
@@ -98,14 +98,14 @@ buildPrintableData(List<BangBaoCaoPhieuXuat_model> data,pw.Font font, Map<String
                   pw.Text(''),
                   pw.Text(''),
                   pw.Text(''),
-                  pw.Text('${formatCurrencyDouble(thongTinTinhTong['_tongCanTong'])}', style: pw.TextStyle(color: PdfColors.red, fontSize: 7)),
-                  pw.Text('${formatCurrencyDouble(thongTinTinhTong['_tongTLhot'])}', style: pw.TextStyle(color: PdfColors.red, fontSize: 7)),
-                  pw.Text('${formatCurrencyDouble(thongTinTinhTong['_tongTLVang'])}', style: pw.TextStyle(color: PdfColors.red, fontSize: 7)),
+                  pw.Text('${formatCurrencyDouble(thongTinTinhTong.TongCanTong)}', style: pw.TextStyle(color: PdfColors.red, fontSize: 7)),
+                  pw.Text('${formatCurrencyDouble(thongTinTinhTong.TongTLhot)}', style: pw.TextStyle(color: PdfColors.red, fontSize: 7)),
+                  pw.Text('${formatCurrencyDouble(thongTinTinhTong.TongTLvang)}', style: pw.TextStyle(color: PdfColors.red, fontSize: 7)),
                   pw.Text(''),
                   pw.Text(''),
-                  pw.Text('${formatCurrencyDouble(thongTinTinhTong['_tongThanhTien'])}', style: pw.TextStyle(color: PdfColors.red, fontSize: 7)),
-                  pw.Text('${formatCurrencyDouble(thongTinTinhTong['_tongGiaGoc'])}', style: pw.TextStyle(color: PdfColors.red, fontSize: 7)),
-                  pw.Text('${formatCurrencyDouble(thongTinTinhTong['_tongLaiLo'])}', style: pw.TextStyle(color: PdfColors.red, fontSize: 7)),
+                  pw.Text('${formatCurrencyDouble(thongTinTinhTong.TongThanhTien)}', style: pw.TextStyle(color: PdfColors.red, fontSize: 7)),
+                  pw.Text('${formatCurrencyDouble(thongTinTinhTong.TongGiaGoc)}', style: pw.TextStyle(color: PdfColors.red, fontSize: 7)),
+                  pw.Text('${formatCurrencyDouble(thongTinTinhTong.TongLaiLo)}', style: pw.TextStyle(color: PdfColors.red, fontSize: 7)),
                 ]
             ),
           ]

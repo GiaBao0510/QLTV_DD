@@ -226,7 +226,7 @@ class ThongTinTinhTong_model {
   }
 
   //Chuyen Object sang Map
-  Map<String, dynamic> toMap(Map<String, dynamic> map) {
+  Map<String, dynamic> toMap() {
     return {
       'SoLuongHang': SoLuongHang,
       'TongCanTong': TongCanTong,

@@ -20,9 +20,10 @@ class BaocaophieuxuatManage with ChangeNotifier {
     String StartDay = DateFormat('yyyy-MM-dd').format(ngayBT);
     String EndDay = DateFormat('yyyy-MM-dd').format(ngayKT);
     String Pages = pages.toString();
+    print('------------------------');
+    print('Số trang: ${Pages}');
+    print('------------------------');
 
-    print("ngày bắt đầu: ${StartDay}");
-    print("ngay ket thuc: ${EndDay}");
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final response = await http.get(
         Uri.parse(
@@ -30,7 +31,6 @@ class BaocaophieuxuatManage with ChangeNotifier {
         headers: {
           "accesstoken": "${prefs.getString('accesstoken')}",
         });
-    print(response.body);
     if (response.statusCode == 200) {
       List<dynamic> jsonList = jsonDecode(response.body);
       List<BangBaoCaoPhieuXuat_model> BangBaoCaoPhieuXuatList =
@@ -55,17 +55,17 @@ class BaocaophieuxuatManage with ChangeNotifier {
     //Truy van
     final res = await http.get(
         Uri.parse(
-            'http://localhost:3000/api/phieu/soluongphieuxuat?ngayBD=${startDay}&ngayKT=${endDay}'),
+            '$url/api/phieu/soluongphieuxuat?ngayBD=${startDay}&ngayKT=${endDay}'),
         headers: {
           "accesstoken": "${prefs.getString('accesstoken')}",
         });
-    print(res.body);
 
     //Success
     if (res.statusCode == 200) {
       final json = jsonDecode(res.body);
       notifyListeners();
-      return json['SoLuongPhieuXuat'] as int;
+      final result = (json[0]['SoLuongPhieuXuat'] as int) ?? 0;
+      return result;
     }
     //Fall
     else {
@@ -91,10 +91,33 @@ class BaocaophieuxuatManage with ChangeNotifier {
     if (res.statusCode == 200) {
       final json = jsonDecode(res.body);
       ThongTinTinhTong_model KetQuaTinhTong =
-          ThongTinTinhTong_model.fromMap(json);
+          ThongTinTinhTong_model.fromMap(json[0]);
       notifyListeners();
+      
+
       return KetQuaTinhTong;
     } else {
+      throw Exception('Failed to load data');
+    }
+  }
+
+  //4. Thông tin phiếu xuất gần dây
+  Future<BangBaoCaoPhieuXuat_model> layPhieuXuatGanDay() async{
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final res = await http.get(
+        Uri.parse(
+            '$url/api/phieu/phieuxuatganday'),
+        headers: {
+          "accesstoken": "${prefs.getString('accesstoken')}",
+        }
+    );
+    if(res.statusCode == 200){
+      final json = jsonDecode(res.body);
+      BangBaoCaoPhieuXuat_model result = BangBaoCaoPhieuXuat_model.fromMap(json);
+      notifyListeners();
+      return result;
+
+    }else{
       throw Exception('Failed to load data');
     }
   }
