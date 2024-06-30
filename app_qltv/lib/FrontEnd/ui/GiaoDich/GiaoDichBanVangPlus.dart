@@ -118,6 +118,7 @@ class _BanVangPlusState extends State<BanVangPlus> {
   void removeHangHoa(hangHoa) {
     setState(() {
       _hangHoaList.remove(hangHoa);
+      _productList.removeWhere((product) => product.code == hangHoa.HANGHOAID);
     });
   }
 
@@ -185,7 +186,13 @@ class _BanVangPlusState extends State<BanVangPlus> {
     // Mã hóa danh sách các map thành chuỗi JSON
     String jsonString = jsonEncode(jsonList);
 
-    print('HANGHOA[]: $jsonString');
+    List<Map<String, dynamic>> jsonList2 =
+        _hangHoaList.map((item) => item.toMap()).toList();
+
+    // Mã hóa danh sách các map thành chuỗi JSON
+    String jsonString2 = jsonEncode(jsonList2);
+    print('HANGHOA_BaoKhoa[]: $jsonString2');
+    print('HANGHOA_MatBao[]: $jsonString');
   }
 
   Future<bool> sendInvoiceMatBao() async {
@@ -194,11 +201,11 @@ class _BanVangPlusState extends State<BanVangPlus> {
       DateTime date = DateTime.now();
       String formattedDateNow = DateFormat('dd/MM/yyyy').format(date);
       String fKey = await manager.getFKey();
-      print('=========fkey: $fKey =========');
-      print('=========formattedDateNow: $formattedDateNow =========');
+      // print('=========fkey: $fKey =========');
+      // print('=========formattedDateNow: $formattedDateNow =========');
       await manager.postHoaDonMatBao(
         fkey: fKey,
-        arisingDate: '',
+        arisingDate: formattedDateNow,
         so: "",
         maKH: maKH,
         cusName: nameKH,
@@ -238,8 +245,10 @@ class _BanVangPlusState extends State<BanVangPlus> {
   void handleThanhToan() async {
     showListSanPham();
 
-    bool invoiceSuccess = await sendInvoiceMatBao();
-    bool phieuXuatSuccess = await sendPhieuXuat();
+    // bool invoiceSuccess = await sendInvoiceMatBao();
+    // bool phieuXuatSuccess = await sendPhieuXuat();
+    bool invoiceSuccess = false;
+    bool phieuXuatSuccess = false;
 
     if (invoiceSuccess && phieuXuatSuccess) {
       setState(() {
@@ -247,8 +256,8 @@ class _BanVangPlusState extends State<BanVangPlus> {
         _productList.clear();
         _totalThanhToan = 0.0;
       });
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: const Text('Gửi hóa đơn và phiếu xuất thành công!')));
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Gửi hóa đơn và phiếu xuất thành công!')));
     } else {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text('Gửi hóa đơn hoặc phiếu xuất thất bại.')));
@@ -326,57 +335,106 @@ class _BanVangPlusState extends State<BanVangPlus> {
         child: Column(
           children: [
             Expanded(
-              child: ListView.separated(
-                padding: const EdgeInsets.all(8),
-                itemCount: _hangHoaList.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return Container(
-                    decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 228, 200, 126),
-                      borderRadius: BorderRadius.circular(10),
+              child: _hangHoaList.isEmpty
+                  ? Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          ElevatedButton(
+                            onPressed: () {
+                              quetMaQR(context);
+                            },
+                            child: const Text(
+                              'Mã QR',
+                              style: TextStyle(
+                                  color: Color.fromARGB(255, 228, 200, 126),
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w900),
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          ElevatedButton(
+                            onPressed: () {
+                              quetBarQR(context);
+                            },
+                            child: const Text(
+                              'Mã Vạch',
+                              style: TextStyle(
+                                  color: Color.fromARGB(255, 228, 200, 126),
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w900),
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          ElevatedButton(
+                            onPressed: () {
+                              nhapMaSanPham(context);
+                            },
+                            child: const Text(
+                              'Nhập Mã',
+                              style: TextStyle(
+                                  color: Color.fromARGB(255, 228, 200, 126),
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w900),
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  : ListView.separated(
+                      padding: const EdgeInsets.all(8),
+                      itemCount: _hangHoaList.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return Container(
+                          decoration: BoxDecoration(
+                            color: const Color.fromARGB(255, 228, 200, 126),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Center(
+                              child: Column(
+                            children: [
+                              const SizedBox(height: 5),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 15.0),
+                                    child: Text(
+                                      'no.${index + 1}',
+                                      style: const TextStyle(
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w600),
+                                    ),
+                                  ),
+                                  Text(
+                                    '${_hangHoaList[index].TEN_HANG}',
+                                    style: const TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w800),
+                                  ),
+                                  IconButton(
+                                    icon: const Icon(
+                                      CupertinoIcons.delete,
+                                      color: Colors.black,
+                                    ),
+                                    onPressed: () {
+                                      removeHangHoa(_hangHoaList[index]);
+                                    },
+                                  ),
+                                ],
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(12.0),
+                                child: chiTietHangHoa(index),
+                              )
+                            ],
+                          )),
+                        );
+                      },
+                      separatorBuilder: (BuildContext context, int index) =>
+                          const Divider(),
                     ),
-                    child: Center(
-                        child: Column(
-                      children: [
-                        const SizedBox(height: 5),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(left: 15.0),
-                              child: Text(
-                                'no.${index + 1}',
-                                style: const TextStyle(
-                                    fontSize: 15, fontWeight: FontWeight.w600),
-                              ),
-                            ),
-                            Text(
-                              '${_hangHoaList[index].TEN_HANG}',
-                              style: const TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.w800),
-                            ),
-                            IconButton(
-                              icon: const Icon(
-                                CupertinoIcons.delete,
-                                color: Colors.black,
-                              ),
-                              onPressed: () {
-                                removeHangHoa(_hangHoaList[index]);
-                              },
-                            ),
-                          ],
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(12.0),
-                          child: chiTietHangHoa(index),
-                        )
-                      ],
-                    )),
-                  );
-                },
-                separatorBuilder: (BuildContext context, int index) =>
-                    const Divider(),
-              ),
             ),
             thongTinGiaoDich(context)
           ],
@@ -453,8 +511,10 @@ class _BanVangPlusState extends State<BanVangPlus> {
             height: 10,
           ),
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Expanded(
+              Flexible(
+                flex: 2,
                 child: Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(15),
@@ -462,38 +522,46 @@ class _BanVangPlusState extends State<BanVangPlus> {
                   child: Padding(
                     padding:
                         const EdgeInsets.only(top: 8.0, bottom: 8.0, left: 8),
-                    child: Text(
-                      formatCurrencyDouble(_totalThanhToan),
-                      style: const TextStyle(
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(
+                        formatCurrencyDouble(_totalThanhToan),
+                        style: const TextStyle(
                           fontSize: 25,
                           fontWeight: FontWeight.w900,
-                          color: Color.fromARGB(255, 231, 107, 40)),
-                      textAlign: TextAlign.left,
+                          color: Color.fromARGB(255, 231, 107, 40),
+                        ),
+                        textAlign: TextAlign.left,
+                      ),
                     ),
                   ),
                 ),
               ),
-              Expanded(
-                  flex: 1,
-                  child: Container(
-                    decoration: BoxDecoration(
-                        color: Colors.orange,
-                        borderRadius: BorderRadius.circular(15)),
-                    child: TextButton(
-                      onPressed: () {
-                        handleThanhToan();
-                      },
-                      child: const Align(
-                          alignment: Alignment.center,
-                          child: Text(
-                            'THANH TOÁN',
-                            style: TextStyle(
-                                fontSize: 20,
-                                color: Colors.black,
-                                fontWeight: FontWeight.w900),
-                          )),
+              Flexible(
+                flex: 1,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.orange,
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: TextButton(
+                    onPressed: () {
+                      handleThanhToan();
+                    },
+                    child: const Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        'THANH TOÁN',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.black,
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
                     ),
-                  )),
+                  ),
+                ),
+              ),
             ],
           ),
           const SizedBox(

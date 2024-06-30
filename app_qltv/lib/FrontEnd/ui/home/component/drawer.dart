@@ -455,7 +455,7 @@ class _drawerState extends State<drawer> {
                           left: 16.0), // Khoảng cách thụt lề
                       child: ListTile(
                         leading: Image.asset(
-                          'assets/images/qr-code.png',
+                          'assets/images/money-transfer.png',
                           width: 24.0,
                           height: 24.0,
                         ),
