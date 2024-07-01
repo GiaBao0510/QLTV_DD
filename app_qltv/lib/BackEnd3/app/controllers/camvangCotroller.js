@@ -3,12 +3,12 @@
 const camvangServices = require('../services/camvangServices');
 
 exports.getPhieuDangCam = async (req, res, next) => {
-  try {
-    const {ngayBD, ngayKT, limit, offset} =  req.query;
-    if(!ngayBD || !ngayKT || !limit || !offset){
-      return res.status(404).json({message: "Vui lòng thêm tham số ngày bắt đầu, ngày kết thúc, limit và offset để lấy thông tin hiển thị."});
+  try { 
+    const {ngayBD, ngayKT, pages} =  req.query;
+    if(!ngayBD || !ngayKT || !pages){
+      return res.status(404).json({message: "Vui lòng thêm tham số ngày bắt đầu, ngày kết thúc, pages để lấy thông tin hiển thị."});
     }
-    const phieuList = await camvangServices.getPhieuDangCam(ngayBD,ngayKT,limit,offset);
+    const phieuList = await camvangServices.getPhieuDangCam(ngayBD,ngayKT,pages);
     res.status(200).json(phieuList);
   } catch (error) {
     next(error);
@@ -27,6 +27,19 @@ exports.getThongTinTinhTongPhieuDangCam = async (req, res, next) => {
     next(error);
   }
 };
+
+exports.getAllPhieuDangCam_byDate = async(req, res, next) =>{
+  const {ngayBD, ngayKT} = req.query;
+  try{
+    if(!ngayBD || !ngayKT){
+      return res.status(400).json({message: 'Vui lòng điền các thông số ngayBD và ngày KT để lấy thông tin'});
+    }
+    const result = await camvangServices.getAllPhieuDangCam_byDate(ngayBD, ngayKT);
+    res.status(200).json(result);
+  }catch(err){
+    next(err);
+  }
+}
 
 exports.getPhieuDangCamById = async (req, res, next) => {
   try {

@@ -4,6 +4,7 @@ const router = express.Router();
 const KiemTra = require('../services/KiemTra.services');
 
 router.route('/dangcam').get( KiemTra.CheckLogin, phieucam.getPhieuDangCam);
+router.route('/dangcamAll').get(KiemTra.CheckLogin, phieucam.getAllPhieuDangCam_byDate);
 router.route('/tinhtongphieudangcam').get( KiemTra.CheckLogin, phieucam.getThongTinTinhTongPhieuDangCam);
 router.route('/dangcam/:id').get(KiemTra.CheckLogin, phieucam.getPhieuDangCamById)
 router.route('/chitietphieucambyloaivang').get(KiemTra.CheckLogin, phieucam.getChiTietPhieuCamByLoaiVang);
