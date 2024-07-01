@@ -20,9 +20,6 @@ class BaocaophieuxuatManage with ChangeNotifier {
     String StartDay = DateFormat('yyyy-MM-dd').format(ngayBT);
     String EndDay = DateFormat('yyyy-MM-dd').format(ngayKT);
     String Pages = pages.toString();
-    print('------------------------');
-    print('Số trang: ${Pages}');
-    print('------------------------');
 
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final response = await http.get(

@@ -2,6 +2,8 @@ import 'package:flutter/services.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:app_qltv/FrontEnd/Service/ThuVien.dart';
+import 'package:app_qltv/FrontEnd/model/CamVang/PhieuDangCam.dart';
+import '../../../ui/components/FormatCurrency.dart';
 
 Future<pw.Font> loadFont(String fontPath) async {
   final fontData = await rootBundle.load(fontPath);
@@ -9,8 +11,8 @@ Future<pw.Font> loadFont(String fontPath) async {
   return font;
 }
 
-buildPrintableData(List<dynamic> data, pw.Font font, Map<String, dynamic> thongTinTinhTong) => pw.Container(
-  child: pw.Table(
+List<pw.Widget> buildPrintableData(List<PhieuDangCam_model> data, pw.Font font, TinhTongPhieuDangCam_model thongTinTinhTong) {
+  return [pw.Table(
       border: pw.TableBorder.all(
         color: PdfColors.black,
       ),
@@ -120,76 +122,111 @@ buildPrintableData(List<dynamic> data, pw.Font font, Map<String, dynamic> thongT
             ]),
           ],
         ),
-        ...data.map((item) => pw.TableRow(children: [
-          pw.Column(children: [
-            pw.Text(' ${item['PHIEU_MA']} ',
-                style: pw.TextStyle(font: font,fontSize: 8))
-          ]),
-          pw.Column(children: [
-            pw.Text(' ${item['KH_TEN']}',
-                style: pw.TextStyle(font: font,fontSize: 8))
-          ]),
-          pw.Column(children: [
-            pw.Text(' ${item['NGAY_CAM']}',
-                style: pw.TextStyle(font: font,fontSize: 8))
-          ]),
-          pw.Column(children: [
-            pw.Text(' ${item['NGAY_QUA_HAN']}',
-                style: pw.TextStyle(font: font,fontSize: 8))
-          ]),
-          pw.Column(children: [
-            pw.Text(' ${DinhDangDonViTien_VND(item['CAN_TONG'])}',
-                style: pw.TextStyle(font: font,fontSize: 8))
-          ]),
-          pw.Column(children: [
-            pw.Text(' ${DinhDangDonViTien_VND(item['TL_HOT'])}',
-                style: pw.TextStyle(font: font,fontSize: 8))
-          ]),
-          pw.Column(children: [
-            pw.Text(' ${DinhDangDonViTien_VND(item['TL_THUC'])}',
-                style: pw.TextStyle(font: font,fontSize: 8))
-          ]),
-          pw.Column(children: [
-            pw.Text(' ${DinhDangDonViTien_VND(item['DINHGIA'])}',
-                style: pw.TextStyle(font: font,fontSize: 8))
-          ]),
-          pw.Column(children: [
-            pw.Text(
-                ' ${DinhDangDonViTien_VND(item['TIEN_KHACH_NHAN'])}',
-                style: pw.TextStyle(font: font,fontSize: 8))
-          ]),
-          pw.Column(children: [
-            pw.Text(' ${DinhDangDonViTien_VND(item['TIEN_THEM'])}',
-                style: pw.TextStyle(font: font,fontSize: 8))
-          ]),
-          pw.Column(children: [
-            pw.Text(
-                ' ${DinhDangDonViTien_VND(item['TIEN_CAM_MOI'])}',
-                style: pw.TextStyle(font: font ,fontSize: 8) )
-          ]),
-          pw.Column(children: [
-            pw.Text(' ${item['LAI_XUAT']}%',
-                style: pw.TextStyle(font: font,fontSize: 8))
-          ]),
-        ]))
+        ...data.map((item) =>
+            pw.TableRow(children: [
+              pw.Column(children: [
+                pw.Text(' ${item.PHIEU_MA} ',
+                    style: pw.TextStyle(font: font, fontSize: 8))
+              ]),
+              pw.Column(children: [
+                pw.Text(' ${item.KH_TEN}',
+                    style: pw.TextStyle(font: font, fontSize: 8))
+              ]),
+              pw.Column(children: [
+                pw.Text(' ${item.NGAY_CAM}',
+                    style: pw.TextStyle(font: font, fontSize: 8))
+              ]),
+              pw.Column(children: [
+                pw.Text(' ${item.DEN_NGAY}',
+                    style: pw.TextStyle(font: font, fontSize: 8))
+              ]),
+              pw.Column(children: [
+                pw.Text(' ${formatCurrencyDouble(item.CAN_TONG ?? 0.0)}',
+                    style: pw.TextStyle(font: font, fontSize: 8))
+              ]),
+              pw.Column(children: [
+                pw.Text(' ${formatCurrencyDouble(item.TL_HOT ?? 0.0)}',
+                    style: pw.TextStyle(font: font, fontSize: 8))
+              ]),
+              pw.Column(children: [
+                pw.Text(' ${formatCurrencyDouble(item.TL_THUC ?? 0.0)}',
+                    style: pw.TextStyle(font: font, fontSize: 8))
+              ]),
+              pw.Column(children: [
+                pw.Text(' ${formatCurrencyDouble(item.DINH_GIA ?? 0.0)}',
+                    style: pw.TextStyle(font: font, fontSize: 8))
+              ]),
+              pw.Column(children: [
+                pw.Text(
+                    ' ${formatCurrencyDouble(item.TIEN_KHACH_NHAN ?? 0.0)}',
+                    style: pw.TextStyle(font: font, fontSize: 8))
+              ]),
+              pw.Column(children: [
+                pw.Text(' ${formatCurrencyDouble(item.TIEN_THEM ?? 0.0)}',
+                    style: pw.TextStyle(font: font, fontSize: 8))
+              ]),
+              pw.Column(children: [
+                pw.Text(
+                    ' ${formatCurrencyDouble(item.TIEN_MOI ?? 0.0)}',
+                    style: pw.TextStyle(font: font, fontSize: 8))
+              ]),
+              pw.Column(children: [
+                pw.Text(' ${item.LAI_XUAT}%',
+                    style: pw.TextStyle(font: font, fontSize: 8))
+              ]),
+            ]))
             .toList(),
 
         //Hien thi tong thong tin
         pw.TableRow(
-          children: [
-            pw.Column(children: [pw.Text(' ${thongTinTinhTong['soHang']}', style: pw.TextStyle(font: font,fontSize: 8, color: PdfColors.red))]),
-            pw.Column(children: [pw.Text(' ')]),
-            pw.Column(children: [pw.Text(' ')]),
-            pw.Column(children: [pw.Text('')]),
-            pw.Column(children: [pw.Text(' ${DinhDangDonViTien_VND(thongTinTinhTong['Tong_CANTONG'])}', style: pw.TextStyle(font: font,fontSize: 8, color: PdfColors.red))]),
-            pw.Column(children: [pw.Text(' ${DinhDangDonViTien_VND(thongTinTinhTong['Tong_TLhot'])}', style: pw.TextStyle(font: font,fontSize: 8, color: PdfColors.red))]),
-            pw.Column(children: [pw.Text(' ${DinhDangDonViTien_VND(thongTinTinhTong['Tong_TLthuc'])}', style: pw.TextStyle(font: font,fontSize: 8, color: PdfColors.red))]),
-            pw.Column(children: [pw.Text(' ${DinhDangDonViTien_VND(thongTinTinhTong['Tong_DinhGia'])}', style: pw.TextStyle(font: font,fontSize: 8, color: PdfColors.red))]),
-            pw.Column(children: [pw.Text(' ${DinhDangDonViTien_VND(thongTinTinhTong['tong_TienKhachNhan'])}', style: pw.TextStyle(font: font,fontSize: 8, color: PdfColors.red))]),
-            pw.Column(children: [pw.Text(' ${DinhDangDonViTien_VND(thongTinTinhTong['tong_TienNhanThem'])}', style: pw.TextStyle(font: font,fontSize: 8, color: PdfColors.red))]),
-            pw.Column(children: [pw.Text(' ${DinhDangDonViTien_VND(thongTinTinhTong['tong_TienCamMoi'])}', style: pw.TextStyle(font: font,fontSize: 8, color: PdfColors.red))]),
-          ]
+            children: [
+              pw.Column(children: [
+                pw.Text(' ${thongTinTinhTong.SoLuong}', style: pw.TextStyle(
+                    font: font, fontSize: 8, color: PdfColors.red))
+              ]),
+              pw.Column(children: [pw.Text(' ')]),
+              pw.Column(children: [pw.Text(' ')]),
+              pw.Column(children: [pw.Text('')]),
+              pw.Column(children: [
+                pw.Text(' ${formatCurrencyDouble(
+                    thongTinTinhTong.TongCanTong ?? 0.0)}', style: pw.TextStyle(
+                    font: font, fontSize: 8, color: PdfColors.red))
+              ]),
+              pw.Column(children: [
+                pw.Text(' ${formatCurrencyDouble(
+                    thongTinTinhTong.Tong_TL_HOT ?? 0.0)}', style: pw.TextStyle(
+                    font: font, fontSize: 8, color: PdfColors.red))
+              ]),
+              pw.Column(children: [
+                pw.Text(' ${formatCurrencyDouble(
+                    thongTinTinhTong.Tong_TLthuc ?? 0.0)}', style: pw.TextStyle(
+                    font: font, fontSize: 8, color: PdfColors.red))
+              ]),
+              pw.Column(children: [
+                pw.Text(' ${formatCurrencyDouble(
+                    thongTinTinhTong.TongDinhGia ?? 0.0)}', style: pw.TextStyle(
+                    font: font, fontSize: 8, color: PdfColors.red))
+              ]),
+              pw.Column(children: [
+                pw.Text(' ${formatCurrencyDouble(
+                    thongTinTinhTong.TongTienKhachNhan ?? 0.0)}',
+                    style: pw.TextStyle(
+                        font: font, fontSize: 8, color: PdfColors.red))
+              ]),
+              pw.Column(children: [
+                pw.Text(' ${formatCurrencyDouble(
+                    thongTinTinhTong.TongTienThem ?? 0.0)}',
+                    style: pw.TextStyle(
+                        font: font, fontSize: 8, color: PdfColors.red))
+              ]),
+              pw.Column(children: [
+                pw.Text(' ${formatCurrencyDouble(
+                    thongTinTinhTong.TongTienMoi ?? 0.0)}', style: pw.TextStyle(
+                    font: font, fontSize: 8, color: PdfColors.red))
+              ]),
+            ]
         ),
 
-      ]),
-);
+      ])
+  ];
+}

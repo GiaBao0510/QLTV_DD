@@ -24,6 +24,32 @@ class _HomeScreenState extends State<HomeScreen> {
       }
     }
 
+    String AnhNen(){
+      int hour = DateTime.now().hour;
+      if (hour < 10) {
+        return 'assets/images/morning.jpg';
+      } else if (hour < 13) {
+        return 'assets/images/CityNoonTime.jpg';
+      } else if (hour < 18) {
+        return 'assets/images/CityAffterNoon.jpg';
+      } else {
+        return 'assets/images/Saigon night__.jpg';
+      }
+    }
+
+    Color Mau_LoiChuc(){
+      int hour = DateTime.now().hour;
+      if (hour < 10) {
+        return Color.fromARGB(255, 255, 187, 0);
+      } else if (hour < 13) {
+        return Color.fromARGB(255, 0, 178, 183);
+      } else if (hour < 18) {
+        return Color.fromARGB(255, 255, 255, 255);
+      } else {
+        return Color.fromARGB(255, 255, 255, 255);
+      }
+    }
+
     final danhmuc_items = [
       {
         'image': 'assets/images/gold-ingot.png',
@@ -178,40 +204,57 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           children: [
             const SizedBox(height: 20),
+            //Ảnh nền
+            const SizedBox(height: 20),
             Container(
-              margin: const EdgeInsets.symmetric(horizontal: 10.0),
-              padding: const EdgeInsets.only(
-                  top: 80, left: 40, right: 40, bottom: 80),
-              decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 218, 218, 218),
-                borderRadius: BorderRadius.circular(20.0),
-              ),
-              width: double.infinity, // Ensure container expands horizontally
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
+              margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
+              child:Stack(
                 children: [
-                  const Text(
-                    'XIN CHÀO!',
-                    style: TextStyle(
-                      color: Color.fromARGB(255, 255, 187, 0),
-                      fontWeight: FontWeight.w900,
-                      fontSize: 30,
-                    ),
+                  Positioned(
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.all(Radius.circular(20)),
+                        child: Image.asset(
+                          AnhNen(),
+                          width: double.maxFinite,
+                          height: 300,
+                          fit: BoxFit.cover,
+                        ),
+                      )
                   ),
-                  const SizedBox(height: 10),
-                  Text(
-                    getGreetingMessage(),
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 18,
+                  Align(
+                    alignment: Alignment.center,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const SizedBox(height: 80,),
+                        Text(
+                          'XIN CHÀO!',
+                          style: TextStyle(
+                            color: Color.fromARGB(255, 255, 187, 0),
+                            fontWeight: FontWeight.w900,
+                            fontSize: 30,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 20),
+                        Text(
+                          getGreetingMessage(),
+                          style: TextStyle(
+                            color: Mau_LoiChuc(),
+                            fontWeight: FontWeight.w600,
+                            fontSize: 18,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
                     ),
-                    textAlign: TextAlign.center,
-                  ),
+                  )
                 ],
               ),
             ),
+
+
             const SizedBox(height: 20),
             Stack(
               children: [

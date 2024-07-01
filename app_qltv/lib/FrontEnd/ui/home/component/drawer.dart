@@ -788,13 +788,13 @@ class _drawerState extends State<drawer> {
           ),
 
           //Phần kiêm tra chuc nang
-          Container(
-            child: ListTile(
-              leading: Image.asset('assets/images/test.png'),
-              title: Text('Test chức năng'),
-              onTap: () {},
-            ),
-          ),
+          // Container(
+          //   child: ListTile(
+          //     leading: Image.asset('assets/images/test.png'),
+          //     title: Text('Test chức năng'),
+          //     onTap: () {},
+          //   ),
+          // ),
 
           //Nút đăng xuất
           const SizedBox(

@@ -30,12 +30,15 @@ class _PhieuDangCam extends State<PhieuDangCam> {
   // ------ Thuộc tính -------
   //--------------------------
   late Future<List<PhieuDangCam_model>> _phieuDangCam_Future;
+  late Future<List<PhieuDangCam_model>> _AllPhieuDangCam_Future;
   late Future<TinhTongPhieuDangCam_model> _tinhTongPhieuDangCam_Future;
   final TextEditingController _searchController = TextEditingController();
   List<PhieuDangCam_model> _fillterPhieuDangCam = [];
   List<PhieuDangCam_model> _PhieuDangCam_List = [];
+  List<PhieuDangCam_model> _All_PhieuDangCam = [];
   late TinhTongPhieuDangCam_model thongTinhTinhTong;
-  final dkCuon = ScrollController();
+  int pages = 0;
+  int SoLuongPhieu = 0;
 
   //--------------------------
   // ------ phương thức ------
@@ -46,52 +49,49 @@ class _PhieuDangCam extends State<PhieuDangCam> {
     super.initState();
     ThuVienUntilState.ngayBD = DateTime.now();
     ThuVienUntilState.ngayKT = DateTime.now();
-    ThuVienUntilState.offset = 0;
     _LoadTongTinTinhTong();
-    _loadDuLieuPhieuDangCam();
+    _loadDuLieuPhieuDangCam(pages);
+    _loadAllPhieuDangCam();
     _searchController.addListener(_FillterPhieuDangCam);
-    dkCuon.addListener(LoadDataWhenEndPage);
-    _refreshData();
   }
 
   //2. Ham huy
   @override
   void dispose() {
     _searchController.dispose();
-    ThuVienUntilState.scrollController.dispose();
+    ThuVienUntilState.ngayBD = DateTime.now();
+    ThuVienUntilState.ngayKT = DateTime.now();
     super.dispose();
   }
 
   //3.Load dữ liệu tìm kiếm theo ngày
-  Future<void> _loadDuLieuPhieuDangCam() async {
+  Future<void> _loadDuLieuPhieuDangCam(int pages) async {
     _phieuDangCam_Future =
         Provider.of<PhieuDangCamManage>(context, listen: false)
             .fetchPhieuDangCam(
-                ThuVienUntilState.ngayBD,
-                ThuVienUntilState.ngayKT,
-                ThuVienUntilState.limit,
-                ThuVienUntilState.offset);
-
-    if (ThuVienUntilState.offset == 0) {
-      _phieuDangCam_Future.then((PhieuDangCams) {
-        setState(() {
-          _PhieuDangCam_List = PhieuDangCams;
-          _fillterPhieuDangCam = PhieuDangCams;
-        });
+                ThuVienUntilState.ngayBD, ThuVienUntilState.ngayKT, pages);
+    _phieuDangCam_Future.then((PhieuDangCams) {
+      setState(() {
+        _PhieuDangCam_List = PhieuDangCams;
+        _fillterPhieuDangCam = PhieuDangCams;
       });
-    } else {
-      _phieuDangCam_Future.then((PhieuDangCams) {
-        for (int i = 0; i < PhieuDangCams.length; i++) {
-          PhieuDangCam_model item = PhieuDangCams[i];
-          setState(() {
-            _fillterPhieuDangCam.add(item);
-          });
-        }
-      });
-    }
+    });
   }
 
-  //4.Load dữ liệu tính tổng
+  //4. Load dữ liệu tất cả các phiếu đang cầm theo ngày
+  Future<void> _loadAllPhieuDangCam() async{
+    _AllPhieuDangCam_Future =
+        Provider.of<PhieuDangCamManage>(context, listen: false)
+            .fetchAllPhieuDangCam(
+            ThuVienUntilState.ngayBD, ThuVienUntilState.ngayKT);
+    _AllPhieuDangCam_Future.then((PhieuDangCams) {
+      setState(() {
+        _All_PhieuDangCam = PhieuDangCams;
+      });
+    });
+  }
+
+  //5.Load dữ liệu tính tổng
   Future<void> _LoadTongTinTinhTong() async {
     _tinhTongPhieuDangCam_Future =
         Provider.of<PhieuDangCamManage>(context, listen: false)
@@ -99,13 +99,12 @@ class _PhieuDangCam extends State<PhieuDangCam> {
                 ThuVienUntilState.ngayBD, ThuVienUntilState.ngayKT);
     _tinhTongPhieuDangCam_Future.then((values) {
       setState(() {
-        print("Giá trị Tính tống: ${values}");
         thongTinhTinhTong = values;
       });
     });
   }
 
-  //5.Lọc dữ liệu dữ trên max phieu dang cam
+  //6.Lọc dữ liệu dữ trên max phieu dang cam
   void _FillterPhieuDangCam() {
     final query = _searchController.text.toLowerCase();
     setState(() {
@@ -115,18 +114,7 @@ class _PhieuDangCam extends State<PhieuDangCam> {
     });
   }
 
-  //6. Làm mới dữ liệu
-  Future<void> _refreshData() async {
-    ThuVienUntilState.ngayBD = DateTime.now();
-    ThuVienUntilState.ngayKT = DateTime.now();
-    ThuVienUntilState.offset = 0;
-    ThuVienUntilState.StartDayController.clear();
-    ThuVienUntilState.EndDayController.clear();
-    await _LoadTongTinTinhTong();
-    await _loadDuLieuPhieuDangCam();
-  }
-
-  //7. Đặt gia trị ngày bắt đầu
+  //8. Đặt gia trị ngày bắt đầu
   void _SelectStartDate() async {
     final DateTime? picked = await showDatePicker(
         context: context,
@@ -142,7 +130,7 @@ class _PhieuDangCam extends State<PhieuDangCam> {
     }
   }
 
-  //8. Đặt gia trị ngày kêết thúc
+  //9. Đặt gia trị ngày kêết thúc
   void _SelectEndDate() async {
     final DateTime? picked = await showDatePicker(
         context: context,
@@ -156,21 +144,21 @@ class _PhieuDangCam extends State<PhieuDangCam> {
             ThuVienUntilState.dateFormat.format(ThuVienUntilState.ngayKT);
       });
     }
-    //print('Ngày kết thúc đã chọn: $ngayKT');
   }
 
-  //9. Điều kện cuộn
-  void LoadDataWhenEndPage() {
-    if (dkCuon.position.pixels >= dkCuon.position.maxScrollExtent - 100) {
-      print('Đến cuối trang');
-      print('Offset: ${ThuVienUntilState.offset}');
-      setState(() {
-        ThuVienUntilState.offset += 10;
-      });
-      _loadDuLieuPhieuDangCam();
-    } else {
-      print('Chưa cuối trang');
-    }
+  //10. Chuyển đổi sang PDF
+  Future<void> exportFilePFD() async{
+    final front = await loadFont('assets/fonts/Roboto-Regular.ttf');
+    final Doc = pw.Document();
+    Doc.addPage(
+      pw.MultiPage(
+        pageFormat: PdfPageFormat.a4,
+        build: (pw.Context context){
+          return buildPrintableData(_All_PhieuDangCam,front ,thongTinhTinhTong);
+        }
+      )
+    );
+    await Printing.layoutPdf(onLayout: (PdfPageFormat format) async => Doc.save());
   }
 
   //--------------------------
@@ -191,69 +179,42 @@ class _PhieuDangCam extends State<PhieuDangCam> {
               Navigator.of(context).pop();
             },
           ),
-          title: Row(
-            children: [
-              const Expanded(
-                flex: 2,
-                child: FittedBox(
-                  fit: BoxFit.fitWidth,
-                  child: Text(
-                    'Phiếu đang cầm',
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 20,
-                        fontFamily: 'Align',
-                        fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ),
-              Expanded(
-                flex: 1,
-                child: TextButton(
-                    onPressed: () {
-                      print('Chuyển sang phần chuyển đổi PDF');
-                      //printDoc(data);
-                    },
-                    child: Container(
-                      width: double.infinity,
-                      padding: EdgeInsets.fromLTRB(2, 5, 2, 20),
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [Color(0xffededed), Color(0xffdee8e8)],
-                          stops: [0.25, 0.75],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
-                        borderRadius: BorderRadius.circular(10),
-                        boxShadow: [
-                          BoxShadow(
-                              color: Colors.black12,
-                              blurRadius: 8,
-                              offset: Offset(4, 8))
-                        ],
-                      ),
-                      child: Center(
-                          child: Text(
-                        'Export PDF',
-                        style: TextStyle(fontSize: 15, color: Colors.black),
-                        textAlign: TextAlign.center,
-                      )),
-                    )),
-              ),
-            ],
+          title: const FittedBox(
+            fit: BoxFit.fitWidth,
+            child: Text(
+              'Phiếu đang cầm',
+              style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 20,
+                  fontFamily: 'Align',
+                  fontWeight: FontWeight.bold),
+            ),
           ),
           flexibleSpace: Container(
             decoration: const BoxDecoration(
-              // gradient: LinearGradient(
-              //     begin: Alignment.topLeft,
-              //     end: Alignment.bottomRight,
-              //     colors: [Colors.orange, Colors.amber])
               color: Color.fromARGB(255, 228, 200, 126),
             ),
           ),
+          actions: [
+            PopupMenuButton(
+                itemBuilder: (BuildContext context){
+                  return <PopupMenuEntry<String>>[
+                    PopupMenuItem<String>(
+                        child: TextButton(
+                          onPressed: (){
+                            print('Chuyển sang pdf');
+                            exportFilePFD();
+                          },
+                          child: Text('Export PDF'),
+                        )
+                    )
+                  ];
+                }
+            ),
+          ],
         ),
         body: RefreshIndicator(
-          onRefresh: _refreshData,
+          onRefresh: () => _loadDuLieuPhieuDangCam(pages),
           child: SafeArea(
             child: Container(
               padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
@@ -272,24 +233,20 @@ class _PhieuDangCam extends State<PhieuDangCam> {
                 ),
                 Expanded(
                     child: Scrollbar(
-                  controller: dkCuon,
-                  child: ListView(
-                    children: [
-                      Column(
+                      child: ListView(
                         children: [
-                          ShowList(),
-                          const SizedBox(
-                            height: 5,
-                          ),
-                          NutLoadDuLieu(context),
-                          const SizedBox(
-                            height: 15,
-                          ),
+                          Column(
+                            children: [
+                              ShowList(),
+                            ],
+                          )
                         ],
-                      )
-                    ],
-                  ),
+                      ),
                 )),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: ChangePage(context),
+                )
               ]),
             ),
           ),
@@ -303,12 +260,6 @@ class _PhieuDangCam extends State<PhieuDangCam> {
                     heightFactor: 0.8,
                     child: Container(
                       decoration: const BoxDecoration(
-                          // gradient: LinearGradient(
-                          //   colors: [Color(0xffff512f), Color(0xfff09819)],
-                          //   stops: [0, 1],
-                          //   begin: Alignment.topLeft,
-                          //   end: Alignment.bottomRight,
-                          // ),
                           color: const Color.fromARGB(255, 228, 200, 126),
                           borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(25),
@@ -344,9 +295,9 @@ class _PhieuDangCam extends State<PhieuDangCam> {
             ));
           } else {
             return ListView.builder(
-                controller: dkCuon,
                 shrinkWrap: true,
-                //reverse: true,
+                reverse: true,
+                physics: NeverScrollableScrollPhysics(),
                 itemCount: _fillterPhieuDangCam.length,
                 itemBuilder: (_, index) {
                   final BaoCao = _fillterPhieuDangCam[index];
@@ -354,12 +305,6 @@ class _PhieuDangCam extends State<PhieuDangCam> {
                     margin: EdgeInsets.fromLTRB(5, 15, 5, 10),
                     padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
                     decoration: BoxDecoration(
-                      // gradient: const LinearGradient(
-                      //   colors: [Color(0xffe65c00), Color(0xfff9d423)],
-                      //   stops: [0, 1],
-                      //   begin: Alignment.topLeft,
-                      //   end: Alignment.bottomRight,
-                      // ),
                       color: const Color.fromARGB(255, 228, 200, 126),
                       borderRadius: BorderRadius.circular(10),
                       boxShadow: [
@@ -671,11 +616,14 @@ class _PhieuDangCam extends State<PhieuDangCam> {
               flex: 1,
               child: TextButton(
                   onPressed: () {
-                    setState(() {
-                      ThuVienUntilState.offset = 0;
-                    });
-                    _loadDuLieuPhieuDangCam();
+                    _loadDuLieuPhieuDangCam(pages);
                     _LoadTongTinTinhTong();
+                    _loadAllPhieuDangCam();
+                    setState(() {
+                      SoLuongPhieu = thongTinhTinhTong.SoLuong ?? 0;
+                    });
+                    print('Số lượng : ${SoLuongPhieu}');
+                    print('pages phiếu đang cầm: ${pages}');
                   },
                   child: FittedBox(
                     fit: BoxFit.fitWidth,
@@ -701,47 +649,41 @@ class _PhieuDangCam extends State<PhieuDangCam> {
   }
 
   //5.Thông tin hiển thị thêm
-  Widget NutLoadDuLieu(BuildContext context) {
-    if (_fillterPhieuDangCam.length == 0) {
-      return Text('');
-    }
-    return Container(
-      width: 150,
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [Color(0xffccd2ff), Color(0xffbfc4df)],
-          stops: [0.25, 0.75],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
+  Widget ChangePage(BuildContext context){
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Visibility(
+            visible: pages >= 0,
+            child: ElevatedButton(
+              onPressed: (){
+                setState(() {
+                  pages-=10;
+                });
+                if(pages >= 0){
+                  _loadDuLieuPhieuDangCam(pages);
+                }
+              },
+              child: const Text('<'),
+            )
         ),
-        borderRadius: BorderRadius.circular(30),
-      ),
-      child: TextButton(
-        onPressed: () {
-          //Kiểm tra nếu đạ độ dai tối đa thì không load thêm
-          int DoDaiToiDa = thongTinhTinhTong.SoLuong ?? 0;
-          print('ĐỘ dài tối đa mới lấy: ${DoDaiToiDa}');
-          print('ĐỘ dài hiện tại: ${ThuVienUntilState.offset}');
-          if (ThuVienUntilState.offset >= DoDaiToiDa) {
-            print('Đạt tối đa');
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: const Text(
-                'Đã hết dữ liệu để hiển thị',
-                textAlign: TextAlign.center,
-              ),
-            ));
-          } else {
-            setState(() {
-              ThuVienUntilState.offset += 10;
-            });
-            _loadDuLieuPhieuDangCam();
-          }
-        },
-        child: Text(
-          'Xem thêm...',
-          style: TextStyle(color: Colors.black),
+
+        const SizedBox(width: 50,),
+        Visibility(
+            visible: pages <= SoLuongPhieu,
+            child: ElevatedButton(
+              onPressed: (){
+                setState(() {
+                  pages+=10;
+                });
+                if(pages <= SoLuongPhieu){
+                  _loadDuLieuPhieuDangCam(pages);
+                }
+              },
+              child: const Text('>'),
+            )
         ),
-      ),
+      ],
     );
   }
 }

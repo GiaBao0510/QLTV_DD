@@ -11,24 +11,28 @@ class PhieuDangCamManage with ChangeNotifier{
   List<PhieuDangCam_model> get BangBaoCaoPhieuDangCam => _BangBaoCaoPhieuDangCam;
   int get BangBaoCaoPhieuDangCam_length => _BangBaoCaoPhieuDangCam.length;
 
-  //Lấy thông tin bảng phiếu đang cầm
+  //1.Lấy thông tin bảng phiếu đang cầm
   Future<List<PhieuDangCam_model>> fetchPhieuDangCam(
-      DateTime ngayBD, DateTime ngayKT, int limit, int offset
+      DateTime ngayBD, DateTime ngayKT, int pages
       ) async{
 
     //Biến đổi đầu vào
     String StartDay = DateFormat('yyyy-MM-dd').format(ngayBD);
     String EndDay = DateFormat('yyyy-MM-dd').format(ngayKT);
-    String Limit = limit.toString();
-    String Offset = offset.toString();
+    String Pages = pages.toString();
 
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final res = await http.get(
-      Uri.parse("$url/api/cam/dangcam?ngayBD=$StartDay&ngayKT=$EndDay&limit=$Limit&offset=$Offset"),
-      headers:{
+      Uri.parse("$url/api/cam/dangcam?ngayBD=$StartDay&ngayKT=$EndDay&pages=$Pages"),
+      headers:<String, String>{
         "accesstoken": "${prefs.getString('accesstoken')}",
       },
     );
+
+    print('Ngày bắt đầu: ${StartDay}');
+    print('Ngày kết thúc: ${EndDay}');
+    print('pages: ${Pages}');
+    //print('Dữ liệu đang cầm: ${res.body}');
 
     if(res.statusCode == 200){
       List<dynamic> json = jsonDecode(res.body);
@@ -41,13 +45,46 @@ class PhieuDangCamManage with ChangeNotifier{
       ).toList();
 
       notifyListeners();
+
+      print('length: ${list_phieuDangCam.length}');
       return list_phieuDangCam;
     }else{
       throw Exception('Failed to load data.');
     }
   }
 
-  //Lấy thông tin tính tổng
+  //2.Lấy thong tin tất cả phiếu đang cầm theo ngày
+  Future<List<PhieuDangCam_model>> fetchAllPhieuDangCam(DateTime ngayBD, DateTime ngayKT) async{
+    //Biến đổi đầu vào
+    String StartDay = DateFormat('yyyy-MM-dd').format(ngayBD);
+    String EndDay = DateFormat('yyyy-MM-dd').format(ngayKT);
+
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final res = await http.get(
+      Uri.parse("$url/api/cam/dangcamAll?ngayBD=$StartDay&ngayKT=$EndDay"),
+      headers:<String, String>{
+        "accesstoken": "${prefs.getString('accesstoken')}",
+      },
+    );
+
+    print('Ngày bắt đầu: ${StartDay}');
+    print('Ngày kết thúc: ${EndDay}');
+    //print('Dữ liệu đang cầm: ${res.body}');
+
+    if(res.statusCode == 200){
+      List<dynamic> json = jsonDecode(res.body);
+      List<PhieuDangCam_model> list_phieuDangCam = json.map(
+              (e)=> PhieuDangCam_model.fromMap(e)).toList();
+      notifyListeners();
+
+      print('length ALL: ${list_phieuDangCam.length}');
+      return list_phieuDangCam;
+    }else{
+      throw Exception('Failed to load data.');
+    }
+  }
+
+  //3.Lấy thông tin tính tổng
   Future<TinhTongPhieuDangCam_model> fetchTinhTongPhieuDangCam(DateTime ngayBD, DateTime ngayKT) async{
     String StartDay = DateFormat('yyyy-MM-dd').format(ngayBD);
     String EndDay = DateFormat('yyyy-MM-dd').format(ngayKT);
@@ -59,9 +96,6 @@ class PhieuDangCamManage with ChangeNotifier{
         "accesstoken": "${prefs.getString('accesstoken')}",
       },
     );
-    print('Ngày bắt đầu: ${StartDay}');
-    print('Ngày ết thúc: ${EndDay}');
-    print('Dữ liệu tính tổng: ${res.body}');
     if(res.statusCode == 200){
       List<dynamic> json = jsonDecode(res.body);
       //TinhTongPhieuDangCam_model tinhTong = TinhTongPhieuDangCam_model.fromMap(json);

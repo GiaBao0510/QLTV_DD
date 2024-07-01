@@ -137,7 +137,6 @@ class _BaoCaoPhieuXuat extends State<BaoCaoPhieuXuatScreen> {
             ThuVienUntilState.dateFormat.format(ThuVienUntilState.ngayKT);
       });
     }
-    //print('Ngày kết thúc đã chọn: $ngayKT');
   }
 
   //7. Load tinh tong
@@ -473,7 +472,7 @@ class _BaoCaoPhieuXuat extends State<BaoCaoPhieuXuatScreen> {
         });
   }
 
-//   //Hiển thị thông tin chi tiết
+  //Hiển thị thông tin chi tiết
   Future<void> ThongTinChiTiet(
       BuildContext context, BangBaoCaoPhieuXuat_model item) async {
     double tongChung_CanTong = 0.0,

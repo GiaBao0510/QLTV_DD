@@ -56,16 +56,11 @@ class _PhieuDangCamChiTiet extends State<PhieuDangCamChiTiet> {
             Navigator.of(context).pop();
           },
         ),
-        title: const Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text("BC Chi Tiết Phiếu Cầm",
-                style: TextStyle(
-                    color: Colors.black, fontWeight: FontWeight.w900)),
-            SizedBox(
-              width: 50,
-            )
-          ],
+        title:  FittedBox(
+          fit: BoxFit.fitWidth,
+          child: Text("BC Chi Tiết Phiếu Cầm",
+              style: TextStyle(
+                  color: Colors.black, fontWeight: FontWeight.w900)),
         ),
         // actions: [
         //   Padding(
