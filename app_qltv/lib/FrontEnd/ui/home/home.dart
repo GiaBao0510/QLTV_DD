@@ -42,7 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
       if (hour < 10) {
         return Color.fromARGB(255, 255, 187, 0);
       } else if (hour < 13) {
-        return Color.fromARGB(255, 0, 178, 183);
+        return Color.fromARGB(255, 34, 252, 36);
       } else if (hour < 18) {
         return Color.fromARGB(255, 255, 255, 255);
       } else {

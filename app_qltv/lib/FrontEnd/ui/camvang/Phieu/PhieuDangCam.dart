@@ -61,6 +61,9 @@ class _PhieuDangCam extends State<PhieuDangCam> {
     _searchController.dispose();
     ThuVienUntilState.ngayBD = DateTime.now();
     ThuVienUntilState.ngayKT = DateTime.now();
+    ThuVienUntilState.EndDayController.clear();
+    ThuVienUntilState.StartDayController.clear();
+    pages = 0;
     super.dispose();
   }
 

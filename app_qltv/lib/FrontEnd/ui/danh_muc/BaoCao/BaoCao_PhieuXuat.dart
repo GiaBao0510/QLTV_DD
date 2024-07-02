@@ -52,6 +52,8 @@ class _BaoCaoPhieuXuat extends State<BaoCaoPhieuXuatScreen> {
   @override
   void dispose() {
     _searchController.dispose();
+    ThuVienUntilState.EndDayController.clear();
+    ThuVienUntilState.StartDayController.clear();
     super.dispose();
   }
 

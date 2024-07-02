@@ -1,11 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 import 'package:app_qltv/FrontEnd/model/danhmuc/hanghoa.dart';
 import 'package:app_qltv/FrontEnd/model/danhmuc/loaivang.dart';
 import 'package:app_qltv/FrontEnd/model/danhmuc/nhomvang.dart';
 import 'package:app_qltv/FrontEnd/controller/danhmuc/nhomvang_manager.dart';
 import 'package:app_qltv/FrontEnd/controller/danhmuc/loaivang_manager.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 
 class ChiTietHangHoaScreen extends StatelessWidget {
   static const routeName = "/chitiethanghoa";
@@ -116,6 +119,14 @@ class ChiTietHangHoaScreen extends StatelessWidget {
                   buildDetailRow('Ghi Chú:', '${hangHoa.ghiChu}'),
                   buildDetailRow('Xuất Xứ:', '${hangHoa.xuatXu}'),
                   buildDetailRow('Ký Hiệu:', '${hangHoa.kyHieu}'),
+                  Align(
+                    alignment: Alignment.center,
+                    child: QrImageView(
+                      data: '${hangHoa.hangHoaMa}',
+                      version: QrVersions.auto,
+                      size: 100,
+                    )
+                  )
                 ],
               ),
             ),
