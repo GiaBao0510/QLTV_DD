@@ -77,5 +77,5 @@ exports.getChiTietPhieuCam = async (req, res, next) => {
       res.status(200).json(phieu);
     } catch (error) {
       next(error);
-    }
+    } 
   };
