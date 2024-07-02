@@ -447,7 +447,7 @@ class _drawerState extends State<drawer> {
                     width: 24.0,
                     height: 24.0,
                   ),
-                  title: const Text('Giao dịch',
+                  title: const Text('Giao Dịch',
                       style: TextStyle(fontWeight: FontWeight.w800)),
                   children: <Widget>[
                     Padding(
@@ -674,7 +674,7 @@ class _drawerState extends State<drawer> {
                     width: 24.0,
                     height: 24.0,
                   ),
-                  title: const Text('Hóa đơn bán ra',
+                  title: const Text('Hóa Đơn Bán Ra',
                       style: TextStyle(fontWeight: FontWeight.w800)),
                   children: <Widget>[
                     Padding(
@@ -686,7 +686,7 @@ class _drawerState extends State<drawer> {
                           width: 24.0,
                           height: 24.0,
                         ),
-                        title: const Text('Danh sách hóa đơn',
+                        title: const Text('Danh Sách Hóa Đơn',
                             style: TextStyle(fontWeight: FontWeight.w800)),
                         onTap: () {
                           Navigator.push(
@@ -707,7 +707,7 @@ class _drawerState extends State<drawer> {
                           width: 24.0,
                           height: 24.0,
                         ),
-                        title: const Text('Thêm hóa đơn ',
+                        title: const Text('Thêm Hóa Đơn ',
                             style: TextStyle(fontWeight: FontWeight.w800)),
                         onTap: () {
                           Navigator.push(
