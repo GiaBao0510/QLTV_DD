@@ -24,7 +24,7 @@ class _HomeScreenState extends State<HomeScreen> {
       }
     }
 
-    String AnhNen(){
+    String AnhNen() {
       int hour = DateTime.now().hour;
       if (hour < 10) {
         return 'assets/images/morning.jpg';
@@ -37,16 +37,16 @@ class _HomeScreenState extends State<HomeScreen> {
       }
     }
 
-    Color Mau_LoiChuc(){
+    Color Mau_LoiChuc() {
       int hour = DateTime.now().hour;
       if (hour < 10) {
-        return Color.fromARGB(255, 255, 187, 0);
+        return const Color.fromARGB(255, 255, 187, 0);
       } else if (hour < 13) {
-        return Color.fromARGB(255, 34, 252, 36);
+        return const Color.fromARGB(255, 34, 172, 252);
       } else if (hour < 18) {
-        return Color.fromARGB(255, 255, 255, 255);
+        return const Color.fromARGB(255, 237, 171, 113);
       } else {
-        return Color.fromARGB(255, 255, 255, 255);
+        return const Color.fromARGB(255, 232, 232, 232);
       }
     }
 
@@ -119,6 +119,27 @@ class _HomeScreenState extends State<HomeScreen> {
       },
     ];
 
+    final banvang_items = [
+      {
+        'image': 'assets/images/money-transfer.png',
+        'text': 'Giao Dịch Bán Vàng',
+        'routeName': '/giaodichbanvangplus'
+      },
+    ];
+
+    final hoadon_items = [
+      {
+        'image': 'assets/images/invoiceList.png',
+        'text': 'Danh Sách Hóa Đơn',
+        'routeName': '/danhSachHoaDonMBScreen'
+      },
+      {
+        'image': 'assets/images/addInvoice.png',
+        'text': 'Thêm Hóa Đơn ',
+        'routeName': '/themhoadonnhap'
+      },
+    ];
+
     final baocao_items = [
       {
         'image': 'assets/images/budget.png',
@@ -187,6 +208,14 @@ class _HomeScreenState extends State<HomeScreen> {
     final gridHeight_CamVang =
         itemHeight * rowCount_CamVang + (10.0 * (rowCount_CamVang - 1));
 
+    final rowCount_BanVang = (banvang_items.length / crossAxisCount).ceil();
+    final gridHeight_BanVang =
+        itemHeight * rowCount_BanVang + (10.0 * (rowCount_BanVang - 1));
+
+    final rowCount_HoaDon = (hoadon_items.length / crossAxisCount).ceil();
+    final gridHeight_HoaDon =
+        itemHeight * rowCount_HoaDon + (10.0 * (rowCount_HoaDon - 1));
+
     final rowCount_BaoCao = (baocao_items.length / crossAxisCount).ceil();
     final gridHeight_BaoCao =
         itemHeight * rowCount_BaoCao + (10.0 * (rowCount_BaoCao - 1));
@@ -203,37 +232,45 @@ class _HomeScreenState extends State<HomeScreen> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            const SizedBox(height: 20),
+            const SizedBox(height: 25),
             //Ảnh nền
-            const SizedBox(height: 20),
+            // const SizedBox(height: 20),
             Container(
-              margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
-              child:Stack(
+              margin: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+              child: Stack(
                 children: [
                   Positioned(
                       child: ClipRRect(
-                        borderRadius: BorderRadius.all(Radius.circular(20)),
-                        child: Image.asset(
-                          AnhNen(),
-                          width: double.maxFinite,
-                          height: 300,
-                          fit: BoxFit.cover,
-                        ),
-                      )
-                  ),
+                    borderRadius: const BorderRadius.all(Radius.circular(20)),
+                    child: Image.asset(
+                      AnhNen(),
+                      width: double.maxFinite,
+                      height: 240,
+                      fit: BoxFit.cover,
+                    ),
+                  )),
                   Align(
                     alignment: Alignment.center,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const SizedBox(height: 80,),
-                        Text(
+                        const SizedBox(
+                          height: 80,
+                        ),
+                        const Text(
                           'XIN CHÀO!',
                           style: TextStyle(
                             color: Color.fromARGB(255, 255, 187, 0),
                             fontWeight: FontWeight.w900,
-                            fontSize: 30,
+                            fontSize: 35,
+                            shadows: [
+                              Shadow(
+                                offset: Offset(2.0, 2.0),
+                                blurRadius: 3.0,
+                                color: Color.fromARGB(255, 0, 0, 0),
+                              ),
+                            ],
                           ),
                           textAlign: TextAlign.center,
                         ),
@@ -243,7 +280,14 @@ class _HomeScreenState extends State<HomeScreen> {
                           style: TextStyle(
                             color: Mau_LoiChuc(),
                             fontWeight: FontWeight.w600,
-                            fontSize: 18,
+                            fontSize: 20,
+                            shadows: const [
+                              Shadow(
+                                offset: Offset(2.0, 2.0),
+                                blurRadius: 3.0,
+                                color: Color.fromARGB(255, 0, 0, 0),
+                              ),
+                            ],
                           ),
                           textAlign: TextAlign.center,
                         ),
@@ -253,7 +297,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
             ),
-
 
             const SizedBox(height: 20),
             Stack(
@@ -502,6 +545,180 @@ class _HomeScreenState extends State<HomeScreen> {
                               const SizedBox(height: 5),
                               Text(
                                 camvang_items[index]['text']!,
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.w800),
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            Stack(
+              children: [
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 10.0),
+                  padding: const EdgeInsets.only(
+                      top: 10.0, left: 40, right: 20, bottom: 50),
+                  decoration: const BoxDecoration(
+                    color: Color.fromARGB(255, 228, 200, 126),
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(20.0),
+                      topRight: Radius.circular(20.0),
+                    ),
+                  ),
+                  width: double.infinity,
+                  child: Row(
+                    children: [
+                      Image.asset(
+                        'assets/images/transaction.png',
+                        width: 24.0,
+                        height: 24.0,
+                      ),
+                      const SizedBox(width: 10),
+                      const Text(
+                        'Bán Vàng',
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.w900,
+                            fontSize: 20),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(top: 50, left: 10, right: 10),
+                  padding: const EdgeInsets.all(20.0),
+                  decoration: BoxDecoration(
+                    color: const Color.fromARGB(255, 218, 218, 218),
+                    borderRadius: BorderRadius.circular(20.0),
+                    border: Border.all(
+                      color: Colors.white,
+                      width: 2.0,
+                    ),
+                  ),
+                  width: double.infinity,
+                  child: SizedBox(
+                    height: gridHeight_BanVang,
+                    child: GridView.builder(
+                      physics: const NeverScrollableScrollPhysics(),
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3,
+                        crossAxisSpacing: 10.0,
+                        mainAxisSpacing: 10.0,
+                        childAspectRatio: 0.8,
+                      ),
+                      itemCount: banvang_items.length,
+                      itemBuilder: (context, index) {
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.pushNamed(
+                                context, banvang_items[index]['routeName']!);
+                          },
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image.asset(
+                                banvang_items[index]['image']!,
+                                width: 64.0,
+                                height: 64.0,
+                              ),
+                              const SizedBox(height: 5),
+                              Text(
+                                banvang_items[index]['text']!,
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.w800),
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            Stack(
+              children: [
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 10.0),
+                  padding: const EdgeInsets.only(
+                      top: 10.0, left: 40, right: 20, bottom: 50),
+                  decoration: const BoxDecoration(
+                    color: Color.fromARGB(255, 228, 200, 126),
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(20.0),
+                      topRight: Radius.circular(20.0),
+                    ),
+                  ),
+                  width: double.infinity,
+                  child: Row(
+                    children: [
+                      Image.asset(
+                        'assets/images/billofsale.png',
+                        width: 24.0,
+                        height: 24.0,
+                      ),
+                      const SizedBox(width: 10),
+                      const Text(
+                        'Hóa Đơn Bán Ra',
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.w900,
+                            fontSize: 20),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(top: 50, left: 10, right: 10),
+                  padding: const EdgeInsets.all(20.0),
+                  decoration: BoxDecoration(
+                    color: const Color.fromARGB(255, 218, 218, 218),
+                    borderRadius: BorderRadius.circular(20.0),
+                    border: Border.all(
+                      color: Colors.white,
+                      width: 2.0,
+                    ),
+                  ),
+                  width: double.infinity,
+                  child: SizedBox(
+                    height: gridHeight_BanVang,
+                    child: GridView.builder(
+                      physics: const NeverScrollableScrollPhysics(),
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3,
+                        crossAxisSpacing: 10.0,
+                        mainAxisSpacing: 10.0,
+                        childAspectRatio: 0.8,
+                      ),
+                      itemCount: hoadon_items.length,
+                      itemBuilder: (context, index) {
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.pushNamed(
+                                context, hoadon_items[index]['routeName']!);
+                          },
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image.asset(
+                                hoadon_items[index]['image']!,
+                                width: 64.0,
+                                height: 64.0,
+                              ),
+                              const SizedBox(height: 5),
+                              Text(
+                                hoadon_items[index]['text']!,
                                 style: const TextStyle(
                                     fontWeight: FontWeight.w800),
                                 textAlign: TextAlign.center,

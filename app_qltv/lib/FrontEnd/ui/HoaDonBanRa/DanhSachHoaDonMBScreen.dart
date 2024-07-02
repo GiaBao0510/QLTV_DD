@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
 class DanhSachHoaDonMBScreen extends StatefulWidget {
-  static const routeName = "/danhSachHoaDonMBScreen";
+  static const routerName = "/danhSachHoaDonMBScreen";
 
   const DanhSachHoaDonMBScreen({Key? key}) : super(key: key);
 

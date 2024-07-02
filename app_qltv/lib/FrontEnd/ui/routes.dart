@@ -1,3 +1,5 @@
+import 'package:app_qltv/FrontEnd/ui/GiaoDich/GiaoDichBanVangPlus.dart';
+import 'package:app_qltv/FrontEnd/ui/HoaDonBanRa/DanhSachHoaDonMBScreen.dart';
 import 'package:app_qltv/FrontEnd/ui/danh_muc/BaoCao/BaoCaoPhieuMua.dart';
 
 import 'package:app_qltv/FrontEnd/ui/danh_muc/BaoCao/BaoCao_KhoVangMuaVao.dart';
@@ -60,7 +62,11 @@ final Map<String, WidgetBuilder> routes = {
   //TestPage.routeName: (ctx) => TestPage(),
   ThemHoaDon_nhap.routerName: (ctx) => ThemHoaDon_nhap(),
   BaoCaoTopKhachHangScreen.routeName: (ctx) => BaoCaoTopKhachHangScreen(),
-  Interfaceerror500.routerName: (ctx) => Interfaceerror500(EroRecordedinText: "",),
+  Interfaceerror500.routerName: (ctx) => Interfaceerror500(
+        EroRecordedinText: "",
+      ),
   Loadinginterface.routeName: (ctx) => Loadinginterface(),
   BanVang.routerName: (ctx) => BanVang(),
+  BanVangPlus.routerName: (ctx) => BanVangPlus(),
+  DanhSachHoaDonMBScreen.routerName: (ctx) => DanhSachHoaDonMBScreen(),
 };
