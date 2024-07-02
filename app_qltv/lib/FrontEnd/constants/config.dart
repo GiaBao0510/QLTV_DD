@@ -1,4 +1,4 @@
-const url = "http://45.251.114.98:3000";
+const url = "http://103.7.40.161:3000";
 
 const login = "$url/login"; //Đăng nhập
 const logout = "$url/exit"; //Đăng xuất
