@@ -107,7 +107,7 @@ class _drawerState extends State<drawer> {
               children: <Widget>[
                 UserAccountsDrawerHeader(
                   accountName: const Text(
-                    'Phần mềm vàng',
+                    'Phần Mềm Vàng',
                     style: TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.w900,
@@ -138,9 +138,17 @@ class _drawerState extends State<drawer> {
                           ),
                         ],
                       ),
-                      Text(
-                        '${_getDate()}',
-                        style: TextStyle(fontSize: 12, color: Colors.black),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 43.0),
+                          child: Text(
+                            '${_getDate()}',
+                            style: const TextStyle(
+                                fontSize: 12, color: Colors.black),
+                            textAlign: TextAlign.left,
+                          ),
+                        ),
                       ),
                     ],
                   ),
