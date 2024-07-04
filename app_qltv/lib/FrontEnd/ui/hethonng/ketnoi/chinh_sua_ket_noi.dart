@@ -156,12 +156,12 @@ class _ChinhSuaKetNoiPageState extends State<ChinhSuaKetNoiPage> {
                       decoration: InputDecoration(labelText: 'Password'),
                       onSaved: (value) => _currentConfig =
                           _currentConfig.copyWith(password: value),
-                      // validator: (value) {
-                      //   if (value == null || value.isEmpty) {
-                      //     return 'Vui lòng nhập password';
-                      //   }
-                      //   return null;
-                      // },
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Vui lòng nhập password';
+                        }
+                        return null;
+                      },
                     ),
                     const SizedBox(height: 20),
                     ElevatedButton(
