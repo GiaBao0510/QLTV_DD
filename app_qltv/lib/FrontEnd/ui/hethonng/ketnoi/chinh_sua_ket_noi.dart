@@ -174,7 +174,7 @@ class _ChinhSuaKetNoiPageState extends State<ChinhSuaKetNoiPage> {
                         'Cập nhật',
                         style: TextStyle(
                             fontWeight: FontWeight.w900,
-                            color: Colors.green,
+                            color: Colors.black,
                             fontSize: 20),
                       ),
                     ),

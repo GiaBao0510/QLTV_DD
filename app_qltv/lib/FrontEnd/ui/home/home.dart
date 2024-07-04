@@ -1,5 +1,8 @@
+import 'package:app_qltv/FrontEnd/controller/danhmuc/don_vi_manage.dart';
+import 'package:app_qltv/FrontEnd/model/danhmuc/donvi.dart';
 import 'package:app_qltv/FrontEnd/ui/home/component/drawer.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -9,6 +12,25 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  late Future<List<Donvi>> _donviFuture;
+  List<Donvi> _donviList = [];
+
+  Future<void> _loadDonvi() async {
+    _donviFuture =
+        Provider.of<DonviManage>(context, listen: false).fetchDonvi();
+    _donviFuture.then((donvis) {
+      setState(() {
+        _donviList = donvis;
+      });
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadDonvi();
+  }
+
   @override
   Widget build(BuildContext context) {
     String getGreetingMessage() {
@@ -42,7 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
       if (hour < 10) {
         return const Color.fromARGB(255, 255, 187, 0);
       } else if (hour < 13) {
-        return const Color.fromARGB(255, 34, 172, 252);
+        return const Color.fromARGB(255, 123, 233, 149);
       } else if (hour < 18) {
         return const Color.fromARGB(255, 237, 171, 113);
       } else {
@@ -251,47 +273,69 @@ class _HomeScreenState extends State<HomeScreen> {
                   )),
                   Align(
                     alignment: Alignment.center,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const SizedBox(
-                          height: 80,
-                        ),
-                        const Text(
-                          'XIN CHÀO!',
-                          style: TextStyle(
-                            color: Color.fromARGB(255, 255, 187, 0),
-                            fontWeight: FontWeight.w900,
-                            fontSize: 35,
-                            shadows: [
-                              Shadow(
-                                offset: Offset(2.0, 2.0),
-                                blurRadius: 3.0,
-                                color: Color.fromARGB(255, 0, 0, 0),
-                              ),
-                            ],
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 20.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const SizedBox(
+                            height: 80,
                           ),
-                          textAlign: TextAlign.center,
-                        ),
-                        const SizedBox(height: 20),
-                        Text(
-                          getGreetingMessage(),
-                          style: TextStyle(
-                            color: Mau_LoiChuc(),
-                            fontWeight: FontWeight.w600,
-                            fontSize: 20,
-                            shadows: const [
-                              Shadow(
-                                offset: Offset(2.0, 2.0),
-                                blurRadius: 3.0,
-                                color: Color.fromARGB(255, 0, 0, 0),
-                              ),
-                            ],
+                          const Text(
+                            'XIN CHÀO!',
+                            style: TextStyle(
+                              color: Color.fromARGB(255, 255, 187, 0),
+                              fontWeight: FontWeight.w900,
+                              fontSize: 20,
+                              shadows: [
+                                Shadow(
+                                  offset: Offset(2.0, 2.0),
+                                  blurRadius: 3.0,
+                                  color: Color.fromARGB(255, 0, 0, 0),
+                                ),
+                              ],
+                            ),
+                            textAlign: TextAlign.center,
                           ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
+                          if (_donviList.isNotEmpty)
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                _donviList[0].dvi_ten ?? '',
+                                style: const TextStyle(
+                                  color: Color.fromARGB(255, 255, 187, 0),
+                                  fontWeight: FontWeight.w800,
+                                  fontSize: 25,
+                                  shadows: [
+                                    Shadow(
+                                      offset: Offset(2.0, 2.0),
+                                      blurRadius: 3.0,
+                                      color: Color.fromARGB(255, 0, 0, 0),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          const SizedBox(height: 20),
+                          Text(
+                            getGreetingMessage(),
+                            style: TextStyle(
+                              color: Mau_LoiChuc(),
+                              fontWeight: FontWeight.w600,
+                              fontSize: 20,
+                              shadows: const [
+                                Shadow(
+                                  offset: Offset(2.0, 2.0),
+                                  blurRadius: 3.0,
+                                  color: Color.fromARGB(255, 0, 0, 0),
+                                ),
+                              ],
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
                     ),
                   )
                 ],
